@@ -1,0 +1,13 @@
+{
+  "version": "1",
+  "name": "Attraccess API",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ],
+  "presets": {
+    "requestType": "http",
+    "requestUrl": "http://{{host}}:3000/api"
+  }
+}
