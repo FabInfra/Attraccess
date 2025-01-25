@@ -1,0 +1,19 @@
+meta {
+  name: Get User
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://{{host}}:3000/api/users/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: 1
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphcHB5Iiwic3ViIjoxLCJ0b2tlbklkIjoid2hIUFZldTBiNnMxbW5TZzFzekxnIiwiaWF0IjoxNzM3ODA4MDA2LCJleHAiOjE3Mzc4MDgwNjZ9.7zX28IGHsDtKGc9RnyQ1i2d_efel-tKnoKXGwLf_Sdk
+}
