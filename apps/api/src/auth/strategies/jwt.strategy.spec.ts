@@ -3,6 +3,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { UsersService } from '../../users/users.service';
 import { AuthService } from '../auth.service';
 import { UnauthorizedException } from '@nestjs/common';
+import { User } from '@attraccess/database';
 
 describe('JwtStrategy', () => {
   let jwtStrategy: JwtStrategy;
@@ -34,7 +35,7 @@ describe('JwtStrategy', () => {
     const user = { id: 1, username: 'testuser' };
 
     jest.spyOn(authService, 'isJWTRevoked').mockResolvedValue(false);
-    jest.spyOn(usersService, 'findOne').mockResolvedValue(user);
+    jest.spyOn(usersService, 'findOne').mockResolvedValue(user as User);
 
     const result = await jwtStrategy.validate(payload);
     expect(result).toEqual(user);

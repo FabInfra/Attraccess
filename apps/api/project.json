@@ -20,7 +20,7 @@
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": ["build"],
+      "dependsOn": ["build", "start-db"],
       "options": {
         "buildTarget": "api:build",
         "runBuildTargetDependencies": false
@@ -37,6 +37,12 @@
     "test": {
       "options": {
         "passWithNoTests": true
+      }
+    },
+    "start-db": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker compose -f docker-compose.dev.yml up -d postgres"
       }
     }
   }

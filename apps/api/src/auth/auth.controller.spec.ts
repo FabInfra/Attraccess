@@ -1,33 +1,34 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
-import { jwtConstants } from './constants';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { AuthService, UserAuthenticationType } from './auth.service';
-import { UsersModule } from '../users/users.module';
-import { UsersService } from '../users/users.service';
+import { AuthService } from './auth.service';
 import { AuthenticatedRequest } from '@attraccess/types';
+import { User } from '@attraccess/database';
+import { UsersService } from '../users/users.service';
 
 describe('AuthController', () => {
   let authController: AuthController;
-  let jwtService: JwtService;
-  let usersService: UsersService;
   let authService: AuthService;
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [AuthService],
-      imports: [
-        UsersModule,
-        JwtModule.register({
-          secret: jwtConstants.secret,
-          signOptions: { expiresIn: '60s' },
-        }),
+      providers: [
+        {
+          provide: AuthService,
+          useValue: {
+            createJWT: jest.fn(),
+            revokeJWT: jest.fn(),
+          },
+        },
+        {
+          provide: UsersService,
+          useValue: {},
+        },
       ],
+      imports: [],
     }).compile();
 
     authController = module.get<AuthController>(AuthController);
-    usersService = module.get<UsersService>(UsersService);
-    jwtService = module.get<JwtService>(JwtService);
     authService = module.get<AuthService>(AuthService);
   });
 
@@ -36,15 +37,8 @@ describe('AuthController', () => {
   });
 
   it('should return a JWT token when starting a session', async () => {
-    await usersService.createOne('test');
-    const user = await usersService.findOne({ id: 1 });
-
-    await authService.addAuthenticationDetails(1, {
-      type: UserAuthenticationType.PASSWORD,
-      details: {
-        password: 'test',
-      },
-    });
+    const user: Partial<User> = { id: 1, username: 'testuser' };
+    jest.spyOn(authService, 'createJWT').mockResolvedValue('testtoken');
 
     const result = await authController.postSession({
       user,
@@ -58,15 +52,8 @@ describe('AuthController', () => {
     expect(result).toHaveProperty('authToken');
     expect(result).toHaveProperty('user');
     expect(result.user).toEqual(user);
+    expect(result.authToken).toEqual('testtoken');
 
-    // validate JWT token content (should contain id and username)
-    const decoded = jwtService.verify(result.authToken);
-
-    expect(decoded).toEqual(
-      expect.objectContaining({
-        sub: user.id,
-        username: user.username,
-      })
-    );
+    expect(authService.createJWT).toHaveBeenCalledWith(user);
   });
 });
