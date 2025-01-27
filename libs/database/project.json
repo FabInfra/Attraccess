@@ -1,0 +1,32 @@
+{
+  "name": "database",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/database/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/database",
+        "tsConfig": "libs/database/tsconfig.lib.json",
+        "packageJson": "libs/database/package.json",
+        "main": "libs/database/src/index.ts",
+        "assets": ["libs/database/*.md"]
+      }
+    },
+    "migration:generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "typeorm migration:generate",
+        "args": ["-n", "{args.migrationName}", "-d", "path/to/migrations"]
+      },
+      "configurations": {
+        "default": {
+          "migrationName": "DefaultMigrationName"
+        }
+      }
+    }
+  }
+}

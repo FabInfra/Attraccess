@@ -1,24 +1,26 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService, UserAuthenticationType } from './auth.service';
-import { UsersModule } from '../users/users.module';
-import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
+import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
-import { User } from '@attraccess/types';
+import {
+  AuthenticationDetail,
+  AuthenticationType,
+  User,
+} from '@attraccess/database';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
+import { Repository } from 'typeorm';
+
+const AuthenticationDetailRepository = getRepositoryToken(AuthenticationDetail);
 
 describe('AuthService', () => {
   let authService: AuthService;
   let usersService: UsersService;
+  let authenticationDetailRepository: Repository<AuthenticationDetail>;
+  let jwtService: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        JwtModule.register({
-          global: true,
-          secret: jwtConstants.secret,
-          signOptions: { expiresIn: '60s' },
-        }),
-      ],
+      imports: [],
       providers: [
         AuthService,
         {
@@ -27,11 +29,27 @@ describe('AuthService', () => {
             findOne: jest.fn(),
           },
         },
+        {
+          provide: AuthenticationDetailRepository,
+          useValue: {
+            findOne: jest.fn(),
+          },
+        },
+        {
+          provide: JwtService,
+          useValue: {
+            sign: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
     usersService = module.get<UsersService>(UsersService);
+    authenticationDetailRepository = module.get<
+      typeof authenticationDetailRepository
+    >(AuthenticationDetailRepository);
+    jwtService = module.get<JwtService>(JwtService);
   });
 
   it('should be defined', () => {
@@ -39,35 +57,41 @@ describe('AuthService', () => {
   });
 
   it('should authenticate user with correct credentials', async () => {
-    // first add authentication details
-    await authService.addAuthenticationDetails(1, {
-      type: UserAuthenticationType.PASSWORD,
-      details: { password: 'password' },
-    });
+    const user: Partial<User> = { id: 1, username: 'testuser' };
+    jest.spyOn(usersService, 'findOne').mockResolvedValue(user as User);
 
-    jest.spyOn(usersService, 'findOne').mockResolvedValue({
-      id: 1,
-      username: 'testuser',
-    } as User);
+    const authenticationDetail: Partial<AuthenticationDetail> = {
+      userId: 1,
+      type: AuthenticationType.PASSWORD,
+      password: 'my-password',
+    };
+    jest
+      .spyOn(authenticationDetailRepository, 'findOne')
+      .mockResolvedValue(authenticationDetail as AuthenticationDetail);
 
     const isAuthenticated =
       await authService.getUserByUsernameAndAuthenticationDetails('testuser', {
-        type: UserAuthenticationType.PASSWORD,
-        details: { password: 'password' },
+        type: AuthenticationType.PASSWORD,
+        details: { password: 'my-password' },
       });
 
     expect(isAuthenticated).not.toBeNull();
   });
 
   it('should not authenticate user with incorrect credentials', async () => {
-    jest.spyOn(usersService, 'findOne').mockResolvedValue({
+    const user: Partial<User> = { id: 1, username: 'testuser' };
+    jest.spyOn(usersService, 'findOne').mockResolvedValue(user as User);
+
+    jest.spyOn(authenticationDetailRepository, 'findOne').mockResolvedValue({
       id: 1,
-      username: 'testuser',
-    } as User);
+      userId: user.id,
+      type: AuthenticationType.PASSWORD,
+      password: 'my-password',
+    } as AuthenticationDetail);
 
     const isAuthenticated =
       await authService.getUserByUsernameAndAuthenticationDetails('testuser', {
-        type: UserAuthenticationType.PASSWORD,
+        type: AuthenticationType.PASSWORD,
         details: { password: 'wrongpassword' },
       });
 
@@ -75,11 +99,20 @@ describe('AuthService', () => {
   });
 
   it('should create a JWT for a valid user', async () => {
-    const user: User = { id: 1, username: 'testuser' };
-    const token = await authService.createJWT(user);
+    const user: Partial<User> = { id: 1, username: 'testuser' };
+
+    jest.spyOn(jwtService, 'sign').mockReturnValue('test-token');
+
+    const token = await authService.createJWT(user as User);
 
     expect(token).toBeDefined();
-    expect(typeof token).toBe('string');
+    expect(token).toEqual('test-token');
+
+    expect(jwtService.sign).toHaveBeenCalledWith({
+      username: user.username,
+      sub: user.id,
+      tokenId: expect.any(String),
+    });
   });
 
   it('should revoke a JWT and identify it as revoked', async () => {
@@ -97,7 +130,7 @@ describe('AuthService', () => {
       await authService.getUserByUsernameAndAuthenticationDetails(
         'nonexistentuser',
         {
-          type: UserAuthenticationType.PASSWORD,
+          type: AuthenticationType.PASSWORD,
           details: { password: 'password' },
         }
       );

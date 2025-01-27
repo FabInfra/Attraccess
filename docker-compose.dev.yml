@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: attraccess_postgres
+    environment:
+      POSTGRES_USER: attraccess
+      POSTGRES_PASSWORD: attraccess
+      POSTGRES_DB: attraccess
+    ports:
+      - '2345:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

@@ -1,5 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { User } from '@attraccess/types';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { User } from '@attraccess/database';
+import { InjectRepository } from '@nestjs/typeorm';
 
 interface FindOneOptions {
   id?: number;
@@ -8,34 +10,30 @@ interface FindOneOptions {
 
 @Injectable()
 export class UsersService {
-  private readonly users: User[] = [];
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>
+  ) {}
 
   async findOne(options: FindOneOptions): Promise<User | null> {
-    // TODO: replace with database logic
-    const user = this.users.find((user) => {
-      if (options.id && user.id !== options.id) {
-        return false;
-      }
+    if (!options.id && !options.username) {
+      throw new BadRequestException('No options provided');
+    }
 
-      if (options.username && user.username !== options.username) {
-        return false;
-      }
-
-      return true;
+    const user = await this.userRepository.findOne({
+      where: {
+        id: options.id,
+        username: options.username,
+      },
     });
 
     // Return null instead of throwing an exception
     return user || null;
   }
 
-  // TODO: add authentication logic
   async createOne(username: string): Promise<User> {
-    // TODO: replace with database logic
-    const user = {
-      id: this.users.length + 1,
-      username,
-    };
-    this.users.push(user);
-    return user;
+    const user = new User();
+    user.username = username;
+    return this.userRepository.save(user);
   }
 }

@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UnauthorizedException } from '@nestjs/common';
 import { LocalStrategy } from './local.strategy';
 import { AuthService } from '../auth.service';
-import { User } from '@attraccess/types';
+import { User } from '@attraccess/database';
 
 describe('LocalStrategy', () => {
   let localStrategy: LocalStrategy;
@@ -26,10 +26,10 @@ describe('LocalStrategy', () => {
   });
 
   it('should return a user if validation is successful', async () => {
-    const user: User = { id: 1, username: 'testuser' }; // Mock user object
+    const user: Partial<User> = { id: 1, username: 'testuser' }; // Mock user object
     jest
       .spyOn(authService, 'getUserByUsernameAndAuthenticationDetails')
-      .mockResolvedValue(user);
+      .mockResolvedValue(user as User);
 
     const result = await localStrategy.validate('testuser', 'password2');
     expect(result).toEqual(user);

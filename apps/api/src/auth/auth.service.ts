@@ -1,57 +1,43 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@attraccess/types';
 import { nanoid } from 'nanoid';
-
-export enum UserAuthenticationType {
-  PASSWORD = 'password',
-}
-
-export interface UserAuthenticationDetails {
-  id: number;
-  userId: number;
-  type: UserAuthenticationType;
-  password: string | null;
-}
+import { Repository } from 'typeorm';
+import { AuthenticationDetail, AuthenticationType } from '@attraccess/database';
+import { User } from '@attraccess/database';
+import { InjectRepository } from '@nestjs/typeorm';
 
 export interface PasswordAuthenticationOptions {
   password: string;
 }
 
 type AuthenticationOptionsTypeMapping = {
-  [UserAuthenticationType.PASSWORD]: PasswordAuthenticationOptions;
+  [AuthenticationType.PASSWORD]: PasswordAuthenticationOptions;
 };
 
-export type AuthenticationOptions<T extends UserAuthenticationType> = {
+export type AuthenticationOptions<T extends AuthenticationType> = {
   type: T;
   details: AuthenticationOptionsTypeMapping[T];
 };
 
 @Injectable()
 export class AuthService {
-  private readonly authenticationDetails: UserAuthenticationDetails[] = [
-    {
-      id: 1,
-      userId: 1,
-      password: 'password',
-      type: UserAuthenticationType.PASSWORD,
-    },
-  ];
   private readonly revokedJWTs: string[] = [];
 
   constructor(
     private usersService: UsersService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    @InjectRepository(AuthenticationDetail)
+    private authenticationDetailRepository: Repository<AuthenticationDetail>
   ) {}
 
-  private async getAuthenticationDetails(
+  private async getAuthenticationDetail(
+    authenticationType: AuthenticationType,
     userId: number
-  ): Promise<UserAuthenticationDetails> {
-    // TODO: replace with database logic
-    const details = this.authenticationDetails.find(
-      (details) => details.userId === userId
-    );
+  ): Promise<AuthenticationDetail> {
+    const details = await this.authenticationDetailRepository.findOne({
+      where: { userId, type: authenticationType },
+    });
 
     if (!details) {
       throw new NotFoundException(
@@ -62,14 +48,17 @@ export class AuthService {
     return details;
   }
 
-  async validateAuthenticationDetails<T extends UserAuthenticationType>(
+  async validateAuthenticationDetails<T extends AuthenticationType>(
     userId: number,
     options: AuthenticationOptions<T>
   ): Promise<boolean> {
-    const authenticationDetails = await this.getAuthenticationDetails(userId);
+    const authenticationDetails = await this.getAuthenticationDetail(
+      options.type,
+      userId
+    );
 
-    switch (authenticationDetails?.type) {
-      case UserAuthenticationType.PASSWORD:
+    switch (options.type) {
+      case AuthenticationType.PASSWORD:
         // TODO: use encryption to compare passwords
         return options.details.password === authenticationDetails.password;
 
@@ -78,34 +67,32 @@ export class AuthService {
     }
   }
 
-  async addAuthenticationDetails<T extends UserAuthenticationType>(
+  async addAuthenticationDetails<T extends AuthenticationType>(
     userId: number,
     options: AuthenticationOptions<T>
   ): Promise<void> {
     // TODO: replace with database logic
 
-    this.authenticationDetails.push({
-      id: this.authenticationDetails.length + 1,
-      userId,
-      type: options.type,
-      password: options.details.password,
-    });
+    const authenticationDetail = new AuthenticationDetail();
+    authenticationDetail.userId = userId;
+    authenticationDetail.type = options.type;
+    authenticationDetail.password = options.details.password;
+
+    await this.authenticationDetailRepository.save(authenticationDetail);
   }
 
-  async getUserByUsernameAndAuthenticationDetails<
-    T extends UserAuthenticationType
-  >(username: string, options: AuthenticationOptions<T>): Promise<User | null> {
+  async getUserByUsernameAndAuthenticationDetails<T extends AuthenticationType>(
+    username: string,
+    options: AuthenticationOptions<T>
+  ): Promise<User | null> {
     const user = await this.usersService.findOne({ username });
 
-    // Check if user is null
     if (!user) {
-      console.log('user not found');
       return null;
     }
 
     const isValid = await this.validateAuthenticationDetails(user.id, options);
     if (!isValid) {
-      console.log('invalid');
       return null;
     }
 

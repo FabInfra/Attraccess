@@ -7,9 +7,12 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { AuthenticationDetail } from '@attraccess/database';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([AuthenticationDetail]),
     UsersModule,
     PassportModule,
     JwtModule.register({
