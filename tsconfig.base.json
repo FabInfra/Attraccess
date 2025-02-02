@@ -16,9 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@attraccess/attracces": ["tools/attracces/src/index.ts"],
-      "@attraccess/database": ["libs/database/src/index.ts"],
-      "@attraccess/env": ["libs/env/src/index.ts"],
-      "@attraccess/types": ["libs/types/src/index.ts"]
+      "@attraccess/env": ["libs/env/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

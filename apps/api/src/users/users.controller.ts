@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtGuard } from '../auth/strategies/jwt.guard';
-import { AuthenticatedRequest } from '@attraccess/types';
+import { AuthenticatedRequest } from '../types/request';
 
 @Controller('users')
 export class UsersController {

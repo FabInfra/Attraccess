@@ -3,8 +3,8 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { nanoid } from 'nanoid';
 import { Repository } from 'typeorm';
-import { AuthenticationDetail, AuthenticationType } from '@attraccess/database';
-import { User } from '@attraccess/database';
+import { AuthenticationDetail, AuthenticationType } from '../database/entities';
+import { User } from '../database/entities';
 import { InjectRepository } from '@nestjs/typeorm';
 
 export interface PasswordAuthenticationOptions {

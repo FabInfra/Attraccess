@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { User } from '@attraccess/database';
+import { User } from '../database/entities';
 import { InjectRepository } from '@nestjs/typeorm';
 
 interface FindOneOptions {

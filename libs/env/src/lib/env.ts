@@ -1,7 +1,12 @@
-import { z, ZodObjectDef, ZodUnionDef } from 'zod';
+import { z } from 'zod';
 
-export function loadEnv<
-  TSchema extends z.ZodType<Record<string, any>, ZodObjectDef | ZodUnionDef>
->(schema: TSchema, env: typeof process.env = process.env) {
-  return schema.parse(env);
+type SchemaDefinition = { [key: string]: z.ZodType };
+
+export function loadEnv<TSchema extends SchemaDefinition>(
+  schema: TSchema | ((z) => TSchema),
+  env: typeof process.env = process.env
+): z.infer<z.ZodObject<TSchema>> {
+  const zodSchema = typeof schema === 'function' ? schema(z) : schema;
+
+  return z.object(zodSchema).parse(env);
 }

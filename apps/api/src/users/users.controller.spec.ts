@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { ForbiddenException } from '@nestjs/common';
-import { AuthenticatedRequest } from '@attraccess/types';
-import { User } from '@attraccess/database';
+import { AuthenticatedRequest } from '../types/request';
+import { User } from '../database/entities';
 
 describe('UsersController', () => {
   let controller: UsersController;

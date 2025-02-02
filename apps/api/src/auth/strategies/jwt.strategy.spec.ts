@@ -3,7 +3,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { UsersService } from '../../users/users.service';
 import { AuthService } from '../auth.service';
 import { UnauthorizedException } from '@nestjs/common';
-import { User } from '@attraccess/database';
+import { User } from '../../database/entities';
 
 describe('JwtStrategy', () => {
   let jwtStrategy: JwtStrategy;
