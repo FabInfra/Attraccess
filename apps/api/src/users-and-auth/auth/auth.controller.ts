@@ -1,14 +1,15 @@
 import { Controller, Delete, Post, Req, UseGuards } from '@nestjs/common';
-import { LoginGuard } from './strategies/login.guard';
 import { AuthService } from './auth.service';
-import { AuthenticatedRequest } from '../types/request';
+import { AuthenticatedRequest } from '../../types/request';
+import { LoginGuard } from '../strategies/login.guard';
+import { Auth } from '../strategies/systemPermissions.guard';
 
 @Controller('/auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @UseGuards(LoginGuard)
   @Post('/session/local')
+  @UseGuards(LoginGuard)
   async postSession(@Req() request: AuthenticatedRequest) {
     const authToken = await this.authService.createJWT(request.user);
 
@@ -18,8 +19,8 @@ export class AuthController {
     };
   }
 
-  @UseGuards(LoginGuard)
   @Delete('/session')
+  @Auth()
   async deleteSession(@Req() request: AuthenticatedRequest) {
     await this.authService.revokeJWT(request.authInfo.tokenId);
     return request.logout();

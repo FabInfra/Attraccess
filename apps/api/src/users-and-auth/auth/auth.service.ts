@@ -3,16 +3,19 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { nanoid } from 'nanoid';
 import { Repository } from 'typeorm';
-import { AuthenticationDetail, AuthenticationType } from '../database/entities';
-import { User } from '../database/entities';
+import {
+  AuthenticationDetail,
+  AuthenticationType,
+} from '../../database/entities';
+import { User } from '../../database/entities';
 import { InjectRepository } from '@nestjs/typeorm';
 
-export interface PasswordAuthenticationOptions {
+export interface LocalPasswordAuthenticationOptions {
   password: string;
 }
 
 type AuthenticationOptionsTypeMapping = {
-  [AuthenticationType.PASSWORD]: PasswordAuthenticationOptions;
+  [AuthenticationType.LOCAL_PASSWORD]: LocalPasswordAuthenticationOptions;
 };
 
 export type AuthenticationOptions<T extends AuthenticationType> = {
@@ -58,7 +61,7 @@ export class AuthService {
     );
 
     switch (options.type) {
-      case AuthenticationType.PASSWORD:
+      case AuthenticationType.LOCAL_PASSWORD:
         // TODO: use encryption to compare passwords
         return options.details.password === authenticationDetails.password;
 

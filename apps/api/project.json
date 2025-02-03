@@ -17,6 +17,15 @@
         }
       }
     },
+    "build-swagger": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "webpack-cli build",
+        "config": "apps/api/webpack.config.swagger.js",
+        "args": ["node-env=production"],
+        "output-path": "dist/apps/api-swagger"
+      }
+    },
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
@@ -34,6 +43,14 @@
         }
       }
     },
+    "export-swagger": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build-swagger"],
+      "options": {
+        "command": "node dist/apps/api-swagger/main.js"
+      },
+      "outputs": ["{projectRoot}/dist/apps/api-swagger/swagger.json"]
+    },
     "test": {
       "options": {
         "passWithNoTests": true
@@ -44,6 +61,34 @@
       "options": {
         "command": "docker compose -f docker-compose.dev.yml up -d postgres"
       }
+    },
+    "build-migration-config": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/typeorm-migration",
+        "main": "apps/api/src/database/datasource.ts",
+        "tsConfig": "apps/api/tsconfig.app.json",
+        "webpackConfig": "apps/api/webpack.config.migrations.js"
+      }
+    },
+    "generate-migrations": {
+      "executor": "nx:run-commands",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "cwd": "apps/api",
+        "commands": ["typeorm -d ../../dist/apps/typeorm-migration/main.js migration:generate"]
+      },
+      "dependsOn": ["build-migration-config"]
+    },
+    "run-migrations": {
+      "executor": "nx:run-commands",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "cwd": "apps/api",
+        "commands": ["typeorm -d ../../dist/apps/typeorm-migration/main.js migration:run"]
+      },
+      "dependsOn": ["build-migration-config"]
     }
   }
 }

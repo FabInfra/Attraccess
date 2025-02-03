@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@attraccess/api-client": ["libs/api-client/src/index.ts"],
       "@attraccess/attracces": ["tools/attracces/src/index.ts"],
       "@attraccess/env": ["libs/env/src/index.ts"]
     }

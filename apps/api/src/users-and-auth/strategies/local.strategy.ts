@@ -1,7 +1,7 @@
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../auth/auth.service';
 import { AuthenticationType } from '../../database/entities';
 import { User } from '../../database/entities';
 
@@ -16,7 +16,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       await this.authService.getUserByUsernameAndAuthenticationDetails(
         username,
         {
-          type: AuthenticationType.PASSWORD,
+          type: AuthenticationType.LOCAL_PASSWORD,
           details: {
             password,
           },

@@ -5,7 +5,7 @@ import {
   AuthenticationDetail,
   AuthenticationType,
   User,
-} from '../database/entities';
+} from '../../database/entities';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
@@ -62,7 +62,7 @@ describe('AuthService', () => {
 
     const authenticationDetail: Partial<AuthenticationDetail> = {
       userId: 1,
-      type: AuthenticationType.PASSWORD,
+      type: AuthenticationType.LOCAL_PASSWORD,
       password: 'my-password',
     };
     jest
@@ -71,7 +71,7 @@ describe('AuthService', () => {
 
     const isAuthenticated =
       await authService.getUserByUsernameAndAuthenticationDetails('testuser', {
-        type: AuthenticationType.PASSWORD,
+        type: AuthenticationType.LOCAL_PASSWORD,
         details: { password: 'my-password' },
       });
 
@@ -85,13 +85,13 @@ describe('AuthService', () => {
     jest.spyOn(authenticationDetailRepository, 'findOne').mockResolvedValue({
       id: 1,
       userId: user.id,
-      type: AuthenticationType.PASSWORD,
+      type: AuthenticationType.LOCAL_PASSWORD,
       password: 'my-password',
     } as AuthenticationDetail);
 
     const isAuthenticated =
       await authService.getUserByUsernameAndAuthenticationDetails('testuser', {
-        type: AuthenticationType.PASSWORD,
+        type: AuthenticationType.LOCAL_PASSWORD,
         details: { password: 'wrongpassword' },
       });
 
@@ -130,7 +130,7 @@ describe('AuthService', () => {
       await authService.getUserByUsernameAndAuthenticationDetails(
         'nonexistentuser',
         {
-          type: AuthenticationType.PASSWORD,
+          type: AuthenticationType.LOCAL_PASSWORD,
           details: { password: 'password' },
         }
       );

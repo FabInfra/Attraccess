@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtStrategy } from './jwt.strategy';
-import { UsersService } from '../../users/users.service';
-import { AuthService } from '../auth.service';
+import { UsersService } from '../users/users.service';
+import { AuthService } from '../auth/auth.service';
 import { UnauthorizedException } from '@nestjs/common';
 import { User } from '../../database/entities';
 

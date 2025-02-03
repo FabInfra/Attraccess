@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { User } from './user.entity';
 
 export enum AuthenticationType {
-  PASSWORD = 'password',
+  LOCAL_PASSWORD = 'password',
 }
 
 @Entity()

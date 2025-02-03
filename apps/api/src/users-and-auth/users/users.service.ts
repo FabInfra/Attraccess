@@ -1,7 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { User } from '../database/entities';
+import { User } from '../../database/entities';
 import { InjectRepository } from '@nestjs/typeorm';
+import { makePaginatedResponse, PaginatedResponse } from '../../types/response';
+import {
+  PaginationOptions,
+  PaginationOptionsSchema,
+} from '../../types/request';
+import { loadEnv } from '@attraccess/env';
 
 interface FindOneOptions {
   id?: number;
@@ -35,5 +41,18 @@ export class UsersService {
     const user = new User();
     user.username = username;
     return this.userRepository.save(user);
+  }
+
+  async findAll(options: PaginationOptions): Promise<PaginatedResponse<User>> {
+    const paginationOptions = PaginationOptionsSchema.parse(options);
+    const { page, limit } = paginationOptions;
+    const skip = (page - 1) * limit;
+
+    const [users, total] = await this.userRepository.findAndCount({
+      skip,
+      take: limit,
+    });
+
+    return makePaginatedResponse(options, users, total);
   }
 }

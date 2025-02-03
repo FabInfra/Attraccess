@@ -8,6 +8,11 @@ import {
 } from 'typeorm';
 import { AuthenticationDetail } from './authenticationDetail.entity';
 
+class SystemPermissions {
+  @Column({ default: false })
+  canManageUsers: boolean;
+}
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -24,4 +29,7 @@ export class User {
 
   @OneToMany(() => AuthenticationDetail, (authDetail) => authDetail.user)
   authenticationDetails: AuthenticationDetail[];
+
+  @Column(() => SystemPermissions)
+  systemPermissions: SystemPermissions;
 }

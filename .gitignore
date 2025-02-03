@@ -4,5 +4,7 @@ node_modules/
 build/
 tmp/
 temp/
-.nx
+.nx/
 dist/
+vite.config.*.timestamp*
+vitest.config.*.timestamp*

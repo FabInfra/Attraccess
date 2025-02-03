@@ -1,0 +1,11 @@
+{
+  "name": "@attraccess/api-client",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
+  "dependencies": {
+    "tslib": "^2.3.0",
+    "swagger-typescript-api": "^13.0.23"
+  }
+}
