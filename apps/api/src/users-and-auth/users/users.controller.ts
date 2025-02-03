@@ -13,19 +13,14 @@ import {
 import { UsersService } from './users.service';
 import { AuthenticatedRequest } from '../../types/request';
 import { AuthService } from '../auth/auth.service';
-import { AuthenticationType } from '../../database/entities';
 import { Auth, SystemPermission } from '../strategies/systemPermissions.guard';
-abstract class CreateUserDto {
-  username: string;
-}
-
-class CreateLocalUserDto extends CreateUserDto {
-  strategy: AuthenticationType.LOCAL_PASSWORD;
-  password: string;
-}
+import { ApiProperty } from '@nestjs/swagger';
+import { CreateLocalUserDto } from './createLocalUser.dto';
 
 class GetUsersQueryDto {
+  @ApiProperty()
   page: number;
+  @ApiProperty()
   limit: number;
 }
 

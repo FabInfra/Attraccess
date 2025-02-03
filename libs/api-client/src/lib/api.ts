@@ -9,11 +9,19 @@
  * ---------------------------------------------------------------
  */
 
-export type CreateLocalUserDto = object;
+export interface CreateLocalUserDto {
+  strategy: 'password';
+  password: string;
+}
 
 export type AppControllerGetPingData = any;
 
 export type UsersControllerCreateUserData = any;
+
+export interface UsersControllerGetUsersParams {
+  page: number;
+  limit: number;
+}
 
 export type AuthControllerPostSessionData = any;
 
@@ -57,7 +65,10 @@ export namespace Users {
    */
   export namespace UsersControllerGetUsers {
     export type RequestParams = {};
-    export type RequestQuery = {};
+    export type RequestQuery = {
+      page: number;
+      limit: number;
+    };
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = any;
@@ -370,10 +381,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/api/users
      * @secure
      */
-    usersControllerGetUsers: (params: RequestParams = {}) =>
+    usersControllerGetUsers: (query: UsersControllerGetUsersParams, params: RequestParams = {}) =>
       this.request<any, void>({
         path: `/api/users`,
         method: 'GET',
+        query: query,
         secure: true,
         ...params,
       }),
