@@ -1,7 +1,6 @@
 import {
   SystemPermissionsGuard,
   SystemPermission,
-  NeedsSystemPermissions,
 } from './systemPermissions.guard';
 import { Reflector } from '@nestjs/core';
 import { ExecutionContext } from '@nestjs/common';

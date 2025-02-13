@@ -14,13 +14,17 @@ import { UsersService } from './users.service';
 import { AuthenticatedRequest } from '../../types/request';
 import { AuthService } from '../auth/auth.service';
 import { Auth, SystemPermission } from '../strategies/systemPermissions.guard';
-import { ApiProperty } from '@nestjs/swagger';
 import { CreateLocalUserDto } from './createLocalUser.dto';
+import { IsInt } from 'class-validator';
+import { Type } from 'class-transformer';
 
 class GetUsersQueryDto {
-  @ApiProperty()
+  @IsInt()
+  @Type(() => Number)
   page: number;
-  @ApiProperty()
+
+  @IsInt()
+  @Type(() => Number)
   limit: number;
 }
 

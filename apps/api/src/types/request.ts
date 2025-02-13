@@ -3,12 +3,12 @@ import { User } from '../database/entities';
 import { Request as BaseRequest } from 'express';
 import { loadEnv } from '@attraccess/env';
 
-export interface AuthenticatedRequest extends BaseRequest {
+export interface AuthenticatedRequest extends Omit<BaseRequest, 'logout'> {
   user: User;
   authInfo: {
     tokenId: string;
   };
-  logout: () => Promise<void>;
+  logout: (callback: () => void) => Promise<void>;
 }
 
 const env = loadEnv((z) => ({

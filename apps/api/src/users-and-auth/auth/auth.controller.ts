@@ -3,6 +3,8 @@ import { AuthService } from './auth.service';
 import { AuthenticatedRequest } from '../../types/request';
 import { LoginGuard } from '../strategies/login.guard';
 import { Auth } from '../strategies/systemPermissions.guard';
+import { CreateSessionResponse } from './auth.types';
+import { ApiBody, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
 
 @Controller('/auth')
 export class AuthController {
@@ -10,7 +12,30 @@ export class AuthController {
 
   @Post('/session/local')
   @UseGuards(LoginGuard)
-  async postSession(@Req() request: AuthenticatedRequest) {
+  @ApiResponse({
+    status: 200,
+    description: 'The session has been created',
+    type: CreateSessionResponse,
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['username', 'password'],
+      properties: {
+        username: {
+          type: 'string',
+          description: 'The username for authentication',
+        },
+        password: {
+          type: 'string',
+          description: 'The password for authentication',
+        },
+      },
+    },
+  })
+  async postSession(
+    @Req() request: AuthenticatedRequest
+  ): Promise<CreateSessionResponse> {
     const authToken = await this.authService.createJWT(request.user);
 
     return {
@@ -21,8 +46,14 @@ export class AuthController {
 
   @Delete('/session')
   @Auth()
+  @ApiOkResponse({
+    description: 'The session has been deleted',
+  })
   async deleteSession(@Req() request: AuthenticatedRequest) {
-    await this.authService.revokeJWT(request.authInfo.tokenId);
-    return request.logout();
+    const tokenId = request.authInfo?.tokenId;
+    await new Promise<void>((resolve) => request.logout(resolve));
+    if (tokenId) {
+      await this.authService.revokeJWT(tokenId);
+    }
   }
 }

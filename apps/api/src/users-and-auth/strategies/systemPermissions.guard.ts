@@ -23,7 +23,7 @@ export function Auth(...permissions: SystemPermission[]) {
     NeedsSystemPermissions(permissions),
     UseGuards(JwtGuard, SystemPermissionsGuard),
     ApiBearerAuth(),
-    ApiUnauthorizedResponse({ description: 'Unauthorized"' })
+    ApiUnauthorizedResponse({ description: 'Unauthorized' })
   );
 }
 
