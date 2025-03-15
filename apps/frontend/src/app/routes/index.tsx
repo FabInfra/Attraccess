@@ -1,5 +1,5 @@
 import { Navigate, PathRouteProps } from 'react-router-dom';
-import { ResourceList } from '../resources/list';
+import { ResourcesPage } from '../resources/ResourcesPage';
 import { ResourceDetails } from '../resources/resourceDetails';
 import { IoTSettings } from '../resources/iot-settings/iotSettings';
 import { Database, ServerIcon, Key, Users } from 'lucide-react';
@@ -29,7 +29,7 @@ export const routes: RouteConfig[] = [
   },
   {
     path: '/resources',
-    element: <ResourceList />,
+    element: <ResourcesPage />,
     sidebar: {
       translationKey: 'resources',
       icon: <Database className="h-5 w-5 mr-3" />,

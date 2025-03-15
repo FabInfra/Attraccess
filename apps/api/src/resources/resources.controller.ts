@@ -39,13 +39,20 @@ export class ResourcesController {
   ) {}
 
   private transformResource = (resource: Resource): Resource => {
-    return {
+    const result = {
       ...resource,
       imageFilename: this.resourceImageService.getPublicPath(
         resource.id,
         resource.imageFilename
       ),
     };
+
+    // Remove circular references
+    if (resource.group) {
+      delete resource.group.resources;
+    }
+
+    return result;
   };
 
   @Post()
@@ -87,7 +94,8 @@ export class ResourcesController {
     const resources = await this.resourcesService.listResources(
       query.page,
       query.limit,
-      query.search
+      query.search,
+      query.ungrouped
     );
 
     resources.data = resources.data.map(this.transformResource);

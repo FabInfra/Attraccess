@@ -11,6 +11,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Resource } from './resource.entity';
 import { User } from './user.entity';
 import { ResourceIntroductionHistoryItem } from './resourceIntroductionHistoryItem.entity';
+import { ResourceGroup } from './resourceGroup.entity';
 
 @Entity()
 export class ResourceIntroduction {
@@ -21,12 +22,23 @@ export class ResourceIntroduction {
   })
   id!: number;
 
-  @Column()
+  @Column({ nullable: true })
   @ApiProperty({
     description: 'The ID of the resource',
     example: 1,
+    required: false,
+    type: 'number',
   })
   resourceId!: number;
+
+  @Column({ nullable: true })
+  @ApiProperty({
+    description: 'The ID of the resource group',
+    example: 1,
+    required: false,
+    type: 'number',
+  })
+  resourceGroupId!: number | null;
 
   @Column()
   @ApiProperty({
@@ -59,6 +71,14 @@ export class ResourceIntroduction {
   @ManyToOne(() => Resource, (resource) => resource.introductions)
   @JoinColumn({ name: 'resourceId' })
   resource!: Resource;
+
+  @ManyToOne(() => ResourceGroup, (group) => group.introductions)
+  @JoinColumn({ name: 'resourceGroupId' })
+  @ApiProperty({
+    description: 'The resource group',
+    type: () => ResourceGroup,
+  })
+  resourceGroup!: ResourceGroup;
 
   @ManyToOne(() => User, (user) => user.resourceIntroductions)
   @JoinColumn({ name: 'receiverUserId' })

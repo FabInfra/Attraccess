@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsInt, Min, IsString } from 'class-validator';
+import { IsOptional, IsInt, Min, IsString, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class ListResourcesDto {
@@ -34,4 +34,14 @@ export class ListResourcesDto {
   @IsString()
   @IsOptional()
   search?: string;
+
+  @ApiProperty({
+    description: 'Filter for ungrouped resources only',
+    required: false,
+    type: Boolean,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @Type(() => Boolean)
+  ungrouped?: boolean;
 }

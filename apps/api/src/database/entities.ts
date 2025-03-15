@@ -13,6 +13,7 @@ import {
   WebhookConfig,
   SSOProvider,
   SSOProviderOIDCConfiguration,
+  ResourceGroup,
 } from '@attraccess/database-entities';
 
 export const entities = {
@@ -30,4 +31,5 @@ export const entities = {
   WebhookConfig,
   SSOProvider,
   SSOProviderOIDCConfiguration,
+  ResourceGroup,
 };

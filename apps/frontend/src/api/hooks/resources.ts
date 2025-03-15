@@ -15,16 +15,39 @@ export const resourcesKeys = {
   // Custom keys could be added here if needed
 };
 
-export function useResources(params?: ResourcesControllerGetResourcesParams) {
+// Extend params interface to include groupId
+interface ExtendedResourcesParams
+  extends ResourcesControllerGetResourcesParams {
+  groupId?: number;
+  ungrouped?: boolean;
+}
+
+export function useResources(params?: ExtendedResourcesParams) {
   return useQuery({
     queryKey: resourcesKeys.list(params),
     queryFn: async () => {
       const api = getApi();
-      const response = await api.resources.resourcesControllerGetResources({
+      const queryParams: any = {
         page: params?.page ?? 1,
         limit: params?.limit ?? 10,
-        search: params?.search,
-      });
+      };
+
+      if (params?.search) {
+        queryParams.search = params.search;
+      }
+
+      if (params?.groupId !== undefined) {
+        queryParams.groupId = params.groupId;
+      }
+
+      // Add filter for ungrouped resources
+      if (params?.ungrouped) {
+        queryParams.ungrouped = true;
+      }
+
+      const response = await api.resources.resourcesControllerGetResources(
+        queryParams
+      );
       return response.data as ResourcesControllerGetResourcesData;
     },
   });

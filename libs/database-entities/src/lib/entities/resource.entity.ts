@@ -8,6 +8,7 @@ import {
   ViewEntity,
   ViewColumn,
   OneToOne,
+  ManyToOne,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { ResourceIntroduction } from './resourceIntroduction.entity';
@@ -15,6 +16,7 @@ import { ResourceUsage } from './resourceUsage.entity';
 import { ResourceIntroductionUser } from './resourceIntroductionUser.entity';
 import { MqttResourceConfig } from './mqttResourceConfig.entity';
 import { WebhookConfig } from './webhookConfig.entity';
+import { ResourceGroup } from './resourceGroup.entity';
 
 @Entity()
 export class Resource {
@@ -48,6 +50,14 @@ export class Resource {
   })
   imageFilename!: string | null;
 
+  @Column({ nullable: true })
+  @ApiProperty({
+    description: 'The id of the group this resource belongs to',
+    example: 15,
+    required: false,
+  })
+  groupId!: number | null;
+
   @CreateDateColumn()
   @ApiProperty({
     description: 'When the resource was created',
@@ -80,6 +90,9 @@ export class Resource {
 
   @OneToMany(() => WebhookConfig, (config) => config.resource)
   webhookConfigs!: WebhookConfig[];
+
+  @ManyToOne(() => ResourceGroup, (group) => group.resources)
+  group!: ResourceGroup;
 }
 
 @ViewEntity({

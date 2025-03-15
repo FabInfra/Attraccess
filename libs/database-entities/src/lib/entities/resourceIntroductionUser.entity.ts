@@ -9,6 +9,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { Resource } from './resource.entity';
 import { User } from './user.entity';
+import { ResourceGroup } from './resourceGroup.entity';
 
 @Entity()
 export class ResourceIntroductionUser {
@@ -19,12 +20,23 @@ export class ResourceIntroductionUser {
   })
   id!: number;
 
-  @Column()
+  @Column({ nullable: true, type: 'int' })
   @ApiProperty({
     description: 'The ID of the resource',
     example: 1,
+    required: false,
+    type: 'number',
   })
-  resourceId!: number;
+  resourceId!: number | null;
+
+  @Column({ nullable: true, type: 'int' })
+  @ApiProperty({
+    description: 'The ID of the resource group',
+    example: 1,
+    required: false,
+    type: 'number',
+  })
+  resourceGroupId!: number | null;
 
   @Column()
   @ApiProperty({
@@ -50,4 +62,12 @@ export class ResourceIntroductionUser {
     type: () => User,
   })
   user!: User;
+
+  @ManyToOne(() => ResourceGroup)
+  @JoinColumn({ name: 'resourceGroupId' })
+  @ApiProperty({
+    description: 'The resource group',
+    type: () => ResourceGroup,
+  })
+  resourceGroup!: ResourceGroup;
 }

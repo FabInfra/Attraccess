@@ -7,6 +7,7 @@ import {
   ResourceIntroductionUser,
   ResourceIntroductionHistoryItem,
   User,
+  ResourceGroup,
 } from '@attraccess/database-entities';
 import { ResourcesController } from './resources.controller';
 import { ResourcePermissionsGuard } from './guards/resourcePermissions.guard';
@@ -24,6 +25,7 @@ import { MqttModule } from '../mqtt/mqtt.module';
 import { WebhooksModule } from '../webhooks/webhooks.module';
 import { ResourcesCoreModule } from './resources-core.module';
 import { SSEModule } from './sse/sse.module';
+import { ResourceGroupsModule } from './groups/resource-groups.module';
 
 @Module({
   imports: [
@@ -34,6 +36,7 @@ import { SSEModule } from './sse/sse.module';
       ResourceIntroductionUser,
       ResourceIntroductionHistoryItem,
       User,
+      ResourceGroup,
     ]),
     ScheduleModule.forRoot(),
     FileStorageModule,
@@ -43,6 +46,7 @@ import { SSEModule } from './sse/sse.module';
     MqttModule,
     ResourcesCoreModule,
     SSEModule,
+    ResourceGroupsModule,
     forwardRef(() => WebhooksModule),
   ],
   controllers: [
@@ -60,6 +64,7 @@ import { SSEModule } from './sse/sse.module';
     ResourceUsageService,
     ResourceIntroductionService,
     ResourcesCoreModule,
+    ResourceGroupsModule,
   ],
 })
 export class ResourcesModule {}

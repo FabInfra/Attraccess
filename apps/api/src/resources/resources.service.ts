@@ -49,7 +49,7 @@ export class ResourcesService {
   async getResourceById(id: number): Promise<Resource | null> {
     const resource = await this.resourceRepository.findOne({
       where: { id },
-      relations: ['introductions', 'usages'],
+      relations: ['introductions', 'usages', 'group'],
     });
 
     if (!resource) {
@@ -101,11 +101,33 @@ export class ResourcesService {
   async listResources(
     page = 1,
     limit = 10,
-    search?: string
+    search?: string,
+    ungrouped?: boolean
   ): Promise<PaginatedResponse<Resource>> {
-    const where = search
-      ? [{ name: ILike(`%${search}%`) }, { description: ILike(`%${search}%`) }]
-      : {};
+    let where: any = {};
+
+    // Add search conditions if search parameter provided
+    if (search) {
+      where = [
+        { name: ILike(`%${search}%`) },
+        { description: ILike(`%${search}%`) },
+      ];
+    }
+
+    // Filter for ungrouped resources if requested
+    if (ungrouped) {
+      // If we already have search conditions
+      if (Array.isArray(where)) {
+        // Apply both search and ungrouped filter
+        where = where.map((condition) => ({
+          ...condition,
+          group: null,
+        }));
+      } else {
+        // Just filter for ungrouped
+        where.group = null;
+      }
+    }
 
     const [resources, total] = await this.resourceRepository.findAndCount({
       where,
@@ -114,6 +136,7 @@ export class ResourcesService {
       order: {
         createdAt: 'DESC',
       },
+      relations: ['group'],
     });
 
     return {

@@ -341,6 +341,11 @@ export interface CreateResourceDto {
    */
   description?: string;
   /**
+   * The ID of the group this resource belongs to
+   * @example 15
+   */
+  groupId?: number;
+  /**
    * Resource image file
    * @format binary
    */
@@ -368,6 +373,11 @@ export interface Resource {
    * @example "1234567890_abcdef.jpg"
    */
   imageFilename?: string;
+  /**
+   * The id of the group this resource belongs to
+   * @example 15
+   */
+  groupId?: number;
   /**
    * When the resource was created
    * @format date-time
@@ -399,6 +409,11 @@ export interface UpdateResourceDto {
    * @example "Prusa i3 MK3S+ 3D printer with 0.4mm nozzle"
    */
   description?: string;
+  /**
+   * The ID of the group this resource belongs to
+   * @example 15
+   */
+  groupId?: number;
   /**
    * New resource image file
    * @format binary
@@ -491,6 +506,29 @@ export interface CompleteIntroductionDto {
   userId?: number;
 }
 
+export interface ResourceGroup {
+  /**
+   * The unique identifier of the resource group
+   * @example 1
+   */
+  id: number;
+  /**
+   * The name of the resource group
+   * @example "3D Printers"
+   */
+  name: string;
+  /**
+   * When the resource group was created
+   * @format date-time
+   */
+  createdAt: string;
+  /**
+   * When the resource group was last updated
+   * @format date-time
+   */
+  updatedAt: string;
+}
+
 export interface ResourceIntroductionHistoryItem {
   /**
    * The unique identifier of the introduction history entry
@@ -537,7 +575,12 @@ export interface ResourceIntroduction {
    * The ID of the resource
    * @example 1
    */
-  resourceId: number;
+  resourceId?: number;
+  /**
+   * The ID of the resource group
+   * @example 1
+   */
+  resourceGroupId?: number;
   /**
    * The ID of the user who received the introduction
    * @example 1
@@ -560,6 +603,8 @@ export interface ResourceIntroduction {
    * @example "2021-01-01T00:00:00.000Z"
    */
   createdAt: string;
+  /** The resource group */
+  resourceGroup: ResourceGroup;
   /** The user who received the introduction */
   receiverUser: User;
   /** The user who tutored the receiver */
@@ -602,7 +647,12 @@ export interface ResourceIntroductionUser {
    * The ID of the resource
    * @example 1
    */
-  resourceId: number;
+  resourceId?: number;
+  /**
+   * The ID of the resource group
+   * @example 1
+   */
+  resourceGroupId?: number;
   /**
    * The ID of the user who can give introductions
    * @example 1
@@ -615,6 +665,8 @@ export interface ResourceIntroductionUser {
   grantedAt: string;
   /** The user who can give introductions */
   user: User;
+  /** The resource group */
+  resourceGroup: ResourceGroup;
 }
 
 export interface CanManageIntroducersResponseDto {
@@ -916,6 +968,37 @@ export interface MqttServerStatusDto {
 export interface AllMqttServerStatusesDto {
   /** Map of server IDs to their statuses */
   servers: Record<string, MqttServerStatusDto>;
+}
+
+export interface CreateResourceGroupDto {
+  /**
+   * The name of the resource group
+   * @example "3D Printers"
+   */
+  name: string;
+}
+
+export interface PaginatedResourceGroupResponseDto {
+  data: ResourceGroup[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface UpdateResourceGroupDto {
+  /**
+   * The name of the resource group
+   * @example "3D Printers"
+   */
+  name?: string;
+}
+
+export interface AssignResourceToGroupDto {
+  /**
+   * The ID of the resource to assign to the group
+   * @example 1
+   */
+  resourceId: number;
 }
 
 export interface WebhookConfigResponseDto {
@@ -1351,6 +1434,38 @@ export type MqttServerControllerGetServerStatusData = MqttServerStatusDto;
 export type MqttServerControllerGetAllServerStatusesData = AllMqttServerStatusesDto;
 
 export type SseControllerStreamEventsData = any;
+
+export type ResourceGroupsControllerCreateGroupData = ResourceGroup;
+
+export interface ResourceGroupsControllerGetGroupsParams {
+  /** @default 1 */
+  page?: number;
+  /** @default 10 */
+  limit?: number;
+  search?: string;
+}
+
+export type ResourceGroupsControllerGetGroupsData = PaginatedResourceGroupResponseDto;
+
+export type ResourceGroupsControllerGetGroupByIdData = ResourceGroup;
+
+export type ResourceGroupsControllerUpdateGroupData = ResourceGroup;
+
+export type ResourceGroupsControllerDeleteGroupData = any;
+
+export interface ResourceGroupsControllerGetResourcesInGroupParams {
+  /** @default 10 */
+  limit?: number;
+  /** @default 1 */
+  page?: number;
+  id: number;
+}
+
+export type ResourceGroupsControllerGetResourcesInGroupData = PaginatedResourceResponseDto;
+
+export type ResourceGroupsControllerAssignResourceToGroupData = Resource;
+
+export type ResourceGroupsControllerRemoveResourceFromGroupData = Resource;
 
 export type WebhookConfigControllerFindAllData = WebhookConfigResponseDto[];
 
@@ -2398,6 +2513,160 @@ export namespace Sse {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = SseControllerStreamEventsData;
+  }
+}
+
+export namespace ResourceGroups {
+  /**
+   * No description
+   * @tags Resource Groups
+   * @name ResourceGroupsControllerCreateGroup
+   * @summary Create a new resource group
+   * @request POST:/api/resource-groups
+   * @secure
+   */
+  export namespace ResourceGroupsControllerCreateGroup {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = CreateResourceGroupDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsControllerCreateGroupData;
+  }
+
+  /**
+   * No description
+   * @tags Resource Groups
+   * @name ResourceGroupsControllerGetGroups
+   * @summary Get all resource groups
+   * @request GET:/api/resource-groups
+   * @secure
+   */
+  export namespace ResourceGroupsControllerGetGroups {
+    export type RequestParams = {};
+    export type RequestQuery = {
+      /** @default 1 */
+      page?: number;
+      /** @default 10 */
+      limit?: number;
+      search?: string;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsControllerGetGroupsData;
+  }
+
+  /**
+   * No description
+   * @tags Resource Groups
+   * @name ResourceGroupsControllerGetGroupById
+   * @summary Get a resource group by ID
+   * @request GET:/api/resource-groups/{id}
+   * @secure
+   */
+  export namespace ResourceGroupsControllerGetGroupById {
+    export type RequestParams = {
+      id: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsControllerGetGroupByIdData;
+  }
+
+  /**
+   * No description
+   * @tags Resource Groups
+   * @name ResourceGroupsControllerUpdateGroup
+   * @summary Update a resource group
+   * @request PUT:/api/resource-groups/{id}
+   * @secure
+   */
+  export namespace ResourceGroupsControllerUpdateGroup {
+    export type RequestParams = {
+      id: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateResourceGroupDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsControllerUpdateGroupData;
+  }
+
+  /**
+   * No description
+   * @tags Resource Groups
+   * @name ResourceGroupsControllerDeleteGroup
+   * @summary Delete a resource group
+   * @request DELETE:/api/resource-groups/{id}
+   * @secure
+   */
+  export namespace ResourceGroupsControllerDeleteGroup {
+    export type RequestParams = {
+      id: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsControllerDeleteGroupData;
+  }
+
+  /**
+   * No description
+   * @tags Resource Groups
+   * @name ResourceGroupsControllerGetResourcesInGroup
+   * @summary Get all resources in a group
+   * @request GET:/api/resource-groups/{id}/resources
+   * @secure
+   */
+  export namespace ResourceGroupsControllerGetResourcesInGroup {
+    export type RequestParams = {
+      id: number;
+    };
+    export type RequestQuery = {
+      /** @default 10 */
+      limit?: number;
+      /** @default 1 */
+      page?: number;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsControllerGetResourcesInGroupData;
+  }
+
+  /**
+   * No description
+   * @tags Resource Groups
+   * @name ResourceGroupsControllerAssignResourceToGroup
+   * @summary Assign a resource to the group
+   * @request POST:/api/resource-groups/{id}/resources
+   * @secure
+   */
+  export namespace ResourceGroupsControllerAssignResourceToGroup {
+    export type RequestParams = {
+      id: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = AssignResourceToGroupDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsControllerAssignResourceToGroupData;
+  }
+
+  /**
+   * No description
+   * @tags Resource Groups
+   * @name ResourceGroupsControllerRemoveResourceFromGroup
+   * @summary Remove a resource from the group
+   * @request DELETE:/api/resource-groups/{id}/resources/{resourceId}
+   * @secure
+   */
+  export namespace ResourceGroupsControllerRemoveResourceFromGroup {
+    export type RequestParams = {
+      id: number;
+      resourceId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsControllerRemoveResourceFromGroupData;
   }
 }
 
@@ -3824,6 +4093,165 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<SseControllerStreamEventsData, any>({
         path: `/api/resources/${resourceId}/events`,
         method: 'GET',
+        ...params,
+      }),
+  };
+  resourceGroups = {
+    /**
+     * No description
+     *
+     * @tags Resource Groups
+     * @name ResourceGroupsControllerCreateGroup
+     * @summary Create a new resource group
+     * @request POST:/api/resource-groups
+     * @secure
+     */
+    resourceGroupsControllerCreateGroup: (data: CreateResourceGroupDto, params: RequestParams = {}) =>
+      this.request<ResourceGroupsControllerCreateGroupData, void>({
+        path: `/api/resource-groups`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resource Groups
+     * @name ResourceGroupsControllerGetGroups
+     * @summary Get all resource groups
+     * @request GET:/api/resource-groups
+     * @secure
+     */
+    resourceGroupsControllerGetGroups: (query: ResourceGroupsControllerGetGroupsParams, params: RequestParams = {}) =>
+      this.request<ResourceGroupsControllerGetGroupsData, void>({
+        path: `/api/resource-groups`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resource Groups
+     * @name ResourceGroupsControllerGetGroupById
+     * @summary Get a resource group by ID
+     * @request GET:/api/resource-groups/{id}
+     * @secure
+     */
+    resourceGroupsControllerGetGroupById: (id: number, params: RequestParams = {}) =>
+      this.request<ResourceGroupsControllerGetGroupByIdData, void>({
+        path: `/api/resource-groups/${id}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resource Groups
+     * @name ResourceGroupsControllerUpdateGroup
+     * @summary Update a resource group
+     * @request PUT:/api/resource-groups/{id}
+     * @secure
+     */
+    resourceGroupsControllerUpdateGroup: (id: number, data: UpdateResourceGroupDto, params: RequestParams = {}) =>
+      this.request<ResourceGroupsControllerUpdateGroupData, void>({
+        path: `/api/resource-groups/${id}`,
+        method: 'PUT',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resource Groups
+     * @name ResourceGroupsControllerDeleteGroup
+     * @summary Delete a resource group
+     * @request DELETE:/api/resource-groups/{id}
+     * @secure
+     */
+    resourceGroupsControllerDeleteGroup: (id: number, params: RequestParams = {}) =>
+      this.request<ResourceGroupsControllerDeleteGroupData, void>({
+        path: `/api/resource-groups/${id}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resource Groups
+     * @name ResourceGroupsControllerGetResourcesInGroup
+     * @summary Get all resources in a group
+     * @request GET:/api/resource-groups/{id}/resources
+     * @secure
+     */
+    resourceGroupsControllerGetResourcesInGroup: (
+      { id, ...query }: ResourceGroupsControllerGetResourcesInGroupParams,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceGroupsControllerGetResourcesInGroupData, void>({
+        path: `/api/resource-groups/${id}/resources`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resource Groups
+     * @name ResourceGroupsControllerAssignResourceToGroup
+     * @summary Assign a resource to the group
+     * @request POST:/api/resource-groups/{id}/resources
+     * @secure
+     */
+    resourceGroupsControllerAssignResourceToGroup: (
+      id: number,
+      data: AssignResourceToGroupDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceGroupsControllerAssignResourceToGroupData, void>({
+        path: `/api/resource-groups/${id}/resources`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resource Groups
+     * @name ResourceGroupsControllerRemoveResourceFromGroup
+     * @summary Remove a resource from the group
+     * @request DELETE:/api/resource-groups/{id}/resources/{resourceId}
+     * @secure
+     */
+    resourceGroupsControllerRemoveResourceFromGroup: (id: number, resourceId: number, params: RequestParams = {}) =>
+      this.request<ResourceGroupsControllerRemoveResourceFromGroupData, void>({
+        path: `/api/resource-groups/${id}/resources/${resourceId}`,
+        method: 'DELETE',
+        secure: true,
+        format: 'json',
         ...params,
       }),
   };
