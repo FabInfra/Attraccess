@@ -7,8 +7,8 @@ import { useAuth } from '../../hooks/useAuth';
 import { useTranslations } from '../../i18n';
 import * as en from './translations/toolbar.en';
 import * as de from './translations/toolbar.de';
-import { ViewMode } from './list';
 import { ButtonGroup } from '@heroui/react';
+import { ViewMode } from './ResourceList';
 
 interface ToolbarProps {
   onSearch: (value: string) => void;

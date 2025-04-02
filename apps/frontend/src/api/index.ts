@@ -43,6 +43,7 @@ const getApi = () => {
 };
 
 export function filenameToUrl(name: string) {
+  console.log(getBaseUrl(), name);
   return `${getBaseUrl()}${name}`;
 }
 

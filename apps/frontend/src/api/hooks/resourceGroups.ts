@@ -3,12 +3,12 @@ import {
   CreateResourceGroupDto,
   ResourceGroup,
   UpdateResourceGroupDto,
-  ListResourceGroupsParams,
   AssignResourceToGroupDto,
   ResourceGroupsControllerGetGroupsData,
   ResourceGroupsControllerGetResourcesInGroupData,
   Resource,
   ResourceGroupsControllerGetGroupsParams,
+  ResourceGroupsControllerGetResourcesInGroupParams,
 } from '@attraccess/api-client';
 import { ApiError, createQueryKeys } from './base';
 import getApi from '../index';
@@ -18,7 +18,7 @@ export const resourceGroupsKeys = {
   ...createQueryKeys('resourceGroups'),
   resources: (
     groupId: number,
-    params?: Pick<ListResourceGroupsParams, 'page' | 'limit'>
+    params?: Pick<ResourceGroupsControllerGetResourcesInGroupParams, 'page' | 'limit'>
   ) => [...resourceGroupsKeys.detail(groupId), 'resources', params || {}],
 };
 
@@ -52,7 +52,7 @@ export function useResourceGroup(id: number) {
 
 export function useResourceGroupResources(
   groupId: number,
-  params?: Pick<ListResourceGroupsParams, 'page' | 'limit'>
+  params?: Pick<ResourceGroupsControllerGetResourcesInGroupParams, 'page' | 'limit'>
 ) {
   return useQuery({
     queryKey: resourceGroupsKeys.resources(groupId, params),

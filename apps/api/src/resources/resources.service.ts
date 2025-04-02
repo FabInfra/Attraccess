@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, ILike } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Resource, User } from '@attraccess/database-entities';
 import { CreateResourceDto } from './dtos/createResource.dto';
 import { UpdateResourceDto } from './dtos/updateResource.dto';
@@ -104,40 +104,19 @@ export class ResourcesService {
     search?: string,
     ungrouped?: boolean
   ): Promise<PaginatedResponse<Resource>> {
-    let where: any = {};
+    const query = this.resourceRepository.createQueryBuilder('resource');
 
-    // Add search conditions if search parameter provided
     if (search) {
-      where = [
-        { name: ILike(`%${search}%`) },
-        { description: ILike(`%${search}%`) },
-      ];
+      query.where('resource.name ILIKE :search OR resource.description ILIKE :search', { search: `%${search}%` });
     }
 
-    // Filter for ungrouped resources if requested
     if (ungrouped) {
-      // If we already have search conditions
-      if (Array.isArray(where)) {
-        // Apply both search and ungrouped filter
-        where = where.map((condition) => ({
-          ...condition,
-          group: null,
-        }));
-      } else {
-        // Just filter for ungrouped
-        where.group = null;
-      }
+      query.andWhere('resource.group IS NULL');
     }
 
-    const [resources, total] = await this.resourceRepository.findAndCount({
-      where,
-      skip: (page - 1) * limit,
-      take: limit,
-      order: {
-        createdAt: 'DESC',
-      },
-      relations: ['group'],
-    });
+    query.orderBy('resource.createdAt', 'DESC');
+
+    const [resources, total] = await query.getManyAndCount();
 
     return {
       data: resources,

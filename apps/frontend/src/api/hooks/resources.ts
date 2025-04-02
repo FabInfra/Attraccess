@@ -27,7 +27,8 @@ export function useResources(params?: ExtendedResourcesParams) {
     queryKey: resourcesKeys.list(params),
     queryFn: async () => {
       const api = getApi();
-      const queryParams: any = {
+      // Use Partial<> to make all properties optional
+      const queryParams: Partial<ResourcesControllerGetResourcesParams> & { groupId?: number } = {
         page: params?.page ?? 1,
         limit: params?.limit ?? 10,
       };

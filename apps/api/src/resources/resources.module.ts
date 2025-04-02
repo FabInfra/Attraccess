@@ -44,9 +44,9 @@ import { ResourceGroupsModule } from './groups/resource-groups.module';
     MqttResourceModule,
     ConfigModule,
     MqttModule,
-    ResourcesCoreModule,
     SSEModule,
     ResourceGroupsModule,
+    ResourcesCoreModule,
     forwardRef(() => WebhooksModule),
   ],
   controllers: [

@@ -22,11 +22,16 @@ import { AssignResourceToGroupDto } from './dtos/assign-resource-to-group.dto';
 import { PaginatedResourceResponseDto } from '../dtos/paginatedResourceResponse.dto';
 import { Auth } from '../../users-and-auth/strategies/systemPermissions.guard';
 import { CanManageResources } from '../guards/can-manage-resources.decorator';
+import { transformResource } from '../resources.utils';
+import { ResourceImageService } from '../../common/services/resource-image.service';
 
 @ApiTags('Resource Groups')
 @Controller('resource-groups')
 export class ResourceGroupsController {
-  constructor(private readonly resourceGroupsService: ResourceGroupsService) {}
+  constructor(
+    private readonly resourceGroupsService: ResourceGroupsService,
+    private readonly resourceImageService: ResourceImageService
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new resource group' })
@@ -157,7 +162,12 @@ export class ResourceGroupsController {
     @Query('page') page = 1,
     @Query('limit') limit = 10
   ): Promise<PaginatedResponse<Resource>> {
-    return this.resourceGroupsService.getResourcesInGroup(id, page, limit);
+    const result = await this.resourceGroupsService.getResourcesInGroup(id, page, limit);
+    
+    return {
+      ...result,
+      data: result.data.map((resource) => transformResource(resource, this.resourceImageService)),
+    };
   }
 
   @Post(':id/resources')

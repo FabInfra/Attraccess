@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { ResourceList, ViewMode } from './list';
+import { ResourceList, ViewMode } from './ResourceList';
 
 export function ResourcesPage() {
   const [searchParams, setSearchParams] = useSearchParams();

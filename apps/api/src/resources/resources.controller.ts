@@ -29,6 +29,7 @@ import { FileUpload } from '../common/types/file-upload.types';
 import { PaginatedResourceResponseDto } from './dtos/paginatedResourceResponse.dto';
 import { ResourceImageService } from '../common/services/resource-image.service';
 import { CanManageResources } from './guards/can-manage-resources.decorator';
+import { transformResource } from './resources.utils';
 
 @ApiTags('Resources')
 @Controller('resources')
@@ -37,23 +38,6 @@ export class ResourcesController {
     private readonly resourcesService: ResourcesService,
     private readonly resourceImageService: ResourceImageService
   ) {}
-
-  private transformResource = (resource: Resource): Resource => {
-    const result = {
-      ...resource,
-      imageFilename: this.resourceImageService.getPublicPath(
-        resource.id,
-        resource.imageFilename
-      ),
-    };
-
-    // Remove circular references
-    if (resource.group) {
-      delete resource.group.resources;
-    }
-
-    return result;
-  };
 
   @Post()
   @ApiOperation({ summary: 'Create a new resource' })
@@ -73,7 +57,7 @@ export class ResourcesController {
       createDto,
       image
     );
-    return this.transformResource(resource);
+    return transformResource(resource, this.resourceImageService);
   }
 
   @Get()
@@ -98,7 +82,7 @@ export class ResourcesController {
       query.ungrouped
     );
 
-    resources.data = resources.data.map(this.transformResource);
+    resources.data = resources.data.map((resource) => transformResource(resource, this.resourceImageService));
     return resources;
   }
 
@@ -122,7 +106,7 @@ export class ResourcesController {
     @Param('id', ParseIntPipe) id: number
   ): Promise<Resource> {
     const resource = await this.resourcesService.getResourceById(id);
-    return this.transformResource(resource);
+    return transformResource(resource, this.resourceImageService);
   }
 
   @Put(':id')
@@ -145,7 +129,7 @@ export class ResourcesController {
       updateDto,
       image
     );
-    return this.transformResource(resource);
+    return transformResource(resource, this.resourceImageService);
   }
 
   @Delete(':id')

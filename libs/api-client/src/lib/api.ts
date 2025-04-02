@@ -1323,6 +1323,8 @@ export interface ResourcesControllerGetResourcesParams {
   limit?: number;
   /** Search term to filter resources */
   search?: string;
+  /** Filter for ungrouped resources only */
+  ungrouped?: boolean;
 }
 
 export type ResourcesControllerGetResourcesData = PaginatedResourceResponseDto;
@@ -1874,6 +1876,8 @@ export namespace Resources {
       limit?: number;
       /** Search term to filter resources */
       search?: string;
+      /** Filter for ungrouped resources only */
+      ungrouped?: boolean;
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
