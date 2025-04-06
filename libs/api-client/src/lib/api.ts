@@ -413,7 +413,7 @@ export interface UpdateResourceDto {
    * The ID of the group this resource belongs to
    * @example 15
    */
-  groupId?: number;
+  groupId?: number | null;
   /**
    * New resource image file
    * @format binary
@@ -672,6 +672,61 @@ export interface ResourceIntroductionUser {
 export interface CanManageIntroducersResponseDto {
   /**
    * Whether the user can manage introducers for the resource
+   * @example true
+   */
+  canManageIntroducers: boolean;
+}
+
+export interface CreateResourceGroupDto {
+  /**
+   * The name of the resource group
+   * @example "3D Printers"
+   */
+  name: string;
+}
+
+export interface PaginatedResourceGroupResponseDto {
+  data: ResourceGroup[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface UpdateResourceGroupDto {
+  /**
+   * The name of the resource group
+   * @example "3D Printers"
+   */
+  name?: string;
+}
+
+export interface AssignResourceToGroupDto {
+  /**
+   * The ID of the resource to assign to the group
+   * @example 1
+   */
+  resourceId: number;
+}
+
+export interface CreateIntroductionDto {
+  /**
+   * User ID of the person receiving the introduction
+   * @example 1
+   */
+  receiverUserId: number;
+}
+
+export interface PaginatedGroupIntroductionResponseDto {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  data: ResourceIntroduction[];
+}
+
+export interface CanManageGroupIntroducersResponseDto {
+  /**
+   * Whether the user can manage introducers for the group
    * @example true
    */
   canManageIntroducers: boolean;
@@ -968,37 +1023,6 @@ export interface MqttServerStatusDto {
 export interface AllMqttServerStatusesDto {
   /** Map of server IDs to their statuses */
   servers: Record<string, MqttServerStatusDto>;
-}
-
-export interface CreateResourceGroupDto {
-  /**
-   * The name of the resource group
-   * @example "3D Printers"
-   */
-  name: string;
-}
-
-export interface PaginatedResourceGroupResponseDto {
-  data: ResourceGroup[];
-  total: number;
-  page: number;
-  limit: number;
-}
-
-export interface UpdateResourceGroupDto {
-  /**
-   * The name of the resource group
-   * @example "3D Printers"
-   */
-  name?: string;
-}
-
-export interface AssignResourceToGroupDto {
-  /**
-   * The ID of the resource to assign to the group
-   * @example 1
-   */
-  resourceId: number;
 }
 
 export interface WebhookConfigResponseDto {
@@ -1411,32 +1435,6 @@ export type ResourceIntroducersControllerRemoveIntroducerData = any;
 
 export type ResourceIntroducersControllerCanManageIntroducersData = CanManageIntroducersResponseDto;
 
-export type MqttResourceConfigControllerGetMqttConfigData = MqttResourceConfig;
-
-export type MqttResourceConfigControllerCreateOrUpdateMqttConfigData = MqttResourceConfig;
-
-export type MqttResourceConfigControllerDeleteMqttConfigData = any;
-
-export type MqttResourceConfigControllerTestMqttConfigData = TestMqttConfigResponseDto;
-
-export type MqttServerControllerGetMqttServersData = MqttServer[];
-
-export type MqttServerControllerCreateMqttServerData = MqttServer;
-
-export type MqttServerControllerGetMqttServerByIdData = MqttServer;
-
-export type MqttServerControllerUpdateMqttServerData = MqttServer;
-
-export type MqttServerControllerDeleteMqttServerData = any;
-
-export type MqttServerControllerTestMqttServerConnectionData = TestConnectionResponseDto;
-
-export type MqttServerControllerGetServerStatusData = MqttServerStatusDto;
-
-export type MqttServerControllerGetAllServerStatusesData = AllMqttServerStatusesDto;
-
-export type SseControllerStreamEventsData = any;
-
 export type ResourceGroupsControllerCreateGroupData = ResourceGroup;
 
 export interface ResourceGroupsControllerGetGroupsParams {
@@ -1468,6 +1466,77 @@ export type ResourceGroupsControllerGetResourcesInGroupData = PaginatedResourceR
 export type ResourceGroupsControllerAssignResourceToGroupData = Resource;
 
 export type ResourceGroupsControllerRemoveResourceFromGroupData = Resource;
+
+export type GroupIntroductionControllerCreateIntroductionData = ResourceIntroduction;
+
+export interface GroupIntroductionControllerGetGroupIntroductionsParams {
+  /**
+   * Page number (1-based)
+   * @min 1
+   * @default 1
+   */
+  page: number;
+  /**
+   * Number of items per page
+   * @min 1
+   * @max 100
+   * @default 10
+   */
+  limit: number;
+  groupId: number;
+}
+
+export type GroupIntroductionControllerGetGroupIntroductionsData = PaginatedGroupIntroductionResponseDto;
+
+export interface GroupIntroductionControllerCheckIntroductionStatusData {
+  hasValidIntroduction?: boolean;
+}
+
+export type GroupIntroductionControllerGetGroupIntroductionByIdData = ResourceIntroduction;
+
+export type GroupIntroductionControllerGetIntroductionHistoryData = ResourceIntroductionHistoryItem[];
+
+export type GroupIntroductionControllerRevokeIntroductionData = ResourceIntroductionHistoryItem;
+
+export type GroupIntroductionControllerUnrevokeIntroductionData = ResourceIntroductionHistoryItem;
+
+export interface GroupIntroductionControllerCanManageIntroductionsData {
+  canManageIntroductions?: boolean;
+}
+
+export type GroupIntroducersControllerGetGroupIntroducersData = ResourceIntroductionUser[];
+
+export type GroupIntroducersControllerAddIntroducerData = ResourceIntroductionUser;
+
+export type GroupIntroducersControllerRemoveIntroducerData = any;
+
+export type GroupIntroducersControllerCanManageIntroducersData = CanManageGroupIntroducersResponseDto;
+
+export type MqttResourceConfigControllerGetMqttConfigData = MqttResourceConfig;
+
+export type MqttResourceConfigControllerCreateOrUpdateMqttConfigData = MqttResourceConfig;
+
+export type MqttResourceConfigControllerDeleteMqttConfigData = any;
+
+export type MqttResourceConfigControllerTestMqttConfigData = TestMqttConfigResponseDto;
+
+export type MqttServerControllerGetMqttServersData = MqttServer[];
+
+export type MqttServerControllerCreateMqttServerData = MqttServer;
+
+export type MqttServerControllerGetMqttServerByIdData = MqttServer;
+
+export type MqttServerControllerUpdateMqttServerData = MqttServer;
+
+export type MqttServerControllerDeleteMqttServerData = any;
+
+export type MqttServerControllerTestMqttServerConnectionData = TestConnectionResponseDto;
+
+export type MqttServerControllerGetServerStatusData = MqttServerStatusDto;
+
+export type MqttServerControllerGetAllServerStatusesData = AllMqttServerStatusesDto;
+
+export type SseControllerStreamEventsData = any;
 
 export type WebhookConfigControllerFindAllData = WebhookConfigResponseDto[];
 
@@ -2288,6 +2357,400 @@ export namespace ResourceIntroducers {
   }
 }
 
+export namespace ResourceGroups {
+  /**
+   * No description
+   * @tags Resource Groups
+   * @name ResourceGroupsControllerCreateGroup
+   * @summary Create a new resource group
+   * @request POST:/api/resource-groups
+   * @secure
+   */
+  export namespace ResourceGroupsControllerCreateGroup {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = CreateResourceGroupDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsControllerCreateGroupData;
+  }
+
+  /**
+   * No description
+   * @tags Resource Groups
+   * @name ResourceGroupsControllerGetGroups
+   * @summary Get all resource groups
+   * @request GET:/api/resource-groups
+   * @secure
+   */
+  export namespace ResourceGroupsControllerGetGroups {
+    export type RequestParams = {};
+    export type RequestQuery = {
+      /** @default 1 */
+      page?: number;
+      /** @default 10 */
+      limit?: number;
+      search?: string;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsControllerGetGroupsData;
+  }
+
+  /**
+   * No description
+   * @tags Resource Groups
+   * @name ResourceGroupsControllerGetGroupById
+   * @summary Get a resource group by ID
+   * @request GET:/api/resource-groups/{id}
+   * @secure
+   */
+  export namespace ResourceGroupsControllerGetGroupById {
+    export type RequestParams = {
+      id: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsControllerGetGroupByIdData;
+  }
+
+  /**
+   * No description
+   * @tags Resource Groups
+   * @name ResourceGroupsControllerUpdateGroup
+   * @summary Update a resource group
+   * @request PUT:/api/resource-groups/{id}
+   * @secure
+   */
+  export namespace ResourceGroupsControllerUpdateGroup {
+    export type RequestParams = {
+      id: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateResourceGroupDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsControllerUpdateGroupData;
+  }
+
+  /**
+   * No description
+   * @tags Resource Groups
+   * @name ResourceGroupsControllerDeleteGroup
+   * @summary Delete a resource group
+   * @request DELETE:/api/resource-groups/{id}
+   * @secure
+   */
+  export namespace ResourceGroupsControllerDeleteGroup {
+    export type RequestParams = {
+      id: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsControllerDeleteGroupData;
+  }
+
+  /**
+   * No description
+   * @tags Resource Groups
+   * @name ResourceGroupsControllerGetResourcesInGroup
+   * @summary Get all resources in a group
+   * @request GET:/api/resource-groups/{id}/resources
+   * @secure
+   */
+  export namespace ResourceGroupsControllerGetResourcesInGroup {
+    export type RequestParams = {
+      id: number;
+    };
+    export type RequestQuery = {
+      /** @default 10 */
+      limit?: number;
+      /** @default 1 */
+      page?: number;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsControllerGetResourcesInGroupData;
+  }
+
+  /**
+   * No description
+   * @tags Resource Groups
+   * @name ResourceGroupsControllerAssignResourceToGroup
+   * @summary Assign a resource to the group
+   * @request POST:/api/resource-groups/{id}/resources
+   * @secure
+   */
+  export namespace ResourceGroupsControllerAssignResourceToGroup {
+    export type RequestParams = {
+      id: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = AssignResourceToGroupDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsControllerAssignResourceToGroupData;
+  }
+
+  /**
+   * No description
+   * @tags Resource Groups
+   * @name ResourceGroupsControllerRemoveResourceFromGroup
+   * @summary Remove a resource from the group
+   * @request DELETE:/api/resource-groups/{id}/resources/{resourceId}
+   * @secure
+   */
+  export namespace ResourceGroupsControllerRemoveResourceFromGroup {
+    export type RequestParams = {
+      id: number;
+      resourceId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsControllerRemoveResourceFromGroupData;
+  }
+}
+
+export namespace GroupIntroductions {
+  /**
+   * @description Creates an introduction record for a user, typically performed by an authorized introducer or manager.
+   * @tags Group Introductions
+   * @name GroupIntroductionControllerCreateIntroduction
+   * @summary Create a group introduction for a user
+   * @request POST:/api/groups/{groupId}/introductions/create
+   * @secure
+   */
+  export namespace GroupIntroductionControllerCreateIntroduction {
+    export type RequestParams = {
+      groupId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = CreateIntroductionDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = GroupIntroductionControllerCreateIntroductionData;
+  }
+
+  /**
+   * No description
+   * @tags Group Introductions
+   * @name GroupIntroductionControllerGetGroupIntroductions
+   * @summary Get all introductions for a group
+   * @request GET:/api/groups/{groupId}/introductions
+   * @secure
+   */
+  export namespace GroupIntroductionControllerGetGroupIntroductions {
+    export type RequestParams = {
+      groupId: number;
+    };
+    export type RequestQuery = {
+      /**
+       * Page number (1-based)
+       * @min 1
+       * @default 1
+       */
+      page: number;
+      /**
+       * Number of items per page
+       * @min 1
+       * @max 100
+       * @default 10
+       */
+      limit: number;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = GroupIntroductionControllerGetGroupIntroductionsData;
+  }
+
+  /**
+   * @description Check if the logged-in user has a completed introduction for this group that is not revoked
+   * @tags Group Introductions
+   * @name GroupIntroductionControllerCheckIntroductionStatus
+   * @summary Check if current user has a valid introduction for the group
+   * @request GET:/api/groups/{groupId}/introductions/status
+   * @secure
+   */
+  export namespace GroupIntroductionControllerCheckIntroductionStatus {
+    export type RequestParams = {
+      groupId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = GroupIntroductionControllerCheckIntroductionStatusData;
+  }
+
+  /**
+   * @description Retrieve details of a specific introduction within a group.
+   * @tags Group Introductions
+   * @name GroupIntroductionControllerGetGroupIntroductionById
+   * @summary Get a single group introduction by ID
+   * @request GET:/api/groups/{groupId}/introductions/{introductionId}
+   * @secure
+   */
+  export namespace GroupIntroductionControllerGetGroupIntroductionById {
+    export type RequestParams = {
+      groupId: number;
+      introductionId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = GroupIntroductionControllerGetGroupIntroductionByIdData;
+  }
+
+  /**
+   * No description
+   * @tags Group Introductions
+   * @name GroupIntroductionControllerGetIntroductionHistory
+   * @summary Get history for a specific group introduction
+   * @request GET:/api/groups/{groupId}/introductions/{introductionId}/history
+   * @secure
+   */
+  export namespace GroupIntroductionControllerGetIntroductionHistory {
+    export type RequestParams = {
+      groupId: number;
+      introductionId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = GroupIntroductionControllerGetIntroductionHistoryData;
+  }
+
+  /**
+   * No description
+   * @tags Group Introductions
+   * @name GroupIntroductionControllerRevokeIntroduction
+   * @summary Revoke a group introduction
+   * @request POST:/api/groups/{groupId}/introductions/{introductionId}/revoke
+   * @secure
+   */
+  export namespace GroupIntroductionControllerRevokeIntroduction {
+    export type RequestParams = {
+      groupId: number;
+      introductionId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = RevokeIntroductionDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = GroupIntroductionControllerRevokeIntroductionData;
+  }
+
+  /**
+   * No description
+   * @tags Group Introductions
+   * @name GroupIntroductionControllerUnrevokeIntroduction
+   * @summary Unrevoke a group introduction
+   * @request POST:/api/groups/{groupId}/introductions/{introductionId}/unrevoke
+   * @secure
+   */
+  export namespace GroupIntroductionControllerUnrevokeIntroduction {
+    export type RequestParams = {
+      groupId: number;
+      introductionId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UnrevokeIntroductionDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = GroupIntroductionControllerUnrevokeIntroductionData;
+  }
+
+  /**
+   * No description
+   * @tags Group Introductions
+   * @name GroupIntroductionControllerCanManageIntroductions
+   * @summary Check if current user can manage introductions for the group
+   * @request GET:/api/groups/{groupId}/introductions/permissions/manage
+   * @secure
+   */
+  export namespace GroupIntroductionControllerCanManageIntroductions {
+    export type RequestParams = {
+      groupId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = GroupIntroductionControllerCanManageIntroductionsData;
+  }
+}
+
+export namespace GroupIntroducers {
+  /**
+   * No description
+   * @tags Group Introducers
+   * @name GroupIntroducersControllerGetGroupIntroducers
+   * @summary Get all authorized introducers for a group
+   * @request GET:/api/groups/{groupId}/introducers
+   * @secure
+   */
+  export namespace GroupIntroducersControllerGetGroupIntroducers {
+    export type RequestParams = {
+      groupId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = GroupIntroducersControllerGetGroupIntroducersData;
+  }
+
+  /**
+   * No description
+   * @tags Group Introducers
+   * @name GroupIntroducersControllerAddIntroducer
+   * @summary Add a user as an introducer for a group
+   * @request POST:/api/groups/{groupId}/introducers/{userId}
+   * @secure
+   */
+  export namespace GroupIntroducersControllerAddIntroducer {
+    export type RequestParams = {
+      groupId: number;
+      userId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = GroupIntroducersControllerAddIntroducerData;
+  }
+
+  /**
+   * No description
+   * @tags Group Introducers
+   * @name GroupIntroducersControllerRemoveIntroducer
+   * @summary Remove a user as an introducer for a group
+   * @request DELETE:/api/groups/{groupId}/introducers/{userId}
+   * @secure
+   */
+  export namespace GroupIntroducersControllerRemoveIntroducer {
+    export type RequestParams = {
+      groupId: number;
+      userId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = GroupIntroducersControllerRemoveIntroducerData;
+  }
+
+  /**
+   * No description
+   * @tags Group Introducers
+   * @name GroupIntroducersControllerCanManageIntroducers
+   * @summary Check if the current user can manage introducers for a group
+   * @request GET:/api/groups/{groupId}/introducers/can-manage
+   * @secure
+   */
+  export namespace GroupIntroducersControllerCanManageIntroducers {
+    export type RequestParams = {
+      groupId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = GroupIntroducersControllerCanManageIntroducersData;
+  }
+}
+
 export namespace MqttResourceConfiguration {
   /**
    * No description
@@ -2517,160 +2980,6 @@ export namespace Sse {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = SseControllerStreamEventsData;
-  }
-}
-
-export namespace ResourceGroups {
-  /**
-   * No description
-   * @tags Resource Groups
-   * @name ResourceGroupsControllerCreateGroup
-   * @summary Create a new resource group
-   * @request POST:/api/resource-groups
-   * @secure
-   */
-  export namespace ResourceGroupsControllerCreateGroup {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = CreateResourceGroupDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = ResourceGroupsControllerCreateGroupData;
-  }
-
-  /**
-   * No description
-   * @tags Resource Groups
-   * @name ResourceGroupsControllerGetGroups
-   * @summary Get all resource groups
-   * @request GET:/api/resource-groups
-   * @secure
-   */
-  export namespace ResourceGroupsControllerGetGroups {
-    export type RequestParams = {};
-    export type RequestQuery = {
-      /** @default 1 */
-      page?: number;
-      /** @default 10 */
-      limit?: number;
-      search?: string;
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = ResourceGroupsControllerGetGroupsData;
-  }
-
-  /**
-   * No description
-   * @tags Resource Groups
-   * @name ResourceGroupsControllerGetGroupById
-   * @summary Get a resource group by ID
-   * @request GET:/api/resource-groups/{id}
-   * @secure
-   */
-  export namespace ResourceGroupsControllerGetGroupById {
-    export type RequestParams = {
-      id: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = ResourceGroupsControllerGetGroupByIdData;
-  }
-
-  /**
-   * No description
-   * @tags Resource Groups
-   * @name ResourceGroupsControllerUpdateGroup
-   * @summary Update a resource group
-   * @request PUT:/api/resource-groups/{id}
-   * @secure
-   */
-  export namespace ResourceGroupsControllerUpdateGroup {
-    export type RequestParams = {
-      id: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = UpdateResourceGroupDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = ResourceGroupsControllerUpdateGroupData;
-  }
-
-  /**
-   * No description
-   * @tags Resource Groups
-   * @name ResourceGroupsControllerDeleteGroup
-   * @summary Delete a resource group
-   * @request DELETE:/api/resource-groups/{id}
-   * @secure
-   */
-  export namespace ResourceGroupsControllerDeleteGroup {
-    export type RequestParams = {
-      id: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = ResourceGroupsControllerDeleteGroupData;
-  }
-
-  /**
-   * No description
-   * @tags Resource Groups
-   * @name ResourceGroupsControllerGetResourcesInGroup
-   * @summary Get all resources in a group
-   * @request GET:/api/resource-groups/{id}/resources
-   * @secure
-   */
-  export namespace ResourceGroupsControllerGetResourcesInGroup {
-    export type RequestParams = {
-      id: number;
-    };
-    export type RequestQuery = {
-      /** @default 10 */
-      limit?: number;
-      /** @default 1 */
-      page?: number;
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = ResourceGroupsControllerGetResourcesInGroupData;
-  }
-
-  /**
-   * No description
-   * @tags Resource Groups
-   * @name ResourceGroupsControllerAssignResourceToGroup
-   * @summary Assign a resource to the group
-   * @request POST:/api/resource-groups/{id}/resources
-   * @secure
-   */
-  export namespace ResourceGroupsControllerAssignResourceToGroup {
-    export type RequestParams = {
-      id: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = AssignResourceToGroupDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = ResourceGroupsControllerAssignResourceToGroupData;
-  }
-
-  /**
-   * No description
-   * @tags Resource Groups
-   * @name ResourceGroupsControllerRemoveResourceFromGroup
-   * @summary Remove a resource from the group
-   * @request DELETE:/api/resource-groups/{id}/resources/{resourceId}
-   * @secure
-   */
-  export namespace ResourceGroupsControllerRemoveResourceFromGroup {
-    export type RequestParams = {
-      id: number;
-      resourceId: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = ResourceGroupsControllerRemoveResourceFromGroupData;
   }
 }
 
@@ -3859,6 +4168,414 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         ...params,
       }),
   };
+  resourceGroups = {
+    /**
+     * No description
+     *
+     * @tags Resource Groups
+     * @name ResourceGroupsControllerCreateGroup
+     * @summary Create a new resource group
+     * @request POST:/api/resource-groups
+     * @secure
+     */
+    resourceGroupsControllerCreateGroup: (data: CreateResourceGroupDto, params: RequestParams = {}) =>
+      this.request<ResourceGroupsControllerCreateGroupData, void>({
+        path: `/api/resource-groups`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resource Groups
+     * @name ResourceGroupsControllerGetGroups
+     * @summary Get all resource groups
+     * @request GET:/api/resource-groups
+     * @secure
+     */
+    resourceGroupsControllerGetGroups: (query: ResourceGroupsControllerGetGroupsParams, params: RequestParams = {}) =>
+      this.request<ResourceGroupsControllerGetGroupsData, void>({
+        path: `/api/resource-groups`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resource Groups
+     * @name ResourceGroupsControllerGetGroupById
+     * @summary Get a resource group by ID
+     * @request GET:/api/resource-groups/{id}
+     * @secure
+     */
+    resourceGroupsControllerGetGroupById: (id: number, params: RequestParams = {}) =>
+      this.request<ResourceGroupsControllerGetGroupByIdData, void>({
+        path: `/api/resource-groups/${id}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resource Groups
+     * @name ResourceGroupsControllerUpdateGroup
+     * @summary Update a resource group
+     * @request PUT:/api/resource-groups/{id}
+     * @secure
+     */
+    resourceGroupsControllerUpdateGroup: (id: number, data: UpdateResourceGroupDto, params: RequestParams = {}) =>
+      this.request<ResourceGroupsControllerUpdateGroupData, void>({
+        path: `/api/resource-groups/${id}`,
+        method: 'PUT',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resource Groups
+     * @name ResourceGroupsControllerDeleteGroup
+     * @summary Delete a resource group
+     * @request DELETE:/api/resource-groups/{id}
+     * @secure
+     */
+    resourceGroupsControllerDeleteGroup: (id: number, params: RequestParams = {}) =>
+      this.request<ResourceGroupsControllerDeleteGroupData, void>({
+        path: `/api/resource-groups/${id}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resource Groups
+     * @name ResourceGroupsControllerGetResourcesInGroup
+     * @summary Get all resources in a group
+     * @request GET:/api/resource-groups/{id}/resources
+     * @secure
+     */
+    resourceGroupsControllerGetResourcesInGroup: (
+      { id, ...query }: ResourceGroupsControllerGetResourcesInGroupParams,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceGroupsControllerGetResourcesInGroupData, void>({
+        path: `/api/resource-groups/${id}/resources`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resource Groups
+     * @name ResourceGroupsControllerAssignResourceToGroup
+     * @summary Assign a resource to the group
+     * @request POST:/api/resource-groups/{id}/resources
+     * @secure
+     */
+    resourceGroupsControllerAssignResourceToGroup: (
+      id: number,
+      data: AssignResourceToGroupDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceGroupsControllerAssignResourceToGroupData, void>({
+        path: `/api/resource-groups/${id}/resources`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resource Groups
+     * @name ResourceGroupsControllerRemoveResourceFromGroup
+     * @summary Remove a resource from the group
+     * @request DELETE:/api/resource-groups/{id}/resources/{resourceId}
+     * @secure
+     */
+    resourceGroupsControllerRemoveResourceFromGroup: (id: number, resourceId: number, params: RequestParams = {}) =>
+      this.request<ResourceGroupsControllerRemoveResourceFromGroupData, void>({
+        path: `/api/resource-groups/${id}/resources/${resourceId}`,
+        method: 'DELETE',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+  };
+  groupIntroductions = {
+    /**
+     * @description Creates an introduction record for a user, typically performed by an authorized introducer or manager.
+     *
+     * @tags Group Introductions
+     * @name GroupIntroductionControllerCreateIntroduction
+     * @summary Create a group introduction for a user
+     * @request POST:/api/groups/{groupId}/introductions/create
+     * @secure
+     */
+    groupIntroductionControllerCreateIntroduction: (
+      groupId: number,
+      data: CreateIntroductionDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<GroupIntroductionControllerCreateIntroductionData, void>({
+        path: `/api/groups/${groupId}/introductions/create`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Group Introductions
+     * @name GroupIntroductionControllerGetGroupIntroductions
+     * @summary Get all introductions for a group
+     * @request GET:/api/groups/{groupId}/introductions
+     * @secure
+     */
+    groupIntroductionControllerGetGroupIntroductions: (
+      { groupId, ...query }: GroupIntroductionControllerGetGroupIntroductionsParams,
+      params: RequestParams = {},
+    ) =>
+      this.request<GroupIntroductionControllerGetGroupIntroductionsData, void>({
+        path: `/api/groups/${groupId}/introductions`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Check if the logged-in user has a completed introduction for this group that is not revoked
+     *
+     * @tags Group Introductions
+     * @name GroupIntroductionControllerCheckIntroductionStatus
+     * @summary Check if current user has a valid introduction for the group
+     * @request GET:/api/groups/{groupId}/introductions/status
+     * @secure
+     */
+    groupIntroductionControllerCheckIntroductionStatus: (groupId: number, params: RequestParams = {}) =>
+      this.request<GroupIntroductionControllerCheckIntroductionStatusData, void>({
+        path: `/api/groups/${groupId}/introductions/status`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Retrieve details of a specific introduction within a group.
+     *
+     * @tags Group Introductions
+     * @name GroupIntroductionControllerGetGroupIntroductionById
+     * @summary Get a single group introduction by ID
+     * @request GET:/api/groups/{groupId}/introductions/{introductionId}
+     * @secure
+     */
+    groupIntroductionControllerGetGroupIntroductionById: (
+      groupId: number,
+      introductionId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<GroupIntroductionControllerGetGroupIntroductionByIdData, void>({
+        path: `/api/groups/${groupId}/introductions/${introductionId}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Group Introductions
+     * @name GroupIntroductionControllerGetIntroductionHistory
+     * @summary Get history for a specific group introduction
+     * @request GET:/api/groups/{groupId}/introductions/{introductionId}/history
+     * @secure
+     */
+    groupIntroductionControllerGetIntroductionHistory: (
+      groupId: number,
+      introductionId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<GroupIntroductionControllerGetIntroductionHistoryData, void>({
+        path: `/api/groups/${groupId}/introductions/${introductionId}/history`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Group Introductions
+     * @name GroupIntroductionControllerRevokeIntroduction
+     * @summary Revoke a group introduction
+     * @request POST:/api/groups/{groupId}/introductions/{introductionId}/revoke
+     * @secure
+     */
+    groupIntroductionControllerRevokeIntroduction: (
+      groupId: number,
+      introductionId: number,
+      data: RevokeIntroductionDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<GroupIntroductionControllerRevokeIntroductionData, void>({
+        path: `/api/groups/${groupId}/introductions/${introductionId}/revoke`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Group Introductions
+     * @name GroupIntroductionControllerUnrevokeIntroduction
+     * @summary Unrevoke a group introduction
+     * @request POST:/api/groups/{groupId}/introductions/{introductionId}/unrevoke
+     * @secure
+     */
+    groupIntroductionControllerUnrevokeIntroduction: (
+      groupId: number,
+      introductionId: number,
+      data: UnrevokeIntroductionDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<GroupIntroductionControllerUnrevokeIntroductionData, void>({
+        path: `/api/groups/${groupId}/introductions/${introductionId}/unrevoke`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Group Introductions
+     * @name GroupIntroductionControllerCanManageIntroductions
+     * @summary Check if current user can manage introductions for the group
+     * @request GET:/api/groups/{groupId}/introductions/permissions/manage
+     * @secure
+     */
+    groupIntroductionControllerCanManageIntroductions: (groupId: number, params: RequestParams = {}) =>
+      this.request<GroupIntroductionControllerCanManageIntroductionsData, void>({
+        path: `/api/groups/${groupId}/introductions/permissions/manage`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+  };
+  groupIntroducers = {
+    /**
+     * No description
+     *
+     * @tags Group Introducers
+     * @name GroupIntroducersControllerGetGroupIntroducers
+     * @summary Get all authorized introducers for a group
+     * @request GET:/api/groups/{groupId}/introducers
+     * @secure
+     */
+    groupIntroducersControllerGetGroupIntroducers: (groupId: number, params: RequestParams = {}) =>
+      this.request<GroupIntroducersControllerGetGroupIntroducersData, void>({
+        path: `/api/groups/${groupId}/introducers`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Group Introducers
+     * @name GroupIntroducersControllerAddIntroducer
+     * @summary Add a user as an introducer for a group
+     * @request POST:/api/groups/{groupId}/introducers/{userId}
+     * @secure
+     */
+    groupIntroducersControllerAddIntroducer: (groupId: number, userId: number, params: RequestParams = {}) =>
+      this.request<GroupIntroducersControllerAddIntroducerData, void>({
+        path: `/api/groups/${groupId}/introducers/${userId}`,
+        method: 'POST',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Group Introducers
+     * @name GroupIntroducersControllerRemoveIntroducer
+     * @summary Remove a user as an introducer for a group
+     * @request DELETE:/api/groups/{groupId}/introducers/{userId}
+     * @secure
+     */
+    groupIntroducersControllerRemoveIntroducer: (groupId: number, userId: number, params: RequestParams = {}) =>
+      this.request<GroupIntroducersControllerRemoveIntroducerData, void>({
+        path: `/api/groups/${groupId}/introducers/${userId}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Group Introducers
+     * @name GroupIntroducersControllerCanManageIntroducers
+     * @summary Check if the current user can manage introducers for a group
+     * @request GET:/api/groups/{groupId}/introducers/can-manage
+     * @secure
+     */
+    groupIntroducersControllerCanManageIntroducers: (groupId: number, params: RequestParams = {}) =>
+      this.request<GroupIntroducersControllerCanManageIntroducersData, void>({
+        path: `/api/groups/${groupId}/introducers/can-manage`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+  };
   mqttResourceConfiguration = {
     /**
      * No description
@@ -4097,165 +4814,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<SseControllerStreamEventsData, any>({
         path: `/api/resources/${resourceId}/events`,
         method: 'GET',
-        ...params,
-      }),
-  };
-  resourceGroups = {
-    /**
-     * No description
-     *
-     * @tags Resource Groups
-     * @name ResourceGroupsControllerCreateGroup
-     * @summary Create a new resource group
-     * @request POST:/api/resource-groups
-     * @secure
-     */
-    resourceGroupsControllerCreateGroup: (data: CreateResourceGroupDto, params: RequestParams = {}) =>
-      this.request<ResourceGroupsControllerCreateGroupData, void>({
-        path: `/api/resource-groups`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resource Groups
-     * @name ResourceGroupsControllerGetGroups
-     * @summary Get all resource groups
-     * @request GET:/api/resource-groups
-     * @secure
-     */
-    resourceGroupsControllerGetGroups: (query: ResourceGroupsControllerGetGroupsParams, params: RequestParams = {}) =>
-      this.request<ResourceGroupsControllerGetGroupsData, void>({
-        path: `/api/resource-groups`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resource Groups
-     * @name ResourceGroupsControllerGetGroupById
-     * @summary Get a resource group by ID
-     * @request GET:/api/resource-groups/{id}
-     * @secure
-     */
-    resourceGroupsControllerGetGroupById: (id: number, params: RequestParams = {}) =>
-      this.request<ResourceGroupsControllerGetGroupByIdData, void>({
-        path: `/api/resource-groups/${id}`,
-        method: 'GET',
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resource Groups
-     * @name ResourceGroupsControllerUpdateGroup
-     * @summary Update a resource group
-     * @request PUT:/api/resource-groups/{id}
-     * @secure
-     */
-    resourceGroupsControllerUpdateGroup: (id: number, data: UpdateResourceGroupDto, params: RequestParams = {}) =>
-      this.request<ResourceGroupsControllerUpdateGroupData, void>({
-        path: `/api/resource-groups/${id}`,
-        method: 'PUT',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resource Groups
-     * @name ResourceGroupsControllerDeleteGroup
-     * @summary Delete a resource group
-     * @request DELETE:/api/resource-groups/{id}
-     * @secure
-     */
-    resourceGroupsControllerDeleteGroup: (id: number, params: RequestParams = {}) =>
-      this.request<ResourceGroupsControllerDeleteGroupData, void>({
-        path: `/api/resource-groups/${id}`,
-        method: 'DELETE',
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resource Groups
-     * @name ResourceGroupsControllerGetResourcesInGroup
-     * @summary Get all resources in a group
-     * @request GET:/api/resource-groups/{id}/resources
-     * @secure
-     */
-    resourceGroupsControllerGetResourcesInGroup: (
-      { id, ...query }: ResourceGroupsControllerGetResourcesInGroupParams,
-      params: RequestParams = {},
-    ) =>
-      this.request<ResourceGroupsControllerGetResourcesInGroupData, void>({
-        path: `/api/resource-groups/${id}/resources`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resource Groups
-     * @name ResourceGroupsControllerAssignResourceToGroup
-     * @summary Assign a resource to the group
-     * @request POST:/api/resource-groups/{id}/resources
-     * @secure
-     */
-    resourceGroupsControllerAssignResourceToGroup: (
-      id: number,
-      data: AssignResourceToGroupDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<ResourceGroupsControllerAssignResourceToGroupData, void>({
-        path: `/api/resource-groups/${id}/resources`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resource Groups
-     * @name ResourceGroupsControllerRemoveResourceFromGroup
-     * @summary Remove a resource from the group
-     * @request DELETE:/api/resource-groups/{id}/resources/{resourceId}
-     * @secure
-     */
-    resourceGroupsControllerRemoveResourceFromGroup: (id: number, resourceId: number, params: RequestParams = {}) =>
-      this.request<ResourceGroupsControllerRemoveResourceFromGroupData, void>({
-        path: `/api/resource-groups/${id}/resources/${resourceId}`,
-        method: 'DELETE',
-        secure: true,
-        format: 'json',
         ...params,
       }),
   };

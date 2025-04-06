@@ -24,6 +24,7 @@ import { Auth } from '../../users-and-auth/strategies/systemPermissions.guard';
 import { CanManageResources } from '../guards/can-manage-resources.decorator';
 import { transformResource } from '../resources.utils';
 import { ResourceImageService } from '../../common/services/resource-image.service';
+import { makePaginatedResponse } from '../../types/response';
 
 @ApiTags('Resource Groups')
 @Controller('resource-groups')
@@ -162,12 +163,22 @@ export class ResourceGroupsController {
     @Query('page') page = 1,
     @Query('limit') limit = 10
   ): Promise<PaginatedResponse<Resource>> {
-    const result = await this.resourceGroupsService.getResourcesInGroup(id, page, limit);
-    
-    return {
-      ...result,
-      data: result.data.map((resource) => transformResource(resource, this.resourceImageService)),
-    };
+    const result = await this.resourceGroupsService.getResourcesInGroup(
+      id,
+      page,
+      limit
+    );
+
+    return makePaginatedResponse(
+      {
+        page,
+        limit,
+      },
+      result.data.map((resource) =>
+        transformResource(resource, this.resourceImageService)
+      ),
+      result.total
+    );
   }
 
   @Post(':id/resources')

@@ -17,6 +17,7 @@ import { ResourceIntroductionUser } from './resourceIntroductionUser.entity';
 import { MqttResourceConfig } from './mqttResourceConfig.entity';
 import { WebhookConfig } from './webhookConfig.entity';
 import { ResourceGroup } from './resourceGroup.entity';
+import { ValidateIf, IsNumber } from 'class-validator';
 
 @Entity()
 export class Resource {
@@ -56,6 +57,8 @@ export class Resource {
     example: 15,
     required: false,
   })
+  @IsNumber()
+  @ValidateIf((object, value) => value !== null)
   groupId!: number | null;
 
   @CreateDateColumn()

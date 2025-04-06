@@ -1,6 +1,7 @@
 export default {
   searchPlaceholder: 'Ressourcen suchen...',
-  addResource: 'Ressource hinzufügen',
+  addResource: 'Neu',
+  edit: 'Bearbeiten',
   listView: 'Listenansicht',
   groupView: 'Gruppenansicht',
 };

@@ -66,9 +66,15 @@ export class ResourcesService {
   ): Promise<Resource> {
     const resource = await this.getResourceById(id);
 
+    console.log('dto', dto);
+
     // Update only provided fields
     if (dto.name !== undefined) resource.name = dto.name;
     if (dto.description !== undefined) resource.description = dto.description;
+    if (dto.groupId !== undefined) {
+      delete resource.group;
+      resource.groupId = dto.groupId;
+    }
 
     if (image) {
       // Delete old image if it exists
@@ -80,6 +86,8 @@ export class ResourcesService {
         image
       );
     }
+
+    console.log('updating resource', resource);
 
     return this.resourceRepository.save(resource);
   }
@@ -107,11 +115,14 @@ export class ResourcesService {
     const query = this.resourceRepository.createQueryBuilder('resource');
 
     if (search) {
-      query.where('resource.name ILIKE :search OR resource.description ILIKE :search', { search: `%${search}%` });
+      query.where(
+        'resource.name ILIKE :search OR resource.description ILIKE :search',
+        { search: `%${search}%` }
+      );
     }
 
     if (ungrouped) {
-      query.andWhere('resource.group IS NULL');
+      query.andWhere('resource.group = "NULL"');
     }
 
     query.orderBy('resource.createdAt', 'DESC');

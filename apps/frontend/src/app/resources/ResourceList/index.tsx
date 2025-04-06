@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Toolbar } from '../toolbar';
 import { ResourceListView } from './components/ResourceListView';
 import { ResourceGroupView } from './components/ResourceGroupView';
+import { useResourcesStore } from '../resources.store';
 
 export type ViewMode = 'list' | 'group';
 
@@ -19,6 +20,8 @@ export function ResourceList({
   const [searchInput, setSearchInput] = useState('');
   const [viewMode, setViewMode] = useState<ViewMode>(initialViewMode || 'list');
 
+  const { isInEditMode } = useResourcesStore();
+
   // Sync with external viewMode changes
   useEffect(() => {
     if (initialViewMode && initialViewMode !== viewMode) {
@@ -32,7 +35,7 @@ export function ResourceList({
 
   const handleViewModeChange = (mode: ViewMode) => {
     setViewMode(mode);
-    
+
     // Call external handler if provided
     if (onViewModeChange) {
       onViewModeChange(mode);
@@ -53,17 +56,15 @@ export function ResourceList({
         showGroupId={!!groupId}
       />
 
-      {viewMode === 'list' ? (
-        <ResourceListView 
+      {viewMode === 'list' && !isInEditMode ? (
+        <ResourceListView
           searchInput={searchInput}
           groupId={groupId}
           ungroupedOnly={ungroupedOnly}
         />
       ) : (
-        <ResourceGroupView 
-          searchInput={searchInput}
-        />
+        <ResourceGroupView searchInput={searchInput} />
       )}
     </>
   );
-} 
+}

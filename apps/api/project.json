@@ -16,7 +16,8 @@
         "development": {
           "args": ["node-env=development"]
         }
-      }
+      },
+      "parallelism": true
     },
     "swagger-build": {
       "executor": "nx:run-commands",

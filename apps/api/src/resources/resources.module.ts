@@ -25,7 +25,12 @@ import { MqttModule } from '../mqtt/mqtt.module';
 import { WebhooksModule } from '../webhooks/webhooks.module';
 import { ResourcesCoreModule } from './resources-core.module';
 import { SSEModule } from './sse/sse.module';
-import { ResourceGroupsModule } from './groups/resource-groups.module';
+import { ResourceGroupsController } from './groups/resource-groups.controller';
+import { GroupIntroductionController } from './groups/introduction/groupIntroduction.controller';
+import { GroupIntroducersController } from './groups/introduction/groupIntroducers.controller';
+import { GroupsService } from './groups/groups.service';
+import { GroupIntroductionService } from './groups/introduction/groupIntroduction.service';
+import { ResourceGroupsService } from './groups/resource-groups.service';
 
 @Module({
   imports: [
@@ -45,7 +50,6 @@ import { ResourceGroupsModule } from './groups/resource-groups.module';
     ConfigModule,
     MqttModule,
     SSEModule,
-    ResourceGroupsModule,
     ResourcesCoreModule,
     forwardRef(() => WebhooksModule),
   ],
@@ -54,17 +58,25 @@ import { ResourceGroupsModule } from './groups/resource-groups.module';
     ResourceUsageController,
     ResourceIntroductionController,
     ResourceIntroducersController,
+    ResourceGroupsController,
+    GroupIntroductionController,
+    GroupIntroducersController,
   ],
   providers: [
     ResourcePermissionsGuard,
     ResourceUsageService,
     ResourceIntroductionService,
+    GroupsService,
+    ResourceGroupsService,
+    GroupIntroductionService,
   ],
   exports: [
     ResourceUsageService,
     ResourceIntroductionService,
+    GroupsService,
+    ResourceGroupsService,
+    GroupIntroductionService,
     ResourcesCoreModule,
-    ResourceGroupsModule,
   ],
 })
 export class ResourcesModule {}

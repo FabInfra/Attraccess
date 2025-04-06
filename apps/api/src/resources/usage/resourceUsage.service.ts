@@ -6,6 +6,7 @@ import { ResourcesService } from '../resources.service';
 import { StartUsageSessionDto } from './dtos/startUsageSession.dto';
 import { EndUsageSessionDto } from './dtos/endUsageSession.dto';
 import { ResourceIntroductionService } from '../introduction/resourceIntroduction.service';
+import { GroupIntroductionService } from '../groups/introduction/groupIntroduction.service';
 import { ResourceNotFoundException } from '../../exceptions/resource.notFound.exception';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
@@ -20,6 +21,7 @@ export class ResourceUsageService {
     private resourceUsageRepository: Repository<ResourceUsage>,
     private resourcesService: ResourcesService,
     private resourceIntroductionService: ResourceIntroductionService,
+    private groupIntroductionService: GroupIntroductionService,
     private eventEmitter: EventEmitter2
   ) {}
 
@@ -28,53 +30,77 @@ export class ResourceUsageService {
     user: User,
     dto: StartUsageSessionDto
   ): Promise<ResourceUsage> {
-    // Check if resource exists and is ready
     const resource = await this.resourcesService.getResourceById(resourceId);
     if (!resource) {
       throw new ResourceNotFoundException(resourceId);
     }
 
-    // Skip introduction check for users with resource management permission
     const canManageResources =
       user.systemPermissions?.canManageResources || false;
 
     let canStartSession = canManageResources;
+    let hasResourceIntroduction = false;
+    let canGiveResourceIntroductions = false;
+    let hasGroupIntroduction = false;
+    let canGiveGroupIntroductions = false;
 
-    // Only check for introduction if user doesn't have resource management permission
+    // 1. Check resource-specific introduction completion
     if (!canStartSession) {
-      // Check if user has completed the introduction
-      const hasCompletedIntroduction =
-        await this.resourceIntroductionService.hasCompletedIntroduction(
+      hasResourceIntroduction =
+        await this.resourceIntroductionService.hasValidIntroduction(
           resourceId,
           user.id
         );
-
-      canStartSession = hasCompletedIntroduction;
+      canStartSession = hasResourceIntroduction;
     }
 
+    // 2. Check resource-specific introducer permission
     if (!canStartSession) {
-      const canGiveIntroductions =
+      canGiveResourceIntroductions =
         await this.resourceIntroductionService.canGiveIntroductions(
           resourceId,
           user.id
         );
-
-      canStartSession = canGiveIntroductions;
+      canStartSession = canGiveResourceIntroductions;
     }
 
+    // 3. Fallback to group checks if resource checks failed and resource belongs to a group
+    if (!canStartSession && resource.groupId) {
+      // Check group introduction completion
+      hasGroupIntroduction =
+        await this.groupIntroductionService.hasValidGroupIntroduction(
+          resource.groupId,
+          user.id
+        );
+      canStartSession = hasGroupIntroduction;
+
+      // Check group introducer permission
+      if (!canStartSession) {
+        canGiveGroupIntroductions =
+          await this.groupIntroductionService.canGiveGroupIntroductions(
+            resource.groupId,
+            user.id
+          );
+        canStartSession = canGiveGroupIntroductions;
+      }
+    }
+
+    // Final check before allowing session start
     if (!canStartSession) {
-      throw new BadRequestException(
-        'You must complete the resource introduction before using it'
-      );
+      // Provide a more informative error message
+      let reason = 'You must complete the introduction before using it.';
+      if (resource.groupId) {
+        reason =
+          'You must complete the introduction for the resource or its group before using it.';
+      }
+      throw new BadRequestException(reason);
     }
 
-    // Check if user has an active session
     const activeSession = await this.getActiveSession(resourceId, user.id);
     if (activeSession) {
       throw new BadRequestException('User already has an active session');
     }
 
-    // Create new usage session
     const usageData = {
       resourceId,
       userId: user.id,
@@ -103,7 +129,6 @@ export class ResourceUsageService {
       relations: ['resource', 'user'],
     });
 
-    // Emit event after successful save
     this.eventEmitter.emit(
       'resource.usage.started',
       new ResourceUsageStartedEvent(resourceId, user.id, usageData.startTime)

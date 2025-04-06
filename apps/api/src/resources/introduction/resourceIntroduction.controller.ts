@@ -16,7 +16,10 @@ import {
 } from '@attraccess/database-entities';
 import { Auth } from '../../users-and-auth/strategies/systemPermissions.guard';
 import { AuthenticatedRequest } from '../../types/request';
-import { PaginatedResponseDto } from '../../types/response';
+import {
+  makePaginatedResponse,
+  PaginatedResponseDto,
+} from '../../types/response';
 import { GetResourceIntroductionsQueryDto } from './dtos/getResourceIntroductionsQuery.dto';
 import { PaginatedResourceIntroductionResponseDto } from './dtos/paginatedResourceIntroductionResponse.dto';
 import { UsersService } from '../../users-and-auth/users/users.service';
@@ -100,13 +103,14 @@ export class ResourceIntroductionController {
         query.limit
       );
 
-    return {
+    return makePaginatedResponse(
+      {
+        page: query.page,
+        limit: query.limit,
+      },
       data,
-      total,
-      page: query.page,
-      limit: query.limit,
-      totalPages: Math.ceil(total / query.limit),
-    };
+      total
+    );
   }
 
   @Get('status')

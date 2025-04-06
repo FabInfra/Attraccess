@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsInt, IsPositive } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 import { FileUpload } from '../../common/types/file-upload.types';
-import { Type } from 'class-transformer';
 
 export class UpdateResourceDto {
   @ApiProperty({
@@ -26,12 +25,10 @@ export class UpdateResourceDto {
     description: 'The ID of the group this resource belongs to',
     example: 15,
     required: false,
+    nullable: true,
   })
-  @IsInt()
-  @IsPositive()
   @IsOptional()
-  @Type(() => Number)
-  groupId?: number;
+  groupId?: number | null;
 
   @ApiProperty({
     description: 'New resource image file',

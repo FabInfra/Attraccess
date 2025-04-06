@@ -30,6 +30,7 @@ import { PaginatedResourceResponseDto } from './dtos/paginatedResourceResponse.d
 import { ResourceImageService } from '../common/services/resource-image.service';
 import { CanManageResources } from './guards/can-manage-resources.decorator';
 import { transformResource } from './resources.utils';
+import { makePaginatedResponse } from '../types/response';
 
 @ApiTags('Resources')
 @Controller('resources')
@@ -82,8 +83,16 @@ export class ResourcesController {
       query.ungrouped
     );
 
-    resources.data = resources.data.map((resource) => transformResource(resource, this.resourceImageService));
-    return resources;
+    return makePaginatedResponse(
+      {
+        page: query.page,
+        limit: query.limit,
+      },
+      resources.data.map((resource) =>
+        transformResource(resource, this.resourceImageService)
+      ),
+      resources.total
+    );
   }
 
   @Get(':id')
