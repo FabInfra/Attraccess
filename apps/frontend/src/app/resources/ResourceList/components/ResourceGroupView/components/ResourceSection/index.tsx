@@ -24,6 +24,12 @@ import {
 import { useTranslations } from '@frontend/i18n';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { useResourcesStore } from '@frontend/app/resources/resources.store';
+// Import hooks and components for the details link using relative paths
+import { useAuth } from '../../../../../../../hooks/useAuth';
+import { useGroupIntroducers } from '../../../../../../../api/hooks/groupIntroduction';
+import { Link } from 'react-router-dom';
+import { Settings } from 'lucide-react';
+import { ResourceIntroductionUser } from '@attraccess/api-client';
 
 // Import translation modules
 import * as enGroup from './translations/en';
@@ -225,11 +231,45 @@ export function ResourceSection(
 ) {
   const { isInEditMode } = useResourcesStore();
   const { title, groupId, searchInput, className, ...divProps } = props;
+  const isUngrouped = groupId === 'ungrouped';
+
+  // --- Add logic for details link ---
+  const { hasPermission, user: currentUser } = useAuth();
+  const canManageResourcesGlobally = hasPermission('canManageResources');
+
+  // Fetch introducers only if it's a real group
+  const { data: groupIntroducers } = useGroupIntroducers(
+    isUngrouped ? 0 : groupId
+  );
+
+  // Determine if user can manage this specific group
+  const canManageThisGroup = useMemo(() => {
+    if (isUngrouped) return false; // Cannot manage "ungrouped"
+    if (canManageResourcesGlobally) return true;
+    // Check if user is in the introducer list for this group
+    return groupIntroducers?.some(
+      (intro: ResourceIntroductionUser) => intro.userId === currentUser?.id
+    );
+  }, [
+    isUngrouped,
+    canManageResourcesGlobally,
+    groupIntroducers,
+    currentUser?.id,
+  ]);
+  // --- End logic for details link ---
 
   return (
     <div className={'w-full ' + (className ?? '')} {...divProps}>
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-xl font-semibold">{title}</h3>
+        <div className="flex items-center gap-2">
+          <h3 className="text-xl font-semibold">{title}</h3>
+          {/* Show settings link if user can manage this group */}
+          {canManageThisGroup && (
+            <Link to={`/groups/${groupId}`} title={`Manage ${title}`}>
+              <Settings className="w-4 h-4 text-gray-500 hover:text-primary cursor-pointer" />
+            </Link>
+          )}
+        </div>
       </div>
 
       {isInEditMode ? (

@@ -2,7 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useResource, useDeleteResource } from '../../api/hooks/resources';
 import { useAuth } from '../../hooks/useAuth';
 import { useToastMessage } from '../../components/toastProvider';
-import { ArrowLeft, Trash, Wifi } from 'lucide-react';
+import { ArrowLeft, Trash, Wifi, Users, UserCheck } from 'lucide-react';
 import { Button } from '@heroui/button';
 import { Spinner, Link } from '@heroui/react';
 import { useDisclosure } from '@heroui/modal';
@@ -19,7 +19,13 @@ import { memo, useMemo } from 'react';
 import {
   useCanManageIntroductions,
   useCanManageIntroducers,
+  useResourceIntroducers,
 } from '../../api/hooks/resourceIntroduction';
+import { useGroupIntroducers } from '../../api/hooks/groupIntroduction';
+import { AttraccessUser } from '../../components/AttraccessUser';
+import { Card, CardBody, CardHeader } from '@heroui/card';
+import { Listbox, ListboxItem } from '@heroui/listbox';
+import { ResourceIntroductionUser } from '@attraccess/api-client';
 
 function ResourceDetailsComponent() {
   const { id } = useParams<{ id: string }>();
@@ -27,7 +33,7 @@ function ResourceDetailsComponent() {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const { hasPermission } = useAuth();
+  const { hasPermission, user: currentUser } = useAuth();
   const { success, error: showError } = useToastMessage();
   const navigate = useNavigate();
 
@@ -41,6 +47,10 @@ function ResourceDetailsComponent() {
     isLoading: isLoadingResource,
     error: resourceError,
   } = useResource(resourceId);
+
+  const { data: resourceIntroducers } = useResourceIntroducers(resourceId);
+  const groupId = resource?.groupId;
+  const { data: groupIntroducers } = useGroupIntroducers(groupId ?? 0);
 
   const deleteResource = useDeleteResource();
 
@@ -64,18 +74,42 @@ function ResourceDetailsComponent() {
   };
 
   const canManageResources = hasPermission('canManageResources');
-  const { data: canManageIntroductions } =
+
+  const canStartSession = useMemo(() => {
+    if (canManageResources) return true;
+
+    const isResourceIntroducer = resourceIntroducers?.some(
+      (intro) => intro.userId === currentUser?.id
+    );
+    if (isResourceIntroducer) return true;
+
+    const isGroupIntroducer = groupIntroducers?.some(
+      (intro) => intro.userId === currentUser?.id
+    );
+    if (resource?.groupId && isGroupIntroducer) return true;
+
+    return false;
+  }, [
+    canManageResources,
+    resourceIntroducers,
+    groupIntroducers,
+    resource?.groupId,
+    currentUser?.id,
+  ]);
+
+  const { data: canManageResourceIntroductions } =
     useCanManageIntroductions(resourceId);
-  const { data: canManageIntroducers } = useCanManageIntroducers(resourceId);
+  const { data: canManageResourceIntroducers } =
+    useCanManageIntroducers(resourceId);
 
   const showIntroductionsManagement = useMemo(
-    () => canManageResources || canManageIntroductions,
-    [canManageResources, canManageIntroductions]
+    () => canManageResources || canManageResourceIntroductions,
+    [canManageResources, canManageResourceIntroductions]
   );
 
   const showIntroducersManagement = useMemo(
-    () => canManageResources || canManageIntroducers,
-    [canManageResources, canManageIntroducers]
+    () => canManageResources || canManageResourceIntroducers,
+    [canManageResources, canManageResourceIntroducers]
   );
 
   if (isLoadingResource) {
@@ -106,7 +140,7 @@ function ResourceDetailsComponent() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 min-h-screen">
+    <div className="max-w-7xl mx-auto px-4 py-8 min-h-screen space-y-8">
       <PageHeader
         title={resource.name}
         subtitle={resource.description || undefined}
@@ -135,13 +169,78 @@ function ResourceDetailsComponent() {
         }
       />
 
-      {/* Full width Usage section for all devices */}
-      <div className="w-full space-y-6 mb-8">
-        <ResourceUsageSession resourceId={resourceId} />
+      <div className="w-full space-y-6">
+        {!canStartSession && (
+          <Card>
+            <CardHeader>
+              <h2 className="text-lg font-semibold">
+                {t('missingIntroduction.title')}
+              </h2>
+            </CardHeader>
+            <CardBody className="space-y-4">
+              <p className="text-gray-600 dark:text-gray-400">
+                {t('missingIntroduction.description')}
+              </p>
+              {resourceIntroducers && resourceIntroducers.length > 0 && (
+                <div>
+                  <h3 className="font-medium mb-2 flex items-center gap-2">
+                    <UserCheck className="w-5 h-5 text-primary" />
+                    {t('resourceIntroducersTitle')}
+                  </h3>
+                  <Listbox
+                    aria-label={t('resourceIntroducersTitle')}
+                    variant="bordered"
+                  >
+                    {resourceIntroducers.map(
+                      (intro: ResourceIntroductionUser) => (
+                        <ListboxItem
+                          key={`res-${intro.id}`}
+                          textValue={intro.user.username}
+                        >
+                          <AttraccessUser user={intro.user} />
+                        </ListboxItem>
+                      )
+                    )}
+                  </Listbox>
+                </div>
+              )}
+              {groupId && groupIntroducers && groupIntroducers.length > 0 && (
+                <div>
+                  <h3 className="font-medium mb-2 flex items-center gap-2">
+                    <Users className="w-5 h-5 text-secondary" />
+                    {t('groupIntroducersTitle')}
+                  </h3>
+                  <Listbox
+                    aria-label={t('groupIntroducersTitle')}
+                    variant="bordered"
+                  >
+                    {groupIntroducers.map((intro: ResourceIntroductionUser) => (
+                      <ListboxItem
+                        key={`grp-${intro.id}`}
+                        textValue={intro.user.username}
+                      >
+                        <AttraccessUser user={intro.user} />
+                      </ListboxItem>
+                    ))}
+                  </Listbox>
+                </div>
+              )}
+              {(!resourceIntroducers || resourceIntroducers.length === 0) &&
+                (!groupId ||
+                  !groupIntroducers ||
+                  groupIntroducers.length === 0) && (
+                  <p className="text-sm text-gray-500 dark:text-gray-500 italic">
+                    {t('missingIntroduction.noIntroducersFound')}
+                  </p>
+                )}
+            </CardBody>
+          </Card>
+        )}
+        {canStartSession && <ResourceUsageSession resourceId={resourceId} />}
         <ResourceUsageHistory resourceId={resourceId} />
       </div>
 
-      {/* 2-column layout for Introductions and Introducers on non-mobile */}
+      {/* Management Section (Introductions & Introducers) */}
       {(showIntroducersManagement || showIntroductionsManagement) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {showIntroductionsManagement && (

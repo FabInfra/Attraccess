@@ -2,6 +2,7 @@ import { Navigate, PathRouteProps } from 'react-router-dom';
 import { ResourcesPage } from '../resources/ResourcesPage';
 import { ResourceDetails } from '../resources/resourceDetails';
 import { IoTSettings } from '../resources/iot-settings/iotSettings';
+import { GroupDetails } from '../groups/groupDetails/groupDetails';
 import { Database, ServerIcon, Key, Users } from 'lucide-react';
 import React from 'react';
 import { MqttServersPage } from '../mqtt/MqttServersPage';
@@ -46,6 +47,11 @@ export const routes: RouteConfig[] = [
     path: '/resources/:id/iot',
     element: <IoTSettings />,
     authRequired: 'canManageResources',
+  },
+  {
+    path: '/groups/:id',
+    element: <GroupDetails />,
+    authRequired: true,
   },
   {
     path: '/mqtt/servers',
