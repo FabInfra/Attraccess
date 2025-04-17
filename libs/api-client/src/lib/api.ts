@@ -1377,7 +1377,7 @@ export interface GetAllResourceIntroductionsParams {
    * @min 1
    * @default 1
    */
-  page: number;
+  page?: number;
   /**
    * Number of items per page
    * @min 1
@@ -2186,7 +2186,7 @@ export namespace ResourceIntroductions {
        * @min 1
        * @default 1
        */
-      page: number;
+      page?: number;
       /**
        * Number of items per page
        * @min 1

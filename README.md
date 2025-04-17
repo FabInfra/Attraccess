@@ -18,6 +18,7 @@ Attraccess provides [ESPHome components](https://github.com/jappyjan/Attraccess-
 - Real-time resource status monitoring via Server-Sent Events (SSE)
 - No polling required - uses persistent connections for efficient updates
 - Automatic reconnection if connection is lost
+
 - Compatible with ESP8266/ESP32 devices
 - Enables automation based on resource status (availability, usage, etc.)
 - Provides both sensors and binary sensors for monitoring
