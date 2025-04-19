@@ -81,12 +81,12 @@ export function ResourceUsageSession({ resourceId }: ResourceUsageSessionProps) 
 
   // Update elapsed time every second when session is active
   useEffect(() => {
-    if (!activeSession) {
+    if (!activeSession?.activeSession) {
       setElapsedTime('00:00:00');
       return;
     }
 
-    const startTime = new Date(activeSession.startTime).getTime();
+    const startTime = new Date(activeSession.activeSession.startTime).getTime();
 
     const updateElapsedTime = () => {
       const now = new Date().getTime();
@@ -193,16 +193,16 @@ export function ResourceUsageSession({ resourceId }: ResourceUsageSessionProps) 
             <div className="flex justify-center py-4">
               <Spinner size="md" color="primary" />
             </div>
-          ) : activeSession ? (
+          ) : activeSession?.activeSession ? (
             // Check if the active session belongs to the current user
-            activeSession.userId === user?.id ? (
+            activeSession?.activeSession?.userId === user?.id ? (
               // Current user's active session: Show timer and End button
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-500 dark:text-gray-400">{t('sessionStarted')}:</p>
                     <p className="font-medium text-gray-900 dark:text-white">
-                      <DateTimeDisplay date={activeSession.startTime} />
+                      <DateTimeDisplay date={activeSession.activeSession.startTime} />
                     </p>
                   </div>
                   <div className="text-right">
@@ -225,8 +225,8 @@ export function ResourceUsageSession({ resourceId }: ResourceUsageSessionProps) 
               // Active session belongs to another user: Show info message
               <div className="space-y-2 text-center">
                 <p className="text-sm text-gray-500 dark:text-gray-400">{t('resourceInUseBy')}</p>
-                {activeSession.user ? (
-                  <AttraccessUser user={activeSession.user} />
+                {activeSession?.activeSession?.user ? (
+                  <AttraccessUser user={activeSession?.activeSession?.user} />
                 ) : (
                   <p className="text-sm font-medium text-gray-900 dark:text-white">
                     {t('unknownUser')} {/* Add a fallback translation if needed */}
@@ -235,7 +235,7 @@ export function ResourceUsageSession({ resourceId }: ResourceUsageSessionProps) 
 
                 {/* Optional: Display start time for the other user's session */}
                 <p className="text-xs text-gray-400 dark:text-gray-500">
-                  ({t('sessionStarted')} <DateTimeDisplay date={activeSession.startTime} />)
+                  ({t('sessionStarted')} <DateTimeDisplay date={activeSession?.activeSession?.startTime} />)
                 </p>
               </div>
             )

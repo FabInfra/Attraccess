@@ -1,7 +1,7 @@
 // generated with @7nohe/openapi-react-query-codegen@1.6.2 
 
 import { type QueryClient } from "@tanstack/react-query";
-import { ApplicationService, MqttResourceConfigurationService, MqttServersService, ResourceGroupsService, ResourceIntroducersService, ResourceIntroductionsService, ResourceUsageService, ResourcesService, SseService, SsoService, UsersService, WebhooksService } from "../requests/services.gen";
+import { ApplicationService, MqttResourceConfigurationService, MqttServersService, ResourceGroupIntroducersService, ResourceGroupIntroductionsService, ResourceGroupsService, ResourceIntroducersService, ResourceIntroductionsService, ResourceUsageService, ResourcesService, SseService, SsoService, UsersService, WebhooksService } from "../requests/services.gen";
 import * as Common from "./common";
 export const prefetchUseApplicationServicePing2 = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseApplicationServicePing2KeyFn(), queryFn: () => ApplicationService.ping2() });
 export const prefetchUseUsersServiceGetAllUsers = (queryClient: QueryClient, { limit, page, search }: {
@@ -92,6 +92,23 @@ export const prefetchUseResourceIntroducersServiceGetAllResourceIntroducers = (q
 export const prefetchUseResourceIntroducersServiceCheckCanManagePermission = (queryClient: QueryClient, { resourceId }: {
   resourceId: number;
 }) => queryClient.prefetchQuery({ queryKey: Common.UseResourceIntroducersServiceCheckCanManagePermissionKeyFn({ resourceId }), queryFn: () => ResourceIntroducersService.checkCanManagePermission({ resourceId }) });
+export const prefetchUseResourceGroupIntroducersServiceGetAllResourceGroupIntroducers = (queryClient: QueryClient, { groupId }: {
+  groupId: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseResourceGroupIntroducersServiceGetAllResourceGroupIntroducersKeyFn({ groupId }), queryFn: () => ResourceGroupIntroducersService.getAllResourceGroupIntroducers({ groupId }) });
+export const prefetchUseResourceGroupIntroductionsServiceGetAllResourceGroupIntroductions = (queryClient: QueryClient, { groupId }: {
+  groupId: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseResourceGroupIntroductionsServiceGetAllResourceGroupIntroductionsKeyFn({ groupId }), queryFn: () => ResourceGroupIntroductionsService.getAllResourceGroupIntroductions({ groupId }) });
+export const prefetchUseResourceGroupIntroductionsServiceCheckGroupIntroductionStatus = (queryClient: QueryClient, { groupId }: {
+  groupId: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseResourceGroupIntroductionsServiceCheckGroupIntroductionStatusKeyFn({ groupId }), queryFn: () => ResourceGroupIntroductionsService.checkGroupIntroductionStatus({ groupId }) });
+export const prefetchUseResourceGroupIntroductionsServiceGetHistoryOfGroupIntroduction = (queryClient: QueryClient, { groupId, introductionId }: {
+  groupId: number;
+  introductionId: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseResourceGroupIntroductionsServiceGetHistoryOfGroupIntroductionKeyFn({ groupId, introductionId }), queryFn: () => ResourceGroupIntroductionsService.getHistoryOfGroupIntroduction({ groupId, introductionId }) });
+export const prefetchUseResourceGroupIntroductionsServiceGetOneGroupIntroduction = (queryClient: QueryClient, { groupId, introductionId }: {
+  groupId: number;
+  introductionId: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseResourceGroupIntroductionsServiceGetOneGroupIntroductionKeyFn({ groupId, introductionId }), queryFn: () => ResourceGroupIntroductionsService.getOneGroupIntroduction({ groupId, introductionId }) });
 export const prefetchUseMqttResourceConfigurationServiceGetOneMqttConfiguration = (queryClient: QueryClient, { resourceId }: {
   resourceId: number;
 }) => queryClient.prefetchQuery({ queryKey: Common.UseMqttResourceConfigurationServiceGetOneMqttConfigurationKeyFn({ resourceId }), queryFn: () => MqttResourceConfigurationService.getOneMqttConfiguration({ resourceId }) });

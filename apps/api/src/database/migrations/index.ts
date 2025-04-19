@@ -7,3 +7,5 @@ export * from './1741793486503-shorter-permissions-db-column-names';
 export * from './1741806539678-user-management-permission';
 export * from './1744911268510-resource-groups';
 export * from './1744912425272-resource-groups-2';
+export * from './1744984921368-resource-groups-3';
+export * from './1744989282885-resource-groups-introducers';

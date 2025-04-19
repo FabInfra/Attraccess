@@ -8,6 +8,7 @@ import { MqttServersPage } from '../mqtt/MqttServersPage';
 import { SSOProvidersPage } from '../sso/SSOProvidersPage';
 import { SystemPermissions } from '@attraccess/react-query-client';
 import { UserManagementPage } from '../users/UserManagementPage';
+import { ResourceGroupDetails } from '../resources/groups/resourceGroupDetails';
 export * as de from './translations/de';
 export * as en from './translations/en';
 
@@ -36,7 +37,12 @@ export const routes: RouteConfig[] = [
       order: 1,
     },
     authRequired: true,
-  },
+  } /*
+  {
+    path: '/resources/groups/:id',
+    element: <ResourceGroupDetails />,
+    authRequired: true,
+  },*/,
   {
     path: '/resources/:id',
     element: <ResourceDetails />,

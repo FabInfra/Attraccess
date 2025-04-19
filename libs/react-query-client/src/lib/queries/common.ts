@@ -1,7 +1,7 @@
 // generated with @7nohe/openapi-react-query-codegen@1.6.2 
 
 import { UseQueryResult } from "@tanstack/react-query";
-import { ApplicationService, AuthenticationService, MqttResourceConfigurationService, MqttServersService, ResourceGroupsService, ResourceIntroducersService, ResourceIntroductionsService, ResourceUsageService, ResourcesService, SseService, SsoService, UsersService, WebhooksService } from "../requests/services.gen";
+import { ApplicationService, AuthenticationService, MqttResourceConfigurationService, MqttServersService, ResourceGroupIntroducersService, ResourceGroupIntroductionsService, ResourceGroupsService, ResourceIntroducersService, ResourceIntroductionsService, ResourceUsageService, ResourcesService, SseService, SsoService, UsersService, WebhooksService } from "../requests/services.gen";
 export type ApplicationServicePing2DefaultResponse = Awaited<ReturnType<typeof ApplicationService.ping2>>;
 export type ApplicationServicePing2QueryResult<TData = ApplicationServicePing2DefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useApplicationServicePing2Key = "ApplicationServicePing2";
@@ -163,6 +163,38 @@ export const useResourceIntroducersServiceCheckCanManagePermissionKey = "Resourc
 export const UseResourceIntroducersServiceCheckCanManagePermissionKeyFn = ({ resourceId }: {
   resourceId: number;
 }, queryKey?: Array<unknown>) => [useResourceIntroducersServiceCheckCanManagePermissionKey, ...(queryKey ?? [{ resourceId }])];
+export type ResourceGroupIntroducersServiceGetAllResourceGroupIntroducersDefaultResponse = Awaited<ReturnType<typeof ResourceGroupIntroducersService.getAllResourceGroupIntroducers>>;
+export type ResourceGroupIntroducersServiceGetAllResourceGroupIntroducersQueryResult<TData = ResourceGroupIntroducersServiceGetAllResourceGroupIntroducersDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useResourceGroupIntroducersServiceGetAllResourceGroupIntroducersKey = "ResourceGroupIntroducersServiceGetAllResourceGroupIntroducers";
+export const UseResourceGroupIntroducersServiceGetAllResourceGroupIntroducersKeyFn = ({ groupId }: {
+  groupId: number;
+}, queryKey?: Array<unknown>) => [useResourceGroupIntroducersServiceGetAllResourceGroupIntroducersKey, ...(queryKey ?? [{ groupId }])];
+export type ResourceGroupIntroductionsServiceGetAllResourceGroupIntroductionsDefaultResponse = Awaited<ReturnType<typeof ResourceGroupIntroductionsService.getAllResourceGroupIntroductions>>;
+export type ResourceGroupIntroductionsServiceGetAllResourceGroupIntroductionsQueryResult<TData = ResourceGroupIntroductionsServiceGetAllResourceGroupIntroductionsDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useResourceGroupIntroductionsServiceGetAllResourceGroupIntroductionsKey = "ResourceGroupIntroductionsServiceGetAllResourceGroupIntroductions";
+export const UseResourceGroupIntroductionsServiceGetAllResourceGroupIntroductionsKeyFn = ({ groupId }: {
+  groupId: number;
+}, queryKey?: Array<unknown>) => [useResourceGroupIntroductionsServiceGetAllResourceGroupIntroductionsKey, ...(queryKey ?? [{ groupId }])];
+export type ResourceGroupIntroductionsServiceCheckGroupIntroductionStatusDefaultResponse = Awaited<ReturnType<typeof ResourceGroupIntroductionsService.checkGroupIntroductionStatus>>;
+export type ResourceGroupIntroductionsServiceCheckGroupIntroductionStatusQueryResult<TData = ResourceGroupIntroductionsServiceCheckGroupIntroductionStatusDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useResourceGroupIntroductionsServiceCheckGroupIntroductionStatusKey = "ResourceGroupIntroductionsServiceCheckGroupIntroductionStatus";
+export const UseResourceGroupIntroductionsServiceCheckGroupIntroductionStatusKeyFn = ({ groupId }: {
+  groupId: number;
+}, queryKey?: Array<unknown>) => [useResourceGroupIntroductionsServiceCheckGroupIntroductionStatusKey, ...(queryKey ?? [{ groupId }])];
+export type ResourceGroupIntroductionsServiceGetHistoryOfGroupIntroductionDefaultResponse = Awaited<ReturnType<typeof ResourceGroupIntroductionsService.getHistoryOfGroupIntroduction>>;
+export type ResourceGroupIntroductionsServiceGetHistoryOfGroupIntroductionQueryResult<TData = ResourceGroupIntroductionsServiceGetHistoryOfGroupIntroductionDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useResourceGroupIntroductionsServiceGetHistoryOfGroupIntroductionKey = "ResourceGroupIntroductionsServiceGetHistoryOfGroupIntroduction";
+export const UseResourceGroupIntroductionsServiceGetHistoryOfGroupIntroductionKeyFn = ({ groupId, introductionId }: {
+  groupId: number;
+  introductionId: number;
+}, queryKey?: Array<unknown>) => [useResourceGroupIntroductionsServiceGetHistoryOfGroupIntroductionKey, ...(queryKey ?? [{ groupId, introductionId }])];
+export type ResourceGroupIntroductionsServiceGetOneGroupIntroductionDefaultResponse = Awaited<ReturnType<typeof ResourceGroupIntroductionsService.getOneGroupIntroduction>>;
+export type ResourceGroupIntroductionsServiceGetOneGroupIntroductionQueryResult<TData = ResourceGroupIntroductionsServiceGetOneGroupIntroductionDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useResourceGroupIntroductionsServiceGetOneGroupIntroductionKey = "ResourceGroupIntroductionsServiceGetOneGroupIntroduction";
+export const UseResourceGroupIntroductionsServiceGetOneGroupIntroductionKeyFn = ({ groupId, introductionId }: {
+  groupId: number;
+  introductionId: number;
+}, queryKey?: Array<unknown>) => [useResourceGroupIntroductionsServiceGetOneGroupIntroductionKey, ...(queryKey ?? [{ groupId, introductionId }])];
 export type MqttResourceConfigurationServiceGetOneMqttConfigurationDefaultResponse = Awaited<ReturnType<typeof MqttResourceConfigurationService.getOneMqttConfiguration>>;
 export type MqttResourceConfigurationServiceGetOneMqttConfigurationQueryResult<TData = MqttResourceConfigurationServiceGetOneMqttConfigurationDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useMqttResourceConfigurationServiceGetOneMqttConfigurationKey = "MqttResourceConfigurationServiceGetOneMqttConfiguration";
@@ -221,6 +253,10 @@ export type ResourceIntroductionsServiceMarkCompletedMutationResult = Awaited<Re
 export type ResourceIntroductionsServiceMarkRevokedMutationResult = Awaited<ReturnType<typeof ResourceIntroductionsService.markRevoked>>;
 export type ResourceIntroductionsServiceMarkUnrevokedMutationResult = Awaited<ReturnType<typeof ResourceIntroductionsService.markUnrevoked>>;
 export type ResourceIntroducersServiceAddOneMutationResult = Awaited<ReturnType<typeof ResourceIntroducersService.addOne>>;
+export type ResourceGroupIntroducersServiceAddGroupIntroducerMutationResult = Awaited<ReturnType<typeof ResourceGroupIntroducersService.addGroupIntroducer>>;
+export type ResourceGroupIntroductionsServiceMarkGroupIntroductionCompletedMutationResult = Awaited<ReturnType<typeof ResourceGroupIntroductionsService.markGroupIntroductionCompleted>>;
+export type ResourceGroupIntroductionsServiceMarkGroupIntroductionRevokedMutationResult = Awaited<ReturnType<typeof ResourceGroupIntroductionsService.markGroupIntroductionRevoked>>;
+export type ResourceGroupIntroductionsServiceMarkGroupIntroductionUnrevokedMutationResult = Awaited<ReturnType<typeof ResourceGroupIntroductionsService.markGroupIntroductionUnrevoked>>;
 export type MqttResourceConfigurationServiceUpsertOneMutationResult = Awaited<ReturnType<typeof MqttResourceConfigurationService.upsertOne>>;
 export type MqttResourceConfigurationServiceTestOneMutationResult = Awaited<ReturnType<typeof MqttResourceConfigurationService.testOne>>;
 export type MqttServersServiceCreateOneMqttServerMutationResult = Awaited<ReturnType<typeof MqttServersService.createOneMqttServer>>;
@@ -242,6 +278,7 @@ export type ResourceGroupsServiceDeleteOneResourceGroupMutationResult = Awaited<
 export type ResourcesServiceDeleteOneResourceMutationResult = Awaited<ReturnType<typeof ResourcesService.deleteOneResource>>;
 export type ResourcesServiceRemoveResourceFromGroupMutationResult = Awaited<ReturnType<typeof ResourcesService.removeResourceFromGroup>>;
 export type ResourceIntroducersServiceRemoveOneMutationResult = Awaited<ReturnType<typeof ResourceIntroducersService.removeOne>>;
+export type ResourceGroupIntroducersServiceRemoveGroupIntroducerMutationResult = Awaited<ReturnType<typeof ResourceGroupIntroducersService.removeGroupIntroducer>>;
 export type MqttResourceConfigurationServiceDeleteOneMqttConfigurationMutationResult = Awaited<ReturnType<typeof MqttResourceConfigurationService.deleteOneMqttConfiguration>>;
 export type MqttServersServiceDeleteOneMqttServerMutationResult = Awaited<ReturnType<typeof MqttServersService.deleteOneMqttServer>>;
 export type WebhooksServiceDeleteOneWebhookConfigurationMutationResult = Awaited<ReturnType<typeof WebhooksService.deleteOneWebhookConfiguration>>;

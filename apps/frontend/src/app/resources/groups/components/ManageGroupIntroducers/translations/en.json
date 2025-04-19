@@ -1,0 +1,20 @@
+{
+  "title": "Manage Group Introducers",
+  "description": "Add or remove users who can introduce others to the resources in this group",
+  "addIntroducer": "Add Introducer",
+  "searchUsers": "Search Users",
+  "searchUsersPlaceholder": "Start typing to search for users...",
+  "selectUser": "Select User",
+  "selectUserPlaceholder": "Select a user from the search results",
+  "currentIntroducers": "Current Introducers",
+  "noIntroducers": "No introducers have been added yet",
+  "introducerAdded": "Introducer Added",
+  "introducerAddedDescription": "User has been added as an introducer for this group",
+  "errorAddingIntroducer": "Error Adding Introducer",
+  "errorAddingIntroducerDescription": "There was a problem adding the introducer. Please try again.",
+  "selectUserFirst": "Please select a user first",
+  "introducerRemoved": "Introducer Removed",
+  "introducerRemovedDescription": "{{name}} has been removed as an introducer for this group",
+  "errorRemovingIntroducer": "Error Removing Introducer",
+  "errorRemovingIntroducerDescription": "There was a problem removing the introducer. Please try again."
+}

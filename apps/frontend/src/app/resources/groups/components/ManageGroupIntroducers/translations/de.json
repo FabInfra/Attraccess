@@ -1,0 +1,20 @@
+{
+  "title": "Gruppeneinführer verwalten",
+  "description": "Benutzer hinzufügen oder entfernen, die andere zu den Ressourcen in dieser Gruppe einführen können",
+  "addIntroducer": "Einführer hinzufügen",
+  "searchUsers": "Benutzer suchen",
+  "searchUsersPlaceholder": "Namen eingeben, um Benutzer zu suchen...",
+  "selectUser": "Benutzer auswählen",
+  "selectUserPlaceholder": "Wählen Sie einen Benutzer aus den Suchergebnissen",
+  "currentIntroducers": "Aktuelle Einführer",
+  "noIntroducers": "Es wurden noch keine Einführer hinzugefügt",
+  "introducerAdded": "Einführer hinzugefügt",
+  "introducerAddedDescription": "Benutzer wurde als Einführer für diese Gruppe hinzugefügt",
+  "errorAddingIntroducer": "Fehler beim Hinzufügen des Einführers",
+  "errorAddingIntroducerDescription": "Beim Hinzufügen des Einführers ist ein Problem aufgetreten. Bitte versuchen Sie es erneut.",
+  "selectUserFirst": "Bitte wählen Sie zuerst einen Benutzer aus",
+  "introducerRemoved": "Einführer entfernt",
+  "introducerRemovedDescription": "{{name}} wurde als Einführer für diese Gruppe entfernt",
+  "errorRemovingIntroducer": "Fehler beim Entfernen des Einführers",
+  "errorRemovingIntroducerDescription": "Beim Entfernen des Einführers ist ein Problem aufgetreten. Bitte versuchen Sie es erneut."
+}

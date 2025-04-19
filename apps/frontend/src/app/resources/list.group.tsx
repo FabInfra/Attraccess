@@ -10,7 +10,7 @@ import {
   useResourcesServiceGetAllResources,
 } from '@attraccess/react-query-client';
 import { useInView } from 'react-intersection-observer';
-import { ResourcesInGroupList } from './list.resources-in-group';
+import { ResourcesInGroupList } from './list.resourcesInGroup';
 
 export function ResourceList() {
   const [searchInput, setSearchInput] = useState('');

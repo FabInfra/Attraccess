@@ -31,6 +31,7 @@ export class MqttMonitoringService {
   // Connection monitoring
   registerServer(serverId: number): void {
     if (!this.connections.has(serverId)) {
+      this.logger.log(`Registering new MQTT server for monitoring: ID ${serverId}`);
       this.connections.set(serverId, {
         connected: false,
         connectionAttempts: 0,
@@ -58,9 +59,7 @@ export class MqttMonitoringService {
     this.connections.set(serverId, stats);
 
     if (this.isDebugMode) {
-      this.logger.debug(
-        `MQTT Server ${serverId} connected. Stats: ${JSON.stringify(stats)}`
-      );
+      this.logger.debug(`MQTT Server ${serverId} connected. Stats: ${JSON.stringify(stats)}`);
     }
   }
 
@@ -71,11 +70,7 @@ export class MqttMonitoringService {
     stats.connectionFailures++;
     this.connections.set(serverId, stats);
 
-    this.logger.warn(
-      `MQTT Server ${serverId} connection failed: ${error}. Stats: ${JSON.stringify(
-        stats
-      )}`
-    );
+    this.logger.warn(`MQTT Server ${serverId} connection failed: ${error}. Stats: ${JSON.stringify(stats)}`);
   }
 
   onDisconnect(serverId: number): void {
@@ -95,9 +90,7 @@ export class MqttMonitoringService {
     this.messages.set(serverId, stats);
 
     if (this.isDebugMode) {
-      this.logger.debug(
-        `Message published to server ${serverId}. Total: ${stats.published}`
-      );
+      this.logger.debug(`Message published to server ${serverId}. Total: ${stats.published}`);
     }
   }
 
@@ -107,13 +100,12 @@ export class MqttMonitoringService {
     stats.lastFailureTime = new Date();
     this.messages.set(serverId, stats);
 
-    this.logger.warn(
-      `Message publish failed to server ${serverId}: ${error}. Total failures: ${stats.failed}`
-    );
+    this.logger.warn(`Message publish failed to server ${serverId}: ${error}. Total failures: ${stats.failed}`);
   }
 
   // Get status information
   getConnectionStats(serverId: number): ConnectionStats {
+    this.logger.debug(`Getting connection stats for server ID: ${serverId}`);
     return (
       this.connections.get(serverId) || {
         connected: false,
@@ -125,6 +117,7 @@ export class MqttMonitoringService {
   }
 
   getMessageStats(serverId: number): MessageStats {
+    this.logger.debug(`Getting message stats for server ID: ${serverId}`);
     return (
       this.messages.get(serverId) || {
         published: 0,
@@ -133,14 +126,9 @@ export class MqttMonitoringService {
     );
   }
 
-  getAllServerStats(): Record<
-    number,
-    { connection: ConnectionStats; messages: MessageStats }
-  > {
-    const result: Record<
-      number,
-      { connection: ConnectionStats; messages: MessageStats }
-    > = {};
+  getAllServerStats(): Record<number, { connection: ConnectionStats; messages: MessageStats }> {
+    this.logger.debug(`Getting all server stats`);
+    const result: Record<number, { connection: ConnectionStats; messages: MessageStats }> = {};
 
     this.connections.forEach((connectionStats, serverId) => {
       result[serverId] = {
@@ -156,13 +144,12 @@ export class MqttMonitoringService {
     healthy: boolean;
     details: string;
   } {
+    this.logger.debug(`Getting connection health status for server ID: ${serverId}`);
     const stats = this.getConnectionStats(serverId);
     const messageStats = this.getMessageStats(serverId);
 
     // Simple health check based on connection status and failure rate
-    const isHealthy =
-      stats.connected &&
-      stats.connectionFailures / (stats.connectionAttempts || 1) < 0.3;
+    const isHealthy = stats.connected && stats.connectionFailures / (stats.connectionAttempts || 1) < 0.3;
 
     return {
       healthy: isHealthy,
@@ -172,6 +159,7 @@ export class MqttMonitoringService {
 
   // Clear stats for a server (when deleted)
   clearServerStats(serverId: number): void {
+    this.logger.log(`Clearing stats for server ID: ${serverId}`);
     this.connections.delete(serverId);
     this.messages.delete(serverId);
   }

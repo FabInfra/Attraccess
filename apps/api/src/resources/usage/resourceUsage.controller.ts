@@ -1,15 +1,4 @@
-import {
-  Controller,
-  Post,
-  Put,
-  Get,
-  Param,
-  Body,
-  Query,
-  ParseIntPipe,
-  Req,
-  ForbiddenException,
-} from '@nestjs/common';
+import { Controller, Post, Put, Get, Param, Body, Query, ParseIntPipe, Req, ForbiddenException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ResourceUsageService } from './resourceUsage.service';
 import { ResourceUsage } from '@attraccess/database-entities';
@@ -20,6 +9,7 @@ import { AuthenticatedRequest } from '../../types/request';
 import { makePaginatedResponse } from '../../types/response';
 import { GetResourceHistoryQueryDto } from './dtos/getResourceHistoryQuery.dto';
 import { GetResourceHistoryResponseDto } from './dtos/GetResourceHistoryResponse.dto';
+import { GetActiveUsageSessionDto } from './dtos/getActiveUsageSession.dto';
 
 @ApiTags('Resource Usage')
 @Controller('resources/:resourceId/usage')
@@ -108,10 +98,8 @@ export class ResourceUsageController {
     @Req() req: AuthenticatedRequest
   ): Promise<GetResourceHistoryResponseDto> {
     // Allow users to see their own history, or admins to see all history
-    const canManageResources =
-      req.user.systemPermissions?.canManageResources === true;
-    const isViewingOwnHistory =
-      query.userId === req.user.id || query.userId === undefined;
+    const canManageResources = req.user.systemPermissions?.canManageResources === true;
+    const isViewingOwnHistory = query.userId === req.user.id || query.userId === undefined;
 
     // If not an admin and trying to view someone else's history, deny access
     if (!canManageResources && !isViewingOwnHistory) {
@@ -123,19 +111,14 @@ export class ResourceUsageController {
       query.userId = req.user.id;
     }
 
-    const { data, total } =
-      await this.resourceUsageService.getResourceUsageHistory(
-        resourceId,
-        query.page,
-        query.limit,
-        query.userId
-      );
-
-    return makePaginatedResponse(
-      { page: query.page, limit: query.limit },
-      data,
-      total
+    const { data, total } = await this.resourceUsageService.getResourceUsageHistory(
+      resourceId,
+      query.page,
+      query.limit,
+      query.userId
     );
+
+    return makePaginatedResponse({ page: query.page, limit: query.limit }, data, total);
   }
 
   @Get('active')
@@ -144,7 +127,7 @@ export class ResourceUsageController {
   @ApiResponse({
     status: 200,
     description: 'Active session retrieved successfully.',
-    type: ResourceUsage,
+    type: GetActiveUsageSessionDto,
   })
   @ApiResponse({
     status: 401,
@@ -154,9 +137,11 @@ export class ResourceUsageController {
     status: 404,
     description: 'Resource not found',
   })
-  async getActiveSession(
-    @Param('resourceId', ParseIntPipe) resourceId: number,
-  ): Promise<ResourceUsage | null> {
-    return await this.resourceUsageService.getActiveSession(resourceId);
+  async getActiveSession(@Param('resourceId', ParseIntPipe) resourceId: number): Promise<GetActiveUsageSessionDto> {
+    const activeSession = await this.resourceUsageService.getActiveSession(resourceId);
+
+    return {
+      activeSession: activeSession || null,
+    };
   }
 }

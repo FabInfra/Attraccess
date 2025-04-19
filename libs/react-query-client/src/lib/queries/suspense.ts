@@ -1,7 +1,7 @@
 // generated with @7nohe/openapi-react-query-codegen@1.6.2 
 
 import { UseQueryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { ApplicationService, MqttResourceConfigurationService, MqttServersService, ResourceGroupsService, ResourceIntroducersService, ResourceIntroductionsService, ResourceUsageService, ResourcesService, SseService, SsoService, UsersService, WebhooksService } from "../requests/services.gen";
+import { ApplicationService, MqttResourceConfigurationService, MqttServersService, ResourceGroupIntroducersService, ResourceGroupIntroductionsService, ResourceGroupsService, ResourceIntroducersService, ResourceIntroductionsService, ResourceUsageService, ResourcesService, SseService, SsoService, UsersService, WebhooksService } from "../requests/services.gen";
 import * as Common from "./common";
 export const useApplicationServicePing2Suspense = <TData = Common.ApplicationServicePing2DefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseApplicationServicePing2KeyFn(queryKey), queryFn: () => ApplicationService.ping2() as TData, ...options });
 export const useUsersServiceGetAllUsersSuspense = <TData = Common.UsersServiceGetAllUsersDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ limit, page, search }: {
@@ -92,6 +92,23 @@ export const useResourceIntroducersServiceGetAllResourceIntroducersSuspense = <T
 export const useResourceIntroducersServiceCheckCanManagePermissionSuspense = <TData = Common.ResourceIntroducersServiceCheckCanManagePermissionDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
   resourceId: number;
 }, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseResourceIntroducersServiceCheckCanManagePermissionKeyFn({ resourceId }, queryKey), queryFn: () => ResourceIntroducersService.checkCanManagePermission({ resourceId }) as TData, ...options });
+export const useResourceGroupIntroducersServiceGetAllResourceGroupIntroducersSuspense = <TData = Common.ResourceGroupIntroducersServiceGetAllResourceGroupIntroducersDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId }: {
+  groupId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseResourceGroupIntroducersServiceGetAllResourceGroupIntroducersKeyFn({ groupId }, queryKey), queryFn: () => ResourceGroupIntroducersService.getAllResourceGroupIntroducers({ groupId }) as TData, ...options });
+export const useResourceGroupIntroductionsServiceGetAllResourceGroupIntroductionsSuspense = <TData = Common.ResourceGroupIntroductionsServiceGetAllResourceGroupIntroductionsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId }: {
+  groupId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseResourceGroupIntroductionsServiceGetAllResourceGroupIntroductionsKeyFn({ groupId }, queryKey), queryFn: () => ResourceGroupIntroductionsService.getAllResourceGroupIntroductions({ groupId }) as TData, ...options });
+export const useResourceGroupIntroductionsServiceCheckGroupIntroductionStatusSuspense = <TData = Common.ResourceGroupIntroductionsServiceCheckGroupIntroductionStatusDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId }: {
+  groupId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseResourceGroupIntroductionsServiceCheckGroupIntroductionStatusKeyFn({ groupId }, queryKey), queryFn: () => ResourceGroupIntroductionsService.checkGroupIntroductionStatus({ groupId }) as TData, ...options });
+export const useResourceGroupIntroductionsServiceGetHistoryOfGroupIntroductionSuspense = <TData = Common.ResourceGroupIntroductionsServiceGetHistoryOfGroupIntroductionDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId, introductionId }: {
+  groupId: number;
+  introductionId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseResourceGroupIntroductionsServiceGetHistoryOfGroupIntroductionKeyFn({ groupId, introductionId }, queryKey), queryFn: () => ResourceGroupIntroductionsService.getHistoryOfGroupIntroduction({ groupId, introductionId }) as TData, ...options });
+export const useResourceGroupIntroductionsServiceGetOneGroupIntroductionSuspense = <TData = Common.ResourceGroupIntroductionsServiceGetOneGroupIntroductionDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId, introductionId }: {
+  groupId: number;
+  introductionId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseResourceGroupIntroductionsServiceGetOneGroupIntroductionKeyFn({ groupId, introductionId }, queryKey), queryFn: () => ResourceGroupIntroductionsService.getOneGroupIntroduction({ groupId, introductionId }) as TData, ...options });
 export const useMqttResourceConfigurationServiceGetOneMqttConfigurationSuspense = <TData = Common.MqttResourceConfigurationServiceGetOneMqttConfigurationDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
   resourceId: number;
 }, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseMqttResourceConfigurationServiceGetOneMqttConfigurationKeyFn({ resourceId }, queryKey), queryFn: () => MqttResourceConfigurationService.getOneMqttConfiguration({ resourceId }) as TData, ...options });

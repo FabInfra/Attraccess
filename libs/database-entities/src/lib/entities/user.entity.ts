@@ -1,18 +1,11 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  OneToMany,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { ResourceIntroduction } from './resourceIntroduction.entity';
 import { ResourceUsage } from './resourceUsage.entity';
 import { RevokedToken } from './revokedToken.entity';
 import { AuthenticationDetail } from './authenticationDetail.entity';
-import { ResourceIntroductionUser } from './resourceIntroductionUser.entity';
+import { ResourceIntroducer } from './resourceIntroducer';
 
 export class SystemPermissions {
   @Column({ default: false })
@@ -99,13 +92,9 @@ export class User {
   })
   updatedAt!: Date;
 
-  @OneToMany(
-    () => ResourceIntroduction,
-    (introduction) => introduction.receiverUser,
-    {
-      onDelete: 'CASCADE',
-    }
-  )
+  @OneToMany(() => ResourceIntroduction, (introduction) => introduction.receiverUser, {
+    onDelete: 'CASCADE',
+  })
   resourceIntroductions!: ResourceIntroduction[];
 
   @OneToMany(() => ResourceUsage, (usage) => usage.user, {
@@ -123,8 +112,8 @@ export class User {
   })
   authenticationDetails!: AuthenticationDetail[];
 
-  @OneToMany(() => ResourceIntroductionUser, (introducer) => introducer.user, {
+  @OneToMany(() => ResourceIntroducer, (introducer) => introducer.user, {
     onDelete: 'CASCADE',
   })
-  resourceIntroducerPermissions!: ResourceIntroductionUser[];
+  resourceIntroducerPermissions!: ResourceIntroducer[];
 }

@@ -4,7 +4,7 @@ import {
   Resource,
   ResourceUsage,
   ResourceIntroduction,
-  ResourceIntroductionUser,
+  ResourceIntroducer,
   ResourceIntroductionHistoryItem,
   User,
   ResourceGroup,
@@ -18,7 +18,7 @@ import { FileStorageModule } from '../common/modules/file-storage.module';
 import { ResourceIntroductionController } from './introduction/resourceIntroduction.controller';
 import { ResourceIntroductionService } from './introduction/resourceIntroduction.service';
 import { UsersAndAuthModule } from '../users-and-auth/users-and-auth.module';
-import { ResourceIntroducersController } from './introduction/resourceIntroducers.controller';
+import { ResourceIntroducersController } from './introducers/resourceIntroducers.controller';
 import { MqttResourceModule } from './mqtt/mqtt-resource.module';
 import { ConfigModule } from '@nestjs/config';
 import { MqttModule } from '../mqtt/mqtt.module';
@@ -27,6 +27,11 @@ import { ResourcesCoreModule } from './resources-core.module';
 import { SSEModule } from './sse/sse.module';
 import { ResourceGroupsController } from './groups/resourceGroups.controller';
 import { ResourceGroupsService } from './groups/resourceGroups.service';
+import { ResourceGroupIntroducersController } from './groups/introducers/resourceGroupIntroducers.controller';
+import { ResourceGroupIntroductionService } from './groups/introductions/resourceGroupIntroduction.service';
+import { ResourceGroupIntroductionController } from './groups/introductions/resourceGroupIntroduction.controller';
+import { ResourceGroupIntroducersService } from './groups/introducers/resourceGroupIntroducers.service';
+import { ResourceIntroducersService } from './introducers/resourceIntroducers.service';
 
 @Module({
   imports: [
@@ -34,7 +39,7 @@ import { ResourceGroupsService } from './groups/resourceGroups.service';
       Resource,
       ResourceUsage,
       ResourceIntroduction,
-      ResourceIntroductionUser,
+      ResourceIntroducer,
       ResourceIntroductionHistoryItem,
       User,
       ResourceGroup,
@@ -55,8 +60,26 @@ import { ResourceGroupsService } from './groups/resourceGroups.service';
     ResourceUsageController,
     ResourceIntroductionController,
     ResourceIntroducersController,
+    ResourceGroupIntroducersController,
+    ResourceGroupIntroductionController,
   ],
-  providers: [ResourcePermissionsGuard, ResourceUsageService, ResourceIntroductionService, ResourceGroupsService],
-  exports: [ResourceUsageService, ResourceIntroductionService, ResourcesCoreModule, ResourceGroupsService],
+  providers: [
+    ResourcePermissionsGuard,
+    ResourceUsageService,
+    ResourceIntroductionService,
+    ResourceIntroducersService,
+    ResourceGroupsService,
+    ResourceGroupIntroductionService,
+    ResourceGroupIntroducersService,
+  ],
+  exports: [
+    ResourceUsageService,
+    ResourceIntroductionService,
+    ResourceIntroducersService,
+    ResourcesCoreModule,
+    ResourceGroupsService,
+    ResourceGroupIntroductionService,
+    ResourceGroupIntroducersService,
+  ],
 })
 export class ResourcesModule {}

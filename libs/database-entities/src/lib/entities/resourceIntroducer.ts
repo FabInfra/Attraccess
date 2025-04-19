@@ -1,18 +1,11 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  ManyToOne,
-  JoinColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Resource } from './resource.entity';
 import { User } from './user.entity';
 import { ResourceGroup } from './resourceGroup.entity';
 
 @Entity()
-export class ResourceIntroductionUser {
+export class ResourceIntroducer {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     description: 'The unique identifier of the introduction permission',
@@ -20,7 +13,7 @@ export class ResourceIntroductionUser {
   })
   id!: number;
 
-  @Column()
+  @Column({ nullable: true })
   @ApiProperty({
     description: 'The ID of the resource',
     example: 1,

@@ -484,6 +484,10 @@ export type GetResourceHistoryResponseDto = {
     data: Array<ResourceUsage>;
 };
 
+export type GetActiveUsageSessionDto = {
+    activeSession: ResourceUsage;
+};
+
 export type CompleteIntroductionDto = {
     /**
      * User ID
@@ -595,7 +599,7 @@ export type UnrevokeIntroductionDto = {
     comment?: string;
 };
 
-export type ResourceIntroductionUser = {
+export type ResourceIntroducer = {
     /**
      * The unique identifier of the introduction permission
      */
@@ -623,6 +627,13 @@ export type CanManageIntroducersResponseDto = {
      * Whether the user can manage introducers for the resource
      */
     canManageIntroducers: boolean;
+};
+
+export type CompleteGroupIntroductionDto = {
+    /**
+     * User ID to introduce
+     */
+    userId: number;
 };
 
 export type MqttResourceConfig = {
@@ -1388,7 +1399,7 @@ export type GetActiveSessionData = {
     resourceId: number;
 };
 
-export type GetActiveSessionResponse = ResourceUsage;
+export type GetActiveSessionResponse = GetActiveUsageSessionDto;
 
 export type MarkCompletedData = {
     requestBody: CompleteIntroductionDto;
@@ -1470,14 +1481,14 @@ export type GetAllResourceIntroducersData = {
     resourceId: number;
 };
 
-export type GetAllResourceIntroducersResponse = Array<ResourceIntroductionUser>;
+export type GetAllResourceIntroducersResponse = Array<ResourceIntroducer>;
 
 export type AddOneData = {
     resourceId: number;
     userId: number;
 };
 
-export type AddOneResponse = ResourceIntroductionUser;
+export type AddOneResponse = ResourceIntroducer;
 
 export type RemoveOneData = {
     resourceId: number;
@@ -1485,6 +1496,77 @@ export type RemoveOneData = {
 };
 
 export type RemoveOneResponse = void;
+
+export type GetAllResourceGroupIntroducersData = {
+    groupId: number;
+};
+
+export type GetAllResourceGroupIntroducersResponse = Array<ResourceIntroducer>;
+
+export type AddGroupIntroducerData = {
+    groupId: number;
+    userId: number;
+};
+
+export type AddGroupIntroducerResponse = ResourceIntroducer;
+
+export type RemoveGroupIntroducerData = {
+    groupId: number;
+    userId: number;
+};
+
+export type RemoveGroupIntroducerResponse = void;
+
+export type MarkGroupIntroductionCompletedData = {
+    groupId: number;
+    requestBody: CompleteGroupIntroductionDto;
+};
+
+export type MarkGroupIntroductionCompletedResponse = ResourceIntroduction;
+
+export type GetAllResourceGroupIntroductionsData = {
+    groupId: number;
+};
+
+export type GetAllResourceGroupIntroductionsResponse = unknown;
+
+export type CheckGroupIntroductionStatusData = {
+    groupId: number;
+};
+
+export type CheckGroupIntroductionStatusResponse = {
+    hasValidIntroduction?: boolean;
+};
+
+export type MarkGroupIntroductionRevokedData = {
+    groupId: number;
+    introductionId: number;
+    requestBody: RevokeIntroductionDto;
+};
+
+export type MarkGroupIntroductionRevokedResponse = ResourceIntroductionHistoryItem;
+
+export type MarkGroupIntroductionUnrevokedData = {
+    groupId: number;
+    introductionId: number;
+    requestBody: UnrevokeIntroductionDto;
+};
+
+export type MarkGroupIntroductionUnrevokedResponse = ResourceIntroductionHistoryItem;
+
+export type GetHistoryOfGroupIntroductionData = {
+    groupId: number;
+    introductionId: number;
+};
+
+export type GetHistoryOfGroupIntroductionResponse = Array<ResourceIntroductionHistoryItem>;
+
+export type GetOneGroupIntroductionData = {
+    groupId: number;
+    introductionId: number;
+};
+
+export type GetOneGroupIntroductionResponse = ResourceIntroduction;
 
 export type GetOneMqttConfigurationData = {
     resourceId: number;
@@ -2297,7 +2379,7 @@ export type $OpenApiTs = {
                 /**
                  * Active session retrieved successfully.
                  */
-                200: ResourceUsage;
+                200: GetActiveUsageSessionDto;
                 /**
                  * Unauthorized
                  */
@@ -2493,7 +2575,7 @@ export type $OpenApiTs = {
                 /**
                  * List of resource introducers
                  */
-                200: Array<ResourceIntroductionUser>;
+                200: Array<ResourceIntroducer>;
                 /**
                  * Unauthorized
                  */
@@ -2508,7 +2590,7 @@ export type $OpenApiTs = {
                 /**
                  * User added as an introducer
                  */
-                201: ResourceIntroductionUser;
+                201: ResourceIntroducer;
                 /**
                  * User is not authenticated
                  */
@@ -2545,6 +2627,184 @@ export type $OpenApiTs = {
                  * Permission check result
                  */
                 200: CanManageIntroducersResponseDto;
+                /**
+                 * Unauthorized
+                 */
+                401: unknown;
+            };
+        };
+    };
+    '/api/resource-groups/{groupId}/introducers': {
+        get: {
+            req: GetAllResourceGroupIntroducersData;
+            res: {
+                /**
+                 * List of resource group introducers
+                 */
+                200: Array<ResourceIntroducer>;
+                /**
+                 * Unauthorized
+                 */
+                401: unknown;
+            };
+        };
+    };
+    '/api/resource-groups/{groupId}/introducers/{userId}': {
+        post: {
+            req: AddGroupIntroducerData;
+            res: {
+                /**
+                 * User added as a group introducer
+                 */
+                201: ResourceIntroducer;
+                /**
+                 * User is not authenticated
+                 */
+                401: unknown;
+                /**
+                 * User does not have permission to manage this resource
+                 */
+                403: unknown;
+            };
+        };
+        delete: {
+            req: RemoveGroupIntroducerData;
+            res: {
+                /**
+                 * User removed as a group introducer
+                 */
+                204: void;
+                /**
+                 * User is not authenticated
+                 */
+                401: unknown;
+                /**
+                 * User does not have permission to manage this resource
+                 */
+                403: unknown;
+            };
+        };
+    };
+    '/api/resource-groups/{groupId}/introductions/complete': {
+        post: {
+            req: MarkGroupIntroductionCompletedData;
+            res: {
+                /**
+                 * Introduction marked as completed successfully.
+                 */
+                201: ResourceIntroduction;
+                /**
+                 * Unauthorized
+                 */
+                401: unknown;
+                /**
+                 * User or resource group not found
+                 */
+                404: unknown;
+            };
+        };
+    };
+    '/api/resource-groups/{groupId}/introductions': {
+        get: {
+            req: GetAllResourceGroupIntroductionsData;
+            res: {
+                /**
+                 * Resource group introductions
+                 */
+                200: unknown;
+                /**
+                 * User is not authenticated
+                 */
+                401: unknown;
+                /**
+                 * User does not have permission to manage this resource
+                 */
+                403: unknown;
+            };
+        };
+    };
+    '/api/resource-groups/{groupId}/introductions/status': {
+        get: {
+            req: CheckGroupIntroductionStatusData;
+            res: {
+                /**
+                 * Status retrieved successfully
+                 */
+                200: {
+                    hasValidIntroduction?: boolean;
+                };
+                /**
+                 * Unauthorized
+                 */
+                401: unknown;
+            };
+        };
+    };
+    '/api/resource-groups/{groupId}/introductions/{introductionId}/revoke': {
+        post: {
+            req: MarkGroupIntroductionRevokedData;
+            res: {
+                /**
+                 * Introduction revoked successfully
+                 */
+                201: ResourceIntroductionHistoryItem;
+                /**
+                 * User is not authenticated
+                 */
+                401: unknown;
+                /**
+                 * User does not have permission to manage this resource
+                 */
+                403: unknown;
+            };
+        };
+    };
+    '/api/resource-groups/{groupId}/introductions/{introductionId}/unrevoke': {
+        post: {
+            req: MarkGroupIntroductionUnrevokedData;
+            res: {
+                /**
+                 * Introduction unrevoked successfully
+                 */
+                201: ResourceIntroductionHistoryItem;
+                /**
+                 * User is not authenticated
+                 */
+                401: unknown;
+                /**
+                 * User does not have permission to manage this resource
+                 */
+                403: unknown;
+            };
+        };
+    };
+    '/api/resource-groups/{groupId}/introductions/{introductionId}/history': {
+        get: {
+            req: GetHistoryOfGroupIntroductionData;
+            res: {
+                /**
+                 * Introduction history
+                 */
+                200: Array<ResourceIntroductionHistoryItem>;
+                /**
+                 * User is not authenticated
+                 */
+                401: unknown;
+                /**
+                 * User does not have permission to manage this resource
+                 */
+                403: unknown;
+            };
+        };
+    };
+    '/api/resource-groups/{groupId}/introductions/{introductionId}': {
+        get: {
+            req: GetOneGroupIntroductionData;
+            res: {
+                /**
+                 * Resource group introduction
+                 */
+                200: ResourceIntroduction;
                 /**
                  * Unauthorized
                  */

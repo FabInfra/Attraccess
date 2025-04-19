@@ -25,17 +25,6 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import { ManageResourceGroups } from './groups/ManageResourceGroups';
 
-// Placeholder hook - replace with actual implementation
-const useResourceGroupsServiceCheckCanManagePermission = (params: { resourceId: number }) => {
-  console.warn('Placeholder hook used: useResourceGroupsServiceCheckCanManagePermission', params);
-  // Replace with actual API call - default to true for now
-  return {
-    data: { canManageResourceGroups: true },
-    isLoading: false,
-    error: null,
-  };
-};
-
 function ResourceDetailsComponent() {
   const { id } = useParams<{ id: string }>();
   const resourceId = parseInt(id || '', 10);
@@ -84,8 +73,6 @@ function ResourceDetailsComponent() {
   const canManageResources = hasPermission('canManageResources');
   const { data: canManageIntroductions } = useResourceIntroductionsServiceCheckCanManagePermission({ resourceId });
   const { data: canManageIntroducers } = useResourceIntroducersServiceCheckCanManagePermission({ resourceId });
-  const { data: canManageResourceGroupsData } = useResourceGroupsServiceCheckCanManagePermission({ resourceId });
-  const canManageResourceGroups = canManageResourceGroupsData?.canManageResourceGroups;
 
   const showIntroductionsManagement = useMemo(
     () => canManageResources || canManageIntroductions?.canManageIntroductions,
@@ -97,10 +84,7 @@ function ResourceDetailsComponent() {
     [canManageResources, canManageIntroducers]
   );
 
-  const showGroupsManagement = useMemo(
-    () => canManageResources || canManageResourceGroups,
-    [canManageResources, canManageResourceGroups]
-  );
+  const showGroupsManagement = useMemo(() => canManageResources, [canManageResources]);
 
   if (isLoadingResource) {
     return (

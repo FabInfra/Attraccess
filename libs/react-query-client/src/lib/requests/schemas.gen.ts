@@ -763,6 +763,16 @@ export const $GetResourceHistoryResponseDto = {
     required: ['total', 'page', 'limit', 'nextPage', 'totalPages', 'data']
 } as const;
 
+export const $GetActiveUsageSessionDto = {
+    type: 'object',
+    properties: {
+        activeSession: {
+            '$ref': '#/components/schemas/ResourceUsage'
+        }
+    },
+    required: ['activeSession']
+} as const;
+
 export const $CompleteIntroductionDto = {
     type: 'object',
     properties: {
@@ -935,7 +945,7 @@ export const $UnrevokeIntroductionDto = {
     }
 } as const;
 
-export const $ResourceIntroductionUser = {
+export const $ResourceIntroducer = {
     type: 'object',
     properties: {
         id: {
@@ -980,6 +990,18 @@ export const $CanManageIntroducersResponseDto = {
         }
     },
     required: ['canManageIntroducers']
+} as const;
+
+export const $CompleteGroupIntroductionDto = {
+    type: 'object',
+    properties: {
+        userId: {
+            type: 'number',
+            description: 'User ID to introduce',
+            example: 1
+        }
+    },
+    required: ['userId']
 } as const;
 
 export const $MqttResourceConfig = {

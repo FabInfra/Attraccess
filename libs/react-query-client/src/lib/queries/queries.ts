@@ -1,8 +1,8 @@
 // generated with @7nohe/openapi-react-query-codegen@1.6.2 
 
 import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
-import { ApplicationService, AuthenticationService, MqttResourceConfigurationService, MqttServersService, ResourceGroupsService, ResourceIntroducersService, ResourceIntroductionsService, ResourceUsageService, ResourcesService, SseService, SsoService, UsersService, WebhooksService } from "../requests/services.gen";
-import { BulkUpdateUserPermissionsDto, CompleteIntroductionDto, CreateMqttResourceConfigDto, CreateMqttServerDto, CreateResourceDto, CreateResourceGroupDto, CreateSSOProviderDto, CreateUserDto, CreateWebhookConfigDto, EndUsageSessionDto, RevokeIntroductionDto, StartUsageSessionDto, UnrevokeIntroductionDto, UpdateMqttServerDto, UpdateResourceDto, UpdateResourceGroupDto, UpdateSSOProviderDto, UpdateUserPermissionsDto, UpdateWebhookConfigDto, VerifyEmailDto, WebhookStatusDto } from "../requests/types.gen";
+import { ApplicationService, AuthenticationService, MqttResourceConfigurationService, MqttServersService, ResourceGroupIntroducersService, ResourceGroupIntroductionsService, ResourceGroupsService, ResourceIntroducersService, ResourceIntroductionsService, ResourceUsageService, ResourcesService, SseService, SsoService, UsersService, WebhooksService } from "../requests/services.gen";
+import { BulkUpdateUserPermissionsDto, CompleteGroupIntroductionDto, CompleteIntroductionDto, CreateMqttResourceConfigDto, CreateMqttServerDto, CreateResourceDto, CreateResourceGroupDto, CreateSSOProviderDto, CreateUserDto, CreateWebhookConfigDto, EndUsageSessionDto, RevokeIntroductionDto, StartUsageSessionDto, UnrevokeIntroductionDto, UpdateMqttServerDto, UpdateResourceDto, UpdateResourceGroupDto, UpdateSSOProviderDto, UpdateUserPermissionsDto, UpdateWebhookConfigDto, VerifyEmailDto, WebhookStatusDto } from "../requests/types.gen";
 import * as Common from "./common";
 export const useApplicationServicePing2 = <TData = Common.ApplicationServicePing2DefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseApplicationServicePing2KeyFn(queryKey), queryFn: () => ApplicationService.ping2() as TData, ...options });
 export const useUsersServiceGetAllUsers = <TData = Common.UsersServiceGetAllUsersDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ limit, page, search }: {
@@ -93,6 +93,23 @@ export const useResourceIntroducersServiceGetAllResourceIntroducers = <TData = C
 export const useResourceIntroducersServiceCheckCanManagePermission = <TData = Common.ResourceIntroducersServiceCheckCanManagePermissionDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
   resourceId: number;
 }, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceIntroducersServiceCheckCanManagePermissionKeyFn({ resourceId }, queryKey), queryFn: () => ResourceIntroducersService.checkCanManagePermission({ resourceId }) as TData, ...options });
+export const useResourceGroupIntroducersServiceGetAllResourceGroupIntroducers = <TData = Common.ResourceGroupIntroducersServiceGetAllResourceGroupIntroducersDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId }: {
+  groupId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceGroupIntroducersServiceGetAllResourceGroupIntroducersKeyFn({ groupId }, queryKey), queryFn: () => ResourceGroupIntroducersService.getAllResourceGroupIntroducers({ groupId }) as TData, ...options });
+export const useResourceGroupIntroductionsServiceGetAllResourceGroupIntroductions = <TData = Common.ResourceGroupIntroductionsServiceGetAllResourceGroupIntroductionsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId }: {
+  groupId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceGroupIntroductionsServiceGetAllResourceGroupIntroductionsKeyFn({ groupId }, queryKey), queryFn: () => ResourceGroupIntroductionsService.getAllResourceGroupIntroductions({ groupId }) as TData, ...options });
+export const useResourceGroupIntroductionsServiceCheckGroupIntroductionStatus = <TData = Common.ResourceGroupIntroductionsServiceCheckGroupIntroductionStatusDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId }: {
+  groupId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceGroupIntroductionsServiceCheckGroupIntroductionStatusKeyFn({ groupId }, queryKey), queryFn: () => ResourceGroupIntroductionsService.checkGroupIntroductionStatus({ groupId }) as TData, ...options });
+export const useResourceGroupIntroductionsServiceGetHistoryOfGroupIntroduction = <TData = Common.ResourceGroupIntroductionsServiceGetHistoryOfGroupIntroductionDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId, introductionId }: {
+  groupId: number;
+  introductionId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceGroupIntroductionsServiceGetHistoryOfGroupIntroductionKeyFn({ groupId, introductionId }, queryKey), queryFn: () => ResourceGroupIntroductionsService.getHistoryOfGroupIntroduction({ groupId, introductionId }) as TData, ...options });
+export const useResourceGroupIntroductionsServiceGetOneGroupIntroduction = <TData = Common.ResourceGroupIntroductionsServiceGetOneGroupIntroductionDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId, introductionId }: {
+  groupId: number;
+  introductionId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceGroupIntroductionsServiceGetOneGroupIntroductionKeyFn({ groupId, introductionId }, queryKey), queryFn: () => ResourceGroupIntroductionsService.getOneGroupIntroduction({ groupId, introductionId }) as TData, ...options });
 export const useMqttResourceConfigurationServiceGetOneMqttConfiguration = <TData = Common.MqttResourceConfigurationServiceGetOneMqttConfigurationDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
   resourceId: number;
 }, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMqttResourceConfigurationServiceGetOneMqttConfigurationKeyFn({ resourceId }, queryKey), queryFn: () => MqttResourceConfigurationService.getOneMqttConfiguration({ resourceId }) as TData, ...options });
@@ -195,6 +212,38 @@ export const useResourceIntroducersServiceAddOne = <TData = Common.ResourceIntro
   resourceId: number;
   userId: number;
 }, TContext>({ mutationFn: ({ resourceId, userId }) => ResourceIntroducersService.addOne({ resourceId, userId }) as unknown as Promise<TData>, ...options });
+export const useResourceGroupIntroducersServiceAddGroupIntroducer = <TData = Common.ResourceGroupIntroducersServiceAddGroupIntroducerMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  groupId: number;
+  userId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  groupId: number;
+  userId: number;
+}, TContext>({ mutationFn: ({ groupId, userId }) => ResourceGroupIntroducersService.addGroupIntroducer({ groupId, userId }) as unknown as Promise<TData>, ...options });
+export const useResourceGroupIntroductionsServiceMarkGroupIntroductionCompleted = <TData = Common.ResourceGroupIntroductionsServiceMarkGroupIntroductionCompletedMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  groupId: number;
+  requestBody: CompleteGroupIntroductionDto;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  groupId: number;
+  requestBody: CompleteGroupIntroductionDto;
+}, TContext>({ mutationFn: ({ groupId, requestBody }) => ResourceGroupIntroductionsService.markGroupIntroductionCompleted({ groupId, requestBody }) as unknown as Promise<TData>, ...options });
+export const useResourceGroupIntroductionsServiceMarkGroupIntroductionRevoked = <TData = Common.ResourceGroupIntroductionsServiceMarkGroupIntroductionRevokedMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  groupId: number;
+  introductionId: number;
+  requestBody: RevokeIntroductionDto;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  groupId: number;
+  introductionId: number;
+  requestBody: RevokeIntroductionDto;
+}, TContext>({ mutationFn: ({ groupId, introductionId, requestBody }) => ResourceGroupIntroductionsService.markGroupIntroductionRevoked({ groupId, introductionId, requestBody }) as unknown as Promise<TData>, ...options });
+export const useResourceGroupIntroductionsServiceMarkGroupIntroductionUnrevoked = <TData = Common.ResourceGroupIntroductionsServiceMarkGroupIntroductionUnrevokedMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  groupId: number;
+  introductionId: number;
+  requestBody: UnrevokeIntroductionDto;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  groupId: number;
+  introductionId: number;
+  requestBody: UnrevokeIntroductionDto;
+}, TContext>({ mutationFn: ({ groupId, introductionId, requestBody }) => ResourceGroupIntroductionsService.markGroupIntroductionUnrevoked({ groupId, introductionId, requestBody }) as unknown as Promise<TData>, ...options });
 export const useMqttResourceConfigurationServiceUpsertOne = <TData = Common.MqttResourceConfigurationServiceUpsertOneMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   requestBody: CreateMqttResourceConfigDto;
   resourceId: number;
@@ -328,6 +377,13 @@ export const useResourceIntroducersServiceRemoveOne = <TData = Common.ResourceIn
   resourceId: number;
   userId: number;
 }, TContext>({ mutationFn: ({ resourceId, userId }) => ResourceIntroducersService.removeOne({ resourceId, userId }) as unknown as Promise<TData>, ...options });
+export const useResourceGroupIntroducersServiceRemoveGroupIntroducer = <TData = Common.ResourceGroupIntroducersServiceRemoveGroupIntroducerMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  groupId: number;
+  userId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  groupId: number;
+  userId: number;
+}, TContext>({ mutationFn: ({ groupId, userId }) => ResourceGroupIntroducersService.removeGroupIntroducer({ groupId, userId }) as unknown as Promise<TData>, ...options });
 export const useMqttResourceConfigurationServiceDeleteOneMqttConfiguration = <TData = Common.MqttResourceConfigurationServiceDeleteOneMqttConfigurationMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   resourceId: number;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {

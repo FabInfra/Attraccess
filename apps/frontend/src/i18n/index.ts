@@ -22,8 +22,8 @@ interface TranslationModule {
 }
 
 interface TranslationModules {
-  en: TranslationModule;
-  de: TranslationModule;
+  en: TranslationModule | Record<string, unknown>;
+  de: TranslationModule | Record<string, unknown>;
 }
 
 export function useTranslations<T extends TranslationModules>(

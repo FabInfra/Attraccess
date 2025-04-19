@@ -39,13 +39,13 @@ export class ResourceGroupsController {
   @Get()
   @Auth()
   @ApiOperation({ summary: 'Retrieve all resource groups', operationId: 'getAllResourceGroups' })
-  @ApiResponse({ status: 200, description: 'List of resource groups with pagination.', type: PaginatedResourceGroupResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'List of resource groups with pagination.',
+    type: PaginatedResourceGroupResponseDto,
+  })
   getAll(@Query() query: ListResourceGroupsDto): Promise<PaginatedResponse<ResourceGroup>> {
-    return this.resourceGroupsService.listResourceGroups(
-      query.page,
-      query.limit,
-      query.search,
-    );
+    return this.resourceGroupsService.listResourceGroups(query.page, query.limit, query.search);
   }
 
   @Get(':id')
@@ -55,7 +55,7 @@ export class ResourceGroupsController {
   @ApiResponse({ status: 200, description: 'The resource group details.', type: ResourceGroup })
   @ApiResponse({ status: 404, description: 'Resource group not found.' })
   getOneById(@Param('id', ParseIntPipe) id: number): Promise<ResourceGroup> {
-    return this.resourceGroupsService.getResourceGroupById(id);
+    return this.resourceGroupsService.getById(id);
   }
 
   @Patch(':id')
@@ -64,10 +64,7 @@ export class ResourceGroupsController {
   @ApiParam({ name: 'id', description: 'Resource Group ID', type: Number })
   @ApiResponse({ status: 200, description: 'The resource group has been successfully updated.', type: ResourceGroup })
   @ApiResponse({ status: 404, description: 'Resource group not found.' })
-  updateOne(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateDto: UpdateResourceGroupDto,
-  ): Promise<ResourceGroup> {
+  updateOne(@Param('id', ParseIntPipe) id: number, @Body() updateDto: UpdateResourceGroupDto): Promise<ResourceGroup> {
     return this.resourceGroupsService.updateResourceGroup(id, updateDto);
   }
 

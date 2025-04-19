@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  Logger,
-  NotFoundException,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs/promises';
 import * as path from 'path';
@@ -63,81 +58,110 @@ export class FileStorageService implements OnModuleInit {
   ): Promise<void> {
     const maxSize = options?.maxSize ?? this.config.maxFileSize;
     const allowedTypes = options?.allowedTypes ?? this.config.allowedMimeTypes;
+    this.logger.debug(
+      `Validating file: ${file.originalname}, size: ${file.size}, type: ${
+        file.mimetype
+      }. Max size: ${maxSize}, Allowed types: ${allowedTypes.join(', ')}`
+    );
 
     // Check file size
     if (file.size > maxSize) {
-      throw new FileUploadValidationError(
-        `File size exceeds maximum allowed size of ${maxSize} bytes`
-      );
+      const errorMsg = `File size ${file.size} exceeds maximum allowed size of ${maxSize} bytes`;
+      this.logger.warn(`File validation failed for ${file.originalname}: ${errorMsg}`);
+      throw new FileUploadValidationError(errorMsg);
     }
 
     // Check MIME type
     if (!allowedTypes.includes(file.mimetype as AllowedMimeType)) {
-      throw new FileUploadValidationError(
-        `File type ${
-          file.mimetype
-        } is not allowed. Allowed types: ${allowedTypes.join(', ')}`
-      );
+      const errorMsg = `File type ${file.mimetype} is not allowed. Allowed types: ${allowedTypes.join(', ')}`;
+      this.logger.warn(`File validation failed for ${file.originalname}: ${errorMsg}`);
+      throw new FileUploadValidationError(errorMsg);
     }
+    this.logger.debug(`File validation successful for ${file.originalname}`);
   }
 
   async saveFile(file: FileUpload, subDirectory: string): Promise<string> {
+    this.logger.debug(
+      `Attempting to save file: ${file.originalname} (size: ${file.size}, type: ${file.mimetype}) to subDirectory: ${subDirectory}`
+    );
     await this.validateFile(file);
 
     const secureFilename = this.generateSecureFilename(file.originalname);
     const targetDir = path.join(this.config.root, 'uploads', subDirectory);
+    this.logger.debug(`Generated secure filename: ${secureFilename}, Target directory: ${targetDir}`);
 
-    await fs.mkdir(targetDir, { recursive: true, mode: 0o755 });
+    try {
+      this.logger.debug(`Ensuring target directory exists: ${targetDir}`);
+      await fs.mkdir(targetDir, { recursive: true, mode: 0o755 });
+    } catch (error) {
+      this.logger.error(`Failed to create directory ${targetDir}: ${error.message}`, error.stack);
+      throw error; // Re-throw error after logging
+    }
 
     const filePath = path.join(targetDir, secureFilename);
-    await fs.writeFile(filePath, file.buffer, { mode: 0o644 });
+    try {
+      this.logger.debug(`Writing file to path: ${filePath}`);
+      await fs.writeFile(filePath, file.buffer, { mode: 0o644 });
+      this.logger.log(`Successfully saved file to ${filePath}`);
+    } catch (error) {
+      this.logger.error(`Failed to write file to ${filePath}: ${error.message}`, error.stack);
+      // Attempt to clean up if write fails?
+      throw error; // Re-throw error after logging
+    }
 
     return secureFilename;
   }
 
   async deleteFile(subDirectory: string, filename: string): Promise<void> {
-    const filePath = path.join(
-      this.config.root,
-      'uploads',
-      subDirectory,
-      filename
-    );
+    const filePath = path.join(this.config.root, 'uploads', subDirectory, filename);
+    this.logger.debug(`Attempting to delete file: ${filePath}`);
 
     try {
       await fs.unlink(filePath);
+      this.logger.log(`Successfully deleted file: ${filePath}`);
     } catch (error) {
-      if (error.code !== 'ENOENT') {
+      if (error.code === 'ENOENT') {
+        this.logger.warn(`Attempted to delete non-existent file: ${filePath}`);
+        // File already gone, swallow error
+      } else {
+        this.logger.error(`Error deleting file ${filePath}: ${error.message}`, error.stack);
         throw error;
       }
     }
   }
 
   async getFilePath(subDirectory: string, filename: string): Promise<string> {
-    const filePath = path.join(
-      this.config.root,
-      'uploads',
-      subDirectory,
-      filename
-    );
+    const filePath = path.join(this.config.root, 'uploads', subDirectory, filename);
+    this.logger.debug(`Getting file path for: ${filePath}`);
 
     try {
       await fs.access(filePath);
+      this.logger.debug(`File path exists: ${filePath}`);
       return filePath;
     } catch {
-      throw new FileNotFoundError(filename);
+      this.logger.warn(`File not found at path: ${filePath}`);
+      throw new FileNotFoundError(filePath); // Use the custom error with path info
     }
   }
 
   getPublicPath(subDirectory: string, filename: string): string {
-    return `/storage/uploads/${subDirectory}/${filename}`;
+    const publicPath = `/storage/uploads/${subDirectory}/${filename}`;
+    this.logger.debug(`Getting public path for ${subDirectory}/${filename}: ${publicPath}`);
+    return publicPath;
   }
 
   async clearCache(subDirectory: string): Promise<void> {
     const cacheDir = path.join(this.config.root, 'cache', subDirectory);
+    this.logger.debug(`Attempting to clear cache directory: ${cacheDir}`);
     try {
       await fs.rm(cacheDir, { recursive: true, force: true });
+      this.logger.log(`Successfully cleared cache directory: ${cacheDir}`);
     } catch (error) {
-      if (error.code !== 'ENOENT') {
+      if (error.code === 'ENOENT') {
+        this.logger.warn(`Attempted to clear non-existent cache directory: ${cacheDir}`);
+        // Directory already gone, swallow error
+      } else {
+        this.logger.error(`Error clearing cache directory ${cacheDir}: ${error.message}`, error.stack);
         throw error;
       }
     }
