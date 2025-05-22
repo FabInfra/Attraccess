@@ -1327,6 +1327,28 @@ export type AppKeyResponseDto = {
     key: string;
 };
 
+export type SetNfcCardDisabledDto = {
+    /**
+     * The ID of the NFC card to update disabled status
+     */
+    cardId: number;
+    /**
+     * Whether the NFC card should be disabled
+     */
+    isDisabled: boolean;
+};
+
+export type SetNfcCardDisabledResponseDto = {
+    /**
+     * The ID of the NFC card
+     */
+    id: number;
+    /**
+     * Whether the NFC card is now disabled
+     */
+    isDisabled: boolean;
+};
+
 export type NFCCard = {
     /**
      * The ID of the NFC card
@@ -1340,6 +1362,10 @@ export type NFCCard = {
      * The ID of the user that owns the NFC card
      */
     userId: number;
+    /**
+     * Whether the NFC card is temporarily disabled
+     */
+    isDisabled: boolean;
     /**
      * The date and time the NFC card was created
      */
@@ -2014,6 +2040,12 @@ export type GetAppKeyByUidData = {
 };
 
 export type GetAppKeyByUidResponse = AppKeyResponseDto;
+
+export type SetCardDisabledData = {
+    requestBody: SetNfcCardDisabledDto;
+};
+
+export type SetCardDisabledResponse = SetNfcCardDisabledResponseDto;
 
 export type GetAllCardsResponse = Array<NFCCard>;
 
@@ -3546,6 +3578,21 @@ export type $OpenApiTs = {
                  * The app key for the card
                  */
                 200: AppKeyResponseDto;
+                /**
+                 * Unauthorized
+                 */
+                401: unknown;
+            };
+        };
+    };
+    '/api/fabreader/cards/set-disabled': {
+        post: {
+            req: SetCardDisabledData;
+            res: {
+                /**
+                 * The updated card status
+                 */
+                200: SetNfcCardDisabledResponseDto;
                 /**
                  * Unauthorized
                  */

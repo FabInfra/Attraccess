@@ -102,6 +102,21 @@ export interface VerifyEmailDto {
   email: string;
 }
 
+export type ResetPasswordDto = object;
+
+export interface ChangePasswordDto {
+  /**
+   * The new password for the user
+   * @example "password123"
+   */
+  password: string;
+  /**
+   * The token for the user
+   * @example "1234567890"
+   */
+  token: string;
+}
+
 export type UserNotFoundException = object;
 
 export interface PaginatedUsersResponseDto {
@@ -510,10 +525,9 @@ export interface ResourceUsage {
    * @example "Completed initial prototype, material usage: 500g"
    */
   endNotes?: string;
-  /**
-   * The user who used the resource
-   * @example 1
-   */
+  /** The resource being used */
+  resource?: Resource;
+  /** The user who used the resource */
   user?: User;
   /**
    * The duration of the usage session in minutes
@@ -706,6 +720,11 @@ export interface MqttResourceConfig {
    */
   resourceId: number;
   /**
+   * Name of this MQTT configuration
+   * @example "Primary Status Feed"
+   */
+  name: string;
+  /**
    * The ID of the MQTT server to publish to
    * @example 1
    */
@@ -749,6 +768,11 @@ export interface CreateMqttResourceConfigDto {
    */
   serverId: number;
   /**
+   * Name of this MQTT configuration
+   * @example "Primary Status Feed"
+   */
+  name: string;
+  /**
    * Topic template for when resource is in use
    * @example "resources/{{id}}/status"
    */
@@ -768,6 +792,39 @@ export interface CreateMqttResourceConfigDto {
    * @example "{"status":"not_in_use","resourceId":{{id}},"resourceName":"{{name}}"}"
    */
   notInUseMessage: string;
+}
+
+export interface UpdateMqttResourceConfigDto {
+  /**
+   * ID of the MQTT server to use
+   * @example 1
+   */
+  serverId?: number;
+  /**
+   * Name of this MQTT configuration
+   * @example "Primary Status Feed"
+   */
+  name?: string;
+  /**
+   * Topic template for when resource is in use
+   * @example "resources/{{id}}/status"
+   */
+  inUseTopic?: string;
+  /**
+   * Message template for when resource is in use
+   * @example "{"status":"in_use","resourceId":{{id}},"resourceName":"{{name}}"}"
+   */
+  inUseMessage?: string;
+  /**
+   * Topic template for when resource is not in use
+   * @example "resources/{{id}}/status"
+   */
+  notInUseTopic?: string;
+  /**
+   * Message template for when resource is not in use
+   * @example "{"status":"not_in_use","resourceId":{{id}},"resourceName":"{{name}}"}"
+   */
+  notInUseMessage?: string;
 }
 
 export interface TestMqttConfigResponseDto {
@@ -1292,6 +1349,140 @@ export interface UploadPluginDto {
   pluginZip: File;
 }
 
+export interface EnrollNfcCardDto {
+  /**
+   * The ID of the reader to enroll the NFC card on
+   * @example 1
+   */
+  readerId: number;
+}
+
+export interface EnrollNfcCardResponseDto {
+  /**
+   * Success message
+   * @example "Enrollment initiated, continue on Reader"
+   */
+  message: string;
+}
+
+export interface ResetNfcCardDto {
+  /**
+   * The ID of the reader to reset the NFC card on
+   * @example 1
+   */
+  readerId: number;
+  /**
+   * The ID of the NFC card to reset
+   * @example 123
+   */
+  cardId: number;
+}
+
+export interface ResetNfcCardResponseDto {
+  /**
+   * Success message
+   * @example "Reset initiated, continue on Reader"
+   */
+  message: string;
+}
+
+export interface UpdateReaderDto {
+  /**
+   * The name of the reader
+   * @example "Main Entrance Reader"
+   */
+  name: string;
+  /** The IDs of the resources that the reader has access to */
+  connectedResources: number[];
+}
+
+export interface FabReader {
+  /** The ID of the reader */
+  id: number;
+  /** The name of the reader */
+  name: string;
+  /** The IDs of the resources that the reader has access to */
+  hasAccessToResourceIds: number[];
+  /**
+   * The last time the reader connected to the server
+   * @format date-time
+   */
+  lastConnection: string;
+  /**
+   * The first time the reader connected to the server
+   * @format date-time
+   */
+  firstConnection: string;
+  /** Whether the reader is currently connected */
+  connected: boolean;
+}
+
+export interface UpdateReaderResponseDto {
+  /**
+   * Success message
+   * @example "Reader updated successfully"
+   */
+  message: string;
+  /** The updated reader */
+  reader: FabReader;
+}
+
+export interface AppKeyRequestDto {
+  /**
+   * The UID of the card to get the app key for
+   * @example "04A2B3C4D5E6"
+   */
+  cardUID: string;
+  /**
+   * The key number to generate
+   * @example 1
+   */
+  keyNo: number;
+}
+
+export interface AppKeyResponseDto {
+  /**
+   * Generated key in hex format
+   * @example "0A1B2C3D4E5F6789"
+   */
+  key: string;
+}
+
+export interface SetNfcCardDisabledDto {
+  /** The ID of the NFC card to update disabled status */
+  cardId: number;
+  /** Whether the NFC card should be disabled */
+  isDisabled: boolean;
+}
+
+export interface SetNfcCardDisabledResponseDto {
+  /** The ID of the NFC card */
+  id: number;
+  /** Whether the NFC card is now disabled */
+  isDisabled: boolean;
+}
+
+export interface NFCCard {
+  /** The ID of the NFC card */
+  id: number;
+  /** The UID of the NFC card */
+  uid: string;
+  /** The ID of the user that owns the NFC card */
+  userId: number;
+  /** Whether the NFC card is temporarily disabled */
+  isDisabled: boolean;
+  /**
+   * The date and time the NFC card was created
+   * @format date-time
+   */
+  createdAt: string;
+  /**
+   * The date and time the NFC card was last updated
+   * @format date-time
+   */
+  updatedAt: string;
+}
+
 export interface Ping2Data {
   /** @example "pong" */
   message?: string;
@@ -1314,6 +1505,10 @@ export interface VerifyEmailData {
   /** @example "Email verified successfully" */
   message?: string;
 }
+
+export type RequestPasswordResetData = any;
+
+export type ChangePasswordViaResetTokenData = any;
 
 export type GetCurrentData = User;
 
@@ -1525,9 +1720,13 @@ export type RemoveOneData = any;
 
 export type CheckCanManagePermissionResult = CanManageIntroducersResponseDto;
 
+export type GetAllMqttConfigurationsData = MqttResourceConfig[];
+
+export type CreateMqttConfigurationData = MqttResourceConfig;
+
 export type GetOneMqttConfigurationData = MqttResourceConfig;
 
-export type UpsertOneData = MqttResourceConfig;
+export type UpdateMqttConfigurationData = MqttResourceConfig;
 
 export type DeleteOneMqttConfigurationData = any;
 
@@ -1573,26 +1772,39 @@ export type GetFrontendPluginFileData = string;
 
 export type DeletePluginData = any;
 
-export type EnrollNfcCardData = any;
+export type EnrollNfcCardData = EnrollNfcCardResponseDto;
 
-export type ResetNfcCardData = any;
+export type ResetNfcCardData = ResetNfcCardResponseDto;
 
-export interface UpdateReaderPayload {
-  /** The new name for the reader */
-  name?: string;
-  /** IDs of resources connected to this reader */
-  connectedResources?: number[];
+export type UpdateReaderData = UpdateReaderResponseDto;
+
+export type GetReaderByIdData = FabReader;
+
+export type GetReadersData = FabReader[];
+
+export type GetAppKeyByUidData = AppKeyResponseDto;
+
+export type SetCardDisabledData = SetNfcCardDisabledResponseDto;
+
+export type GetAllCardsData = NFCCard[];
+
+export interface AnalyticsControllerGetResourceUsageHoursInDateRangeParams {
+  /**
+   * The start date of the range
+   * @format date-time
+   * @example "2021-01-01"
+   */
+  start: string;
+  /**
+   * The end date of the range
+   * @format date-time
+   * @example "2021-01-01"
+   */
+  end: string;
 }
 
-export type UpdateReaderData = any;
-
-export type GetReaderByIdData = any;
-
-export type GetReadersData = any;
-
-export type GetAppKeyByUidData = any;
-
-export type CardControllerGetCardsData = any;
+export type AnalyticsControllerGetResourceUsageHoursInDateRangeData =
+  ResourceUsage[];
 
 export namespace Application {
   /**
@@ -1663,6 +1875,38 @@ export namespace Users {
     export type RequestBody = VerifyEmailDto;
     export type RequestHeaders = {};
     export type ResponseBody = VerifyEmailData;
+  }
+
+  /**
+   * No description
+   * @tags users
+   * @name RequestPasswordReset
+   * @summary Request a password reset
+   * @request POST:/api/users/reset-password
+   */
+  export namespace RequestPasswordReset {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = ResetPasswordDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = RequestPasswordResetData;
+  }
+
+  /**
+   * No description
+   * @tags users
+   * @name ChangePasswordViaResetToken
+   * @summary Change a user password after password reset
+   * @request POST:/api/users/{userId}/change-password
+   */
+  export namespace ChangePasswordViaResetToken {
+    export type RequestParams = {
+      userId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = ChangePasswordDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ChangePasswordViaResetTokenData;
   }
 
   /**
@@ -2551,14 +2795,51 @@ export namespace MqttResourceConfiguration {
   /**
    * No description
    * @tags MQTT Resource Configuration
-   * @name GetOneMqttConfiguration
-   * @summary Get MQTT configuration for a resource
+   * @name GetAllMqttConfigurations
+   * @summary Get all MQTT configurations for a resource
    * @request GET:/api/resources/{resourceId}/mqtt/config
+   * @secure
+   */
+  export namespace GetAllMqttConfigurations {
+    export type RequestParams = {
+      resourceId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = GetAllMqttConfigurationsData;
+  }
+
+  /**
+   * No description
+   * @tags MQTT Resource Configuration
+   * @name CreateMqttConfiguration
+   * @summary Create a new MQTT configuration for a resource
+   * @request POST:/api/resources/{resourceId}/mqtt/config
+   * @secure
+   */
+  export namespace CreateMqttConfiguration {
+    export type RequestParams = {
+      resourceId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = CreateMqttResourceConfigDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = CreateMqttConfigurationData;
+  }
+
+  /**
+   * No description
+   * @tags MQTT Resource Configuration
+   * @name GetOneMqttConfiguration
+   * @summary Get a specific MQTT configuration for a resource
+   * @request GET:/api/resources/{resourceId}/mqtt/config/{configId}
    * @secure
    */
   export namespace GetOneMqttConfiguration {
     export type RequestParams = {
       resourceId: number;
+      configId: number;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -2569,32 +2850,34 @@ export namespace MqttResourceConfiguration {
   /**
    * No description
    * @tags MQTT Resource Configuration
-   * @name UpsertOne
-   * @summary Create or update MQTT configuration for a resource
-   * @request POST:/api/resources/{resourceId}/mqtt/config
+   * @name UpdateMqttConfiguration
+   * @summary Update a specific MQTT configuration
+   * @request PUT:/api/resources/{resourceId}/mqtt/config/{configId}
    * @secure
    */
-  export namespace UpsertOne {
+  export namespace UpdateMqttConfiguration {
     export type RequestParams = {
       resourceId: number;
+      configId: number;
     };
     export type RequestQuery = {};
-    export type RequestBody = CreateMqttResourceConfigDto;
+    export type RequestBody = UpdateMqttResourceConfigDto;
     export type RequestHeaders = {};
-    export type ResponseBody = UpsertOneData;
+    export type ResponseBody = UpdateMqttConfigurationData;
   }
 
   /**
    * No description
    * @tags MQTT Resource Configuration
    * @name DeleteOneMqttConfiguration
-   * @summary Delete MQTT configuration for a resource
-   * @request DELETE:/api/resources/{resourceId}/mqtt/config
+   * @summary Delete a specific MQTT configuration
+   * @request DELETE:/api/resources/{resourceId}/mqtt/config/{configId}
    * @secure
    */
   export namespace DeleteOneMqttConfiguration {
     export type RequestParams = {
       resourceId: number;
+      configId: number;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -2606,13 +2889,14 @@ export namespace MqttResourceConfiguration {
    * No description
    * @tags MQTT Resource Configuration
    * @name TestOne
-   * @summary Test MQTT configuration
-   * @request POST:/api/resources/{resourceId}/mqtt/config/test
+   * @summary Test a specific MQTT configuration
+   * @request POST:/api/resources/{resourceId}/mqtt/config/{configId}/test
    * @secure
    */
   export namespace TestOne {
     export type RequestParams = {
       resourceId: number;
+      configId: number;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -3014,50 +3298,42 @@ export namespace Plugin {
   }
 }
 
-export namespace Reader {
+export namespace FabReaderReaders {
   /**
    * No description
-   * @tags Reader
+   * @tags FabReader Readers
    * @name EnrollNfcCard
    * @summary Enroll a new NFC card
-   * @request POST:/api/fabreader/readers/{readerId}/enroll-nfc-card
+   * @request POST:/api/fabreader/readers/enroll-nfc-card
    * @secure
    */
   export namespace EnrollNfcCard {
-    export type RequestParams = {
-      /** The ID of the reader to enroll the NFC card on */
-      readerId: number;
-    };
+    export type RequestParams = {};
     export type RequestQuery = {};
-    export type RequestBody = never;
+    export type RequestBody = EnrollNfcCardDto;
     export type RequestHeaders = {};
     export type ResponseBody = EnrollNfcCardData;
   }
 
   /**
    * No description
-   * @tags Reader
+   * @tags FabReader Readers
    * @name ResetNfcCard
    * @summary Reset an NFC card
-   * @request POST:/api/fabreader/readers/{readerId}/reset-nfc-card/{cardId}
+   * @request POST:/api/fabreader/readers/reset-nfc-card
    * @secure
    */
   export namespace ResetNfcCard {
-    export type RequestParams = {
-      /** The ID of the reader to reset the NFC card on */
-      readerId: number;
-      /** The ID of the NFC card to reset */
-      cardId: number;
-    };
+    export type RequestParams = {};
     export type RequestQuery = {};
-    export type RequestBody = never;
+    export type RequestBody = ResetNfcCardDto;
     export type RequestHeaders = {};
     export type ResponseBody = ResetNfcCardData;
   }
 
   /**
    * No description
-   * @tags Reader
+   * @tags FabReader Readers
    * @name UpdateReader
    * @summary Update reader name and connected resources
    * @request PATCH:/api/fabreader/readers/{readerId}
@@ -3065,18 +3341,21 @@ export namespace Reader {
    */
   export namespace UpdateReader {
     export type RequestParams = {
-      /** The ID of the reader to update */
+      /**
+       * The ID of the reader to update
+       * @example 1
+       */
       readerId: number;
     };
     export type RequestQuery = {};
-    export type RequestBody = UpdateReaderPayload;
+    export type RequestBody = UpdateReaderDto;
     export type RequestHeaders = {};
     export type ResponseBody = UpdateReaderData;
   }
 
   /**
    * No description
-   * @tags Reader
+   * @tags FabReader Readers
    * @name GetReaderById
    * @summary Get a reader by ID
    * @request GET:/api/fabreader/readers/{readerId}
@@ -3084,7 +3363,10 @@ export namespace Reader {
    */
   export namespace GetReaderById {
     export type RequestParams = {
-      /** The ID of the reader to get */
+      /**
+       * The ID of the reader to get
+       * @example 1
+       */
       readerId: number;
     };
     export type RequestQuery = {};
@@ -3095,7 +3377,7 @@ export namespace Reader {
 
   /**
    * No description
-   * @tags Reader
+   * @tags FabReader Readers
    * @name GetReaders
    * @summary Get all readers
    * @request GET:/api/fabreader/readers
@@ -3110,42 +3392,84 @@ export namespace Reader {
   }
 }
 
-export namespace Card {
+export namespace FabReaderNfcCards {
   /**
    * No description
-   * @tags Card
+   * @tags FabReader NFC Cards
    * @name GetAppKeyByUid
    * @summary Get the app key for a card by UID
-   * @request POST:/api/fabreader/cards/{cardUID}/keys/{keyNo}
+   * @request POST:/api/fabreader/cards/keys
    * @secure
    */
   export namespace GetAppKeyByUid {
-    export type RequestParams = {
-      /** The UID of the card to get the app key for */
-      cardUid: string;
-      /** The key number to generate */
-      keyNo: number;
-    };
+    export type RequestParams = {};
     export type RequestQuery = {};
-    export type RequestBody = never;
+    export type RequestBody = AppKeyRequestDto;
     export type RequestHeaders = {};
     export type ResponseBody = GetAppKeyByUidData;
   }
 
   /**
    * No description
-   * @tags Card
-   * @name CardControllerGetCards
+   * @tags FabReader NFC Cards
+   * @name SetCardDisabled
+   * @summary Set the disabled status of a card
+   * @request POST:/api/fabreader/cards/set-disabled
+   * @secure
+   */
+  export namespace SetCardDisabled {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = SetNfcCardDisabledDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = SetCardDisabledData;
+  }
+
+  /**
+   * No description
+   * @tags FabReader NFC Cards
+   * @name GetAllCards
    * @summary Get all cards (to which you have access)
    * @request GET:/api/fabreader/cards
    * @secure
    */
-  export namespace CardControllerGetCards {
+  export namespace GetAllCards {
     export type RequestParams = {};
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = CardControllerGetCardsData;
+    export type ResponseBody = GetAllCardsData;
+  }
+}
+
+export namespace Analytics {
+  /**
+   * No description
+   * @tags Analytics
+   * @name AnalyticsControllerGetResourceUsageHoursInDateRange
+   * @request GET:/api/analytics/resource-usage-hours
+   * @secure
+   */
+  export namespace AnalyticsControllerGetResourceUsageHoursInDateRange {
+    export type RequestParams = {};
+    export type RequestQuery = {
+      /**
+       * The start date of the range
+       * @format date-time
+       * @example "2021-01-01"
+       */
+      start: string;
+      /**
+       * The end date of the range
+       * @format date-time
+       * @example "2021-01-01"
+       */
+      end: string;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody =
+      AnalyticsControllerGetResourceUsageHoursInDateRangeData;
   }
 }
 
@@ -3473,6 +3797,47 @@ export class Api<
         body: data,
         type: ContentType.Json,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags users
+     * @name RequestPasswordReset
+     * @summary Request a password reset
+     * @request POST:/api/users/reset-password
+     */
+    requestPasswordReset: (
+      data: ResetPasswordDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<RequestPasswordResetData, void>({
+        path: `/api/users/reset-password`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags users
+     * @name ChangePasswordViaResetToken
+     * @summary Change a user password after password reset
+     * @request POST:/api/users/{userId}/change-password
+     */
+    changePasswordViaResetToken: (
+      userId: number,
+      data: ChangePasswordDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ChangePasswordViaResetTokenData, void>({
+        path: `/api/users/${userId}/change-password`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
         ...params,
       }),
 
@@ -4402,13 +4767,16 @@ export class Api<
      * No description
      *
      * @tags MQTT Resource Configuration
-     * @name GetOneMqttConfiguration
-     * @summary Get MQTT configuration for a resource
+     * @name GetAllMqttConfigurations
+     * @summary Get all MQTT configurations for a resource
      * @request GET:/api/resources/{resourceId}/mqtt/config
      * @secure
      */
-    getOneMqttConfiguration: (resourceId: number, params: RequestParams = {}) =>
-      this.request<GetOneMqttConfigurationData, void>({
+    getAllMqttConfigurations: (
+      resourceId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<GetAllMqttConfigurationsData, void>({
         path: `/api/resources/${resourceId}/mqtt/config`,
         method: "GET",
         secure: true,
@@ -4420,17 +4788,17 @@ export class Api<
      * No description
      *
      * @tags MQTT Resource Configuration
-     * @name UpsertOne
-     * @summary Create or update MQTT configuration for a resource
+     * @name CreateMqttConfiguration
+     * @summary Create a new MQTT configuration for a resource
      * @request POST:/api/resources/{resourceId}/mqtt/config
      * @secure
      */
-    upsertOne: (
+    createMqttConfiguration: (
       resourceId: number,
       data: CreateMqttResourceConfigDto,
       params: RequestParams = {},
     ) =>
-      this.request<UpsertOneData, void>({
+      this.request<CreateMqttConfigurationData, void>({
         path: `/api/resources/${resourceId}/mqtt/config`,
         method: "POST",
         body: data,
@@ -4444,17 +4812,65 @@ export class Api<
      * No description
      *
      * @tags MQTT Resource Configuration
+     * @name GetOneMqttConfiguration
+     * @summary Get a specific MQTT configuration for a resource
+     * @request GET:/api/resources/{resourceId}/mqtt/config/{configId}
+     * @secure
+     */
+    getOneMqttConfiguration: (
+      resourceId: number,
+      configId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<GetOneMqttConfigurationData, void>({
+        path: `/api/resources/${resourceId}/mqtt/config/${configId}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MQTT Resource Configuration
+     * @name UpdateMqttConfiguration
+     * @summary Update a specific MQTT configuration
+     * @request PUT:/api/resources/{resourceId}/mqtt/config/{configId}
+     * @secure
+     */
+    updateMqttConfiguration: (
+      resourceId: number,
+      configId: number,
+      data: UpdateMqttResourceConfigDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateMqttConfigurationData, void>({
+        path: `/api/resources/${resourceId}/mqtt/config/${configId}`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MQTT Resource Configuration
      * @name DeleteOneMqttConfiguration
-     * @summary Delete MQTT configuration for a resource
-     * @request DELETE:/api/resources/{resourceId}/mqtt/config
+     * @summary Delete a specific MQTT configuration
+     * @request DELETE:/api/resources/{resourceId}/mqtt/config/{configId}
      * @secure
      */
     deleteOneMqttConfiguration: (
       resourceId: number,
+      configId: number,
       params: RequestParams = {},
     ) =>
       this.request<DeleteOneMqttConfigurationData, void>({
-        path: `/api/resources/${resourceId}/mqtt/config`,
+        path: `/api/resources/${resourceId}/mqtt/config/${configId}`,
         method: "DELETE",
         secure: true,
         ...params,
@@ -4465,13 +4881,17 @@ export class Api<
      *
      * @tags MQTT Resource Configuration
      * @name TestOne
-     * @summary Test MQTT configuration
-     * @request POST:/api/resources/{resourceId}/mqtt/config/test
+     * @summary Test a specific MQTT configuration
+     * @request POST:/api/resources/{resourceId}/mqtt/config/{configId}/test
      * @secure
      */
-    testOne: (resourceId: number, params: RequestParams = {}) =>
+    testOne: (
+      resourceId: number,
+      configId: number,
+      params: RequestParams = {},
+    ) =>
       this.request<TestOneData, void>({
-        path: `/api/resources/${resourceId}/mqtt/config/test`,
+        path: `/api/resources/${resourceId}/mqtt/config/${configId}/test`,
         method: "POST",
         secure: true,
         format: "json",
@@ -4903,49 +5323,51 @@ export class Api<
         ...params,
       }),
   };
-  reader = {
+  fabReaderReaders = {
     /**
      * No description
      *
-     * @tags Reader
+     * @tags FabReader Readers
      * @name EnrollNfcCard
      * @summary Enroll a new NFC card
-     * @request POST:/api/fabreader/readers/{readerId}/enroll-nfc-card
+     * @request POST:/api/fabreader/readers/enroll-nfc-card
      * @secure
      */
-    enrollNfcCard: (readerId: number, params: RequestParams = {}) =>
+    enrollNfcCard: (data: EnrollNfcCardDto, params: RequestParams = {}) =>
       this.request<EnrollNfcCardData, void>({
-        path: `/api/fabreader/readers/${readerId}/enroll-nfc-card`,
+        path: `/api/fabreader/readers/enroll-nfc-card`,
         method: "POST",
+        body: data,
         secure: true,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 
     /**
      * No description
      *
-     * @tags Reader
+     * @tags FabReader Readers
      * @name ResetNfcCard
      * @summary Reset an NFC card
-     * @request POST:/api/fabreader/readers/{readerId}/reset-nfc-card/{cardId}
+     * @request POST:/api/fabreader/readers/reset-nfc-card
      * @secure
      */
-    resetNfcCard: (
-      readerId: number,
-      cardId: number,
-      params: RequestParams = {},
-    ) =>
+    resetNfcCard: (data: ResetNfcCardDto, params: RequestParams = {}) =>
       this.request<ResetNfcCardData, void>({
-        path: `/api/fabreader/readers/${readerId}/reset-nfc-card/${cardId}`,
+        path: `/api/fabreader/readers/reset-nfc-card`,
         method: "POST",
+        body: data,
         secure: true,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 
     /**
      * No description
      *
-     * @tags Reader
+     * @tags FabReader Readers
      * @name UpdateReader
      * @summary Update reader name and connected resources
      * @request PATCH:/api/fabreader/readers/{readerId}
@@ -4953,7 +5375,7 @@ export class Api<
      */
     updateReader: (
       readerId: number,
-      data: UpdateReaderPayload,
+      data: UpdateReaderDto,
       params: RequestParams = {},
     ) =>
       this.request<UpdateReaderData, void>({
@@ -4962,13 +5384,14 @@ export class Api<
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 
     /**
      * No description
      *
-     * @tags Reader
+     * @tags FabReader Readers
      * @name GetReaderById
      * @summary Get a reader by ID
      * @request GET:/api/fabreader/readers/{readerId}
@@ -4979,13 +5402,14 @@ export class Api<
         path: `/api/fabreader/readers/${readerId}`,
         method: "GET",
         secure: true,
+        format: "json",
         ...params,
       }),
 
     /**
      * No description
      *
-     * @tags Reader
+     * @tags FabReader Readers
      * @name GetReaders
      * @summary Get all readers
      * @request GET:/api/fabreader/readers
@@ -4996,45 +5420,94 @@ export class Api<
         path: `/api/fabreader/readers`,
         method: "GET",
         secure: true,
+        format: "json",
         ...params,
       }),
   };
-  card = {
+  fabReaderNfcCards = {
     /**
      * No description
      *
-     * @tags Card
+     * @tags FabReader NFC Cards
      * @name GetAppKeyByUid
      * @summary Get the app key for a card by UID
-     * @request POST:/api/fabreader/cards/{cardUID}/keys/{keyNo}
+     * @request POST:/api/fabreader/cards/keys
      * @secure
      */
-    getAppKeyByUid: (
-      cardUid: string,
-      keyNo: number,
-      params: RequestParams = {},
-    ) =>
+    getAppKeyByUid: (data: AppKeyRequestDto, params: RequestParams = {}) =>
       this.request<GetAppKeyByUidData, void>({
-        path: `/api/fabreader/cards/${cardUid}/keys/${keyNo}`,
+        path: `/api/fabreader/cards/keys`,
         method: "POST",
+        body: data,
         secure: true,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 
     /**
      * No description
      *
-     * @tags Card
-     * @name CardControllerGetCards
+     * @tags FabReader NFC Cards
+     * @name SetCardDisabled
+     * @summary Set the disabled status of a card
+     * @request POST:/api/fabreader/cards/set-disabled
+     * @secure
+     */
+    setCardDisabled: (
+      data: SetNfcCardDisabledDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<SetCardDisabledData, void>({
+        path: `/api/fabreader/cards/set-disabled`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags FabReader NFC Cards
+     * @name GetAllCards
      * @summary Get all cards (to which you have access)
      * @request GET:/api/fabreader/cards
      * @secure
      */
-    cardControllerGetCards: (params: RequestParams = {}) =>
-      this.request<CardControllerGetCardsData, void>({
+    getAllCards: (params: RequestParams = {}) =>
+      this.request<GetAllCardsData, void>({
         path: `/api/fabreader/cards`,
         method: "GET",
         secure: true,
+        format: "json",
+        ...params,
+      }),
+  };
+  analytics = {
+    /**
+     * No description
+     *
+     * @tags Analytics
+     * @name AnalyticsControllerGetResourceUsageHoursInDateRange
+     * @request GET:/api/analytics/resource-usage-hours
+     * @secure
+     */
+    analyticsControllerGetResourceUsageHoursInDateRange: (
+      query: AnalyticsControllerGetResourceUsageHoursInDateRangeParams,
+      params: RequestParams = {},
+    ) =>
+      this.request<
+        AnalyticsControllerGetResourceUsageHoursInDateRangeData,
+        void
+      >({
+        path: `/api/analytics/resource-usage-hours`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
         ...params,
       }),
   };
