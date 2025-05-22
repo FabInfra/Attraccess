@@ -3,10 +3,10 @@
   "nfcCards": "NFC Cards",
   "noNfcCardsFound": "No NFC Cards found",
   "errorFetchCards": "Error fetching NFC cards",
-  "cardStatusToggled": "Card status updated",
+  "cardStatusUpdated": "Card status updated",
   "cardDisabledSuccess": "Card ID {{id}} has been disabled",
   "cardEnabledSuccess": "Card ID {{id}} has been enabled",
-  "errorToggleCardStatus": "Error toggling card status",
+  "errorUpdateCardStatus": "Error updating card status",
   "nfcCardsTable": {
     "headers": {
       "id": "ID",

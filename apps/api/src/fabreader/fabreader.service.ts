@@ -53,7 +53,7 @@ export class FabreaderService {
     return await this.nfcCardRepository.delete(id);
   }
 
-  public async toggleNFCCardDisabledStatus(id: number, userId: number): Promise<NFCCard> {
+  public async setNFCCardDisabledStatus(id: number, userId: number, isDisabled: boolean): Promise<NFCCard> {
     const card = await this.getNFCCardByID(id);
     
     if (!card) {
@@ -65,8 +65,8 @@ export class FabreaderService {
       throw new Error('You do not have permission to modify this card');
     }
     
-    // Toggle the disabled status
-    card.isDisabled = !card.isDisabled;
+    // Set the disabled status directly
+    card.isDisabled = isDisabled;
     
     return await this.nfcCardRepository.save(card);
   }

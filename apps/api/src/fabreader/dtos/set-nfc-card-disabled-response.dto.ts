@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class ToggleNfcCardDisabledResponseDto {
+export class SetNfcCardDisabledResponseDto {
   @ApiProperty({ description: 'The ID of the NFC card' })
   id!: number;
 

@@ -3,10 +3,10 @@
   "nfcCards": "NFC-Karten",
   "noNfcCardsFound": "Keine NFC-Karten gefunden",
   "errorFetchCards": "Fehler beim Abrufen der NFC-Karten",
-  "cardStatusToggled": "Kartenstatus aktualisiert",
+  "cardStatusUpdated": "Kartenstatus aktualisiert",
   "cardDisabledSuccess": "Karte ID {{id}} wurde deaktiviert",
   "cardEnabledSuccess": "Karte ID {{id}} wurde aktiviert",
-  "errorToggleCardStatus": "Fehler beim Umschalten des Kartenstatus",
+  "errorUpdateCardStatus": "Fehler beim Aktualisieren des Kartenstatus",
   "nfcCardsTable": {
     "headers": {
       "id": "ID",

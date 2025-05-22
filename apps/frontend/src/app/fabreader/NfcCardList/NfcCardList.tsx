@@ -25,7 +25,7 @@ import {
   useFabReaderReadersServiceResetNfcCard,
   useUsersServiceGetOneUserById,
   useFabReaderReadersServiceEnrollNfcCard,
-  useFabReaderNfcCardsServiceToggleCardDisabled,
+  useFabReaderNfcCardsServiceSetCardDisabled,
 } from '@attraccess/react-query-client';
 import de from './NfcCardList.de.json';
 import en from './NfcCardList.en.json';
@@ -195,10 +195,10 @@ export function NfcCardList() {
 
   const { user } = useAuth();
 
-  const { mutate: toggleCardDisabled } = useFabReaderNfcCardsServiceToggleCardDisabled({
+  const { mutate: setCardDisabled } = useFabReaderNfcCardsServiceSetCardDisabled({
     onSuccess: (data) => {
       toast.success({
-        title: t('cardStatusToggled'),
+        title: t('cardStatusUpdated'),
         description: data.isDisabled 
           ? t('cardDisabledSuccess', { id: data.id }) 
           : t('cardEnabledSuccess', { id: data.id }),
@@ -207,7 +207,7 @@ export function NfcCardList() {
     },
     onError: (error) => {
       toast.error({
-        title: t('errorToggleCardStatus'),
+        title: t('errorUpdateCardStatus'),
         description: (error as Error).message,
       });
     },
@@ -239,9 +239,9 @@ export function NfcCardList() {
 
   const [cardToDeleteId, setCardToDeleteId] = useState<number | null>(null);
 
-  const handleToggleDisabled = useCallback((cardId: number) => {
-    toggleCardDisabled({ requestBody: { cardId } });
-  }, [toggleCardDisabled]);
+  const handleSetDisabled = useCallback((cardId: number, isDisabled: boolean) => {
+    setCardDisabled({ requestBody: { cardId, isDisabled } });
+  }, [setCardDisabled]);
 
   return (
     <>
@@ -273,7 +273,7 @@ export function NfcCardList() {
                         header={header} 
                         card={card} 
                         onDeleteClick={() => setCardToDeleteId(card.id)}
-                        onToggleDisabled={() => handleToggleDisabled(card.id)}
+                        onToggleDisabled={() => handleSetDisabled(card.id, !card.isDisabled)}
                       />
                     </TableCell>
                   ))}
