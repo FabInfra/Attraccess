@@ -2,16 +2,28 @@
   "workInProgress": "Dieses Feature ist noch in Arbeit, benutzung auf eigene Gefahr!",
   "nfcCards": "NFC-Karten",
   "noNfcCardsFound": "Keine NFC-Karten gefunden",
+  "errorFetchCards": "Fehler beim Abrufen der NFC-Karten",
+  "cardStatusToggled": "Kartenstatus aktualisiert",
+  "cardDisabledSuccess": "Karte ID {{id}} wurde deaktiviert",
+  "cardEnabledSuccess": "Karte ID {{id}} wurde aktiviert",
+  "errorToggleCardStatus": "Fehler beim Umschalten des Kartenstatus",
   "nfcCardsTable": {
     "headers": {
       "id": "ID",
       "uid": "UID",
       "userId": "Benutzer",
+      "isDisabled": "Status",
       "createdAt": "Erstellt am",
       "actions": "Aktionen"
     },
     "actions": {
-      "delete": "Löschen"
+      "delete": "Löschen",
+      "disable": "Deaktivieren",
+      "enable": "Aktivieren"
+    },
+    "status": {
+      "disabled": "Deaktiviert",
+      "enabled": "Aktiviert"
     },
     "deleteModal": {
       "title": "NFC-Karte löschen",

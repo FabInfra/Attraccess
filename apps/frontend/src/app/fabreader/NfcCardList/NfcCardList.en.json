@@ -2,16 +2,28 @@
   "workInProgress": "This feature is still in development, use at your own risk!",
   "nfcCards": "NFC Cards",
   "noNfcCardsFound": "No NFC Cards found",
+  "errorFetchCards": "Error fetching NFC cards",
+  "cardStatusToggled": "Card status updated",
+  "cardDisabledSuccess": "Card ID {{id}} has been disabled",
+  "cardEnabledSuccess": "Card ID {{id}} has been enabled",
+  "errorToggleCardStatus": "Error toggling card status",
   "nfcCardsTable": {
     "headers": {
       "id": "ID",
       "uid": "UID",
       "userId": "User",
+      "isDisabled": "Status",
       "createdAt": "Created at",
       "actions": "Actions"
     },
     "actions": {
-      "delete": "Delete"
+      "delete": "Delete",
+      "disable": "Disable",
+      "enable": "Enable"
+    },
+    "status": {
+      "disabled": "Disabled",
+      "enabled": "Enabled"
     },
     "deleteModal": {
       "title": "Delete NFC Card",
