@@ -1,16 +1,23 @@
 // typeorm.config.ts
 
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { loadEnv } from '@attraccess/env';
+import { createConfigSchema, validateConfig } from '@attraccess/env';
 import { join, resolve } from 'path';
 import { entities } from '@attraccess/database-entities';
 import * as migrations from './migrations';
 import { storageConfig } from '../config/storage.config';
+import { registerAs } from '@nestjs/config';
+import { z } from 'zod';
 
-const envType = loadEnv((z) => ({
+// Define database type schema
+const dbTypeSchema = createConfigSchema((z) => ({
   DB_TYPE: z.enum(['postgres', 'sqlite']).default('sqlite'),
 }));
 
+// Validate database type at startup
+const envType = validateConfig(dbTypeSchema);
+
+// Define base database configuration
 let dbConfig: Partial<DataSourceOptions> = {
   type: envType.DB_TYPE,
   synchronize: false,
@@ -20,17 +27,22 @@ let dbConfig: Partial<DataSourceOptions> = {
   entities: Object.values(entities),
 };
 
+// Define PostgreSQL configuration schema
+const postgresSchema = createConfigSchema((z) => ({
+  DB_HOST: z.string(),
+  DB_PORT: z.coerce
+    .number()
+    .int()
+    .min(1)
+    .max(65535),
+  DB_USERNAME: z.string(),
+  DB_PASSWORD: z.string(),
+  DB_DATABASE: z.string(),
+}));
+
 function loadPostgresConfig() {
-  const env = loadEnv((z) => ({
-    DB_HOST: z.string(),
-    DB_PORT: z
-      .string()
-      .refine((port: string) => parseInt(port) > 0 && parseInt(port) < 65536)
-      .transform((port: string) => parseInt(port)),
-    DB_USERNAME: z.string(),
-    DB_PASSWORD: z.string(),
-    DB_DATABASE: z.string(),
-  }));
+  // Validate PostgreSQL configuration at startup
+  const env = validateConfig(postgresSchema);
 
   dbConfig = {
     ...dbConfig,
@@ -44,9 +56,9 @@ function loadPostgresConfig() {
 }
 
 function loadSqliteConfig() {
-  const dbFile = resolve(join(storageConfig().storage.root, 'attraccess.sqlite'));
+  const dbFile = resolve(join(storageConfig().root, 'attraccess.sqlite'));
 
-  console.log('dbFile', dbFile);
+  console.log('SQLite database file:', dbFile);
 
   dbConfig = {
     ...dbConfig,
@@ -55,6 +67,7 @@ function loadSqliteConfig() {
   } as DataSourceOptions;
 }
 
+// Load the appropriate database configuration based on the database type
 switch (envType.DB_TYPE) {
   case 'postgres':
     loadPostgresConfig();
@@ -68,6 +81,11 @@ switch (envType.DB_TYPE) {
     throw new Error('Unknown Database type in DB_TYPE env');
 }
 
+// Export the database configuration for use in the application
 export const dataSourceConfig = dbConfig;
 
+// Export a database configuration provider for NestJS
+export const databaseConfig = registerAs('database', () => dbConfig);
+
+// Export a DataSource instance for TypeORM
 export default new DataSource(dataSourceConfig as DataSourceOptions);

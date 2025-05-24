@@ -28,7 +28,17 @@ import { SSOOIDCStrategy } from './auth/sso/oidc/oidc.strategy';
 import { ModuleRef } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { SSOController } from './auth/sso/sso.controller';
-import { loadEnv } from '@attraccess/env';
+import { registerAs } from '@nestjs/config';
+import { z } from 'zod';
+import { createConfigSchema } from '@attraccess/env';
+
+// Register frontend URL configuration
+export const frontendConfig = registerAs('frontend', () => {
+  const schema = createConfigSchema((z) => ({
+    FRONTEND_URL: z.string().url().default(process.env.VITE_ATTRACCESS_URL),
+  }));
+  return schema.parse(process.env);
+});
 
 @Module({
   imports: [
@@ -48,7 +58,7 @@ import { loadEnv } from '@attraccess/env';
     SSOService,
     {
       provide: SSOOIDCStrategy,
-      useFactory: (moduleRef: ModuleRef) => {
+      useFactory: (moduleRef: ModuleRef, configService: ConfigService) => {
         // This is a placeholder - you'll need to retrieve an actual configuration
         // from the database or environment variables
         const config = new SSOProviderOIDCConfiguration();
@@ -59,10 +69,8 @@ import { loadEnv } from '@attraccess/env';
         config.clientId = 'placeholder';
         config.clientSecret = 'placeholder';
 
-        const env = loadEnv((z) => ({
-          FRONTEND_URL: z.string().url().default(process.env.VITE_ATTRACCESS_URL),
-        }));
-        const callbackURL = env.FRONTEND_URL + '/api/sso/OIDC/callback';
+        const frontendUrl = configService.get<string>('frontend.FRONTEND_URL');
+        const callbackURL = frontendUrl + '/api/sso/OIDC/callback';
 
         return new SSOOIDCStrategy(moduleRef, config, callbackURL);
       },

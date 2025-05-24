@@ -6,7 +6,11 @@ async function main() {
 
   console.log('Bootstrapping');
 
+  // Set environment variables for swagger export
   process.env.DISABLE_PLUGINS = 'true';
+  
+  // Import plugin config to ensure it's registered
+  await import('./plugin-system/plugin.service');
   const main = await import('./main.bootstrap');
   const { swaggerDocumentFactory } = await main.bootstrap();
 

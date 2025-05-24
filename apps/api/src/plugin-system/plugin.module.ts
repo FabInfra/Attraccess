@@ -1,9 +1,10 @@
 import { DynamicModule, Global, Logger, Module } from '@nestjs/common';
 import { createRequire } from 'module';
 import { PluginManifest } from './plugin.manifest';
-import { PluginService } from './plugin.service';
+import { PluginService, pluginConfig } from './plugin.service';
 import { PluginController } from './plugin.controller';
 import { join } from 'path';
+import { ConfigModule } from '@nestjs/config';
 
 @Global()
 @Module({})
@@ -12,11 +13,15 @@ export class PluginModule {
   private static logger = new Logger(PluginModule.name);
 
   public static forRoot(): DynamicModule {
-    if (process.env.DISABLE_PLUGINS === 'true') {
+    // Load plugin configuration
+    const config = pluginConfig();
+    
+    if (config.DISABLE_PLUGINS) {
       PluginModule.logger.log('Plugins are disabled');
 
       return {
         module: PluginModule,
+        imports: [ConfigModule.forFeature(pluginConfig)],
         providers: [PluginService],
         controllers: [PluginController],
       };
@@ -41,7 +46,10 @@ export class PluginModule {
     return {
       module: PluginModule,
       providers: [PluginService],
-      imports: [...pluginModules],
+      imports: [
+        ConfigModule.forFeature(pluginConfig),
+        ...pluginModules
+      ],
       controllers: [PluginController],
     };
   }

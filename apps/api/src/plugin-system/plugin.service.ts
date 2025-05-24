@@ -1,4 +1,4 @@
-import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Logger, NotFoundException, Injectable } from '@nestjs/common';
 import { join, resolve } from 'path';
 import { PluginManifest, PluginManifestSchema, LoadedPluginManifest } from './plugin.manifest';
 import { existsSync, readdirSync, readFileSync } from 'fs';
@@ -7,9 +7,23 @@ import { rename, rm } from 'fs/promises';
 import decompress from 'decompress';
 import { nanoid } from 'nanoid';
 import { spawn } from 'child_process';
+import { ConfigService } from '@nestjs/config';
+import { registerAs } from '@nestjs/config';
+import { z } from 'zod';
+import { createConfigSchema } from '@attraccess/env';
 
+// Register plugin configuration
+export const pluginConfig = registerAs('plugin', () => {
+  const schema = createConfigSchema((z) => ({
+    PLUGIN_DIR: z.string().optional(),
+    DISABLE_PLUGINS: z.enum(['true', 'false']).transform(val => val === 'true').default('false'),
+  }));
+  return schema.parse(process.env);
+});
+
+@Injectable()
 export class PluginService {
-  public static readonly PLUGIN_PATH = resolve(process.env.PLUGIN_DIR ?? join(__dirname, '..', 'plugins'));
+  public static readonly PLUGIN_PATH = resolve(pluginConfig().PLUGIN_DIR ?? join(__dirname, '..', 'plugins'));
   private static plugins: LoadedPluginManifest[] | null = null;
   private static loadedPlugins: Set<string> = new Set();
   private static pluginLoadErrors: Map<string, Error> = new Map();

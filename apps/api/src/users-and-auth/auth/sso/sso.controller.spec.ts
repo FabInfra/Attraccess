@@ -6,6 +6,7 @@ import { SSOProvider, SSOProviderType } from '@attraccess/database-entities';
 import { NotFoundException } from '@nestjs/common';
 import { CreateSSOProviderDto } from './dto/create-sso-provider.dto';
 import { UpdateSSOProviderDto } from './dto/update-sso-provider.dto';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 describe('SsoController', () => {
   let controller: SSOController;
@@ -34,6 +35,17 @@ describe('SsoController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        ConfigModule.forRoot({
+          load: [
+            () => ({
+              frontend: {
+                FRONTEND_URL: 'http://localhost:4200'
+              }
+            })
+          ]
+        })
+      ],
       providers: [
         {
           provide: SSOService,
@@ -52,6 +64,7 @@ describe('SsoController', () => {
           provide: AuthService,
           useValue: {},
         },
+        ConfigService
       ],
       controllers: [SSOController],
     }).compile();

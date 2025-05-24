@@ -8,24 +8,25 @@ import {
   InvalidSSOProviderTypeException,
   SSOProviderNotFoundException,
 } from '../errors';
-import { loadEnv } from '@attraccess/env';
-
-const env = loadEnv((z) => ({
-  VITE_ATTRACCESS_URL: z.string(),
-}));
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class SSOOIDCGuard implements CanActivate {
   private readonly logger = new Logger(SSOOIDCGuard.name);
 
-  public constructor(private ssoService: SSOService, private moduleRef: ModuleRef) {}
+  public constructor(
+    private ssoService: SSOService, 
+    private moduleRef: ModuleRef,
+    private configService: ConfigService
+  ) {}
 
   async canActivate(context: ExecutionContext) {
     this.logger.log('OIDC Guard activation attempted');
     const req = context.switchToHttp().getRequest();
 
     this.logger.debug(`Request URL: ${req.url}`);
-    const requestURL = new URL(env.VITE_ATTRACCESS_URL + req.url);
+    const frontendUrl = this.configService.get<string>('frontend.FRONTEND_URL');
+    const requestURL = new URL(frontendUrl + req.url);
 
     // e.g. something/sso/oidc/156/login
     const urlPathParts = requestURL.pathname.split('/');
@@ -65,7 +66,7 @@ export class SSOOIDCGuard implements CanActivate {
 
     const redirectTo = requestURL.searchParams.get('redirectTo');
 
-    const callbackURL = new URL(env.VITE_ATTRACCESS_URL);
+    const callbackURL = new URL(frontendUrl);
     callbackURL.pathname = `/api/auth/sso/${ssoType}/${providerId}/callback`;
     callbackURL.searchParams.set('redirectTo', redirectTo);
 
