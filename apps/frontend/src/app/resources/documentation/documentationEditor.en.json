@@ -1,0 +1,37 @@
+{
+  "title": "Edit Documentation",
+  "documentationType": {
+    "label": "Documentation Type",
+    "markdown": "Markdown",
+    "url": "URL"
+  },
+  "markdownContent": {
+    "label": "Markdown Content",
+    "placeholder": "Enter markdown content here..."
+  },
+  "urlContent": {
+    "label": "Documentation URL",
+    "placeholder": "Enter URL to documentation (e.g., https://example.com/docs)"
+  },
+  "preview": "Preview",
+  "edit": "Edit",
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "validation": {
+    "urlRequired": "URL is required when URL type is selected",
+    "markdownRequired": "Markdown content is required when Markdown type is selected",
+    "invalidUrl": "Please enter a valid URL"
+  },
+  "notifications": {
+    "saveSuccess": {
+      "title": "Documentation Saved",
+      "description": "The documentation has been successfully saved."
+    },
+    "saveError": {
+      "title": "Save Failed",
+      "description": "Failed to save documentation. Please try again."
+    }
+  }
+}

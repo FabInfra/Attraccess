@@ -18,6 +18,9 @@ import { MqttResourceConfig } from './mqttResourceConfig.entity';
 import { WebhookConfig } from './webhookConfig.entity';
 import { ResourceGroup } from './resourceGroup.entity';
 
+// Import the DocumentationType enum from the types directory
+import { DocumentationType } from '../types/documentationType.enum';
+
 @Entity()
 export class Resource {
   @PrimaryGeneratedColumn()
@@ -49,6 +52,32 @@ export class Resource {
     required: false,
   })
   imageFilename!: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  @ApiProperty({
+    description: 'The type of documentation (markdown or url)',
+    enum: DocumentationType,
+    name: 'DocumentationType',
+    required: false,
+    example: DocumentationType.MARKDOWN,
+  })
+  documentationType!: DocumentationType | null;
+
+  @Column({ type: 'text', nullable: true })
+  @ApiProperty({
+    description: 'Markdown content for resource documentation',
+    required: false,
+    example: '# Resource Documentation\n\nThis is a markdown documentation for the resource.',
+  })
+  documentationMarkdown!: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  @ApiProperty({
+    description: 'URL to external documentation',
+    required: false,
+    example: 'https://example.com/documentation',
+  })
+  documentationUrl!: string | null;
 
   @CreateDateColumn()
   @ApiProperty({

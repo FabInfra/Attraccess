@@ -53,7 +53,10 @@ export function ResourceCreateModal(props: ResourceCreateModalProps) {
   const navigate = useNavigate();
 
   const clearForm = useCallback(() => {
-    setFormData({ name: '', description: '' });
+    setFormData({
+      name: '',
+      description: '',
+    });
     setSelectedImage(null);
   }, []);
 

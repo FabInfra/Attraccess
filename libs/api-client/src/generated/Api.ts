@@ -416,6 +416,23 @@ export interface CreateResourceDto {
    * @format binary
    */
   image?: File;
+  /**
+   * The type of documentation (markdown or url)
+   * @example "markdown"
+   */
+  documentationType?: "markdown" | "url";
+  /**
+   * Markdown content for resource documentation
+   * @example "# Resource Documentation
+   *
+   * This is a markdown documentation for the resource."
+   */
+  documentationMarkdown?: string;
+  /**
+   * URL to external documentation
+   * @example "https://example.com/documentation"
+   */
+  documentationUrl?: string;
 }
 
 export interface Resource {
@@ -439,6 +456,23 @@ export interface Resource {
    * @example "1234567890_abcdef.jpg"
    */
   imageFilename?: string;
+  /**
+   * The type of documentation (markdown or url)
+   * @example "markdown"
+   */
+  documentationType?: "markdown" | "url";
+  /**
+   * Markdown content for resource documentation
+   * @example "# Resource Documentation
+   *
+   * This is a markdown documentation for the resource."
+   */
+  documentationMarkdown?: string;
+  /**
+   * URL to external documentation
+   * @example "https://example.com/documentation"
+   */
+  documentationUrl?: string;
   /**
    * When the resource was created
    * @format date-time
@@ -479,6 +513,23 @@ export interface UpdateResourceDto {
    * @format binary
    */
   image?: File;
+  /**
+   * The type of documentation (markdown or url)
+   * @example "markdown"
+   */
+  documentationType?: "markdown" | "url";
+  /**
+   * Markdown content for resource documentation
+   * @example "# Resource Documentation
+   *
+   * This is a markdown documentation for the resource."
+   */
+  documentationMarkdown?: string;
+  /**
+   * URL to external documentation
+   * @example "https://example.com/documentation"
+   */
+  documentationUrl?: string;
 }
 
 export interface StartUsageSessionDto {
@@ -1785,7 +1836,6 @@ export type GetReadersData = FabReader[];
 export type GetAppKeyByUidData = AppKeyResponseDto;
 
 export type SetCardDisabledData = SetNfcCardDisabledResponseDto;
-
 export type GetAllCardsData = NFCCard[];
 
 export interface AnalyticsControllerGetResourceUsageHoursInDateRangeParams {

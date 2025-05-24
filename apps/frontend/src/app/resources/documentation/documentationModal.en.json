@@ -1,0 +1,17 @@
+{
+  "title": "Documentation",
+  "noDocumentation": "No documentation available for this resource.",
+  "actions": {
+    "edit": "Edit Documentation",
+    "fullscreen": "Fullscreen",
+    "exitFullscreen": "Exit Fullscreen",
+    "openInNewTab": "Open in New Tab",
+    "close": "Close",
+    "refresh": "Refresh",
+    "retry": "Try Again"
+  },
+  "loading": "Loading documentation...",
+  "error": {
+    "unknown": "An unknown error occurred while loading the documentation."
+  }
+}

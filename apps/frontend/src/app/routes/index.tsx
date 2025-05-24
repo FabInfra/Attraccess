@@ -25,6 +25,7 @@ import { FabreaderList } from '../fabreader/FabreaderList/FabreaderList';
 import { NfcCardList } from '../fabreader/NfcCardList/NfcCardList';
 import { CsvExport } from '../csv-export/csv-export';
 import { CreateMqttConfig, EditMqttConfig, TestMqttConfig } from '../resources/iot-settings/mqtt';
+import { DocumentationEditor, DocumentationView } from '../resources/documentation';
 
 const coreRoutes: RouteConfig[] = [
   {
@@ -65,6 +66,16 @@ const coreRoutes: RouteConfig[] = [
   {
     path: '/resources/:resourceId/iot/mqtt/test/:configId',
     element: <TestMqttConfig />,
+    authRequired: 'canManageResources',
+  },
+  {
+    path: '/resources/:id/documentation',
+    element: <DocumentationView />,
+    authRequired: true,
+  },
+  {
+    path: '/resources/:id/documentation/edit',
+    element: <DocumentationEditor />,
     authRequired: 'canManageResources',
   },
   {

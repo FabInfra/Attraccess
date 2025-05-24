@@ -582,6 +582,24 @@ export const $CreateResourceDto = {
             type: 'string',
             description: 'Resource image file',
             format: 'binary'
+        },
+        documentationType: {
+            type: 'string',
+            description: 'The type of documentation (markdown or url)',
+            enum: ['markdown', 'url'],
+            example: 'markdown'
+        },
+        documentationMarkdown: {
+            type: 'string',
+            description: 'Markdown content for resource documentation',
+            example: `# Resource Documentation
+
+This is a markdown documentation for the resource.`
+        },
+        documentationUrl: {
+            type: 'string',
+            description: 'URL to external documentation',
+            example: 'https://example.com/documentation'
         }
     },
     required: ['name']
@@ -609,6 +627,24 @@ export const $Resource = {
             type: 'string',
             description: 'The filename of the resource image',
             example: '1234567890_abcdef.jpg'
+        },
+        DocumentationType: {
+            type: 'string',
+            description: 'The type of documentation (markdown or url)',
+            enum: ['markdown', 'url'],
+            example: 'markdown'
+        },
+        documentationMarkdown: {
+            type: 'string',
+            description: 'Markdown content for resource documentation',
+            example: `# Resource Documentation
+
+This is a markdown documentation for the resource.`
+        },
+        documentationUrl: {
+            type: 'string',
+            description: 'URL to external documentation',
+            example: 'https://example.com/documentation'
         },
         createdAt: {
             format: 'date-time',
@@ -678,6 +714,24 @@ export const $UpdateResourceDto = {
             type: 'string',
             description: 'New resource image file',
             format: 'binary'
+        },
+        documentationType: {
+            type: 'string',
+            description: 'The type of documentation (markdown or url)',
+            enum: ['markdown', 'url'],
+            example: 'markdown'
+        },
+        documentationMarkdown: {
+            type: 'string',
+            description: 'Markdown content for resource documentation',
+            example: `# Resource Documentation
+
+This is a markdown documentation for the resource.`
+        },
+        documentationUrl: {
+            type: 'string',
+            description: 'URL to external documentation',
+            example: 'https://example.com/documentation'
         }
     }
 } as const;

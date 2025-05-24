@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useToastMessage } from '../../components/toastProvider';
-import { ArrowLeft, Trash, Wifi } from 'lucide-react';
+import { ArrowLeft, BookOpen, Trash, Wifi } from 'lucide-react';
 import { Button } from '@heroui/button';
 import { Spinner, Link } from '@heroui/react';
 import { useDisclosure } from '@heroui/modal';
@@ -22,6 +22,7 @@ import {
 } from '@attraccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { ManageResourceGroups } from './groups/ManageResourceGroups';
+import { DocumentationModal } from './documentation';
 import de from './resourceDetails.de.json';
 import en from './resourceDetails.en.json';
 
@@ -116,21 +117,35 @@ function ResourceDetailsComponent() {
         subtitle={resource.description || undefined}
         backTo="/resources"
         actions={
-          canManageResourceGroups && (
-            <div className="flex space-x-2 flex-wrap justify-end">
-              <Button
-                as={Link}
-                href={`/resources/${resourceId}/iot`}
-                variant="light"
-                startContent={<Wifi className="w-4 h-4" />}
-              >
-                {t('navItems.iotSettings')}
-              </Button>
-              <Button onPress={onOpen} color="danger" variant="light" startContent={<Trash className="w-4 h-4" />}>
-                {t('actions.delete')}
-              </Button>
-            </div>
-          )
+          <div className="flex space-x-2 flex-wrap justify-end">
+            <DocumentationModal resourceId={resourceId}>
+              {(onOpenDocumentation) => (
+                <Button
+                  variant="light"
+                  startContent={<BookOpen className="w-4 h-4" />}
+                  onPress={onOpenDocumentation}
+                >
+                  {t('actions.documentation')}
+                </Button>
+              )}
+            </DocumentationModal>
+            
+            {canManageResourceGroups && (
+              <>
+                <Button
+                  as={Link}
+                  href={`/resources/${resourceId}/iot`}
+                  variant="light"
+                  startContent={<Wifi className="w-4 h-4" />}
+                >
+                  {t('navItems.iotSettings')}
+                </Button>
+                <Button onPress={onOpen} color="danger" variant="light" startContent={<Trash className="w-4 h-4" />}>
+                  {t('actions.delete')}
+                </Button>
+              </>
+            )}
+          </div>
         }
       />
 

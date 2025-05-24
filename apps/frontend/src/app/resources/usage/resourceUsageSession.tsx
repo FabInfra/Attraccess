@@ -45,8 +45,9 @@ export function ResourceUsageSession({ resourceId }: ResourceUsageSessionProps) 
   const queryClient = useQueryClient();
 
   // Check if user has completed the introduction
-  const { data: hasCompletedIntroduction, isLoading: isLoadingIntroStatus } =
-    useResourceIntroductionsServiceCheckStatus({ resourceId });
+  const { data: introduction, isLoading: isLoadingIntroStatus } = useResourceIntroductionsServiceCheckStatus({
+    resourceId,
+  });
 
   // Get list of users who can give introductions
   const { data: introducers, isLoading: isLoadingIntroducers } = useResourceIntroducersServiceGetAllResourceIntroducers(
@@ -196,7 +197,7 @@ export function ResourceUsageSession({ resourceId }: ResourceUsageSessionProps) 
   }, [introducers, user]);
 
   // Users with canManageResources permission can always start a session
-  const canStartSession = canManageResources || hasCompletedIntroduction || isIntroducer;
+  const canStartSession = canManageResources || introduction?.hasValidIntroduction || isIntroducer;
 
   const immediatelyEndSession = useCallback(() => {
     endSession.mutate({

@@ -23,6 +23,9 @@ export class ResourcesService {
     const resource = this.resourceRepository.create({
       name: dto.name,
       description: dto.description,
+      documentationType: dto.documentationType || null,
+      documentationMarkdown: dto.documentationMarkdown || null,
+      documentationUrl: dto.documentationUrl || null
     });
 
     // Save the resource first to get an ID
@@ -71,6 +74,11 @@ export class ResourcesService {
     // Update only provided fields
     if (dto.name !== undefined) resource.name = dto.name;
     if (dto.description !== undefined) resource.description = dto.description;
+    
+    // Handle documentation fields
+    if (dto.documentationType !== undefined) resource.documentationType = dto.documentationType;
+    if (dto.documentationMarkdown !== undefined) resource.documentationMarkdown = dto.documentationMarkdown;
+    if (dto.documentationUrl !== undefined) resource.documentationUrl = dto.documentationUrl;
 
     if (image) {
       // Delete old image if it exists

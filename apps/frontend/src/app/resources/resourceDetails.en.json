@@ -10,6 +10,7 @@
         "iotSettings": "IoT Settings"
     },
     "actions": {
-        "delete": "Delete"
+        "delete": "Delete",
+        "documentation": "Documentation"
     }
 }

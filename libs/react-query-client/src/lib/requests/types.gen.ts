@@ -377,7 +377,27 @@ export type CreateResourceDto = {
      * Resource image file
      */
     image?: (Blob | File);
+    /**
+     * The type of documentation (markdown or url)
+     */
+    documentationType?: 'markdown' | 'url';
+    /**
+     * Markdown content for resource documentation
+     */
+    documentationMarkdown?: string;
+    /**
+     * URL to external documentation
+     */
+    documentationUrl?: string;
 };
+
+/**
+ * The type of documentation (markdown or url)
+ */
+export enum documentationType {
+    MARKDOWN = 'markdown',
+    URL = 'url'
+}
 
 export type Resource = {
     /**
@@ -397,6 +417,18 @@ export type Resource = {
      */
     imageFilename?: string;
     /**
+     * The type of documentation (markdown or url)
+     */
+    DocumentationType?: 'markdown' | 'url';
+    /**
+     * Markdown content for resource documentation
+     */
+    documentationMarkdown?: string;
+    /**
+     * URL to external documentation
+     */
+    documentationUrl?: string;
+    /**
      * When the resource was created
      */
     createdAt: string;
@@ -409,6 +441,14 @@ export type Resource = {
      */
     groups: Array<ResourceGroup>;
 };
+
+/**
+ * The type of documentation (markdown or url)
+ */
+export enum DocumentationType {
+    MARKDOWN = 'markdown',
+    URL = 'url'
+}
 
 export type PaginatedResourceResponseDto = {
     total: number;
@@ -435,6 +475,18 @@ export type UpdateResourceDto = {
      * New resource image file
      */
     image?: (Blob | File);
+    /**
+     * The type of documentation (markdown or url)
+     */
+    documentationType?: 'markdown' | 'url';
+    /**
+     * Markdown content for resource documentation
+     */
+    documentationMarkdown?: string;
+    /**
+     * URL to external documentation
+     */
+    documentationUrl?: string;
 };
 
 export type StartUsageSessionDto = {

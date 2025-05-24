@@ -11,3 +11,4 @@ export * from './1747398210875-diff';
 export * from './1747398859244-fabreader-init';
 export * from './1747403591279-user-password-reset';
 export * from './1747664572702-multiple-resource-mqtt-configs';
+export * from './1747856323317-add-resource-documentation';

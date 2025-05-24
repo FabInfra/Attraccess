@@ -12,5 +12,9 @@
   "createClearButton": "Create and New",
   "createOpenButton": "Create and Open",
   "validationErrorTitle": "Validation Error",
-  "nameRequiredError": "Name is required."
+  "nameRequiredError": "Name is required.",
+  "documentation": {
+    "title": "Documentation",
+    "note": "Documentation can be added after creating the resource."
+  }
 }

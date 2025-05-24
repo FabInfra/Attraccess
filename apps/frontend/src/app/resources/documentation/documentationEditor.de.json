@@ -1,0 +1,37 @@
+{
+  "title": "Dokumentation bearbeiten",
+  "documentationType": {
+    "label": "Dokumentationstyp",
+    "markdown": "Markdown",
+    "url": "URL"
+  },
+  "markdownContent": {
+    "label": "Markdown-Inhalt",
+    "placeholder": "Markdown-Inhalt hier eingeben..."
+  },
+  "urlContent": {
+    "label": "Dokumentations-URL",
+    "placeholder": "URL zur Dokumentation eingeben (z.B. https://example.com/docs)"
+  },
+  "preview": "Vorschau",
+  "edit": "Bearbeiten",
+  "actions": {
+    "save": "Speichern",
+    "cancel": "Abbrechen"
+  },
+  "validation": {
+    "urlRequired": "URL ist erforderlich, wenn URL-Typ ausgewählt ist",
+    "markdownRequired": "Markdown-Inhalt ist erforderlich, wenn Markdown-Typ ausgewählt ist",
+    "invalidUrl": "Bitte geben Sie eine gültige URL ein"
+  },
+  "notifications": {
+    "saveSuccess": {
+      "title": "Dokumentation gespeichert",
+      "description": "Die Dokumentation wurde erfolgreich gespeichert."
+    },
+    "saveError": {
+      "title": "Speichern fehlgeschlagen",
+      "description": "Fehler beim Speichern der Dokumentation. Bitte versuchen Sie es erneut."
+    }
+  }
+}

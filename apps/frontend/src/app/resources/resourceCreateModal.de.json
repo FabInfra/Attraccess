@@ -12,5 +12,9 @@
   "createClearButton": "Erstellen & Neu",
   "createOpenButton": "Erstellen & Öffnen",
   "validationErrorTitle": "Validierungsfehler",
-  "nameRequiredError": "Name ist erforderlich."
+  "nameRequiredError": "Name ist erforderlich.",
+  "documentation": {
+    "title": "Dokumentation",
+    "note": "Dokumentation kann nach dem Erstellen der Ressource hinzugefügt werden."
+  }
 }
