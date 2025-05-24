@@ -1499,6 +1499,20 @@ export interface AppKeyResponseDto {
   key: string;
 }
 
+export interface SetNfcCardDisabledDto {
+  /** The ID of the NFC card to update disabled status */
+  cardId: number;
+  /** Whether the NFC card should be disabled */
+  isDisabled: boolean;
+}
+
+export interface SetNfcCardDisabledResponseDto {
+  /** The ID of the NFC card */
+  id: number;
+  /** Whether the NFC card is now disabled */
+  isDisabled: boolean;
+}
+
 export interface NFCCard {
   /** The ID of the NFC card */
   id: number;
@@ -1506,6 +1520,8 @@ export interface NFCCard {
   uid: string;
   /** The ID of the user that owns the NFC card */
   userId: number;
+  /** Whether the NFC card is temporarily disabled */
+  isDisabled: boolean;
   /**
    * The date and time the NFC card was created
    * @format date-time
@@ -1819,6 +1835,7 @@ export type GetReadersData = FabReader[];
 
 export type GetAppKeyByUidData = AppKeyResponseDto;
 
+export type SetCardDisabledData = SetNfcCardDisabledResponseDto;
 export type GetAllCardsData = NFCCard[];
 
 export interface AnalyticsControllerGetResourceUsageHoursInDateRangeParams {
@@ -3440,6 +3457,22 @@ export namespace FabReaderNfcCards {
     export type RequestBody = AppKeyRequestDto;
     export type RequestHeaders = {};
     export type ResponseBody = GetAppKeyByUidData;
+  }
+
+  /**
+   * No description
+   * @tags FabReader NFC Cards
+   * @name SetCardDisabled
+   * @summary Set the disabled status of a card
+   * @request POST:/api/fabreader/cards/set-disabled
+   * @secure
+   */
+  export namespace SetCardDisabled {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = SetNfcCardDisabledDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = SetCardDisabledData;
   }
 
   /**
@@ -5454,6 +5487,29 @@ export class Api<
     getAppKeyByUid: (data: AppKeyRequestDto, params: RequestParams = {}) =>
       this.request<GetAppKeyByUidData, void>({
         path: `/api/fabreader/cards/keys`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags FabReader NFC Cards
+     * @name SetCardDisabled
+     * @summary Set the disabled status of a card
+     * @request POST:/api/fabreader/cards/set-disabled
+     * @secure
+     */
+    setCardDisabled: (
+      data: SetNfcCardDisabledDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<SetCardDisabledData, void>({
+        path: `/api/fabreader/cards/set-disabled`,
         method: "POST",
         body: data,
         secure: true,
