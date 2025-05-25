@@ -460,7 +460,7 @@ export interface Resource {
    * The type of documentation (markdown or url)
    * @example "markdown"
    */
-  documentationType?: "markdown" | "url";
+  DocumentationType?: "markdown" | "url";
   /**
    * Markdown content for resource documentation
    * @example "# Resource Documentation
@@ -1836,6 +1836,7 @@ export type GetReadersData = FabReader[];
 export type GetAppKeyByUidData = AppKeyResponseDto;
 
 export type SetCardDisabledData = SetNfcCardDisabledResponseDto;
+
 export type GetAllCardsData = NFCCard[];
 
 export interface AnalyticsControllerGetResourceUsageHoursInDateRangeParams {
