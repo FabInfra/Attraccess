@@ -3,7 +3,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { User } from '@attraccess/database-entities';
 import mjml2html from 'mjml';
 import { join, resolve } from 'path';
-import { readdir, readFile, stat } from 'fs/promises';
+import { readdir, readFile, stat, mkdir } from 'fs/promises';
 import * as Handlebars from 'handlebars';
 import { ConfigService } from '@nestjs/config';
 
@@ -62,8 +62,16 @@ export class EmailService {
     }
 
     if (!templatesPath) {
-      this.logger.error('Email templates path not found in any of the possible locations');
-      throw new Error('Email templates path not found');
+      // If no templates path exists, create one in the default location
+      templatesPath = resolve(join('apps', 'api', 'src', 'assets', 'email-templates'));
+      this.logger.debug(`Creating templates directory at: ${templatesPath}`);
+      try {
+        await mkdir(templatesPath, { recursive: true });
+        this.logger.debug(`Created templates directory successfully`);
+      } catch (error) {
+        this.logger.error(`Failed to create templates directory: ${error.message}`);
+        throw new Error(`Failed to create email templates directory: ${error.message}`);
+      }
     }
 
     const files = await readdir(templatesPath);
