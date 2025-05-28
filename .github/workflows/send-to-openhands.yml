@@ -66,53 +66,68 @@ jobs:
         run: |
           echo "Attempting to send issue to OpenHands."
           echo "Triggered by: ${COMMENTER_LOGIN}"
-          echo "Allowed users: ${ALLOWED_TRIGGER_USERS}" # For debugging
           echo "OpenHands API Hostname: ${OPENHANDS_API_HOSTNAME}"
           echo "Raw Comment Body: ${{ github.event.comment.body }}"
+          echo "Is this a PR comment? ${{ github.event.issue.pull_request }}"
 
           COMMENT_BODY_TRIMMED=$(echo "${{ github.event.comment.body }}" | xargs)
-          # Convert to lowercase for @ai check, then extract custom instruction from original comment body
           COMMENT_BODY_LOWER=$(echo "${COMMENT_BODY_TRIMMED}" | tr '[:upper:]' '[:lower:]')
 
-          # Define the common issue details part
-          # Using a HEREDOC for readability of the multi-line string
+          # --- Define common details format strings ---
           ISSUE_DETAILS_FORMAT="\n\n--- Issue Details ---\nIssue Title: %s\nIssue Body:\n%s\nLink to issue: %s\nTriggered by GitHub user: %s"
+          # For PRs, we'll use the issue context as it's an issue_comment trigger
+          # and prompt AI to check PR for full details like branches.
+          PR_DETAILS_FORMAT="\n\n--- Pull Request Details (via issue comment) ---\nPR Title: %s\nPR Body:\n%s\nLink to PR: %s\nTriggered by GitHub user: %s\n\nIMPORTANT: Please check the Pull Request page for specific branch names (head, base) and any linked issues (e.g., 'Fixes #issue_number') in the PR description."
+
+          # --- Determine task instruction ---
+          IS_PR_COMMENT=false
+          if [ -n "${{ github.event.issue.pull_request }}" ]; then
+            IS_PR_COMMENT=true
+          fi
 
           if [ "${COMMENT_BODY_LOWER}" = "@ai" ]; then
-            TASK_INSTRUCTION="Please analyze the following GitHub issue and provide a solution or implement the requested feature/task."
-          else
-            # Remove "@ai " prefix (case-insensitive for @ai, sensitive for space after it)
-            # and assign the rest as the task instruction.
-            # Using sed to remove the prefix. The (?i) flag makes the match case-insensitive for @ai.
-            # This assumes @ai is at the very beginning of the trimmed comment.
-            CUSTOM_INSTRUCTION=$(echo "${COMMENT_BODY_TRIMMED}" | sed -E 's/^(?i)@ai[[:space:]]+//')
-            # If sed didn't change anything (e.g. @ai was not followed by space, or was not at start),
-            # it might mean the trigger condition needs refinement or the comment is malformed.
-            # For now, we assume valid trigger and that CUSTOM_INSTRUCTION will contain the user's text.
-            # If CUSTOM_INSTRUCTION is empty after sed (e.g. comment was "@ai   "), we might want a fallback.
-            # However, the main job 'if' condition `contains(github.event.comment.body, '@ai')` ensures @ai is present.
-            if [ -z "${CUSTOM_INSTRUCTION}" ] || [ "${CUSTOM_INSTRUCTION}" = "${COMMENT_BODY_TRIMMED}" ]; then
-                # This case might happen if comment is just "@ai" but somehow slipped the first check,
-                # or if it's "@ai" with no text after, or if sed failed. Fallback to default.
-                TASK_INSTRUCTION="Please analyze the following GitHub issue and provide a solution or implement the requested feature/task. (Note: Custom instruction could not be parsed, using default.)"
+            if ${IS_PR_COMMENT}; then
+              TASK_INSTRUCTION="Please analyze the following Pull Request. Review the code changes, PR description, and any linked issues mentioned in the PR body. Provide feedback, suggest improvements, or complete any tasks implied by the PR."
             else
-                TASK_INSTRUCTION="${CUSTOM_INSTRUCTION}"
+              TASK_INSTRUCTION="Please analyze the following GitHub issue and provide a solution or implement the requested feature/task."
+            fi
+          else
+            CUSTOM_INSTRUCTION=$(echo "${COMMENT_BODY_TRIMMED}" | sed -E 's/^(?i)@ai[[:space:]]+//')
+            if [ -z "${CUSTOM_INSTRUCTION}" ] || [ "${CUSTOM_INSTRUCTION}" = "${COMMENT_BODY_TRIMMED}" ]; then
+              # Fallback if custom instruction parsing failed
+              if ${IS_PR_COMMENT}; then
+                TASK_INSTRUCTION="Please analyze the following Pull Request. Review the code changes, PR description, and any linked issues mentioned in the PR body. Provide feedback, suggest improvements, or complete any tasks implied by the PR. (Note: Custom instruction from comment could not be parsed, using default PR instruction.)"
+              else
+                TASK_INSTRUCTION="Please analyze the following GitHub issue and provide a solution or implement the requested feature/task. (Note: Custom instruction from comment could not be parsed, using default issue instruction.)"
+              fi
+            else
+              TASK_INSTRUCTION="${CUSTOM_INSTRUCTION}"
             fi
           fi
-          
           echo "Determined Task Instruction: ${TASK_INSTRUCTION}"
 
-          # Combine task instruction with issue details
-          INITIAL_USER_MSG=$(printf "${TASK_INSTRUCTION}${ISSUE_DETAILS_FORMAT}" \
-          "${ISSUE_TITLE}" \
-          "${ISSUE_BODY}" \
-          "${ISSUE_URL}" \
-          "${COMMENTER_LOGIN}")
+          # --- Construct final message with context-specific details ---
+          if ${IS_PR_COMMENT}; then
+            # For issue_comment on a PR, github.event.issue contains the PR's info
+            INITIAL_USER_MSG=$(printf "${TASK_INSTRUCTION}${PR_DETAILS_FORMAT}" \
+            "${{ github.event.issue.title }}" \
+            "${{ github.event.issue.body }}" \
+            "${{ github.event.issue.html_url }}" \
+            "${COMMENTER_LOGIN}")
+          else # It's an issue_comment on a regular issue
+            INITIAL_USER_MSG=$(printf "${TASK_INSTRUCTION}${ISSUE_DETAILS_FORMAT}" \
+            "${{ github.event.issue.title }}" \
+            "${{ github.event.issue.body }}" \
+            "${{ github.event.issue.html_url }}" \
+            "${COMMENTER_LOGIN}")
+          fi
+          
+          echo "Final INITIAL_USER_MSG being sent to AI (first 200 chars): $(echo "$INITIAL_USER_MSG" | cut -c 1-200)"
 
           JSON_PAYLOAD=$(jq -n --arg msg "$INITIAL_USER_MSG" --arg repo "${{ github.event.repository.full_name }}" \
             '{initial_user_msg: $msg, repository: $repo, git_provider: "github"}')
           
-          echo "Payload to send: $JSON_PAYLOAD" # Be cautious with logging full payload if issue body can be very large or sensitive
+          # echo "Full Payload to send: $JSON_PAYLOAD" # Avoid logging full payload if it can be very large or sensitive
 
           curl --fail -s -X POST "${OPENHANDS_API_HOSTNAME}/api/conversations" \
             -H "Authorization: Bearer ${AUTHENTIK_ACCESS_TOKEN}" \
