@@ -55,7 +55,6 @@ jobs:
           echo "Successfully retrieved Authentik access token."
 
       - name: Send Issue to OpenHands
-        needs: get_token
         env:
           AUTHENTIK_ACCESS_TOKEN: ${{ steps.get_token.outputs.access_token }}
           OPENHANDS_API_HOSTNAME: ${{ secrets.OPENHANDS_API_HOSTNAME }}
