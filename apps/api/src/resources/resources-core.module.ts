@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Resource, ResourceGroup, User } from '@attraccess/database-entities';
 import { ResourcesService } from './resources.service';
@@ -13,7 +14,7 @@ import { ResourceGroupsService } from './groups/resourceGroups.service';
  * without creating circular dependencies
  */
 @Module({
-  imports: [TypeOrmModule.forFeature([Resource, User, ResourceGroup]), FileStorageModule],
+  imports: [ConfigModule, TypeOrmModule.forFeature([Resource, User, ResourceGroup]), FileStorageModule],
   providers: [ResourcesService, ResourceImageService, ResourceGroupsService, CanManageResourcesGuard],
   exports: [ResourcesService, ResourceGroupsService, CanManageResourcesGuard],
 })
