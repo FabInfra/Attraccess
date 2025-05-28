@@ -14,17 +14,10 @@ module.exports = [
   ...nx.configs['flat/typescript'],
   ...nx.configs['flat/javascript'],
   {
-    ignores: ['**/dist', "**/tsconfig.**"],
+    ignores: ['**/dist', '**/tsconfig.**', '**/vite.config.*.timestamp*', '**/vitest.config.*.timestamp*'],
   },
   {
-    files: [
-      '**/*.ts',
-      '**/*.tsx',
-      '**/*.js',
-      '**/*.jsx',
-      '**/*.cjs',
-      '**/*.mjs',
-    ],
+    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx', '**/*.cjs', '**/*.mjs'],
     // Override or add rules here
     rules: {
       '@nx/enforce-module-boundaries': [
@@ -40,22 +33,15 @@ module.exports = [
           ],
         },
       ],
-      'no-warning-comments': 'off'},
+      'no-warning-comments': 'off',
+    },
   },
   // Add special configuration for CI environment that converts warnings to errors
   ...(process.env.CI === 'true'
     ? [
         {
-          files: [
-            '**/*.ts',
-            '**/*.tsx',
-            '**/*.js',
-            '**/*.jsx',
-            '**/*.cjs',
-            '**/*.mjs',
-          ],
-          rules: {
-          },
+          files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx', '**/*.cjs', '**/*.mjs'],
+          rules: {},
         },
       ]
     : []),

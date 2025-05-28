@@ -9,7 +9,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as crypto from 'crypto';
 import { FileUploadValidationError } from '../errors/file-upload-validation.error';
-import { StorageConfig, AllowedMimeType } from '../../config/storage.config';
+import { StorageConfigType, AllowedMimeType } from '../../config/storage.config';
 import { FileUpload } from '../types/file-upload.types';
 
 class FileNotFoundError extends NotFoundException {
@@ -23,10 +23,15 @@ class FileNotFoundError extends NotFoundException {
 @Injectable()
 export class FileStorageService implements OnModuleInit {
   private readonly logger = new Logger(FileStorageService.name);
-  private readonly config: StorageConfig;
+  private readonly config: StorageConfigType;
 
   constructor(private readonly configService: ConfigService) {
-    this.config = this.configService.get<StorageConfig>('storage');
+    const storageConf = this.configService.get<StorageConfigType>('storage');
+    if (!storageConf) {
+      this.logger.error('Storage configuration not found. FileStorageService may not work correctly.');
+      throw new Error("Storage configuration ('storage') not found. Check ConfigModule setup.");
+    }
+    this.config = storageConf;
   }
 
   async onModuleInit() {

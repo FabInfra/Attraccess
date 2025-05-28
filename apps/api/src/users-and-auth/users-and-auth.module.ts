@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule } from '@nestjs/config'; // For JwtModule
+import { existsSync, readFileSync } from 'fs'; // For JwtModule secret loading
 
 // Services and Controllers
 import { UsersService } from './users/users.service';
@@ -14,7 +16,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 // Constants and Entities
-import { jwtConstants } from './constants';
+
 import {
   User,
   AuthenticationDetail,
@@ -28,15 +30,49 @@ import { SSOOIDCStrategy } from './auth/sso/oidc/oidc.strategy';
 import { ModuleRef } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { SSOController } from './auth/sso/sso.controller';
-import { loadEnv } from '@attraccess/env';
+import { AppConfigType } from '../config/app.config';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, AuthenticationDetail, RevokedToken, SSOProvider, SSOProviderOIDCConfiguration]),
     PassportModule,
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '24h' },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        const appConfig = configService.get<AppConfigType>('app');
+        if (!appConfig) {
+          // Consider throwing a more specific error or logging
+          throw new Error("App configuration ('app') for JWT not found.");
+        }
+
+        let jwtSecret: string;
+        const jwtSecretOrigin = appConfig.AUTH_JWT_ORIGIN;
+
+        if (jwtSecretOrigin === 'FILE') {
+          const jwtKeyPath = appConfig.AUTH_JWT_SECRET; // Path from config
+          if (!existsSync(jwtKeyPath)) {
+            throw new Error(`JWT secret file (path from AUTH_JWT_SECRET in config) does not exist at ${jwtKeyPath}`);
+          }
+          jwtSecret = readFileSync(jwtKeyPath).toString().trim();
+          if (!jwtSecret) {
+            throw new Error(`JWT secret file at ${jwtKeyPath} is empty`);
+          }
+        } else if (jwtSecretOrigin === 'ENV') {
+          jwtSecret = appConfig.AUTH_JWT_SECRET; // Secret string from config
+          if (!jwtSecret) {
+            throw new Error('AUTH_JWT_SECRET (as secret value) is not set in config for JWT (origin ENV)');
+          }
+        } else {
+          // This case should ideally be prevented by Zod validation on AUTH_JWT_ORIGIN
+          throw new Error(`Unknown JWT secret origin in config: ${jwtSecretOrigin}`);
+        }
+
+        return {
+          secret: jwtSecret,
+          signOptions: { expiresIn: '24h' }, // Standard sign options
+        };
+      },
+      inject: [ConfigService],
     }),
     EmailModule,
   ],
@@ -48,7 +84,7 @@ import { loadEnv } from '@attraccess/env';
     SSOService,
     {
       provide: SSOOIDCStrategy,
-      useFactory: (moduleRef: ModuleRef) => {
+      useFactory: (moduleRef: ModuleRef, configService: ConfigService) => {
         // This is a placeholder - you'll need to retrieve an actual configuration
         // from the database or environment variables
         const config = new SSOProviderOIDCConfiguration();
@@ -59,10 +95,11 @@ import { loadEnv } from '@attraccess/env';
         config.clientId = 'placeholder';
         config.clientSecret = 'placeholder';
 
-        const env = loadEnv((z) => ({
-          FRONTEND_URL: z.string().url().default(process.env.VITE_ATTRACCESS_URL),
-        }));
-        const callbackURL = env.FRONTEND_URL + '/api/sso/OIDC/callback';
+        const appConfig = configService.get<AppConfigType>('app');
+        if (!appConfig) {
+          throw new Error("App configuration ('app') not found.");
+        }
+        const callbackURL = appConfig.FRONTEND_URL + '/api/sso/OIDC/callback';
 
         return new SSOOIDCStrategy(moduleRef, config, callbackURL);
       },

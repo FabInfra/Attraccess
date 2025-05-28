@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { Ping2Response, CreateOneUserData, CreateOneUserResponse, GetAllUsersData, GetAllUsersResponse, VerifyEmailData, VerifyEmailResponse, RequestPasswordResetData, RequestPasswordResetResponse, ChangePasswordViaResetTokenData, ChangePasswordViaResetTokenResponse, GetCurrentResponse, GetOneUserByIdData, GetOneUserByIdResponse, UpdatePermissionsData, UpdatePermissionsResponse, GetPermissionsData, GetPermissionsResponse, BulkUpdatePermissionsData, BulkUpdatePermissionsResponse, GetAllWithPermissionData, GetAllWithPermissionResponse, CreateSessionData, CreateSessionResponse2, EndSessionResponse, GetAllSsoProvidersResponse, CreateOneSsoProviderData, CreateOneSsoProviderResponse, GetOneSsoProviderByIdData, GetOneSsoProviderByIdResponse, UpdateOneSsoProviderData, UpdateOneSsoProviderResponse, DeleteOneSsoProviderData, DeleteOneSsoProviderResponse, LoginWithOidcData, LoginWithOidcResponse, OidcLoginCallbackData, OidcLoginCallbackResponse, CreateOneResourceGroupData, CreateOneResourceGroupResponse, GetAllResourceGroupsData, GetAllResourceGroupsResponse, GetOneResourceGroupByIdData, GetOneResourceGroupByIdResponse, UpdateOneResourceGroupData, UpdateOneResourceGroupResponse, DeleteOneResourceGroupData, DeleteOneResourceGroupResponse, CreateOneResourceData, CreateOneResourceResponse, GetAllResourcesData, GetAllResourcesResponse, GetOneResourceByIdData, GetOneResourceByIdResponse, UpdateOneResourceData, UpdateOneResourceResponse, DeleteOneResourceData, DeleteOneResourceResponse, AddResourceToGroupData, AddResourceToGroupResponse, RemoveResourceFromGroupData, RemoveResourceFromGroupResponse, StartSessionData, StartSessionResponse, EndSessionData, GetHistoryOfResourceUsageData, GetHistoryOfResourceUsageResponse, GetActiveSessionData, GetActiveSessionResponse, MarkCompletedData, MarkCompletedResponse, GetAllResourceIntroductionsData, GetAllResourceIntroductionsResponse, CheckStatusData, CheckStatusResponse, MarkRevokedData, MarkRevokedResponse, MarkUnrevokedData, MarkUnrevokedResponse, GetHistoryOfIntroductionData, GetHistoryOfIntroductionResponse, CheckIsRevokedStatusData, CheckIsRevokedStatusResponse, GetOneResourceIntroductionData, GetOneResourceIntroductionResponse, CheckCanManagePermissionData, CheckCanManagePermissionResponse, GetAllResourceIntroducersData, GetAllResourceIntroducersResponse, AddOneData, AddOneResponse, RemoveOneData, RemoveOneResponse, GetAllMqttConfigurationsData, GetAllMqttConfigurationsResponse, CreateMqttConfigurationData, CreateMqttConfigurationResponse, GetOneMqttConfigurationData, GetOneMqttConfigurationResponse, UpdateMqttConfigurationData, UpdateMqttConfigurationResponse, DeleteOneMqttConfigurationData, DeleteOneMqttConfigurationResponse, TestOneData, TestOneResponse, GetAllMqttServersResponse, CreateOneMqttServerData, CreateOneMqttServerResponse, GetOneMqttServerByIdData, GetOneMqttServerByIdResponse, UpdateOneMqttServerData, UpdateOneMqttServerResponse, DeleteOneMqttServerData, DeleteOneMqttServerResponse, TestConnectionData, TestConnectionResponse, GetStatusOfOneData, GetStatusOfOneResponse, GetStatusOfAllResponse, SseControllerStreamEventsData, SseControllerStreamEventsResponse, GetAllWebhookConfigurationsData, GetAllWebhookConfigurationsResponse, CreateOneWebhookConfigurationData, CreateOneWebhookConfigurationResponse, GetOneWebhookConfigurationByIdData, GetOneWebhookConfigurationByIdResponse, UpdateOneWebhookConfigurationData, UpdateOneWebhookConfigurationResponse, DeleteOneWebhookConfigurationData, DeleteOneWebhookConfigurationResponse, UpdateStatusData, UpdateStatusResponse, TestData, TestResponse, RegenerateSecretData, RegenerateSecretResponse, GetPluginsResponse, UploadPluginData, GetFrontendPluginFileData, GetFrontendPluginFileResponse, DeletePluginData, DeletePluginResponse, EnrollNfcCardData, EnrollNfcCardResponse, ResetNfcCardData, ResetNfcCardResponse, UpdateReaderData, UpdateReaderResponse, GetReaderByIdData, GetReaderByIdResponse, GetReadersResponse, GetAppKeyByUidData, GetAppKeyByUidResponse, SetCardDisabledData, SetCardDisabledResponse, GetAllCardsResponse, AnalyticsControllerGetResourceUsageHoursInDateRangeData, AnalyticsControllerGetResourceUsageHoursInDateRangeResponse } from './types.gen';
+import type { Ping2Response, CreateOneUserData, CreateOneUserResponse, GetAllUsersData, GetAllUsersResponse, VerifyEmailData, VerifyEmailResponse, RequestPasswordResetData, RequestPasswordResetResponse, ChangePasswordViaResetTokenData, ChangePasswordViaResetTokenResponse, GetCurrentResponse, GetOneUserByIdData, GetOneUserByIdResponse, UpdatePermissionsData, UpdatePermissionsResponse, GetPermissionsData, GetPermissionsResponse, BulkUpdatePermissionsData, BulkUpdatePermissionsResponse, GetAllWithPermissionData, GetAllWithPermissionResponse, CreateSessionData, CreateSessionResponse2, EndSessionResponse, GetAllSsoProvidersResponse, CreateOneSsoProviderData, CreateOneSsoProviderResponse, GetOneSsoProviderByIdData, GetOneSsoProviderByIdResponse, UpdateOneSsoProviderData, UpdateOneSsoProviderResponse, DeleteOneSsoProviderData, DeleteOneSsoProviderResponse, LoginWithOidcData, LoginWithOidcResponse, OidcLoginCallbackData, OidcLoginCallbackResponse, CreateOneResourceGroupData, CreateOneResourceGroupResponse, GetAllResourceGroupsData, GetAllResourceGroupsResponse, GetOneResourceGroupByIdData, GetOneResourceGroupByIdResponse, UpdateOneResourceGroupData, UpdateOneResourceGroupResponse, DeleteOneResourceGroupData, DeleteOneResourceGroupResponse, CreateOneResourceData, CreateOneResourceResponse, GetAllResourcesData, GetAllResourcesResponse, GetOneResourceByIdData, GetOneResourceByIdResponse, UpdateOneResourceData, UpdateOneResourceResponse, DeleteOneResourceData, DeleteOneResourceResponse, AddResourceToGroupData, AddResourceToGroupResponse, RemoveResourceFromGroupData, RemoveResourceFromGroupResponse, StartSessionData, StartSessionResponse, EndSessionData, GetHistoryOfResourceUsageData, GetHistoryOfResourceUsageResponse, GetActiveSessionData, GetActiveSessionResponse, MarkCompletedData, MarkCompletedResponse, GetAllResourceIntroductionsData, GetAllResourceIntroductionsResponse, CheckStatusData, CheckStatusResponse, MarkRevokedData, MarkRevokedResponse, MarkUnrevokedData, MarkUnrevokedResponse, GetHistoryOfIntroductionData, GetHistoryOfIntroductionResponse, CheckIsRevokedStatusData, CheckIsRevokedStatusResponse, GetOneResourceIntroductionData, GetOneResourceIntroductionResponse, CheckCanManagePermissionData, CheckCanManagePermissionResponse, GetAllResourceIntroducersData, GetAllResourceIntroducersResponse, AddOneData, AddOneResponse, RemoveOneData, RemoveOneResponse, GetAllMqttServersResponse, CreateOneMqttServerData, CreateOneMqttServerResponse, GetOneMqttServerByIdData, GetOneMqttServerByIdResponse, UpdateOneMqttServerData, UpdateOneMqttServerResponse, DeleteOneMqttServerData, DeleteOneMqttServerResponse, TestConnectionData, TestConnectionResponse, GetStatusOfOneData, GetStatusOfOneResponse, GetStatusOfAllResponse, SseControllerStreamEventsData, SseControllerStreamEventsResponse, GetAllWebhookConfigurationsData, GetAllWebhookConfigurationsResponse, CreateOneWebhookConfigurationData, CreateOneWebhookConfigurationResponse, GetOneWebhookConfigurationByIdData, GetOneWebhookConfigurationByIdResponse, UpdateOneWebhookConfigurationData, UpdateOneWebhookConfigurationResponse, DeleteOneWebhookConfigurationData, DeleteOneWebhookConfigurationResponse, UpdateStatusData, UpdateStatusResponse, TestData, TestResponse, RegenerateSecretData, RegenerateSecretResponse, GetAllMqttConfigurationsData, GetAllMqttConfigurationsResponse, CreateMqttConfigurationData, CreateMqttConfigurationResponse, GetOneMqttConfigurationData, GetOneMqttConfigurationResponse, UpdateMqttConfigurationData, UpdateMqttConfigurationResponse, DeleteOneMqttConfigurationData, DeleteOneMqttConfigurationResponse, TestOneData, TestOneResponse, GetPluginsResponse, UploadPluginData, GetFrontendPluginFileData, GetFrontendPluginFileResponse, DeletePluginData, DeletePluginResponse, EnrollNfcCardData, EnrollNfcCardResponse, ResetNfcCardData, ResetNfcCardResponse, UpdateReaderData, UpdateReaderResponse, GetReaderByIdData, GetReaderByIdResponse, GetReadersResponse, GetAppKeyByUidData, GetAppKeyByUidResponse, SetCardDisabledData, SetCardDisabledResponse, GetAllCardsResponse, AnalyticsControllerGetResourceUsageHoursInDateRangeData, AnalyticsControllerGetResourceUsageHoursInDateRangeResponse } from './types.gen';
 
 export class ApplicationService {
     /**
@@ -1150,155 +1150,6 @@ export class ResourceIntroducersService {
     
 }
 
-export class MqttResourceConfigurationService {
-    /**
-     * Get all MQTT configurations for a resource
-     * @param data The data for the request.
-     * @param data.resourceId
-     * @returns MqttResourceConfig Returns all MQTT configurations for the resource
-     * @throws ApiError
-     */
-    public static getAllMqttConfigurations(data: GetAllMqttConfigurationsData): CancelablePromise<GetAllMqttConfigurationsResponse> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/resources/{resourceId}/mqtt/config',
-            path: {
-                resourceId: data.resourceId
-            },
-            errors: {
-                401: 'User is not authenticated',
-                403: 'User does not have permission to manage this resource',
-                404: 'Resource not found'
-            }
-        });
-    }
-    
-    /**
-     * Create a new MQTT configuration for a resource
-     * @param data The data for the request.
-     * @param data.resourceId
-     * @param data.requestBody
-     * @returns MqttResourceConfig MQTT configuration created successfully
-     * @throws ApiError
-     */
-    public static createMqttConfiguration(data: CreateMqttConfigurationData): CancelablePromise<CreateMqttConfigurationResponse> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/resources/{resourceId}/mqtt/config',
-            path: {
-                resourceId: data.resourceId
-            },
-            body: data.requestBody,
-            mediaType: 'application/json',
-            errors: {
-                401: 'User is not authenticated',
-                403: 'User does not have permission to manage this resource',
-                404: 'Resource not found'
-            }
-        });
-    }
-    
-    /**
-     * Get a specific MQTT configuration for a resource
-     * @param data The data for the request.
-     * @param data.resourceId
-     * @param data.configId
-     * @returns MqttResourceConfig Returns the specific MQTT configuration
-     * @throws ApiError
-     */
-    public static getOneMqttConfiguration(data: GetOneMqttConfigurationData): CancelablePromise<GetOneMqttConfigurationResponse> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/resources/{resourceId}/mqtt/config/{configId}',
-            path: {
-                resourceId: data.resourceId,
-                configId: data.configId
-            },
-            errors: {
-                401: 'User is not authenticated',
-                403: 'User does not have permission to manage this resource',
-                404: 'Resource or configuration not found'
-            }
-        });
-    }
-    
-    /**
-     * Update a specific MQTT configuration
-     * @param data The data for the request.
-     * @param data.resourceId
-     * @param data.configId
-     * @param data.requestBody
-     * @returns MqttResourceConfig MQTT configuration updated successfully
-     * @throws ApiError
-     */
-    public static updateMqttConfiguration(data: UpdateMqttConfigurationData): CancelablePromise<UpdateMqttConfigurationResponse> {
-        return __request(OpenAPI, {
-            method: 'PUT',
-            url: '/api/resources/{resourceId}/mqtt/config/{configId}',
-            path: {
-                resourceId: data.resourceId,
-                configId: data.configId
-            },
-            body: data.requestBody,
-            mediaType: 'application/json',
-            errors: {
-                401: 'User is not authenticated',
-                403: 'User does not have permission to manage this resource',
-                404: 'Resource or configuration not found'
-            }
-        });
-    }
-    
-    /**
-     * Delete a specific MQTT configuration
-     * @param data The data for the request.
-     * @param data.resourceId
-     * @param data.configId
-     * @returns unknown MQTT configuration deleted successfully
-     * @throws ApiError
-     */
-    public static deleteOneMqttConfiguration(data: DeleteOneMqttConfigurationData): CancelablePromise<DeleteOneMqttConfigurationResponse> {
-        return __request(OpenAPI, {
-            method: 'DELETE',
-            url: '/api/resources/{resourceId}/mqtt/config/{configId}',
-            path: {
-                resourceId: data.resourceId,
-                configId: data.configId
-            },
-            errors: {
-                401: 'User is not authenticated',
-                403: 'User does not have permission to manage this resource',
-                404: 'Resource or MQTT configuration not found'
-            }
-        });
-    }
-    
-    /**
-     * Test a specific MQTT configuration
-     * @param data The data for the request.
-     * @param data.resourceId
-     * @param data.configId
-     * @returns TestMqttConfigResponseDto Test result
-     * @throws ApiError
-     */
-    public static testOne(data: TestOneData): CancelablePromise<TestOneResponse> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/resources/{resourceId}/mqtt/config/{configId}/test',
-            path: {
-                resourceId: data.resourceId,
-                configId: data.configId
-            },
-            errors: {
-                401: 'User is not authenticated',
-                403: 'User does not have permission to manage this resource',
-                404: 'Resource or MQTT configuration not found'
-            }
-        });
-    }
-    
-}
-
 export class MqttServersService {
     /**
      * Get all MQTT servers
@@ -1729,6 +1580,155 @@ export class WebhooksService {
                 401: 'User is not authenticated',
                 403: 'User does not have permission to manage this resource',
                 404: 'Webhook configuration not found'
+            }
+        });
+    }
+    
+}
+
+export class MqttResourceConfigurationService {
+    /**
+     * Get all MQTT configurations for a resource
+     * @param data The data for the request.
+     * @param data.resourceId
+     * @returns MqttResourceConfig Returns all MQTT configurations for the resource
+     * @throws ApiError
+     */
+    public static getAllMqttConfigurations(data: GetAllMqttConfigurationsData): CancelablePromise<GetAllMqttConfigurationsResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/resources/{resourceId}/mqtt/config',
+            path: {
+                resourceId: data.resourceId
+            },
+            errors: {
+                401: 'User is not authenticated',
+                403: 'User does not have permission to manage this resource',
+                404: 'Resource not found'
+            }
+        });
+    }
+    
+    /**
+     * Create a new MQTT configuration for a resource
+     * @param data The data for the request.
+     * @param data.resourceId
+     * @param data.requestBody
+     * @returns MqttResourceConfig MQTT configuration created successfully
+     * @throws ApiError
+     */
+    public static createMqttConfiguration(data: CreateMqttConfigurationData): CancelablePromise<CreateMqttConfigurationResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/resources/{resourceId}/mqtt/config',
+            path: {
+                resourceId: data.resourceId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                401: 'User is not authenticated',
+                403: 'User does not have permission to manage this resource',
+                404: 'Resource not found'
+            }
+        });
+    }
+    
+    /**
+     * Get a specific MQTT configuration for a resource
+     * @param data The data for the request.
+     * @param data.resourceId
+     * @param data.configId
+     * @returns MqttResourceConfig Returns the specific MQTT configuration
+     * @throws ApiError
+     */
+    public static getOneMqttConfiguration(data: GetOneMqttConfigurationData): CancelablePromise<GetOneMqttConfigurationResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/resources/{resourceId}/mqtt/config/{configId}',
+            path: {
+                resourceId: data.resourceId,
+                configId: data.configId
+            },
+            errors: {
+                401: 'User is not authenticated',
+                403: 'User does not have permission to manage this resource',
+                404: 'Resource or configuration not found'
+            }
+        });
+    }
+    
+    /**
+     * Update a specific MQTT configuration
+     * @param data The data for the request.
+     * @param data.resourceId
+     * @param data.configId
+     * @param data.requestBody
+     * @returns MqttResourceConfig MQTT configuration updated successfully
+     * @throws ApiError
+     */
+    public static updateMqttConfiguration(data: UpdateMqttConfigurationData): CancelablePromise<UpdateMqttConfigurationResponse> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/resources/{resourceId}/mqtt/config/{configId}',
+            path: {
+                resourceId: data.resourceId,
+                configId: data.configId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                401: 'User is not authenticated',
+                403: 'User does not have permission to manage this resource',
+                404: 'Resource or configuration not found'
+            }
+        });
+    }
+    
+    /**
+     * Delete a specific MQTT configuration
+     * @param data The data for the request.
+     * @param data.resourceId
+     * @param data.configId
+     * @returns unknown MQTT configuration deleted successfully
+     * @throws ApiError
+     */
+    public static deleteOneMqttConfiguration(data: DeleteOneMqttConfigurationData): CancelablePromise<DeleteOneMqttConfigurationResponse> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/resources/{resourceId}/mqtt/config/{configId}',
+            path: {
+                resourceId: data.resourceId,
+                configId: data.configId
+            },
+            errors: {
+                401: 'User is not authenticated',
+                403: 'User does not have permission to manage this resource',
+                404: 'Resource or MQTT configuration not found'
+            }
+        });
+    }
+    
+    /**
+     * Test a specific MQTT configuration
+     * @param data The data for the request.
+     * @param data.resourceId
+     * @param data.configId
+     * @returns TestMqttConfigResponseDto Test result
+     * @throws ApiError
+     */
+    public static testOne(data: TestOneData): CancelablePromise<TestOneResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/resources/{resourceId}/mqtt/config/{configId}/test',
+            path: {
+                resourceId: data.resourceId,
+                configId: data.configId
+            },
+            errors: {
+                401: 'User is not authenticated',
+                403: 'User does not have permission to manage this resource',
+                404: 'Resource or MQTT configuration not found'
             }
         });
     }

@@ -151,7 +151,7 @@ function ResourceDetailsComponent() {
 
       {/* Full width Usage section for all devices */}
       <div className="w-full space-y-6 mb-8">
-        <ResourceUsageSession resourceId={resourceId} />
+        <ResourceUsageSession resourceId={resourceId} resource={resource} />
         <ResourceUsageHistory resourceId={resourceId} />
       </div>
 

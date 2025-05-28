@@ -79,6 +79,14 @@ export class Resource {
   })
   documentationUrl!: string | null;
 
+  @Column({ type: 'boolean', default: false })
+  @ApiProperty({
+    description: 'Whether this resource allows overtaking by the next user without the prior user ending their session',
+    example: false,
+    default: false,
+  })
+  allowTakeOver!: boolean;
+
   @CreateDateColumn()
   @ApiProperty({
     description: 'When the resource was created',

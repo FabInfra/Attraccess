@@ -1,0 +1,14 @@
+{
+  "endSession": "Sitzung beenden",
+  "sessionEnded": "Sitzung beendet",
+  "sessionEndedDescription": "Ihre Nutzungssitzung wurde erfolgreich beendet.",
+  "sessionEndError": "Fehler beim Beenden der Sitzung",
+  "sessionEndErrorDescription": "Beim Beenden der Sitzung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+  "alternativeEndSessionOptionsMenu": {
+    "label": "Alternative Sitzungsbeendigung",
+    "endWithNotes": {
+      "label": "Mit Notizen beenden",
+      "description": "Beenden Sie die Sitzung und geben Sie Notizen an."
+    }
+  }
+}

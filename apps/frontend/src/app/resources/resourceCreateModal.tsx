@@ -9,6 +9,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
+  Switch,
 } from '@heroui/react';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import * as en from './resourceCreateModal.en.json';
@@ -41,6 +42,7 @@ export function ResourceCreateModal(props: ResourceCreateModalProps) {
   const [formData, setFormData] = useState<CreateResourceDto>({
     name: '',
     description: '',
+    allowTakeOver: false,
   });
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const { success, error } = useToastMessage();
@@ -56,6 +58,7 @@ export function ResourceCreateModal(props: ResourceCreateModalProps) {
     setFormData({
       name: '',
       description: '',
+      allowTakeOver: false,
     });
     setSelectedImage(null);
   }, []);
@@ -150,6 +153,7 @@ export function ResourceCreateModal(props: ResourceCreateModalProps) {
         formData: {
           name: formData.name,
           description: formData.description,
+          allowTakeOver: formData.allowTakeOver,
           image: selectedImage ?? undefined,
         },
       });
@@ -186,6 +190,17 @@ export function ResourceCreateModal(props: ResourceCreateModalProps) {
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   isDisabled={isSubmitting}
                 />
+
+                <Switch
+                  isSelected={formData.allowTakeOver}
+                  onValueChange={(value) => setFormData({ ...formData, allowTakeOver: value })}
+                  isDisabled={isSubmitting}
+                >
+                  <div className="flex flex-col">
+                    <span className="text-small">{t('allowTakeOverLabel')}</span>
+                    <span className="text-tiny text-default-400">{t('allowTakeOverDescription')}</span>
+                  </div>
+                </Switch>
 
                 <FileUpload
                   label={t('imageLabel')}

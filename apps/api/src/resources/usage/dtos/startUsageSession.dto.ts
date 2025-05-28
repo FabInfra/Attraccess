@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsBoolean } from 'class-validator';
 
 export class StartUsageSessionDto {
   @ApiProperty({
@@ -10,4 +10,14 @@ export class StartUsageSessionDto {
   @IsString()
   @IsOptional()
   notes?: string;
+
+  @ApiProperty({
+    description: 'Whether to force takeover of an existing session (only works if resource allows takeover)',
+    required: false,
+    example: false,
+    default: false,
+  })
+  @IsBoolean()
+  @IsOptional()
+  forceTakeOver?: boolean;
 }

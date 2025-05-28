@@ -13,6 +13,8 @@
   "createOpenButton": "Erstellen & Öffnen",
   "validationErrorTitle": "Validierungsfehler",
   "nameRequiredError": "Name ist erforderlich.",
+  "allowTakeOverLabel": "Übernahme erlauben",
+  "allowTakeOverDescription": "Nächstem Benutzer erlauben, diese Ressource zu übernehmen, ohne dass der vorherige Benutzer die Sitzung beendet",
   "documentation": {
     "title": "Dokumentation",
     "note": "Dokumentation kann nach dem Erstellen der Ressource hinzugefügt werden."

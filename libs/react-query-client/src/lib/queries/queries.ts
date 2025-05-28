@@ -94,13 +94,6 @@ export const useResourceIntroducersServiceGetAllResourceIntroducers = <TData = C
 export const useResourceIntroducersServiceCheckCanManagePermission = <TData = Common.ResourceIntroducersServiceCheckCanManagePermissionDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
   resourceId: number;
 }, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceIntroducersServiceCheckCanManagePermissionKeyFn({ resourceId }, queryKey), queryFn: () => ResourceIntroducersService.checkCanManagePermission({ resourceId }) as TData, ...options });
-export const useMqttResourceConfigurationServiceGetAllMqttConfigurations = <TData = Common.MqttResourceConfigurationServiceGetAllMqttConfigurationsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
-  resourceId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMqttResourceConfigurationServiceGetAllMqttConfigurationsKeyFn({ resourceId }, queryKey), queryFn: () => MqttResourceConfigurationService.getAllMqttConfigurations({ resourceId }) as TData, ...options });
-export const useMqttResourceConfigurationServiceGetOneMqttConfiguration = <TData = Common.MqttResourceConfigurationServiceGetOneMqttConfigurationDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ configId, resourceId }: {
-  configId: number;
-  resourceId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMqttResourceConfigurationServiceGetOneMqttConfigurationKeyFn({ configId, resourceId }, queryKey), queryFn: () => MqttResourceConfigurationService.getOneMqttConfiguration({ configId, resourceId }) as TData, ...options });
 export const useMqttServersServiceGetAllMqttServers = <TData = Common.MqttServersServiceGetAllMqttServersDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMqttServersServiceGetAllMqttServersKeyFn(queryKey), queryFn: () => MqttServersService.getAllMqttServers() as TData, ...options });
 export const useMqttServersServiceGetOneMqttServerById = <TData = Common.MqttServersServiceGetOneMqttServerByIdDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ id }: {
   id: number;
@@ -119,6 +112,13 @@ export const useWebhooksServiceGetOneWebhookConfigurationById = <TData = Common.
   id: number;
   resourceId: number;
 }, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseWebhooksServiceGetOneWebhookConfigurationByIdKeyFn({ id, resourceId }, queryKey), queryFn: () => WebhooksService.getOneWebhookConfigurationById({ id, resourceId }) as TData, ...options });
+export const useMqttResourceConfigurationServiceGetAllMqttConfigurations = <TData = Common.MqttResourceConfigurationServiceGetAllMqttConfigurationsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
+  resourceId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMqttResourceConfigurationServiceGetAllMqttConfigurationsKeyFn({ resourceId }, queryKey), queryFn: () => MqttResourceConfigurationService.getAllMqttConfigurations({ resourceId }) as TData, ...options });
+export const useMqttResourceConfigurationServiceGetOneMqttConfiguration = <TData = Common.MqttResourceConfigurationServiceGetOneMqttConfigurationDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ configId, resourceId }: {
+  configId: number;
+  resourceId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMqttResourceConfigurationServiceGetOneMqttConfigurationKeyFn({ configId, resourceId }, queryKey), queryFn: () => MqttResourceConfigurationService.getOneMqttConfiguration({ configId, resourceId }) as TData, ...options });
 export const usePluginServiceGetPlugins = <TData = Common.PluginServiceGetPluginsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UsePluginServiceGetPluginsKeyFn(queryKey), queryFn: () => PluginService.getPlugins() as TData, ...options });
 export const usePluginServiceGetFrontendPluginFile = <TData = Common.PluginServiceGetFrontendPluginFileDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ filePath, pluginName }: {
   filePath: string;
@@ -226,20 +226,6 @@ export const useResourceIntroducersServiceAddOne = <TData = Common.ResourceIntro
   resourceId: number;
   userId: number;
 }, TContext>({ mutationFn: ({ resourceId, userId }) => ResourceIntroducersService.addOne({ resourceId, userId }) as unknown as Promise<TData>, ...options });
-export const useMqttResourceConfigurationServiceCreateMqttConfiguration = <TData = Common.MqttResourceConfigurationServiceCreateMqttConfigurationMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  requestBody: CreateMqttResourceConfigDto;
-  resourceId: number;
-}, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  requestBody: CreateMqttResourceConfigDto;
-  resourceId: number;
-}, TContext>({ mutationFn: ({ requestBody, resourceId }) => MqttResourceConfigurationService.createMqttConfiguration({ requestBody, resourceId }) as unknown as Promise<TData>, ...options });
-export const useMqttResourceConfigurationServiceTestOne = <TData = Common.MqttResourceConfigurationServiceTestOneMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  configId: number;
-  resourceId: number;
-}, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  configId: number;
-  resourceId: number;
-}, TContext>({ mutationFn: ({ configId, resourceId }) => MqttResourceConfigurationService.testOne({ configId, resourceId }) as unknown as Promise<TData>, ...options });
 export const useMqttServersServiceCreateOneMqttServer = <TData = Common.MqttServersServiceCreateOneMqttServerMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   requestBody: CreateMqttServerDto;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
@@ -271,6 +257,20 @@ export const useWebhooksServiceRegenerateSecret = <TData = Common.WebhooksServic
   id: number;
   resourceId: number;
 }, TContext>({ mutationFn: ({ id, resourceId }) => WebhooksService.regenerateSecret({ id, resourceId }) as unknown as Promise<TData>, ...options });
+export const useMqttResourceConfigurationServiceCreateMqttConfiguration = <TData = Common.MqttResourceConfigurationServiceCreateMqttConfigurationMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  requestBody: CreateMqttResourceConfigDto;
+  resourceId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  requestBody: CreateMqttResourceConfigDto;
+  resourceId: number;
+}, TContext>({ mutationFn: ({ requestBody, resourceId }) => MqttResourceConfigurationService.createMqttConfiguration({ requestBody, resourceId }) as unknown as Promise<TData>, ...options });
+export const useMqttResourceConfigurationServiceTestOne = <TData = Common.MqttResourceConfigurationServiceTestOneMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  configId: number;
+  resourceId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  configId: number;
+  resourceId: number;
+}, TContext>({ mutationFn: ({ configId, resourceId }) => MqttResourceConfigurationService.testOne({ configId, resourceId }) as unknown as Promise<TData>, ...options });
 export const usePluginServiceUploadPlugin = <TData = Common.PluginServiceUploadPluginMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   formData: UploadPluginDto;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
@@ -317,15 +317,6 @@ export const useResourceUsageServiceEndSession = <TData = Common.ResourceUsageSe
   requestBody: EndUsageSessionDto;
   resourceId: number;
 }, TContext>({ mutationFn: ({ requestBody, resourceId }) => ResourceUsageService.endSession({ requestBody, resourceId }) as unknown as Promise<TData>, ...options });
-export const useMqttResourceConfigurationServiceUpdateMqttConfiguration = <TData = Common.MqttResourceConfigurationServiceUpdateMqttConfigurationMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  configId: number;
-  requestBody: UpdateMqttResourceConfigDto;
-  resourceId: number;
-}, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  configId: number;
-  requestBody: UpdateMqttResourceConfigDto;
-  resourceId: number;
-}, TContext>({ mutationFn: ({ configId, requestBody, resourceId }) => MqttResourceConfigurationService.updateMqttConfiguration({ configId, requestBody, resourceId }) as unknown as Promise<TData>, ...options });
 export const useMqttServersServiceUpdateOneMqttServer = <TData = Common.MqttServersServiceUpdateOneMqttServerMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   id: number;
   requestBody: UpdateMqttServerDto;
@@ -351,6 +342,15 @@ export const useWebhooksServiceUpdateStatus = <TData = Common.WebhooksServiceUpd
   requestBody: WebhookStatusDto;
   resourceId: number;
 }, TContext>({ mutationFn: ({ id, requestBody, resourceId }) => WebhooksService.updateStatus({ id, requestBody, resourceId }) as unknown as Promise<TData>, ...options });
+export const useMqttResourceConfigurationServiceUpdateMqttConfiguration = <TData = Common.MqttResourceConfigurationServiceUpdateMqttConfigurationMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  configId: number;
+  requestBody: UpdateMqttResourceConfigDto;
+  resourceId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  configId: number;
+  requestBody: UpdateMqttResourceConfigDto;
+  resourceId: number;
+}, TContext>({ mutationFn: ({ configId, requestBody, resourceId }) => MqttResourceConfigurationService.updateMqttConfiguration({ configId, requestBody, resourceId }) as unknown as Promise<TData>, ...options });
 export const useUsersServiceUpdatePermissions = <TData = Common.UsersServiceUpdatePermissionsMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   id: number;
   requestBody: UpdateUserPermissionsDto;
@@ -402,13 +402,6 @@ export const useResourceIntroducersServiceRemoveOne = <TData = Common.ResourceIn
   resourceId: number;
   userId: number;
 }, TContext>({ mutationFn: ({ resourceId, userId }) => ResourceIntroducersService.removeOne({ resourceId, userId }) as unknown as Promise<TData>, ...options });
-export const useMqttResourceConfigurationServiceDeleteOneMqttConfiguration = <TData = Common.MqttResourceConfigurationServiceDeleteOneMqttConfigurationMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  configId: number;
-  resourceId: number;
-}, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  configId: number;
-  resourceId: number;
-}, TContext>({ mutationFn: ({ configId, resourceId }) => MqttResourceConfigurationService.deleteOneMqttConfiguration({ configId, resourceId }) as unknown as Promise<TData>, ...options });
 export const useMqttServersServiceDeleteOneMqttServer = <TData = Common.MqttServersServiceDeleteOneMqttServerMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   id: number;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
@@ -421,6 +414,13 @@ export const useWebhooksServiceDeleteOneWebhookConfiguration = <TData = Common.W
   id: number;
   resourceId: number;
 }, TContext>({ mutationFn: ({ id, resourceId }) => WebhooksService.deleteOneWebhookConfiguration({ id, resourceId }) as unknown as Promise<TData>, ...options });
+export const useMqttResourceConfigurationServiceDeleteOneMqttConfiguration = <TData = Common.MqttResourceConfigurationServiceDeleteOneMqttConfigurationMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  configId: number;
+  resourceId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  configId: number;
+  resourceId: number;
+}, TContext>({ mutationFn: ({ configId, resourceId }) => MqttResourceConfigurationService.deleteOneMqttConfiguration({ configId, resourceId }) as unknown as Promise<TData>, ...options });
 export const usePluginServiceDeletePlugin = <TData = Common.PluginServiceDeletePluginMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   pluginId: string;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {

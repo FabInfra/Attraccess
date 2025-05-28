@@ -25,7 +25,8 @@ export class ResourcesService {
       description: dto.description,
       documentationType: dto.documentationType || null,
       documentationMarkdown: dto.documentationMarkdown || null,
-      documentationUrl: dto.documentationUrl || null
+      documentationUrl: dto.documentationUrl || null,
+      allowTakeOver: dto.allowTakeOver || false,
     });
 
     // Save the resource first to get an ID
@@ -74,11 +75,14 @@ export class ResourcesService {
     // Update only provided fields
     if (dto.name !== undefined) resource.name = dto.name;
     if (dto.description !== undefined) resource.description = dto.description;
-    
+
     // Handle documentation fields
     if (dto.documentationType !== undefined) resource.documentationType = dto.documentationType;
     if (dto.documentationMarkdown !== undefined) resource.documentationMarkdown = dto.documentationMarkdown;
     if (dto.documentationUrl !== undefined) resource.documentationUrl = dto.documentationUrl;
+
+    // Handle allowTakeOver field
+    if (dto.allowTakeOver !== undefined) resource.allowTakeOver = dto.allowTakeOver;
 
     if (image) {
       // Delete old image if it exists

@@ -60,9 +60,7 @@ describe('ResourcesService', () => {
     }).compile();
 
     service = module.get<ResourcesService>(ResourcesService);
-    resourceRepository = module.get(getRepositoryToken(Resource)) as jest.Mocked<
-      Repository<Resource>
-    >;
+    resourceRepository = module.get(getRepositoryToken(Resource)) as jest.Mocked<Repository<Resource>>;
     // ResourceImageService is available but not directly used in tests
     resourceGroupsService = module.get(ResourceGroupsService) as jest.Mocked<ResourceGroupsService>;
   });
@@ -82,6 +80,7 @@ describe('ResourcesService', () => {
           documentationType: DocumentationType.MARKDOWN,
           documentationMarkdown: '# Documentation 1',
           documentationUrl: null,
+          allowTakeOver: false,
           createdAt: new Date(),
           updatedAt: new Date(),
           introductions: [],
@@ -89,7 +88,7 @@ describe('ResourcesService', () => {
           introducers: [],
           mqttConfigs: [],
           webhookConfigs: [],
-          groups: []
+          groups: [],
         },
         {
           id: 2,
@@ -99,6 +98,7 @@ describe('ResourcesService', () => {
           documentationType: DocumentationType.URL,
           documentationMarkdown: null,
           documentationUrl: 'https://example.com',
+          allowTakeOver: false,
           createdAt: new Date(),
           updatedAt: new Date(),
           introductions: [],
@@ -106,7 +106,7 @@ describe('ResourcesService', () => {
           introducers: [],
           mqttConfigs: [],
           webhookConfigs: [],
-          groups: []
+          groups: [],
         },
       ];
 
@@ -132,6 +132,7 @@ describe('ResourcesService', () => {
         documentationType: DocumentationType.MARKDOWN,
         documentationMarkdown: '# Documentation 1',
         documentationUrl: null,
+        allowTakeOver: false,
         createdAt: new Date(),
         updatedAt: new Date(),
         introductions: [],
@@ -139,7 +140,7 @@ describe('ResourcesService', () => {
         introducers: [],
         mqttConfigs: [],
         webhookConfigs: [],
-        groups: []
+        groups: [],
       };
 
       resourceRepository.find.mockResolvedValue([mockResource]);
@@ -156,9 +157,7 @@ describe('ResourcesService', () => {
     it('should throw ResourceNotFoundException if resource not found', async () => {
       resourceRepository.find.mockResolvedValue([]);
 
-      await expect(service.getResourceById(999)).rejects.toThrow(
-        ResourceNotFoundException,
-      );
+      await expect(service.getResourceById(999)).rejects.toThrow(ResourceNotFoundException);
     });
   });
 
@@ -170,6 +169,7 @@ describe('ResourcesService', () => {
         documentationType: DocumentationType.MARKDOWN,
         documentationMarkdown: '# New Documentation',
         documentationUrl: null,
+        allowTakeOver: false,
       };
 
       const newResource = {
@@ -180,6 +180,7 @@ describe('ResourcesService', () => {
         documentationType: createDto.documentationType,
         documentationMarkdown: createDto.documentationMarkdown,
         documentationUrl: createDto.documentationUrl,
+        allowTakeOver: false,
         createdAt: new Date(),
         updatedAt: new Date(),
         introductions: [],
@@ -187,7 +188,7 @@ describe('ResourcesService', () => {
         introducers: [],
         mqttConfigs: [],
         webhookConfigs: [],
-        groups: []
+        groups: [],
       };
 
       resourceRepository.create.mockReturnValue(newResource);
@@ -201,7 +202,8 @@ describe('ResourcesService', () => {
         description: createDto.description,
         documentationType: createDto.documentationType || null,
         documentationMarkdown: createDto.documentationMarkdown || null,
-        documentationUrl: createDto.documentationUrl || null
+        documentationUrl: createDto.documentationUrl || null,
+        allowTakeOver: createDto.allowTakeOver || false,
       });
       expect(resourceRepository.save).toHaveBeenCalled();
     });
@@ -225,6 +227,7 @@ describe('ResourcesService', () => {
         documentationType: DocumentationType.MARKDOWN,
         documentationMarkdown: '# Old Documentation',
         documentationUrl: null,
+        allowTakeOver: false,
         createdAt: new Date(),
         updatedAt: new Date(),
         introductions: [],
@@ -232,7 +235,7 @@ describe('ResourcesService', () => {
         introducers: [],
         mqttConfigs: [],
         webhookConfigs: [],
-        groups: []
+        groups: [],
       };
 
       const updatedResource = {
@@ -260,13 +263,9 @@ describe('ResourcesService', () => {
         name: 'Updated Resource',
       };
 
-      jest
-        .spyOn(service, 'getResourceById')
-        .mockRejectedValue(new ResourceNotFoundException(resourceId));
+      jest.spyOn(service, 'getResourceById').mockRejectedValue(new ResourceNotFoundException(resourceId));
 
-      await expect(
-        service.updateResource(resourceId, updateDto),
-      ).rejects.toThrow(ResourceNotFoundException);
+      await expect(service.updateResource(resourceId, updateDto)).rejects.toThrow(ResourceNotFoundException);
     });
   });
 
@@ -281,6 +280,7 @@ describe('ResourcesService', () => {
         documentationType: DocumentationType.MARKDOWN,
         documentationMarkdown: '# Documentation',
         documentationUrl: null,
+        allowTakeOver: false,
         createdAt: new Date(),
         updatedAt: new Date(),
         introductions: [],
@@ -288,7 +288,7 @@ describe('ResourcesService', () => {
         introducers: [],
         mqttConfigs: [],
         webhookConfigs: [],
-        groups: []
+        groups: [],
       };
 
       jest.spyOn(service, 'getResourceById').mockResolvedValue(mockResource);
@@ -303,13 +303,9 @@ describe('ResourcesService', () => {
     it('should throw ResourceNotFoundException if resource not found', async () => {
       const resourceId = 999;
 
-      jest
-        .spyOn(service, 'getResourceById')
-        .mockRejectedValue(new ResourceNotFoundException(resourceId));
+      jest.spyOn(service, 'getResourceById').mockRejectedValue(new ResourceNotFoundException(resourceId));
 
-      await expect(service.deleteResource(resourceId)).rejects.toThrow(
-        ResourceNotFoundException,
-      );
+      await expect(service.deleteResource(resourceId)).rejects.toThrow(ResourceNotFoundException);
     });
   });
 
@@ -325,6 +321,7 @@ describe('ResourcesService', () => {
         documentationType: DocumentationType.MARKDOWN,
         documentationMarkdown: '# Documentation',
         documentationUrl: null,
+        allowTakeOver: false,
         createdAt: new Date(),
         updatedAt: new Date(),
         introductions: [],
@@ -332,7 +329,7 @@ describe('ResourcesService', () => {
         introducers: [],
         mqttConfigs: [],
         webhookConfigs: [],
-        groups: []
+        groups: [],
       };
 
       jest.spyOn(service, 'getResourceById').mockResolvedValue(mockResource);
@@ -357,6 +354,7 @@ describe('ResourcesService', () => {
         documentationType: DocumentationType.MARKDOWN,
         documentationMarkdown: '# Documentation',
         documentationUrl: null,
+        allowTakeOver: false,
         createdAt: new Date(),
         updatedAt: new Date(),
         introductions: [],
@@ -364,7 +362,7 @@ describe('ResourcesService', () => {
         introducers: [],
         mqttConfigs: [],
         webhookConfigs: [],
-        groups: []
+        groups: [],
       };
 
       jest.spyOn(service, 'getResourceById').mockResolvedValue(mockResource);

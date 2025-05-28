@@ -1,5 +1,5 @@
 import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
-import { join, resolve } from 'path';
+import { join } from 'path';
 import { PluginManifest, PluginManifestSchema, LoadedPluginManifest } from './plugin.manifest';
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import { FileUpload } from '../common/types/file-upload.types';
@@ -8,12 +8,26 @@ import decompress from 'decompress';
 import { nanoid } from 'nanoid';
 import { spawn } from 'child_process';
 
+
+
 export class PluginService {
-  public static readonly PLUGIN_PATH = resolve(process.env.PLUGIN_DIR ?? join(__dirname, '..', 'plugins'));
+
   private static plugins: LoadedPluginManifest[] | null = null;
   private static loadedPlugins: Set<string> = new Set();
   private static pluginLoadErrors: Map<string, Error> = new Map();
   private static logger = new Logger(PluginService.name);
+  public static PLUGIN_PATH: string;
+  private static RESTART_BY_EXIT_FLAG: boolean;
+
+  public static configure(config: { PLUGIN_DIR: string, RESTART_BY_EXIT: boolean }): void {
+    PluginService.PLUGIN_PATH = config.PLUGIN_DIR; // Assume PLUGIN_DIR from appConfig is already resolved or correct
+    PluginService.RESTART_BY_EXIT_FLAG = config.RESTART_BY_EXIT;
+    PluginService.logger.log(`PluginService configured. Path: ${PluginService.PLUGIN_PATH}, RestartByExit: ${PluginService.RESTART_BY_EXIT_FLAG}`);
+    if (!PluginService.PLUGIN_PATH) {
+        PluginService.logger.error('PLUGIN_DIR is not configured in AppConfig! Plugin system may not work.');
+    }
+  }
+
 
   public static getPlugins(): LoadedPluginManifest[] {
     if (!PluginService.plugins) {
@@ -125,7 +139,7 @@ export class PluginService {
 
   private restartApp() {
     PluginService.logger.log('Restarting app');
-    if (process.env.RESTART_BY_EXIT === 'true') {
+    if (PluginService.RESTART_BY_EXIT_FLAG) {
       PluginService.logger.log('Restarting app by exiting');
       process.exit();
     }

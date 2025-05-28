@@ -4,6 +4,7 @@ import { SSOService } from './sso.service';
 import { AuthService } from '../auth.service';
 import { SSOProvider, SSOProviderType } from '@attraccess/database-entities';
 import { NotFoundException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { CreateSSOProviderDto } from './dto/create-sso-provider.dto';
 import { UpdateSSOProviderDto } from './dto/update-sso-provider.dto';
 
@@ -51,6 +52,19 @@ describe('SsoController', () => {
         {
           provide: AuthService,
           useValue: {},
+        },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn((key: string) => {
+              if (key === 'app') {
+                return {
+                  BASE_URL: 'http://localhost:3000',
+                };
+              }
+              return null;
+            }),
+          },
         },
       ],
       controllers: [SSOController],

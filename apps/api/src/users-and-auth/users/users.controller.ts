@@ -214,7 +214,6 @@ export class UsersController {
     description: 'User is not authenticated.',
   })
   async getCurrent(@Req() request: AuthenticatedRequest) {
-    this.logger.debug(`Getting current user, ID: ${request.user.id}`);
     return request.user;
   }
 

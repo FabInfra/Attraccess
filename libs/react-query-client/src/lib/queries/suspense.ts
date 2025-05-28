@@ -93,13 +93,6 @@ export const useResourceIntroducersServiceGetAllResourceIntroducersSuspense = <T
 export const useResourceIntroducersServiceCheckCanManagePermissionSuspense = <TData = Common.ResourceIntroducersServiceCheckCanManagePermissionDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
   resourceId: number;
 }, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseResourceIntroducersServiceCheckCanManagePermissionKeyFn({ resourceId }, queryKey), queryFn: () => ResourceIntroducersService.checkCanManagePermission({ resourceId }) as TData, ...options });
-export const useMqttResourceConfigurationServiceGetAllMqttConfigurationsSuspense = <TData = Common.MqttResourceConfigurationServiceGetAllMqttConfigurationsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
-  resourceId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseMqttResourceConfigurationServiceGetAllMqttConfigurationsKeyFn({ resourceId }, queryKey), queryFn: () => MqttResourceConfigurationService.getAllMqttConfigurations({ resourceId }) as TData, ...options });
-export const useMqttResourceConfigurationServiceGetOneMqttConfigurationSuspense = <TData = Common.MqttResourceConfigurationServiceGetOneMqttConfigurationDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ configId, resourceId }: {
-  configId: number;
-  resourceId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseMqttResourceConfigurationServiceGetOneMqttConfigurationKeyFn({ configId, resourceId }, queryKey), queryFn: () => MqttResourceConfigurationService.getOneMqttConfiguration({ configId, resourceId }) as TData, ...options });
 export const useMqttServersServiceGetAllMqttServersSuspense = <TData = Common.MqttServersServiceGetAllMqttServersDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseMqttServersServiceGetAllMqttServersKeyFn(queryKey), queryFn: () => MqttServersService.getAllMqttServers() as TData, ...options });
 export const useMqttServersServiceGetOneMqttServerByIdSuspense = <TData = Common.MqttServersServiceGetOneMqttServerByIdDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ id }: {
   id: number;
@@ -118,6 +111,13 @@ export const useWebhooksServiceGetOneWebhookConfigurationByIdSuspense = <TData =
   id: number;
   resourceId: number;
 }, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseWebhooksServiceGetOneWebhookConfigurationByIdKeyFn({ id, resourceId }, queryKey), queryFn: () => WebhooksService.getOneWebhookConfigurationById({ id, resourceId }) as TData, ...options });
+export const useMqttResourceConfigurationServiceGetAllMqttConfigurationsSuspense = <TData = Common.MqttResourceConfigurationServiceGetAllMqttConfigurationsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
+  resourceId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseMqttResourceConfigurationServiceGetAllMqttConfigurationsKeyFn({ resourceId }, queryKey), queryFn: () => MqttResourceConfigurationService.getAllMqttConfigurations({ resourceId }) as TData, ...options });
+export const useMqttResourceConfigurationServiceGetOneMqttConfigurationSuspense = <TData = Common.MqttResourceConfigurationServiceGetOneMqttConfigurationDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ configId, resourceId }: {
+  configId: number;
+  resourceId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UseMqttResourceConfigurationServiceGetOneMqttConfigurationKeyFn({ configId, resourceId }, queryKey), queryFn: () => MqttResourceConfigurationService.getOneMqttConfiguration({ configId, resourceId }) as TData, ...options });
 export const usePluginServiceGetPluginsSuspense = <TData = Common.PluginServiceGetPluginsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useSuspenseQuery<TData, TError>({ queryKey: Common.UsePluginServiceGetPluginsKeyFn(queryKey), queryFn: () => PluginService.getPlugins() as TData, ...options });
 export const usePluginServiceGetFrontendPluginFileSuspense = <TData = Common.PluginServiceGetFrontendPluginFileDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ filePath, pluginName }: {
   filePath: string;

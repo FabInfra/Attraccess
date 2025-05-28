@@ -1,23 +1,29 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { FileStorageService } from './file-storage.service';
 import { FileUpload } from '../types/file-upload.types';
-import { ConfigService } from '@nestjs/config';
-import { StorageConfig } from '../../config/storage.config';
+import { StorageConfigType } from '../../config/storage.config';
+
+
 import * as path from 'path';
 
 @Injectable()
 export class ResourceImageService {
-  private readonly config: StorageConfig;
+  private readonly resourcesDir: string;
 
   constructor(
     private readonly fileStorageService: FileStorageService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {
-    this.config = this.configService.get<StorageConfig>('storage');
+    const storageConfig = this.configService.get<StorageConfigType>('storage');
+    if (!storageConfig) {
+      throw new Error('Storage configuration not found');
+    }
+    this.resourcesDir = storageConfig.resources.directory;
   }
 
   private getResourceSubDirectory(resourceId: number): string {
-    return path.join('resources', resourceId.toString(), 'original');
+    return path.join(this.resourcesDir, resourceId.toString(), 'original');
   }
 
   async saveImage(resourceId: number, file: FileUpload): Promise<string> {
@@ -31,7 +37,7 @@ export class ResourceImageService {
 
     // Clean up any cached versions
     await this.fileStorageService.clearCache(
-      path.join('resources', resourceId.toString())
+      path.join(this.resourcesDir, resourceId.toString())
     );
   }
 

@@ -93,13 +93,6 @@ export const prefetchUseResourceIntroducersServiceGetAllResourceIntroducers = (q
 export const prefetchUseResourceIntroducersServiceCheckCanManagePermission = (queryClient: QueryClient, { resourceId }: {
   resourceId: number;
 }) => queryClient.prefetchQuery({ queryKey: Common.UseResourceIntroducersServiceCheckCanManagePermissionKeyFn({ resourceId }), queryFn: () => ResourceIntroducersService.checkCanManagePermission({ resourceId }) });
-export const prefetchUseMqttResourceConfigurationServiceGetAllMqttConfigurations = (queryClient: QueryClient, { resourceId }: {
-  resourceId: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseMqttResourceConfigurationServiceGetAllMqttConfigurationsKeyFn({ resourceId }), queryFn: () => MqttResourceConfigurationService.getAllMqttConfigurations({ resourceId }) });
-export const prefetchUseMqttResourceConfigurationServiceGetOneMqttConfiguration = (queryClient: QueryClient, { configId, resourceId }: {
-  configId: number;
-  resourceId: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseMqttResourceConfigurationServiceGetOneMqttConfigurationKeyFn({ configId, resourceId }), queryFn: () => MqttResourceConfigurationService.getOneMqttConfiguration({ configId, resourceId }) });
 export const prefetchUseMqttServersServiceGetAllMqttServers = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseMqttServersServiceGetAllMqttServersKeyFn(), queryFn: () => MqttServersService.getAllMqttServers() });
 export const prefetchUseMqttServersServiceGetOneMqttServerById = (queryClient: QueryClient, { id }: {
   id: number;
@@ -118,6 +111,13 @@ export const prefetchUseWebhooksServiceGetOneWebhookConfigurationById = (queryCl
   id: number;
   resourceId: number;
 }) => queryClient.prefetchQuery({ queryKey: Common.UseWebhooksServiceGetOneWebhookConfigurationByIdKeyFn({ id, resourceId }), queryFn: () => WebhooksService.getOneWebhookConfigurationById({ id, resourceId }) });
+export const prefetchUseMqttResourceConfigurationServiceGetAllMqttConfigurations = (queryClient: QueryClient, { resourceId }: {
+  resourceId: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseMqttResourceConfigurationServiceGetAllMqttConfigurationsKeyFn({ resourceId }), queryFn: () => MqttResourceConfigurationService.getAllMqttConfigurations({ resourceId }) });
+export const prefetchUseMqttResourceConfigurationServiceGetOneMqttConfiguration = (queryClient: QueryClient, { configId, resourceId }: {
+  configId: number;
+  resourceId: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseMqttResourceConfigurationServiceGetOneMqttConfigurationKeyFn({ configId, resourceId }), queryFn: () => MqttResourceConfigurationService.getOneMqttConfiguration({ configId, resourceId }) });
 export const prefetchUsePluginServiceGetPlugins = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UsePluginServiceGetPluginsKeyFn(), queryFn: () => PluginService.getPlugins() });
 export const prefetchUsePluginServiceGetFrontendPluginFile = (queryClient: QueryClient, { filePath, pluginName }: {
   filePath: string;

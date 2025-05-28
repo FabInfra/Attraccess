@@ -20,7 +20,7 @@ export function PWAInstall() {
     <PWAInstallFromLib
       name="Attraccess"
       description={t('description')}
-      icon={'/android-chrome-512x512.png'}
+      icon={'/icon-512-maskable.png'}
     ></PWAInstallFromLib>
   );
 }

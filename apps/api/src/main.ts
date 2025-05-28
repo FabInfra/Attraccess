@@ -1,15 +1,16 @@
-import { bootstrap } from './main.bootstrap';
+import { bootstrap, startListening } from './main.bootstrap';
+
 import { Logger } from '@nestjs/common';
 
 async function main() {
-  const { app, globalPrefix } = await bootstrap();
-
-  const port = process.env.PORT || 3000;
-  await app.listen(port);
-
-  Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
-  );
+  const logger = new Logger('Bootstrap');
+  try {
+    const { app, port, globalPrefix, nodeEnv } = await bootstrap();
+    await startListening(app, port, globalPrefix, nodeEnv);
+  } catch (error) {
+    logger.error('Failed to bootstrap application', error.stack);
+    process.exit(1);
+  }
 }
 
 main();

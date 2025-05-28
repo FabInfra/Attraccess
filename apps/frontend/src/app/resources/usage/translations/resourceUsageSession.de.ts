@@ -6,6 +6,9 @@ export default {
   endSession: 'Sitzung beenden',
   sessionStarted: 'Sitzung gestartet',
   sessionStartedDescription: 'Sie haben die Nutzung dieser Ressource erfolgreich gestartet.',
+  sessionTakeOvernDescription: 'Sie haben die Sitzung erfolgreich übernommen.',
+  sessionTakeOverErrorDescription:
+    'Die Sitzung konnte nicht übernommen werden. Der andere Benutzer hat seine Sitzung möglicherweise beendet, oder es ist ein Fehler aufgetreten.',
   sessionStartError: 'Fehler beim Starten der Sitzung',
   sessionStartErrorDescription: 'Beim Starten der Sitzung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.',
   sessionEnded: 'Sitzung beendet',

@@ -3,11 +3,14 @@ import { Accordion, AccordionItem, Alert, Button, Skeleton } from '@heroui/react
 import {
   useMqttResourceConfigurationServiceGetAllMqttConfigurations,
   useMqttResourceConfigurationServiceDeleteOneMqttConfiguration,
+  useResourcesServiceGetOneResourceById,
 } from '@attraccess/react-query-client';
 import { useNavigate } from 'react-router-dom';
 import { useToastMessage } from '../../../../../components/toastProvider';
 import en from '../translations/configList.en.json';
 import de from '../translations/configList.de.json';
+import { useCallback } from 'react';
+import { useAuth } from '../../../../../hooks/useAuth';
 
 interface MqttConfigListProps {
   resourceId: number;
@@ -17,6 +20,10 @@ export function MqttConfigList({ resourceId }: MqttConfigListProps) {
   const { t } = useTranslations('mqttConfigList', { en, de });
   const navigate = useNavigate();
   const { success, error: showError } = useToastMessage();
+
+  const { user } = useAuth();
+
+  const { data: resource } = useResourcesServiceGetOneResourceById({ id: resourceId });
 
   const {
     data: mqttConfigs = [],
@@ -60,6 +67,38 @@ export function MqttConfigList({ resourceId }: MqttConfigListProps) {
     navigate(`/resources/${resourceId}/iot/mqtt/test/${configId}`);
   };
 
+  const parseTemplate = useCallback(
+    (json: string) => {
+      // escape double brackets before parsing
+      const templatePattern = new RegExp('{{.*?}}', 'g');
+
+      const placeholders = {
+        id: resourceId,
+        name: resource?.name ?? '--name of the resource--',
+        'user.username': user?.username ?? '--username of the user--',
+        'user.id': user?.id ?? 0,
+        timestamp: new Date().toISOString(),
+      };
+
+      const escaped = json.replace(templatePattern, (match) => {
+        const key = match.slice(2, -2);
+        return String(placeholders[key as keyof typeof placeholders] ?? match);
+      });
+
+      try {
+        return JSON.stringify(JSON.parse(escaped), null, 2);
+      } catch (error) {
+        console.log({
+          json,
+          escaped,
+        });
+        console.error('Failed to format JSON:', error);
+        return escaped;
+      }
+    },
+    [resource, resourceId, user]
+  );
+
   if (isLoading) {
     return (
       <div className="space-y-2">
@@ -97,13 +136,13 @@ export function MqttConfigList({ resourceId }: MqttConfigListProps) {
                 <h4 className="font-semibold mb-2">{t('inUseSettings')}</h4>
                 <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded">
                   <p>
-                    <strong>{t('topic')}:</strong> {config.inUseTopic}
+                    <strong>{t('topic')}:</strong> {parseTemplate(config.inUseTopic)}
                   </p>
                   <p className="mt-2">
                     <strong>{t('message')}:</strong>
                   </p>
                   <pre className="bg-gray-100 dark:bg-gray-600 p-2 rounded mt-1 text-xs overflow-auto">
-                    {config.inUseMessage}
+                    {parseTemplate(config.inUseMessage)}
                   </pre>
                 </div>
               </div>
@@ -111,13 +150,13 @@ export function MqttConfigList({ resourceId }: MqttConfigListProps) {
                 <h4 className="font-semibold mb-2">{t('notInUseSettings')}</h4>
                 <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded">
                   <p>
-                    <strong>{t('topic')}:</strong> {config.notInUseTopic}
+                    <strong>{t('topic')}:</strong> {parseTemplate(config.notInUseTopic)}
                   </p>
                   <p className="mt-2">
                     <strong>{t('message')}:</strong>
                   </p>
                   <pre className="bg-gray-100 dark:bg-gray-600 p-2 rounded mt-1 text-xs overflow-auto">
-                    {config.notInUseMessage}
+                    {parseTemplate(config.notInUseMessage)}
                   </pre>
                 </div>
               </div>

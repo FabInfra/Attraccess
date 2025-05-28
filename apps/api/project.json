@@ -33,7 +33,7 @@
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": ["start-services"],
+      "dependsOn": [],
       "options": {
         "buildTarget": "api:build",
         "watch": true
@@ -53,7 +53,7 @@
       "cache": true,
       "outputs": ["{workspaceRoot}/dist/apps/{projectName}-swagger/swagger.json"],
       "options": {
-        "command": "AUTH_SESSION_SECRET=super-secret VITE_ATTRACCESS_URL=http://localhost:3000 AUTH_JWT_ORIGIN=ENV AUTH_JWT_SECRET=not-set SMTP_SERVICE=SMTP SMTP_HOST=not-a-host SMTP_PORT=1234 SMTP_FROM=mail@attraccess.org FRONTEND_URL=http://localhost:4200 node dist/apps/api-swagger/main.js"
+        "command": "AUTH_SESSION_SECRET=super-secret VITE_ATTRACCESS_URL=http://localhost:3000 AUTH_JWT_ORIGIN=ENV AUTH_JWT_SECRET=swagger-export-dummy-jwt-secret123 SMTP_SERVICE=SMTP SMTP_HOST=not-a-host SMTP_PORT=1234 SMTP_FROM=mail@attraccess.org FRONTEND_URL=http://localhost:4200 node dist/apps/api-swagger/main.js"
       }
     },
     "test": {
@@ -94,9 +94,7 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "cwd": ".",
-        "commands": [
-          "typeorm -d dist/apps/migrations/main.js migration:generate"
-        ]
+        "commands": ["typeorm -d dist/apps/migrations/main.js migration:generate"]
       },
       "dependsOn": ["build-migration-datasource"]
     },
@@ -105,9 +103,7 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "cwd": ".",
-        "commands": [
-          "typeorm -d dist/apps/migrations/main.js migration:run"
-        ]
+        "commands": ["typeorm -d dist/apps/migrations/main.js migration:run"]
       },
       "dependsOn": ["build-migration-datasource"]
     }

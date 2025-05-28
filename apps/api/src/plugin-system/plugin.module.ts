@@ -10,9 +10,16 @@ import { join } from 'path';
 export class PluginModule {
   private static pluginManifests: PluginManifest[];
   private static logger = new Logger(PluginModule.name);
+  private static DISABLE_PLUGINS_FLAG = false; // Default to false
+
+  public static configure(config: { DISABLE_PLUGINS: boolean }): void {
+    PluginModule.DISABLE_PLUGINS_FLAG = config.DISABLE_PLUGINS;
+    PluginModule.logger.log(`PluginModule configured. DisablePlugins: ${PluginModule.DISABLE_PLUGINS_FLAG}`);
+  }
+
 
   public static forRoot(): DynamicModule {
-    if (process.env.DISABLE_PLUGINS === 'true') {
+    if (PluginModule.DISABLE_PLUGINS_FLAG) {
       PluginModule.logger.log('Plugins are disabled');
 
       return {

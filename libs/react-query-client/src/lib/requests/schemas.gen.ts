@@ -600,6 +600,12 @@ This is a markdown documentation for the resource.`
             type: 'string',
             description: 'URL to external documentation',
             example: 'https://example.com/documentation'
+        },
+        allowTakeOver: {
+            type: 'boolean',
+            description: 'Whether this resource allows overtaking by the next user without the prior user ending their session',
+            example: false,
+            default: false
         }
     },
     required: ['name']
@@ -646,6 +652,12 @@ This is a markdown documentation for the resource.`
             description: 'URL to external documentation',
             example: 'https://example.com/documentation'
         },
+        allowTakeOver: {
+            type: 'boolean',
+            description: 'Whether this resource allows overtaking by the next user without the prior user ending their session',
+            example: false,
+            default: false
+        },
         createdAt: {
             format: 'date-time',
             type: 'string',
@@ -664,7 +676,7 @@ This is a markdown documentation for the resource.`
             }
         }
     },
-    required: ['id', 'name', 'createdAt', 'updatedAt', 'groups']
+    required: ['id', 'name', 'allowTakeOver', 'createdAt', 'updatedAt', 'groups']
 } as const;
 
 export const $PaginatedResourceResponseDto = {
@@ -732,6 +744,11 @@ This is a markdown documentation for the resource.`
             type: 'string',
             description: 'URL to external documentation',
             example: 'https://example.com/documentation'
+        },
+        allowTakeOver: {
+            type: 'boolean',
+            description: 'Whether this resource allows overtaking by the next user without the prior user ending their session',
+            example: false
         }
     }
 } as const;
@@ -743,6 +760,12 @@ export const $StartUsageSessionDto = {
             type: 'string',
             description: 'Optional notes about the usage session',
             example: 'Printing a prototype case'
+        },
+        forceTakeOver: {
+            type: 'boolean',
+            description: 'Whether to force takeover of an existing session (only works if resource allows takeover)',
+            example: false,
+            default: false
         }
     }
 } as const;
@@ -1089,153 +1112,6 @@ export const $CanManageIntroducersResponseDto = {
         }
     },
     required: ['canManageIntroducers']
-} as const;
-
-export const $MqttResourceConfig = {
-    type: 'object',
-    properties: {
-        id: {
-            type: 'number',
-            description: 'The unique identifier of the MQTT resource configuration',
-            example: 1
-        },
-        resourceId: {
-            type: 'number',
-            description: 'The ID of the resource this configuration is for',
-            example: 1
-        },
-        name: {
-            type: 'string',
-            description: 'Name of this MQTT configuration',
-            example: 'Primary Status Feed'
-        },
-        serverId: {
-            type: 'number',
-            description: 'The ID of the MQTT server to publish to',
-            example: 1
-        },
-        inUseTopic: {
-            type: 'string',
-            description: 'Topic template using Handlebars for in-use status',
-            example: 'resources/{{id}}/status'
-        },
-        inUseMessage: {
-            type: 'string',
-            description: 'Message template using Handlebars for in-use status',
-            example: '{"status": "in_use", "resourceId": "{{id}}", "timestamp": "{{timestamp}}"}'
-        },
-        notInUseTopic: {
-            type: 'string',
-            description: 'Topic template using Handlebars for not-in-use status',
-            example: 'resources/{{id}}/status'
-        },
-        notInUseMessage: {
-            type: 'string',
-            description: 'Message template using Handlebars for not-in-use status',
-            example: '{"status": "not_in_use", "resourceId": "{{id}}", "timestamp": "{{timestamp}}"}'
-        },
-        createdAt: {
-            format: 'date-time',
-            type: 'string',
-            description: 'When the MQTT resource configuration was created'
-        },
-        updatedAt: {
-            format: 'date-time',
-            type: 'string',
-            description: 'When the MQTT resource configuration was last updated'
-        }
-    },
-    required: ['id', 'resourceId', 'name', 'serverId', 'inUseTopic', 'inUseMessage', 'notInUseTopic', 'notInUseMessage', 'createdAt', 'updatedAt']
-} as const;
-
-export const $CreateMqttResourceConfigDto = {
-    type: 'object',
-    properties: {
-        serverId: {
-            type: 'number',
-            description: 'ID of the MQTT server to use',
-            example: 1
-        },
-        name: {
-            type: 'string',
-            description: 'Name of this MQTT configuration',
-            example: 'Primary Status Feed'
-        },
-        inUseTopic: {
-            type: 'string',
-            description: 'Topic template for when resource is in use',
-            example: 'resources/{{id}}/status'
-        },
-        inUseMessage: {
-            type: 'string',
-            description: 'Message template for when resource is in use',
-            example: '{"status":"in_use","resourceId":{{id}},"resourceName":"{{name}}"}'
-        },
-        notInUseTopic: {
-            type: 'string',
-            description: 'Topic template for when resource is not in use',
-            example: 'resources/{{id}}/status'
-        },
-        notInUseMessage: {
-            type: 'string',
-            description: 'Message template for when resource is not in use',
-            example: '{"status":"not_in_use","resourceId":{{id}},"resourceName":"{{name}}"}'
-        }
-    },
-    required: ['serverId', 'name', 'inUseTopic', 'inUseMessage', 'notInUseTopic', 'notInUseMessage']
-} as const;
-
-export const $UpdateMqttResourceConfigDto = {
-    type: 'object',
-    properties: {
-        serverId: {
-            type: 'number',
-            description: 'ID of the MQTT server to use',
-            example: 1
-        },
-        name: {
-            type: 'string',
-            description: 'Name of this MQTT configuration',
-            example: 'Primary Status Feed'
-        },
-        inUseTopic: {
-            type: 'string',
-            description: 'Topic template for when resource is in use',
-            example: 'resources/{{id}}/status'
-        },
-        inUseMessage: {
-            type: 'string',
-            description: 'Message template for when resource is in use',
-            example: '{"status":"in_use","resourceId":{{id}},"resourceName":"{{name}}"}'
-        },
-        notInUseTopic: {
-            type: 'string',
-            description: 'Topic template for when resource is not in use',
-            example: 'resources/{{id}}/status'
-        },
-        notInUseMessage: {
-            type: 'string',
-            description: 'Message template for when resource is not in use',
-            example: '{"status":"not_in_use","resourceId":{{id}},"resourceName":"{{name}}"}'
-        }
-    }
-} as const;
-
-export const $TestMqttConfigResponseDto = {
-    type: 'object',
-    properties: {
-        success: {
-            type: 'boolean',
-            description: 'Whether the test was successful',
-            example: true
-        },
-        message: {
-            type: 'string',
-            description: 'Message describing the test result',
-            example: 'MQTT configuration is valid and connection to server was successful'
-        }
-    },
-    required: ['success', 'message']
 } as const;
 
 export const $MqttServer = {
@@ -1763,6 +1639,153 @@ export const $WebhookTestResponseDto = {
             type: 'string',
             description: 'Message describing the test result',
             example: 'Webhook test request sent successfully'
+        }
+    },
+    required: ['success', 'message']
+} as const;
+
+export const $MqttResourceConfig = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'number',
+            description: 'The unique identifier of the MQTT resource configuration',
+            example: 1
+        },
+        resourceId: {
+            type: 'number',
+            description: 'The ID of the resource this configuration is for',
+            example: 1
+        },
+        name: {
+            type: 'string',
+            description: 'Name of this MQTT configuration',
+            example: 'Primary Status Feed'
+        },
+        serverId: {
+            type: 'number',
+            description: 'The ID of the MQTT server to publish to',
+            example: 1
+        },
+        inUseTopic: {
+            type: 'string',
+            description: 'Topic template using Handlebars for in-use status',
+            example: 'resources/{{id}}/status'
+        },
+        inUseMessage: {
+            type: 'string',
+            description: 'Message template using Handlebars for in-use status',
+            example: '{"status": "in_use", "resourceId": "{{id}}", "timestamp": "{{timestamp}}"}'
+        },
+        notInUseTopic: {
+            type: 'string',
+            description: 'Topic template using Handlebars for not-in-use status',
+            example: 'resources/{{id}}/status'
+        },
+        notInUseMessage: {
+            type: 'string',
+            description: 'Message template using Handlebars for not-in-use status',
+            example: '{"status": "not_in_use", "resourceId": "{{id}}", "timestamp": "{{timestamp}}"}'
+        },
+        createdAt: {
+            format: 'date-time',
+            type: 'string',
+            description: 'When the MQTT resource configuration was created'
+        },
+        updatedAt: {
+            format: 'date-time',
+            type: 'string',
+            description: 'When the MQTT resource configuration was last updated'
+        }
+    },
+    required: ['id', 'resourceId', 'name', 'serverId', 'inUseTopic', 'inUseMessage', 'notInUseTopic', 'notInUseMessage', 'createdAt', 'updatedAt']
+} as const;
+
+export const $CreateMqttResourceConfigDto = {
+    type: 'object',
+    properties: {
+        serverId: {
+            type: 'number',
+            description: 'ID of the MQTT server to use',
+            example: 1
+        },
+        name: {
+            type: 'string',
+            description: 'Name of this MQTT configuration',
+            example: 'Primary Status Feed'
+        },
+        inUseTopic: {
+            type: 'string',
+            description: 'Topic template for when resource is in use',
+            example: 'resources/{{id}}/status'
+        },
+        inUseMessage: {
+            type: 'string',
+            description: 'Message template for when resource is in use',
+            example: '{"status":"in_use","resourceId":{{id}},"resourceName":"{{name}}"}'
+        },
+        notInUseTopic: {
+            type: 'string',
+            description: 'Topic template for when resource is not in use',
+            example: 'resources/{{id}}/status'
+        },
+        notInUseMessage: {
+            type: 'string',
+            description: 'Message template for when resource is not in use',
+            example: '{"status":"not_in_use","resourceId":{{id}},"resourceName":"{{name}}"}'
+        }
+    },
+    required: ['serverId', 'name', 'inUseTopic', 'inUseMessage', 'notInUseTopic', 'notInUseMessage']
+} as const;
+
+export const $UpdateMqttResourceConfigDto = {
+    type: 'object',
+    properties: {
+        serverId: {
+            type: 'number',
+            description: 'ID of the MQTT server to use',
+            example: 1
+        },
+        name: {
+            type: 'string',
+            description: 'Name of this MQTT configuration',
+            example: 'Primary Status Feed'
+        },
+        inUseTopic: {
+            type: 'string',
+            description: 'Topic template for when resource is in use',
+            example: 'resources/{{id}}/status'
+        },
+        inUseMessage: {
+            type: 'string',
+            description: 'Message template for when resource is in use',
+            example: '{"status":"in_use","resourceId":{{id}},"resourceName":"{{name}}"}'
+        },
+        notInUseTopic: {
+            type: 'string',
+            description: 'Topic template for when resource is not in use',
+            example: 'resources/{{id}}/status'
+        },
+        notInUseMessage: {
+            type: 'string',
+            description: 'Message template for when resource is not in use',
+            example: '{"status":"not_in_use","resourceId":{{id}},"resourceName":"{{name}}"}'
+        }
+    }
+} as const;
+
+export const $TestMqttConfigResponseDto = {
+    type: 'object',
+    properties: {
+        success: {
+            type: 'boolean',
+            description: 'Whether the test was successful',
+            example: true
+        },
+        message: {
+            type: 'string',
+            description: 'Message describing the test result',
+            example: 'MQTT configuration is valid and connection to server was successful'
         }
     },
     required: ['success', 'message']

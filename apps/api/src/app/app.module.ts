@@ -4,42 +4,66 @@ import { UsersAndAuthModule } from '../users-and-auth/users-and-auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceConfig } from '../database/datasource';
 import { ResourcesModule } from '../resources/resources.module';
-import { ConfigModule } from '@nestjs/config';
-import { storageConfig } from '../config/storage.config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import storageConfigObject from '../config/storage.config';
+import appConfiguration from '../config/app.config';
+import { AppConfigType } from '../config/app.config';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { resolve, join } from 'path';
+import { resolve } from 'path';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { MqttModule } from '../mqtt/mqtt.module';
-import { WebhooksModule } from '../webhooks/webhooks.module';
 import { Module } from '@nestjs/common';
 import { PluginModule } from '../plugin-system/plugin.module';
 import { FabReaderModule } from '../fabreader/fabreader.module';
 import { AnalyticsModule } from '../analytics/analytics.module';
 
-const frontendPath = resolve(process.env.STATIC_FRONTEND_FILE_PATH || join(__dirname, 'public'));
-console.log('Serving frontend from ', frontendPath);
-
-const docsPath = resolve(process.env.STATIC_DOCS_FILE_PATH || join(__dirname, 'docs'));
-console.log('Serving docs from: ', docsPath);
-
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [storageConfig],
+      load: [appConfiguration, storageConfigObject],
       isGlobal: true,
     }),
+
     EventEmitterModule.forRoot(),
     UsersAndAuthModule,
     TypeOrmModule.forRoot(dataSourceConfig),
     ResourcesModule,
-    MqttModule,
-    WebhooksModule,
-    ServeStaticModule.forRoot({
-      rootPath: docsPath,
-      serveRoot: '/docs',
+    ServeStaticModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const appConfig = configService.get<AppConfigType>('app');
+        if (!appConfig || !appConfig.STATIC_DOCS_FILE_PATH) {
+          console.error('STATIC_DOCS_FILE_PATH not configured. Docs will not be served.');
+          return [];
+        }
+        const resolvedDocsPath = resolve(appConfig.STATIC_DOCS_FILE_PATH);
+        console.log('Serving docs from (via config): ', resolvedDocsPath);
+        return [
+          {
+            rootPath: resolvedDocsPath,
+            serveRoot: '/docs',
+          },
+        ];
+      },
     }),
-    ServeStaticModule.forRoot({
-      rootPath: frontendPath,
+    ServeStaticModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const appConfig = configService.get<AppConfigType>('app');
+        if (!appConfig || !appConfig.STATIC_FRONTEND_FILE_PATH) {
+          console.error('STATIC_FRONTEND_FILE_PATH not configured. Frontend will not be served.');
+          return [];
+        }
+        const resolvedFrontendPath = resolve(appConfig.STATIC_FRONTEND_FILE_PATH);
+        console.log('Serving frontend from (via config): ', resolvedFrontendPath);
+        return [
+          {
+            rootPath: resolvedFrontendPath,
+            // serveRoot: '/' // Default serveRoot is '/'
+          },
+        ];
+      },
     }),
     PluginModule.forRoot(),
     FabReaderModule,

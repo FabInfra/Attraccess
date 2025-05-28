@@ -12,6 +12,9 @@
 
   - [Getting Started](user/getting-started.md)
   - [User Management](user/user-management.md)
+  - [Plugins](user/plugins.md)
+  - [Resource Take-Over](user/resource-takeover.md)
+  - [SSO](user/sso-providers.md)
 
 - **Developer Documentation**
 

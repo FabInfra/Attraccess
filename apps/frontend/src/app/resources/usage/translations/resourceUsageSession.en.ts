@@ -5,6 +5,9 @@ export default {
   endSession: 'End Session',
   sessionStarted: 'Session Started',
   sessionStartedDescription: 'You have successfully started using this resource.',
+  sessionTakeOvernDescription: 'You have successfully takeovern the session.',
+  sessionTakeOverErrorDescription:
+    'Failed to takeover the session. The other user might have ended their session, or an error occurred.',
   sessionStartError: 'Failed to Start Session',
   sessionStartErrorDescription: 'An error occurred while starting the session. Please try again.',
   sessionEnded: 'Session Ended',

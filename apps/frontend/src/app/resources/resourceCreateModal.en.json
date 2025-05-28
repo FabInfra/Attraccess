@@ -13,6 +13,8 @@
   "createOpenButton": "Create and Open",
   "validationErrorTitle": "Validation Error",
   "nameRequiredError": "Name is required.",
+  "allowTakeOverLabel": "Allow TakeOver",
+  "allowTakeOverDescription": "Allow next user to take over this resource without prior user ending session",
   "documentation": {
     "title": "Documentation",
     "note": "Documentation can be added after creating the resource."

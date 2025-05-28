@@ -3,6 +3,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { UsersService } from '../users/users.service';
 import { AuthService } from '../auth/auth.service';
 import { UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { User } from '@attraccess/database-entities';
 
 describe('JwtStrategy', () => {
@@ -23,6 +24,20 @@ describe('JwtStrategy', () => {
       providers: [
         JwtStrategy,
         { provide: UsersService, useValue: usersService },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn((key: string) => {
+              if (key === 'app') {
+                return {
+                  AUTH_JWT_SECRET: 'test-secret-for-jwt-strategy-spec',
+                  AUTH_JWT_ORIGIN: 'ENV',
+                };
+              }
+              return null;
+            }),
+          },
+        },
         { provide: AuthService, useValue: authService },
       ],
     }).compile();

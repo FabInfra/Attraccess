@@ -1,0 +1,14 @@
+{
+  "endSession": "End Session",
+  "sessionEnded": "Session Ended",
+  "sessionEndedDescription": "Your usage session has been successfully ended.",
+  "sessionEndError": "Failed to End Session",
+  "sessionEndErrorDescription": "An error occurred while ending the session. Please try again.",
+  "alternativeEndSessionOptionsMenu": {
+    "label": "Alternative Session End",
+    "endWithNotes": {
+      "label": "End with Notes",
+      "description": "End the session and provide notes."
+    }
+  }
+}

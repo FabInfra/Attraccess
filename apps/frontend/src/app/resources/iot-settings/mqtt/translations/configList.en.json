@@ -1,8 +1,8 @@
 {
   "noConfigs": "No MQTT configurations found",
   "noConfigsDetail": "Create a new MQTT configuration to publish resource status updates to an MQTT broker.",
-  "inUseSettings": "In-Use Status Settings",
-  "notInUseSettings": "Not In-Use Status Settings",
+  "inUseSettings": "In-Use Status Preview",
+  "notInUseSettings": "Not In-Use Status Preview",
   "topic": "Topic",
   "message": "Message",
   "testButton": "Test",
@@ -14,4 +14,4 @@
   "deleteSuccessDetail": "The MQTT configuration has been deleted successfully.",
   "deleteError": "Delete failed",
   "deleteErrorDetail": "There was an error deleting the MQTT configuration. Please try again."
-} 
+}

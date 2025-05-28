@@ -6,9 +6,9 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
-    "@nx/devkit": "20.3.3",
+    "@nx/devkit": "21.1.2",
     "tslib": "^2.3.0",
-    "@nx/nest": "20.3.3"
+    "@nx/nest": "21.1.2"
   },
   "generators": "./generators.json"
 }

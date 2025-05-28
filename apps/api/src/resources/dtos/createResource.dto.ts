@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, MinLength, IsEnum, IsUrl, ValidateIf } from 'class-validator';
+import { IsString, IsOptional, MinLength, IsEnum, IsUrl, ValidateIf, IsBoolean } from 'class-validator';
 import { FileUpload } from '../../common/types/file-upload.types';
 import { DocumentationType } from '@attraccess/database-entities';
 
@@ -28,7 +28,7 @@ export class CreateResourceDto {
     format: 'binary',
   })
   image?: FileUpload;
-  
+
   @ApiProperty({
     description: 'The type of documentation (markdown or url)',
     enum: DocumentationType,
@@ -38,24 +38,34 @@ export class CreateResourceDto {
   @IsEnum(DocumentationType)
   @IsOptional()
   documentationType?: DocumentationType;
-  
+
   @ApiProperty({
     description: 'Markdown content for resource documentation',
     required: false,
     example: '# Resource Documentation\n\nThis is a markdown documentation for the resource.',
   })
   @IsString()
-  @ValidateIf(o => o.documentationType === DocumentationType.MARKDOWN)
+  @ValidateIf((o) => o.documentationType === DocumentationType.MARKDOWN)
   @IsOptional()
   documentationMarkdown?: string;
-  
+
   @ApiProperty({
     description: 'URL to external documentation',
     required: false,
     example: 'https://example.com/documentation',
   })
   @IsUrl()
-  @ValidateIf(o => o.documentationType === DocumentationType.URL)
+  @ValidateIf((o) => o.documentationType === DocumentationType.URL)
   @IsOptional()
   documentationUrl?: string;
+
+  @ApiProperty({
+    description: 'Whether this resource allows overtaking by the next user without the prior user ending their session',
+    required: false,
+    example: false,
+    default: false,
+  })
+  @IsBoolean()
+  @IsOptional()
+  allowTakeOver?: boolean;
 }

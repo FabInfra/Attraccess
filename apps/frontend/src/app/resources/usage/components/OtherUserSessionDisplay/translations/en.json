@@ -1,0 +1,18 @@
+{
+  "resourceInUseBy": "Resource currently in use by:",
+  "unknownUser": "Unknown User",
+  "sessionStarted": "Session Started",
+  "takeoverAvailable": "This resource allows takeover. You can end the current session and start your own.",
+  "takeoverResource": "Takeover Resource",
+  "takeoverOptionsMenu": {
+    "label": "Alternative takeover options",
+    "takeoverWithNotes": {
+      "label": "Takeover with Notes",
+      "description": "End the current session and start your own with notes"
+    }
+  },
+  "takeoverSuccessful": "Resource Takeover Successful",
+  "takeoverSuccessfulDescription": "You have successfully taken over the resource and started a new session.",
+  "takeoverError": "Takeover Failed",
+  "takeoverErrorDescription": "Failed to takeover the resource. Please try again or contact support."
+}
