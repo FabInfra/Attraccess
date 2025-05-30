@@ -192,6 +192,7 @@ export function ResourceGroupUpsertModal(props: ResourceGroupUpsertModalProps) {
                   errorMessage={getFieldError('name')}
                   // Clear specific error when user types
                   onKeyDown={() => setApiErrors((prev) => ({ ...prev, name: undefined }))}
+                  data-cy="resource-group-name-input"
                 />
                 <Input
                   label={t('descriptionLabel')}
@@ -200,15 +201,21 @@ export function ResourceGroupUpsertModal(props: ResourceGroupUpsertModalProps) {
                   isInvalid={!!getFieldError('description')}
                   errorMessage={getFieldError('description')}
                   onKeyDown={() => setApiErrors((prev) => ({ ...prev, description: undefined }))}
+                  data-cy="resource-group-description-input"
                 />
               </ModalBody>
 
               <ModalFooter>
-                <Button variant="flat" color="default" onPress={onClose}>
+                <Button variant="flat" color="default" onPress={onClose} data-cy="cancel-resource-group-button">
                   {t('cancelButton')}
                 </Button>
                 {/* Use the general mutation.isPending state */}
-                <Button color="primary" type="submit" isLoading={mutation.isPending}>
+                <Button
+                  color="primary"
+                  type="submit"
+                  isLoading={mutation.isPending}
+                  data-cy="submit-resource-group-button"
+                >
                   {isEditMode ? t('updateButton') : t('createButton')}
                 </Button>
               </ModalFooter>

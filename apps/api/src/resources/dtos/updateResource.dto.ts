@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsOptional, IsEnum, IsUrl, ValidateIf, IsBoolean } from 'class-validator';
 import { FileUpload } from '../../common/types/file-upload.types';
 import { DocumentationType } from '@attraccess/database-entities';
+import { ToBoolean } from '../../common/request-transformers';
 
 export class UpdateResourceDto {
   @ApiProperty({
@@ -29,6 +30,17 @@ export class UpdateResourceDto {
     format: 'binary',
   })
   image?: FileUpload;
+
+  @ApiProperty({
+    description: 'Whether the resource image should be deleted',
+    required: false,
+    type: Boolean,
+    default: false,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @ToBoolean()
+  deleteImage?: boolean;
 
   @ApiProperty({
     description: 'The type of documentation (markdown or url)',
@@ -64,8 +76,10 @@ export class UpdateResourceDto {
     description: 'Whether this resource allows overtaking by the next user without the prior user ending their session',
     required: false,
     example: false,
+    type: Boolean,
   })
   @IsBoolean()
+  @ToBoolean()
   @IsOptional()
   allowTakeOver?: boolean;
 }

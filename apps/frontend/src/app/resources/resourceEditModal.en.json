@@ -1,0 +1,51 @@
+{
+  "modalTitle": "Edit Resource",
+  "inputs": {
+    "name": {
+      "label": "Name"
+    },
+    "description": {
+      "label": "Description"
+    },
+    "allowTakeOver": {
+      "label": "Allow Takeover",
+      "description": "If enabled, the resource can be taken over by other users without the current user having to release the resource."
+    },
+    "image": {
+      "label": "Image"
+    }
+  },
+  "create": {
+    "success": {
+      "toast": {
+        "title": "Resource Created",
+        "description": "Resource '{{name}}' has been created successfully."
+      }
+    },
+    "error": {
+      "toast": {
+        "title": "Error Creating Resource",
+        "description": "Could not create the resource. Please try again."
+      }
+    }
+  },
+  "update": {
+    "success": {
+      "toast": {
+        "title": "Resource Updated",
+        "description": "Resource '{{name}}' has been updated successfully."
+      }
+    },
+    "error": {
+      "toast": {
+        "title": "Error Updating Resource",
+        "description": "Could not update the resource. Please try again."
+      }
+    }
+  },
+  "buttons": {
+    "create": "Create Resource",
+    "update": "Update Resource",
+    "cancel": "Cancel"
+  }
+}

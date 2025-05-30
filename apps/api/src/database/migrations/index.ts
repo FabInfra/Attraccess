@@ -13,3 +13,5 @@ export * from './1747403591279-user-password-reset';
 export * from './1747664572702-multiple-resource-mqtt-configs';
 export * from './1747856323317-add-resource-documentation';
 export * from './1747856323318-add-resource-allow-takeover';
+export * from './1748449443907-resource-deletion-cascades';
+export * from './1748450135869-resource-deletion-cascades-2';

@@ -40,7 +40,11 @@ export function ResourcesInGroupList(props: ResourcesInGroupProps) {
       <div className="flex flex-row flex-wrap gap-4">
         {allResources.map((resource) => (
           <div key={resource.id} className="flex-grow">
-            <ResourceCard resource={resource} href={`/resources/${resource.id}`} />
+            <ResourceCard
+              resource={resource}
+              href={`/resources/${resource.id}`}
+              data-cy={`resource-card-${resource.id}`}
+            />
           </div>
         ))}
       </div>

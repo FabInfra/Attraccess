@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, ILike, FindOptionsWhere, IsNull, In } from 'typeorm';
 import { Resource } from '@attraccess/database-entities';
@@ -84,12 +84,21 @@ export class ResourcesService {
     // Handle allowTakeOver field
     if (dto.allowTakeOver !== undefined) resource.allowTakeOver = dto.allowTakeOver;
 
+    if (image && dto.deleteImage) {
+      throw new BadRequestException('Image and deleteImage cannot be used together');
+    }
+
     if (image) {
       // Delete old image if it exists
       if (resource.imageFilename) {
         await this.resourceImageService.deleteImage(id, resource.imageFilename);
       }
       resource.imageFilename = await this.resourceImageService.saveImage(id, image);
+    }
+
+    if (dto.deleteImage && resource.imageFilename) {
+      await this.resourceImageService.deleteImage(id, resource.imageFilename);
+      resource.imageFilename = null;
     }
 
     return this.resourceRepository.save(resource);

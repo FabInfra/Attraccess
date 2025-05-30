@@ -16,12 +16,12 @@ import {
 import * as en from './translations/en.json';
 import * as de from './translations/de.json';
 
-interface ResourceUsageSessionProps {
+type ResourceUsageSessionProps = {
   resourceId: number;
   resource: Resource;
-}
+} & Omit<React.ComponentProps<typeof Card>, 'resource'>;
 
-export function ResourceUsageSession({ resourceId, resource }: ResourceUsageSessionProps) {
+export function ResourceUsageSession({ resourceId, resource, ...rest }: ResourceUsageSessionProps) {
   const { t } = useTranslations('resourceUsageSession', { en, de });
   const { hasPermission, user } = useAuth();
   const canManageResources = hasPermission('canManageResources');
@@ -84,7 +84,7 @@ export function ResourceUsageSession({ resourceId, resource }: ResourceUsageSess
   };
 
   return (
-    <Card>
+    <Card {...rest}>
       <CardHeader>
         <div className="flex items-center">
           <Clock className="w-5 h-5 mr-2" />

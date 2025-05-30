@@ -88,10 +88,6 @@ export function MqttConfigList({ resourceId }: MqttConfigListProps) {
       try {
         return JSON.stringify(JSON.parse(escaped), null, 2);
       } catch (error) {
-        console.log({
-          json,
-          escaped,
-        });
         console.error('Failed to format JSON:', error);
         return escaped;
       }

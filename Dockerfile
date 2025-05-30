@@ -16,13 +16,8 @@ COPY ./dist/apps/api ./dist/apps/api
 COPY ./dist/apps/frontend ./dist/apps/frontend
 COPY ./docs ./docs
 
-# Copy the email templates
-COPY ./apps/api/src/assets/email-templates ./dist/apps/api/assets/email-templates
-
 COPY package.json package.json
 
-# Set email templates path
-ENV EMAIL_TEMPLATES_PATH=/app/dist/apps/api/assets/email-templates
 
 # Set environment variable to tell API about frontend location
 ENV STATIC_FRONTEND_FILE_PATH=/app/dist/apps/frontend

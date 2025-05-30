@@ -212,12 +212,6 @@ export function ResourceUsageExport(props: ExportProps) {
 
     const csv = [headerRow.join(';'), ...csvRows.map((row) => row.join(';'))].join('\n');
 
-    console.log({
-      headerRow,
-      csvRows,
-      csv,
-    });
-
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

@@ -1,13 +1,12 @@
-// apps/api/src/email/email.service.ts
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { ConfigService } from '@nestjs/config'; // Added
+import { ConfigService } from '@nestjs/config';
 import { User } from '@attraccess/database-entities';
 import mjml2html from 'mjml';
-import { join } from 'path'; // resolve might not be needed anymore
-import { readdir, readFile, stat } from 'fs/promises';
+
 import * as Handlebars from 'handlebars';
-import { EmailConfiguration as EmailConfigMapType } from './email.config'; // Added for typing
+import { VERIFY_EMAIL_MJML_TEMPLATE } from './templates/verify-email.template';
+import { RESET_PASSWORD_MJML_TEMPLATE } from './templates/reset-password.template';
 
 @Injectable()
 export class EmailService {
@@ -15,109 +14,72 @@ export class EmailService {
   private readonly logger = new Logger(EmailService.name);
   private frontendUrl: string;
 
-  constructor(
-    private readonly mailerService: MailerService,
-    private readonly configService: ConfigService, // Injected
-  ) {
+  constructor(private readonly mailerService: MailerService, private readonly configService: ConfigService) {
     this.logger.debug('Initializing EmailService');
-    
-    const emailConf = this.configService.get<EmailConfigMapType>('email');
-    let templateDirFromConfig: string | undefined;
 
-    if (emailConf && emailConf.mailerOptions && emailConf.mailerOptions.template && emailConf.mailerOptions.template.dir) {
-        templateDirFromConfig = emailConf.mailerOptions.template.dir;
-    }
+    this.loadTemplates();
 
-    if (!templateDirFromConfig) {
-        this.logger.error('Email template path not configured correctly via ConfigService(email.mailerOptions.template.dir). Cannot load templates.');
-    } else {
-        this.loadTemplates(templateDirFromConfig);
-    }
-
-    this.frontendUrl = this.configService.get<string>('app.frontendUrl') || 
-                       this.configService.get<string>('FRONTEND_URL') || 
-                       this.configService.get<string>('VITE_ATTRACCESS_URL'); 
+    this.frontendUrl =
+      this.configService.get<string>('app.frontendUrl') ||
+      this.configService.get<string>('FRONTEND_URL') ||
+      this.configService.get<string>('VITE_ATTRACCESS_URL');
 
     if (!this.frontendUrl) {
-      this.logger.warn('FRONTEND_URL not found in configuration. Using default fallback: http://localhost:3000. Email links may be incorrect.');
+      this.logger.warn(
+        'FRONTEND_URL not found in configuration. Using default fallback: http://localhost:3000. Email links may be incorrect.'
+      );
       this.frontendUrl = 'http://localhost:3000'; // Fallback
     }
     this.logger.debug(`EmailService initialized with FRONTEND_URL: ${this.frontendUrl}`);
   }
 
-  private async loadTemplates(templatesPath: string) {
-    this.logger.debug(`Loading email templates from path: ${templatesPath}`);
-    
+  private async loadTemplates() {
+    this.logger.debug('Loading static email templates.');
+    this.templates = {};
+
     try {
-      const templatesPathExists = await stat(templatesPath).then(stats => stats.isDirectory()).catch(() => false);
-      if (!templatesPathExists) {
-        this.logger.error(`Configured email templates path does not exist or is not a directory: ${templatesPath}`);
-        throw new Error(`Email templates path not found at ${templatesPath}`);
-      }
+      this.logger.debug('Loading static template: verify-email');
+      this.templates['verify-email'] = Handlebars.compile(mjml2html(VERIFY_EMAIL_MJML_TEMPLATE).html);
+      this.logger.debug('Compiled static template: verify-email');
 
-      const files = await readdir(templatesPath);
-      this.logger.debug(`Found ${files.length} files in templates directory: ${templatesPath}`);
-      this.templates = {};
+      this.logger.debug('Loading static template: reset-password');
+      this.templates['reset-password'] = Handlebars.compile(mjml2html(RESET_PASSWORD_MJML_TEMPLATE).html);
+      this.logger.debug('Compiled static template: reset-password');
 
-      for (const file of files) {
-        if (file.endsWith('.mjml')) {
-          const templateName = file.replace('.mjml', '');
-          this.logger.debug(`Loading template: ${templateName}`);
-          const templateContent = await readFile(join(templatesPath, file), 'utf-8');
-          this.templates[templateName] = Handlebars.compile(mjml2html(templateContent).html);
-          this.logger.debug(`Compiled template: ${templateName}`);
-        }
-      }
-      this.logger.debug(`Loaded ${Object.keys(this.templates || {}).length} email templates`);
+      this.logger.debug(`Loaded ${Object.keys(this.templates).length} static email templates.`);
     } catch (error) {
-      this.logger.error(`Failed to load email templates from ${templatesPath}:`, error.stack);
-      this.templates = null; 
+      this.logger.error('Failed to load static email templates:', error.stack);
+      throw error;
     }
   }
 
-  private async getTemplate(name: string): Promise<HandlebarsTemplateDelegate | null> {
+  private async getTemplate(name: string): Promise<HandlebarsTemplateDelegate> {
     this.logger.debug(`Getting template: ${name}`);
-    if (!this.templates) {
-      this.logger.warn('Templates object is null, possibly due to loading error. Cannot get template.');
-      const emailConf = this.configService.get<EmailConfigMapType>('email');
-      let templateDirFromConfig: string | undefined;
-      if (emailConf && emailConf.mailerOptions && emailConf.mailerOptions.template && emailConf.mailerOptions.template.dir) {
-        templateDirFromConfig = emailConf.mailerOptions.template.dir;
-      }
-      if (templateDirFromConfig) {
-        this.logger.debug('Attempting to reload templates in getTemplate.');
-        await this.loadTemplates(templateDirFromConfig); 
-      } else {
-        this.logger.error('Cannot reload templates: path not configured.');
-        return null;
-      }
-    }
-    
-    if (!this.templates) {
-        this.logger.error('Templates are still null after attempting reload. Cannot provide template.');
-        return null;
+    if (!this.templates || !this.templates[name]) {
+      throw new NotFoundException(`Template not found: ${name}`);
     }
 
-    const template = this.templates[name];
-    if (!template) {
-      this.logger.warn(`Template not found: ${name}`);
-      return null; 
-    }
-    return template;
+    return this.templates[name];
   }
 
   async sendVerificationEmail(user: User, verificationToken: string) {
     this.logger.debug(`Sending verification email to user ID: ${user.id}, email: ${user.email}`);
-    const verificationUrl = `${this.frontendUrl}/verify-email?email=${encodeURIComponent(user.email)}&token=${verificationToken}`;
+    const verificationUrl = `${this.frontendUrl}/verify-email?email=${encodeURIComponent(
+      user.email
+    )}&token=${verificationToken}`;
     this.logger.debug(`Verification URL: ${verificationUrl}`);
 
     const template = await this.getTemplate('verify-email');
-    if (!template) {
-      this.logger.error('verify-email template not found or failed to load. Cannot send email.');
-      throw new Error('Email template not found: verify-email');
-    }
 
-    const html = template({ username: user.username, verificationUrl });
+    const html = template({
+      username: user.username,
+      verificationUrl,
+      logoUrl: this.configService.get<string>(
+        'app.logoUrl',
+        'https://attraccess.fabinfra.dev/assets/logo_navbar-BhJ4pnsY.png'
+      ), // Using a default from a quick search, replace if a better one is configured
+      year: new Date().getFullYear(),
+    });
 
     this.logger.debug(`Sending email to: ${user.email}`);
     try {
@@ -139,12 +101,16 @@ export class EmailService {
     this.logger.debug(`Reset URL: ${resetUrl}`);
 
     const template = await this.getTemplate('reset-password');
-    if (!template) {
-      this.logger.error('reset-password template not found or failed to load. Cannot send email.');
-      throw new Error('Email template not found: reset-password');
-    }
 
-    const html = template({ username: user.username, resetUrl });
+    const html = template({
+      username: user.username,
+      resetUrl,
+      logoUrl: this.configService.get<string>(
+        'app.logoUrl',
+        'https://attraccess.fabinfra.dev/assets/logo_navbar-BhJ4pnsY.png'
+      ),
+      year: new Date().getFullYear(),
+    });
 
     this.logger.debug(`Sending reset email to: ${user.email}`);
     try {

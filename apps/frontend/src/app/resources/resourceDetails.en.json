@@ -1,16 +1,17 @@
 {
-    "error": {
-        "resourceNotFound": {
-            "title": "Resource not found",
-            "description": "The requested resource could not be found or you don't have permission to view it.",
-            "backToResources": "Back to Resources"
-        }
-    },
-    "navItems": {
-        "iotSettings": "IoT Settings"
-    },
-    "actions": {
-        "delete": "Delete",
-        "documentation": "Documentation"
+  "error": {
+    "resourceNotFound": {
+      "title": "Resource not found",
+      "description": "The requested resource could not be found or you don't have permission to view it.",
+      "backToResources": "Back to Resources"
     }
+  },
+  "navItems": {
+    "iotSettings": "IoT Settings"
+  },
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "documentation": "Documentation"
+  }
 }

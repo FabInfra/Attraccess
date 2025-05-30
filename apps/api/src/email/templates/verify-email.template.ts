@@ -1,3 +1,5 @@
+// /workspace/Attraccess/apps/api/src/email/templates/verify-email.template.ts
+export const VERIFY_EMAIL_MJML_TEMPLATE = `
 <mjml>
   <mj-head>
     <mj-title>Verify your email address</mj-title>
@@ -42,3 +44,4 @@
     </mj-section>
   </mj-body>
 </mjml>
+`;

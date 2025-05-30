@@ -12,7 +12,10 @@ import {
 } from '@attraccess/react-query-client';
 
 // Main component
-export function ResourceIntroductions({ resourceId }: { resourceId: number }) {
+export function ResourceIntroductions({
+  resourceId,
+  ...rest
+}: { resourceId: number } & React.ComponentProps<typeof Card>) {
   const { t } = useTranslations('resourceIntroductions', {
     en,
     de,
@@ -39,7 +42,7 @@ export function ResourceIntroductions({ resourceId }: { resourceId: number }) {
   }
 
   return (
-    <Card>
+    <Card {...rest}>
       <CardHeader>
         <h2 className="text-xl font-semibold">{t('title')}</h2>
       </CardHeader>

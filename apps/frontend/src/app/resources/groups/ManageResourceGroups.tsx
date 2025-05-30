@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, HTMLAttributes } from 'react';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import * as en from './translations/manageResourceGroups.en';
 import * as de from './translations/manageResourceGroups.de';
@@ -19,11 +19,11 @@ import {
   UseResourcesServiceGetAllResourcesKeyFn,
 } from '@attraccess/react-query-client';
 
-interface ManageResourceGroupsProps {
+interface ManageResourceGroupsProps extends HTMLAttributes<HTMLDivElement> {
   resourceId: number;
 }
 
-export function ManageResourceGroups({ resourceId }: ManageResourceGroupsProps) {
+export function ManageResourceGroups({ resourceId, ...rest }: ManageResourceGroupsProps) {
   const { t } = useTranslations('manageResourceGroups', {
     en,
     de,
@@ -42,7 +42,6 @@ export function ManageResourceGroups({ resourceId }: ManageResourceGroupsProps) 
   const currentGroups: ResourceGroup[] = useMemo(() => resource?.groups ?? [], [resource]);
   const currentGroupIds = useMemo(() => new Set(currentGroups.map((g) => g.id)), [currentGroups]);
 
-  // Fetch groups for search (server-side search)
   const {
     data: searchResultsResponse,
     isLoading: isLoadingSearchResults,
@@ -50,13 +49,10 @@ export function ManageResourceGroups({ resourceId }: ManageResourceGroupsProps) 
   } = useResourceGroupsServiceGetAllResourceGroups({ search: debouncedSearchTerm, limit: 10 }, undefined, {});
   const searchResults: ResourceGroup[] = useMemo(() => searchResultsResponse?.data ?? [], [searchResultsResponse]);
 
-  // --- Mutations ---
   const { mutateAsync: addResourceToGroup, isPending: isAddingResourceToGroup } =
     useResourcesServiceAddResourceToGroup();
   const { mutateAsync: removeResourceFromGroup, isPending: isRemovingResourceFromGroup } =
     useResourcesServiceRemoveResourceFromGroup();
-
-  // --- Event Handlers ---
 
   const handleAddGroup = useCallback(
     async (group: ResourceGroup) => {
@@ -67,16 +63,16 @@ export function ManageResourceGroups({ resourceId }: ManageResourceGroupsProps) 
           title: t('addGroupSuccessTitle'),
           description: t('addGroupSuccessDescription', { groupName: group.name }),
         });
-        // Invalidate queries to refetch current groups and potentially search results
+
         queryClient.invalidateQueries({
           queryKey: UseResourcesServiceGetOneResourceByIdKeyFn({ id: resourceId }),
         });
         queryClient.invalidateQueries({
           queryKey: UseResourceGroupsServiceGetAllResourceGroupsKeyFn({ search: debouncedSearchTerm }),
         });
-        // Invalidate the general resource list query (this will also invalidate infinite queries derived from it)
+
         queryClient.invalidateQueries({ queryKey: UseResourcesServiceGetAllResourcesKeyFn() });
-        setSearchTerm(''); // Clear search after adding
+        setSearchTerm('');
       } catch (err) {
         console.error('Failed to add group:', err);
         showError({
@@ -97,11 +93,11 @@ export function ManageResourceGroups({ resourceId }: ManageResourceGroupsProps) 
           title: t('removeGroupSuccessTitle'),
           description: t('removeGroupSuccessDescription', { groupName: group.name }),
         });
-        // Invalidate queries to refetch current groups
+
         queryClient.invalidateQueries({
           queryKey: UseResourcesServiceGetOneResourceByIdKeyFn({ id: resourceId }),
         });
-        // Invalidate the general resource list query (this will also invalidate infinite queries derived from it)
+
         queryClient.invalidateQueries({ queryKey: UseResourcesServiceGetAllResourcesKeyFn() });
       } catch (err) {
         console.error('Failed to remove group:', err);
@@ -114,16 +110,12 @@ export function ManageResourceGroups({ resourceId }: ManageResourceGroupsProps) 
     [resourceId, success, showError, t, queryClient, removeResourceFromGroup]
   );
 
-  // Filter search results to exclude groups the resource is already in
   const filteredSearchResults = useMemo(() => {
     return searchResults.filter((group) => !currentGroupIds.has(group.id));
   }, [searchResults, currentGroupIds]);
 
-  // --- Rendering ---
-
   return (
-    <div className="space-y-6">
-      {/* Current Groups Section */}
+    <div {...rest} className={`${rest.className ?? ''} space-y-6`}>
       <Card>
         <CardHeader>{t('currentGroups')}</CardHeader>
         <CardBody>
@@ -162,7 +154,6 @@ export function ManageResourceGroups({ resourceId }: ManageResourceGroupsProps) 
         </CardBody>
       </Card>
 
-      {/* Add Group Section */}
       <Card>
         <CardHeader>{t('addGroups')}</CardHeader>
         <CardBody className="space-y-4">

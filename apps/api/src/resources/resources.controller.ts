@@ -36,7 +36,9 @@ export class ResourcesController {
   private transformResource = (resource: Resource): Resource => {
     return {
       ...resource,
-      imageFilename: this.resourceImageService.getPublicPath(resource.id, resource.imageFilename),
+      imageFilename: resource.imageFilename
+        ? this.resourceImageService.getPublicPath(resource.id, resource.imageFilename)
+        : null,
     };
   };
 

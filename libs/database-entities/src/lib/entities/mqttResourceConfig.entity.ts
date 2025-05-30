@@ -81,7 +81,7 @@ export class MqttResourceConfig {
   })
   updatedAt!: Date;
 
-  @ManyToOne(() => Resource)
+  @ManyToOne(() => Resource, undefined, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'resourceId' })
   resource!: Resource;
 

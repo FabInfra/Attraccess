@@ -29,8 +29,20 @@ const setupApiParameters = () => {
   }
 };
 
-export function filenameToUrl(name: string) {
-  return `${getBaseUrl()}${name}`;
+export function filenameToUrl(name?: string) {
+  if (!name) {
+    return undefined;
+  }
+
+  if (name.startsWith('http')) {
+    return name;
+  }
+
+  if (name.startsWith('/')) {
+    return `${getBaseUrl()}${name}`;
+  }
+
+  return `${getBaseUrl()}/${name}`;
 }
 
 export default setupApiParameters;

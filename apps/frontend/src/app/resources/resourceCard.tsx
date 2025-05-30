@@ -32,14 +32,17 @@ export function ResourceCardSkeletonLoader() {
 
 function ActualResourceCard(props: ResourceCardProps & { isPressable?: boolean }) {
   const { resource, badges, isPressable = false, ...rest } = props;
+
   return (
     <ResourceCardSkeleton
       isPressable={isPressable}
       header={
-        <>
-          <h4 className="font-bold text-large">{resource.name}</h4>
-          {badges}
-        </>
+        <div className="flex justify-between items-center w-full">
+          <div className="flex flex-col">
+            <h4 className="font-bold text-large">{resource.name}</h4>
+            {badges}
+          </div>
+        </div>
       }
       body={
         resource.imageFilename && (

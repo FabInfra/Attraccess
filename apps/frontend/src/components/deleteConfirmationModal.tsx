@@ -6,7 +6,7 @@ import * as en from './deleteConfirmation.en.json';
 import * as de from './deleteConfirmation.de.json';
 import { Trans } from 'react-i18next';
 
-interface DeleteConfirmationModalProps {
+interface DeleteConfirmationModalProps extends Omit<ModalProps, 'children'> {
   isOpen: boolean;
   onOpenChange: ModalProps['onOpenChange'];
   onClose: () => void;
@@ -20,6 +20,7 @@ export function DeleteConfirmationModal({
   onClose,
   onConfirm,
   itemName,
+  ...rest
 }: DeleteConfirmationModalProps) {
   const { t } = useTranslations('deleteConfirmation', {
     en,
@@ -27,7 +28,7 @@ export function DeleteConfirmationModal({
   });
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior='inside'>
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="inside" {...rest}>
       <ModalContent>
         {() => (
           <>

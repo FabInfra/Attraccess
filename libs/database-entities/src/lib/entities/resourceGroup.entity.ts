@@ -54,6 +54,6 @@ export class ResourceGroup {
   @OneToMany(() => ResourceIntroductionUser, (introducer) => introducer.resourceGroup)
   introducers!: ResourceIntroductionUser[];
 
-  @ManyToMany(() => Resource, (resource) => resource.groups)
+  @ManyToMany(() => Resource, (resource) => resource.groups, { onDelete: 'CASCADE' })
   resources!: Resource[];
 }

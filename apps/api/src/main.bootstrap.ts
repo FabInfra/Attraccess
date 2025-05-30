@@ -7,7 +7,6 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import session from 'express-session';
 import { ConfigService } from '@nestjs/config';
 import { AppConfigType } from './config/app.config';
-import { StorageConfigType } from './config/storage.config';
 import { DataSource } from 'typeorm';
 import { PluginService } from './plugin-system/plugin.service';
 import { PluginModule } from './plugin-system/plugin.module';
@@ -26,7 +25,6 @@ export async function bootstrap() {
   bootstrapLogger.log('Main application instance created.');
   const configService = app.get(ConfigService);
   const appConfig = configService.get<AppConfigType>('app');
-  const storageConfig = configService.get<StorageConfigType>('storage');
 
   if (!appConfig) {
     bootstrapLogger.error("Application configuration ('app') not loaded. Exiting.");
@@ -43,7 +41,6 @@ export async function bootstrap() {
   });
   bootstrapLogger.log('PluginSystem configured.');
 
-
   // Run migrations before the app fully starts
   try {
     bootstrapLogger.log('Running database migrations...');
@@ -59,7 +56,7 @@ export async function bootstrap() {
       const allMigrations = dataSource.migrations;
       const executedMigrations = dataSource.migrations;
       bootstrapLogger.log(
-        `Pending migrations detected (${allMigrations.length} total known, ${executedMigrations.length} already executed). Running migrations...`,
+        `Pending migrations detected (${allMigrations.length} total known, ${executedMigrations.length} already executed). Running migrations...`
       );
       await dataSource.runMigrations();
       bootstrapLogger.log('Migrations completed successfully.');
@@ -101,16 +98,6 @@ export async function bootstrap() {
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get('Reflector')));
 
-  if (storageConfig && storageConfig.root) {
-    app.useStaticAssets(storageConfig.root, {
-      prefix: '/storage',
-      maxAge: 24 * 60 * 60 * 1000, // Preserving original maxAge
-    });
-    bootstrapLogger.log(`Serving static assets from ${storageConfig.root} at /storage`);
-  } else {
-    bootstrapLogger.warn('STORAGE_ROOT not configured or storage config not loaded, static assets from storage will not be served.');
-  }
-
   const config = new DocumentBuilder()
     .setTitle('Attraccess API')
     .setDescription('The Attraccess API used to manage machine and tool access in a Makerspace or FabLab')
@@ -138,4 +125,3 @@ export async function startListening(app: NestExpressApplication, port: number, 
   const swaggerPath = globalPrefix ? `/${globalPrefix}/api` : '/api';
   applicationLogger.log(`Swagger UI available at http://localhost:${port}${swaggerPath}`);
 }
-

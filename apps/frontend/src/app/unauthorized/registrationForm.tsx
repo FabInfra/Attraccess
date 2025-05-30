@@ -7,7 +7,11 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import * as en from './registrationForm.en.json';
 import * as de from './registrationForm.de.json';
-import { useUsersServiceCreateOneUser, UseUsersServiceGetAllUsersKeyFn } from '@attraccess/react-query-client';
+import {
+  useUsersServiceCreateOneUser,
+  UseUsersServiceGetAllUsersKeyFn,
+  ApiError,
+} from '@attraccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface RegisterFormProps {
@@ -61,9 +65,28 @@ export function RegistrationForm({ onHasAccount }: RegisterFormProps) {
         });
         setRegisteredEmail(email);
         onOpen();
-      } catch (err) {
-        const error = err as { error?: { message?: string } };
-        setError(error.error?.message || 'An unexpected error occurred');
+      } catch (rawError) {
+        let messageToDisplay = t('error.generic');
+
+        if (rawError instanceof ApiError) {
+          const apiErrorBody = rawError.body as { message: string[] };
+
+          if (apiErrorBody && Array.isArray(apiErrorBody.message) && apiErrorBody.message.length > 0) {
+            const backendMsg = apiErrorBody.message[0] as string;
+            if (
+              backendMsg.includes('password') &&
+              (backendMsg.includes('MinLength') || backendMsg.includes('longer than or equal to'))
+            ) {
+              messageToDisplay = t('error.passwordTooShort');
+            } else {
+              messageToDisplay = backendMsg;
+            }
+          } else if (apiErrorBody && typeof apiErrorBody.message === 'string') {
+            messageToDisplay = apiErrorBody.message;
+          }
+        }
+
+        setError(messageToDisplay);
       }
     },
     [createUser, onOpen, t]

@@ -1,23 +1,31 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, HTMLAttributes, useMemo } from 'react';
 import { useToastMessage } from './toastProvider';
 import { ImageIcon, X } from 'lucide-react';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
-import * as en from './fileUpload.en.json';
-import * as de from './fileUpload.de.json';
+import * as en from './imageUpload.en.json';
+import * as de from './imageUpload.de.json';
 
-interface FileUploadProps {
+interface ImageUploadProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
   id: string;
   label: string;
   onChange: (file: File | null) => void;
   disabled?: boolean;
-  className?: string;
+  currentImageUrl?: string;
 }
 
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'] as const;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
-export function FileUpload({ id, label, onChange, disabled = false, className = '' }: FileUploadProps) {
-  const { t } = useTranslations('fileUpload', {
+export function ImageUpload({
+  id,
+  label,
+  onChange,
+  disabled = false,
+  className = '',
+  currentImageUrl,
+  ...rest
+}: ImageUploadProps) {
+  const { t } = useTranslations('imageUpload', {
     en,
     de,
   });
@@ -25,6 +33,15 @@ export function FileUpload({ id, label, onChange, disabled = false, className = 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const { error } = useToastMessage();
+  const [imageWasChanged, setImageWasChanged] = useState(false);
+
+  const imageUrlToDisplay = useMemo(() => {
+    if (imageWasChanged) {
+      return previewUrl;
+    }
+
+    return previewUrl || currentImageUrl;
+  }, [previewUrl, currentImageUrl, imageWasChanged]);
 
   useEffect(() => {
     // Clean up the object URL when component unmounts or when a new file is selected
@@ -127,10 +144,11 @@ export function FileUpload({ id, label, onChange, disabled = false, className = 
     setSelectedFile(null);
     setPreviewUrl(null);
     onChange(null);
+    setImageWasChanged(true);
   }, [onChange]);
 
   return (
-    <div className={className}>
+    <div {...rest}>
       <label htmlFor={id} className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
         {label}
       </label>
@@ -151,7 +169,7 @@ export function FileUpload({ id, label, onChange, disabled = false, className = 
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
         />
 
-        {!selectedFile && (
+        {!imageUrlToDisplay && (
           <div className="text-center">
             <ImageIcon className="mx-auto h-12 w-12 text-gray-400" />
             <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{t('dragAndDrop')}</p>
@@ -161,24 +179,26 @@ export function FileUpload({ id, label, onChange, disabled = false, className = 
           </div>
         )}
 
-        {selectedFile && previewUrl && (
+        {imageUrlToDisplay && (
           <div className="relative">
             <button
               onClick={handleRemoveFile}
-              className="absolute -top-2 -right-2 p-1 bg-red-100 dark:bg-red-900 rounded-full text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              className="absolute z-10 -top-2 -right-2 p-1 bg-red-100 dark:bg-red-900 rounded-full text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               type="button"
             >
               <X className="h-4 w-4" />
             </button>
             <div className="relative w-full aspect-video">
-              <img src={previewUrl} alt="Preview" className="w-full h-full object-contain rounded-lg" />
+              <img src={imageUrlToDisplay} alt="Preview" className="w-full h-full object-contain rounded-lg" />
             </div>
-            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 text-center">
-              {t('preview', {
-                fileName: selectedFile.name,
-                fileSize: (selectedFile.size / 1024 / 1024).toFixed(2),
-              })}
-            </p>
+            {selectedFile && (
+              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 text-center">
+                {t('preview', {
+                  fileName: selectedFile.name,
+                  fileSize: (selectedFile.size / 1024 / 1024).toFixed(2),
+                })}
+              </p>
+            )}
           </div>
         )}
       </div>

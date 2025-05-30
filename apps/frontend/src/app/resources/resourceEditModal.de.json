@@ -1,0 +1,54 @@
+{
+  "modalTitle": {
+    "create": "Ressource erstellen",
+    "update": "Ressource bearbeiten"
+  },
+  "inputs": {
+    "name": {
+      "label": "Name"
+    },
+    "description": {
+      "label": "Beschreibung"
+    },
+    "allowTakeOver": {
+      "label": "Übernahme erlauben",
+      "description": "Wenn aktiviert, kann die Ressource von anderen Benutzern übernommen werden ohne dass der aktuelle Nutzer die Ressource freigeben muss."
+    },
+    "image": {
+      "label": "Bild"
+    }
+  },
+  "create": {
+    "success": {
+      "toast": {
+        "title": "Ressource erstellt",
+        "description": "Ressource '{{name}}' wurde erfolgreich erstellt."
+      }
+    },
+    "error": {
+      "toast": {
+        "title": "Fehler beim Erstellen der Ressource",
+        "description": "Die Ressource konnte nicht erstellt werden. Bitte versuchen Sie es erneut."
+      }
+    }
+  },
+  "update": {
+    "success": {
+      "toast": {
+        "title": "Ressource aktualisiert",
+        "description": "Ressource '{{name}}' wurde erfolgreich aktualisiert."
+      }
+    },
+    "error": {
+      "toast": {
+        "title": "Fehler beim Aktualisieren der Ressource",
+        "description": "Die Ressource konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
+      }
+    }
+  },
+  "buttons": {
+    "create": "Ressource erstellen",
+    "update": "Ressource aktualisieren",
+    "cancel": "Abbrechen"
+  }
+}

@@ -131,7 +131,7 @@ const coreRoutes: RouteConfig[] = [
   {
     path: '/fabreader',
     element: <FabreaderList />,
-    authRequired: true,
+    authRequired: 'canManageSystemConfiguration',
     sidebar: {
       translationKey: 'FabReader',
       icon: <ComputerIcon className="h-5 w-5" />,

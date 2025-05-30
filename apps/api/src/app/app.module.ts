@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceConfig } from '../database/datasource';
 import { ResourcesModule } from '../resources/resources.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import storageConfigObject from '../config/storage.config';
+import storageConfigObject, { StorageConfigType } from '../config/storage.config';
 import appConfiguration from '../config/app.config';
 import { AppConfigType } from '../config/app.config';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -42,6 +42,26 @@ import { AnalyticsModule } from '../analytics/analytics.module';
           {
             rootPath: resolvedDocsPath,
             serveRoot: '/docs',
+          },
+        ];
+      },
+    }),
+    ServeStaticModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const storageConfig = configService.get<StorageConfigType>('storage');
+        if (!storageConfig || !storageConfig.cdn.root) {
+          console.error('CDN_ROOT not configured. CDN will not be served.');
+          return [];
+        }
+
+        const cdnRoot = resolve(storageConfig.cdn.root);
+        console.log('Serving cdn files from (via config): ', cdnRoot);
+        return [
+          {
+            rootPath: cdnRoot,
+            serveRoot: storageConfig.cdn.serveRoot,
           },
         ];
       },

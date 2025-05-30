@@ -1,16 +1,17 @@
 {
-    "error": {
-        "resourceNotFound": {
-            "title": "Ressource nicht gefunden",
-            "description": "Die angefragte Ressource konnte nicht gefunden werden oder Sie haben keine Berechtigung, sie anzuzeigen.",
-            "backToResources": "Zurück zu Ressourcen"
-        }
-    },
-    "navItems": {
-        "iotSettings": "IoT-Einstellungen"
-    },
-    "actions": {
-        "delete": "Löschen",
-        "documentation": "Dokumentation"
+  "error": {
+    "resourceNotFound": {
+      "title": "Ressource nicht gefunden",
+      "description": "Die angefragte Ressource konnte nicht gefunden werden oder Sie haben keine Berechtigung, sie anzuzeigen.",
+      "backToResources": "Zurück zu Ressourcen"
     }
+  },
+  "navItems": {
+    "iotSettings": "IoT-Einstellungen"
+  },
+  "actions": {
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "documentation": "Dokumentation"
+  }
 }

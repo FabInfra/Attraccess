@@ -4,7 +4,10 @@ import { z } from 'zod';
 
 export const StorageEnvSchema = z.object({
   STORAGE_ROOT: z.string().default(path.join(process.cwd(), 'storage')),
-  MAX_FILE_SIZE_BYTES: z.coerce.number().positive().default(10 * 1024 * 1024), // 10MB
+  MAX_FILE_SIZE_BYTES: z.coerce
+    .number()
+    .positive()
+    .default(10 * 1024 * 1024), // 10MB
   CACHE_MAX_AGE_DAYS: z.coerce.number().positive().default(7),
 });
 
@@ -16,8 +19,9 @@ export interface StorageConfigType {
     maxAgeDays: number;
     directory: string;
   };
-  resources: {
-    directory: string;
+  cdn: {
+    serveRoot: string;
+    root: string;
   };
 }
 
@@ -32,9 +36,7 @@ const storageConfigFactory = (): StorageConfigType => {
       maxAgeDays: validatedEnv.CACHE_MAX_AGE_DAYS,
       directory: path.join(validatedEnv.STORAGE_ROOT, 'cache'),
     },
-    resources: {
-      directory: path.join(validatedEnv.STORAGE_ROOT, 'resources'),
-    },
+    cdn: { serveRoot: '/cdn', root: path.join(validatedEnv.STORAGE_ROOT, 'cdn') },
   };
 };
 

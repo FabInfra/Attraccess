@@ -49,7 +49,7 @@ export class ResourceIntroduction {
   })
   createdAt!: Date;
 
-  @ManyToOne(() => Resource, (resource) => resource.introductions)
+  @ManyToOne(() => Resource, (resource) => resource.introductions, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'resourceId' })
   resource!: Resource;
 
@@ -76,7 +76,7 @@ export class ResourceIntroduction {
   })
   history!: ResourceIntroductionHistoryItem[];
 
-  @ManyToOne(() => ResourceGroup, (group) => group.introductions)
+  @ManyToOne(() => ResourceGroup, (group) => group.introductions, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'resourceGroupId' })
   resourceGroup!: ResourceGroup;
 }

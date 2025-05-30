@@ -139,6 +139,12 @@ export class Diff1747398210875 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`DELETE FROM "typeorm_metadata" WHERE "type" = ? AND "name" = ?`, [
+      'VIEW',
+      'resource_computed_view',
+    ]);
+    await queryRunner.query(`DROP VIEW "resource_computed_view"`);
+
     await queryRunner.query(`ALTER TABLE "sso_provider" RENAME TO "temporary_sso_provider"`);
     await queryRunner.query(
       `CREATE TABLE "sso_provider" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "type" varchar CHECK( "type" IN ('OIDC') ) NOT NULL, "createdAt" datetime NOT NULL DEFAULT (datetime('now')), "updatedAt" datetime NOT NULL DEFAULT (datetime('now')))`
@@ -253,5 +259,17 @@ export class Diff1747398210875 implements MigrationInterface {
       `INSERT INTO "resource_group"("id", "name", "description", "createdAt", "updatedAt") SELECT "id", "name", "description", "createdAt", "updatedAt" FROM "temporary_resource_group"`
     );
     await queryRunner.query(`DROP TABLE "temporary_resource_group"`);
+
+    await queryRunner.query(
+      `CREATE VIEW "resource_computed_view" AS SELECT "resource"."id" AS "id", COALESCE(SUM("usage"."usageInMinutes"), -1) AS "totalUsageMinutes" FROM "resource" "resource" LEFT JOIN "resource_usage" "usage" ON "usage"."resourceId" = "resource"."id" GROUP BY "resource"."id"`
+    );
+    await queryRunner.query(
+      `INSERT INTO "typeorm_metadata"("database", "schema", "table", "type", "name", "value") VALUES (NULL, NULL, NULL, ?, ?, ?)`,
+      [
+        'VIEW',
+        'resource_computed_view',
+        'SELECT "resource"."id" AS "id", COALESCE(SUM("usage"."usageInMinutes"), -1) AS "totalUsageMinutes" FROM "resource" "resource" LEFT JOIN "resource_usage" "usage" ON "usage"."resourceId" = "resource"."id" GROUP BY "resource"."id"',
+      ]
+    );
   }
 }

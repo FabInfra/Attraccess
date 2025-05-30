@@ -1,11 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  ManyToOne,
-  JoinColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { ResourceIntroduction } from './resourceIntroduction.entity';
 import { User } from './user.entity';
@@ -64,7 +57,7 @@ export class ResourceIntroductionHistoryItem {
   })
   createdAt!: Date;
 
-  @ManyToOne(() => ResourceIntroduction, (introduction) => introduction.history)
+  @ManyToOne(() => ResourceIntroduction, (introduction) => introduction.history, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'introductionId' })
   introduction!: ResourceIntroduction;
 

@@ -1,16 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  IsBoolean,
-  IsInt,
-  IsOptional,
-  IsEnum,
-  Min,
-  Max,
-  IsJSON,
-  MaxLength,
-} from 'class-validator';
-import { Transform } from 'class-transformer';
+import { IsString, IsBoolean, IsInt, IsOptional, IsEnum, Min, Max, IsJSON, MaxLength } from 'class-validator';
+import { ToBoolean } from '../../../../../common/request-transformers';
 
 export enum WebhookHttpMethod {
   GET = 'GET',
@@ -32,8 +22,7 @@ export class CreateWebhookConfigDto {
   @ApiProperty({
     description:
       'Destination URL for the webhook. Supports templating with variables like {{id}}, {{name}}, {{event}}, etc.',
-    example:
-      'https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX',
+    example: 'https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX',
   })
   @MaxLength(2048)
   url: string;
@@ -47,10 +36,8 @@ export class CreateWebhookConfigDto {
   method: WebhookHttpMethod;
 
   @ApiProperty({
-    description:
-      'JSON object for custom headers. Values can include templates like {{id}}, {{name}}, etc.',
-    example:
-      '{"Content-Type": "application/json", "Authorization": "Bearer token123", "X-Resource-Name": "{{name}}"}',
+    description: 'JSON object for custom headers. Values can include templates like {{id}}, {{name}}, etc.',
+    example: '{"Content-Type": "application/json", "Authorization": "Bearer token123", "X-Resource-Name": "{{name}}"}',
     required: false,
   })
   @IsJSON()
@@ -59,16 +46,14 @@ export class CreateWebhookConfigDto {
 
   @ApiProperty({
     description: 'Template for payload when resource is in use',
-    example:
-      '{"status": "in_use", "resource": "{{name}}", "user": "{{user.name}}", "timestamp": "{{timestamp}}"}',
+    example: '{"status": "in_use", "resource": "{{name}}", "user": "{{user.name}}", "timestamp": "{{timestamp}}"}',
   })
   @IsString()
   inUseTemplate: string;
 
   @ApiProperty({
     description: 'Template for payload when resource is not in use',
-    example:
-      '{"status": "not_in_use", "resource": "{{name}}", "timestamp": "{{timestamp}}"}',
+    example: '{"status": "not_in_use", "resource": "{{name}}", "timestamp": "{{timestamp}}"}',
   })
   @IsString()
   notInUseTemplate: string;
@@ -81,24 +66,22 @@ export class CreateWebhookConfigDto {
   })
   @IsBoolean()
   @IsOptional()
-  @Transform(({ value }) => value === 'true' || value === true)
+  @ToBoolean()
   active?: boolean = true;
 
   @ApiProperty({
-    description:
-      'Whether to enable retry mechanism for failed webhook requests',
+    description: 'Whether to enable retry mechanism for failed webhook requests',
     example: true,
     required: false,
     default: false,
   })
   @IsBoolean()
   @IsOptional()
-  @Transform(({ value }) => value === 'true' || value === true)
+  @ToBoolean()
   retryEnabled?: boolean = false;
 
   @ApiProperty({
-    description:
-      'Number of retry attempts for failed webhook requests (maximum 10)',
+    description: 'Number of retry attempts for failed webhook requests (maximum 10)',
     example: 3,
     required: false,
     default: 3,
@@ -146,8 +129,7 @@ export class UpdateWebhookConfigDto {
   @ApiProperty({
     description:
       'Destination URL for the webhook. Supports templating with variables like {{id}}, {{name}}, {{event}}, etc.',
-    example:
-      'https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX',
+    example: 'https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX',
     required: false,
   })
   @MaxLength(2048)
@@ -165,10 +147,8 @@ export class UpdateWebhookConfigDto {
   method?: WebhookHttpMethod;
 
   @ApiProperty({
-    description:
-      'JSON object for custom headers. Values can include templates like {{id}}, {{name}}, etc.',
-    example:
-      '{"Content-Type": "application/json", "Authorization": "Bearer token123", "X-Resource-Name": "{{name}}"}',
+    description: 'JSON object for custom headers. Values can include templates like {{id}}, {{name}}, etc.',
+    example: '{"Content-Type": "application/json", "Authorization": "Bearer token123", "X-Resource-Name": "{{name}}"}',
     required: false,
   })
   @IsJSON()
@@ -177,8 +157,7 @@ export class UpdateWebhookConfigDto {
 
   @ApiProperty({
     description: 'Template for payload when resource is in use',
-    example:
-      '{"status": "in_use", "resource": "{{name}}", "user": "{{user.name}}", "timestamp": "{{timestamp}}"}',
+    example: '{"status": "in_use", "resource": "{{name}}", "user": "{{user.name}}", "timestamp": "{{timestamp}}"}',
     required: false,
   })
   @IsString()
@@ -187,8 +166,7 @@ export class UpdateWebhookConfigDto {
 
   @ApiProperty({
     description: 'Template for payload when resource is not in use',
-    example:
-      '{"status": "not_in_use", "resource": "{{name}}", "timestamp": "{{timestamp}}"}',
+    example: '{"status": "not_in_use", "resource": "{{name}}", "timestamp": "{{timestamp}}"}',
     required: false,
   })
   @IsString()
@@ -196,19 +174,17 @@ export class UpdateWebhookConfigDto {
   notInUseTemplate?: string;
 
   @ApiProperty({
-    description:
-      'Whether to enable retry mechanism for failed webhook requests',
+    description: 'Whether to enable retry mechanism for failed webhook requests',
     example: true,
     required: false,
   })
   @IsBoolean()
   @IsOptional()
-  @Transform(({ value }) => value === 'true' || value === true)
+  @ToBoolean()
   retryEnabled?: boolean;
 
   @ApiProperty({
-    description:
-      'Number of retry attempts for failed webhook requests (maximum 10)',
+    description: 'Number of retry attempts for failed webhook requests (maximum 10)',
     example: 3,
     required: false,
   })
@@ -245,7 +221,7 @@ export class WebhookStatusDto {
     example: true,
   })
   @IsBoolean()
-  @Transform(({ value }) => value === 'true' || value === true)
+  @ToBoolean()
   active: boolean;
 }
 
@@ -285,8 +261,7 @@ export class WebhookConfigResponseDto {
   @ApiProperty({
     description:
       'Destination URL for the webhook. Supports templating with variables like {{id}}, {{name}}, {{event}}, etc.',
-    example:
-      'https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX',
+    example: 'https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX',
   })
   url: string;
 
@@ -298,24 +273,20 @@ export class WebhookConfigResponseDto {
   method: string;
 
   @ApiProperty({
-    description:
-      'JSON object for custom headers. Values can include templates like {{id}}, {{name}}, etc.',
-    example:
-      '{"Content-Type": "application/json", "Authorization": "Bearer token123", "X-Resource-Name": "{{name}}"}',
+    description: 'JSON object for custom headers. Values can include templates like {{id}}, {{name}}, etc.',
+    example: '{"Content-Type": "application/json", "Authorization": "Bearer token123", "X-Resource-Name": "{{name}}"}',
   })
   headers: string | null;
 
   @ApiProperty({
     description: 'Template for payload when resource is in use',
-    example:
-      '{"status": "in_use", "resource": "{{name}}", "user": "{{user.name}}", "timestamp": "{{timestamp}}"}',
+    example: '{"status": "in_use", "resource": "{{name}}", "user": "{{user.name}}", "timestamp": "{{timestamp}}"}',
   })
   inUseTemplate: string;
 
   @ApiProperty({
     description: 'Template for payload when resource is not in use',
-    example:
-      '{"status": "not_in_use", "resource": "{{name}}", "timestamp": "{{timestamp}}"}',
+    example: '{"status": "not_in_use", "resource": "{{name}}", "timestamp": "{{timestamp}}"}',
   })
   notInUseTemplate: string;
 
@@ -326,8 +297,7 @@ export class WebhookConfigResponseDto {
   active: boolean;
 
   @ApiProperty({
-    description:
-      'Whether to enable retry mechanism for failed webhook requests',
+    description: 'Whether to enable retry mechanism for failed webhook requests',
     example: true,
   })
   retryEnabled: boolean;

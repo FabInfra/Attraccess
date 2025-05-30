@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsOptional, MinLength, IsEnum, IsUrl, ValidateIf, IsBoolean } from 'class-validator';
 import { FileUpload } from '../../common/types/file-upload.types';
 import { DocumentationType } from '@attraccess/database-entities';
+import { ToBoolean } from '../../common/request-transformers';
 
 export class CreateResourceDto {
   @ApiProperty({
@@ -64,8 +65,10 @@ export class CreateResourceDto {
     required: false,
     example: false,
     default: false,
+    type: Boolean,
   })
   @IsBoolean()
   @IsOptional()
+  @ToBoolean()
   allowTakeOver?: boolean;
 }

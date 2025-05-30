@@ -58,7 +58,7 @@ export class ResourceUsage {
   })
   endNotes!: string | null;
 
-  @ManyToOne(() => Resource, (resource) => resource.usages)
+  @ManyToOne(() => Resource, (resource) => resource.usages, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'resourceId' })
   @ApiProperty({
     description: 'The resource being used',

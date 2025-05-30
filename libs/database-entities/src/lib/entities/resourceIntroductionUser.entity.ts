@@ -33,7 +33,7 @@ export class ResourceIntroductionUser {
   })
   grantedAt!: Date;
 
-  @ManyToOne(() => Resource)
+  @ManyToOne(() => Resource, undefined, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'resourceId' })
   resource!: Resource;
 
@@ -45,7 +45,7 @@ export class ResourceIntroductionUser {
   })
   user!: User;
 
-  @ManyToOne(() => ResourceGroup)
+  @ManyToOne(() => ResourceGroup, undefined, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'resourceGroupId' })
   resourceGroup!: ResourceGroup;
 }

@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  Logger,
-  NotFoundException,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs/promises';
 import * as path from 'path';
@@ -23,7 +18,7 @@ class FileNotFoundError extends NotFoundException {
 @Injectable()
 export class FileStorageService implements OnModuleInit {
   private readonly logger = new Logger(FileStorageService.name);
-  private readonly config: StorageConfigType;
+  private readonly storageConfig: StorageConfigType;
 
   constructor(private readonly configService: ConfigService) {
     const storageConf = this.configService.get<StorageConfigType>('storage');
@@ -31,31 +26,24 @@ export class FileStorageService implements OnModuleInit {
       this.logger.error('Storage configuration not found. FileStorageService may not work correctly.');
       throw new Error("Storage configuration ('storage') not found. Check ConfigModule setup.");
     }
-    this.config = storageConf;
+
+    this.storageConfig = storageConf;
   }
 
   async onModuleInit() {
-    await this.ensureStorageDirectories();
+    await this.ensureStorageDirectory();
   }
 
-  private async ensureStorageDirectories() {
-    const directories = [
-      this.config.root,
-      path.join(this.config.root, 'uploads'),
-      path.join(this.config.root, 'cache'),
-    ];
-
-    for (const dir of directories) {
-      try {
-        await fs.access(dir);
-      } catch {
-        await fs.mkdir(dir, { recursive: true, mode: 0o755 });
-        this.logger.log(`Created directory: ${dir}`);
-      }
+  private async ensureStorageDirectory() {
+    try {
+      await fs.access(this.storageConfig.cdn.root);
+    } catch {
+      await fs.mkdir(this.storageConfig.cdn.root, { recursive: true, mode: 0o755 });
+      this.logger.log(`Created directory: ${this.storageConfig.cdn.root}`);
     }
   }
 
-  protected generateSecureFilename(originalFilename: string): string {
+  protected generateUniqueFilename(originalFilename: string): string {
     const ext = path.extname(originalFilename).toLowerCase();
     const randomBytes = crypto.randomBytes(16).toString('hex');
     const timestamp = Date.now();
@@ -66,22 +54,18 @@ export class FileStorageService implements OnModuleInit {
     file: FileUpload,
     options?: { maxSize?: number; allowedTypes?: AllowedMimeType[] }
   ): Promise<void> {
-    const maxSize = options?.maxSize ?? this.config.maxFileSize;
-    const allowedTypes = options?.allowedTypes ?? this.config.allowedMimeTypes;
+    const maxSize = options?.maxSize ?? this.storageConfig.maxFileSize;
+    const allowedTypes = options?.allowedTypes ?? this.storageConfig.allowedMimeTypes;
 
     // Check file size
     if (file.size > maxSize) {
-      throw new FileUploadValidationError(
-        `File size exceeds maximum allowed size of ${maxSize} bytes`
-      );
+      throw new FileUploadValidationError(`File size exceeds maximum allowed size of ${maxSize} bytes`);
     }
 
     // Check MIME type
     if (!allowedTypes.includes(file.mimetype as AllowedMimeType)) {
       throw new FileUploadValidationError(
-        `File type ${
-          file.mimetype
-        } is not allowed. Allowed types: ${allowedTypes.join(', ')}`
+        `File type ${file.mimetype} is not allowed. Allowed types: ${allowedTypes.join(', ')}`
       );
     }
   }
@@ -89,8 +73,8 @@ export class FileStorageService implements OnModuleInit {
   async saveFile(file: FileUpload, subDirectory: string): Promise<string> {
     await this.validateFile(file);
 
-    const secureFilename = this.generateSecureFilename(file.originalname);
-    const targetDir = path.join(this.config.root, 'uploads', subDirectory);
+    const secureFilename = this.generateUniqueFilename(file.originalname);
+    const targetDir = path.join(this.storageConfig.cdn.root, subDirectory);
 
     await fs.mkdir(targetDir, { recursive: true, mode: 0o755 });
 
@@ -101,12 +85,7 @@ export class FileStorageService implements OnModuleInit {
   }
 
   async deleteFile(subDirectory: string, filename: string): Promise<void> {
-    const filePath = path.join(
-      this.config.root,
-      'uploads',
-      subDirectory,
-      filename
-    );
+    const filePath = path.join(this.storageConfig.cdn.root, subDirectory, filename);
 
     try {
       await fs.unlink(filePath);
@@ -118,12 +97,7 @@ export class FileStorageService implements OnModuleInit {
   }
 
   async getFilePath(subDirectory: string, filename: string): Promise<string> {
-    const filePath = path.join(
-      this.config.root,
-      'uploads',
-      subDirectory,
-      filename
-    );
+    const filePath = path.join(this.storageConfig.cdn.root, subDirectory, filename);
 
     try {
       await fs.access(filePath);
@@ -134,17 +108,6 @@ export class FileStorageService implements OnModuleInit {
   }
 
   getPublicPath(subDirectory: string, filename: string): string {
-    return `/storage/uploads/${subDirectory}/${filename}`;
-  }
-
-  async clearCache(subDirectory: string): Promise<void> {
-    const cacheDir = path.join(this.config.root, 'cache', subDirectory);
-    try {
-      await fs.rm(cacheDir, { recursive: true, force: true });
-    } catch (error) {
-      if (error.code !== 'ENOENT') {
-        throw error;
-      }
-    }
+    return `${this.storageConfig.cdn.serveRoot}/${subDirectory}/${filename}`;
   }
 }

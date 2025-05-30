@@ -57,7 +57,6 @@ export class Resource {
   @ApiProperty({
     description: 'The type of documentation (markdown or url)',
     enum: DocumentationType,
-    name: 'DocumentationType',
     required: false,
     example: DocumentationType.MARKDOWN,
   })

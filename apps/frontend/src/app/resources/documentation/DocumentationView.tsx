@@ -128,15 +128,15 @@ function DocumentationViewComponent() {
             </div>
           )}
 
-          {!resource.DocumentationType && <p className="text-center text-default-400 p-4">{t('noDocumentation')}</p>}
+          {!resource.documentationType && <p className="text-center text-default-400 p-4">{t('noDocumentation')}</p>}
 
-          {resource.DocumentationType === 'markdown' && resource.documentationMarkdown && (
+          {resource.documentationType === 'markdown' && resource.documentationMarkdown && (
             <div className="prose max-w-none">
               <ReactMarkdown>{resource.documentationMarkdown}</ReactMarkdown>
             </div>
           )}
 
-          {resource.DocumentationType === 'url' && resource.documentationUrl && (
+          {resource.documentationType === 'url' && resource.documentationUrl && (
             <iframe
               src={resource.documentationUrl}
               className="w-full h-[calc(100vh-300px)] min-h-[500px] border-0"

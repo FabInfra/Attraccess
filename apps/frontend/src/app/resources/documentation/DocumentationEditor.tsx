@@ -22,7 +22,7 @@ import {
   useResourcesServiceGetOneResourceById,
   useResourcesServiceUpdateOneResource,
   UseResourcesServiceGetOneResourceByIdKeyFn,
-  DocumentationType,
+  documentationType as DocumentationType, // alias for local usage
 } from '@attraccess/react-query-client';
 import ReactMarkdown from 'react-markdown';
 import en from './documentationEditor.en.json';
@@ -89,8 +89,8 @@ function DocumentationEditorComponent() {
   useEffect(() => {
     if (resource) {
       // Set the documentation type directly from the resource
-      if (resource.DocumentationType) {
-        setDocumentationType(resource.DocumentationType as DocumentationType);
+      if (resource.documentationType) {
+        setDocumentationType(resource.documentationType as DocumentationType);
       } else {
         setDocumentationType('');
       }

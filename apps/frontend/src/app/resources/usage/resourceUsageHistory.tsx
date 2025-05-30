@@ -9,13 +9,12 @@ import { UsageNotesModal } from './components/UsageNotesModal';
 import * as en from './translations/resourceUsageHistory.en';
 import * as de from './translations/resourceUsageHistory.de';
 
-// Types
-interface ResourceUsageHistoryProps {
+type ResourceUsageHistoryProps = {
   resourceId: number;
-}
+} & React.ComponentProps<typeof Card>;
 
 // Main component
-export function ResourceUsageHistory({ resourceId }: ResourceUsageHistoryProps) {
+export function ResourceUsageHistory({ resourceId, ...rest }: ResourceUsageHistoryProps) {
   const { t } = useTranslations('resourceUsageHistory', { en, de });
   const { hasPermission } = useAuth();
   const canManageResources = hasPermission('canManageResources');
@@ -34,7 +33,7 @@ export function ResourceUsageHistory({ resourceId }: ResourceUsageHistoryProps) 
   };
 
   return (
-    <Card className="w-full">
+    <Card {...rest} className={`${rest.className ?? ''} w-full`}>
       <CardHeader className="flex justify-between items-center">
         <HistoryHeader
           title={t('usageHistory')}

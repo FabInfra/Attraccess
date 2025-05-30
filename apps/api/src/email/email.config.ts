@@ -1,52 +1,86 @@
 import { registerAs } from '@nestjs/config';
 import { MailerOptions } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import * as path from 'path';
 import { z } from 'zod';
 
 const EmailEnvSchema = z.object({
-  SMTP_SERVICE: z.string().optional(),
+  SMTP_SERVICE: z.enum(['SMTP', 'Outlook365']).optional(),
+});
+
+const SMTP_ENV_SCHEMA = z.object({
   SMTP_HOST: z.string().min(1, { message: 'SMTP_HOST is required' }),
   SMTP_PORT: z.coerce.number().positive({ message: 'SMTP_PORT must be a positive number' }),
   SMTP_SECURE: z.coerce.boolean().default(false),
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
-  SMTP_FROM_NAME: z.string().default('Attraccess'),
-  SMTP_FROM_EMAIL: z.string().email({ message: 'Invalid SMTP_FROM_EMAIL format' }).default('noreply@attraccess.org'),
-  EMAIL_TEMPLATES_PATH: z.string().default(path.resolve(process.cwd(), 'apps/api/src/assets/email-templates')),
+  SMTP_FROM: z.string().min(1, { message: 'SMTP_FROM email is required' }),
 });
 
-// This type can be imported by EmailModule if needed for ConfigService typing
-export type EmailConfiguration = ReturnType<typeof emailConfigFactory>;
+const OUTLOOK_ENV_SCHEMA = z.object({
+  SMTP_FROM: z.string().min(1, { message: 'SMTP_FROM email is required' }),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
+});
 
 const handlebarsAdapter = new HandlebarsAdapter();
 
-const emailConfigFactory = () => {
-  const validatedEnv = EmailEnvSchema.parse(process.env);
-  return {
-    mailerOptions: {
-      transport: {
-        host: validatedEnv.SMTP_HOST,
-        port: validatedEnv.SMTP_PORT,
-        secure: validatedEnv.SMTP_SECURE,
-        auth: (validatedEnv.SMTP_USER && validatedEnv.SMTP_PASS) ? {
-          user: validatedEnv.SMTP_USER,
-          pass: validatedEnv.SMTP_PASS,
-        } : undefined,
-        ...(validatedEnv.SMTP_SERVICE && { service: validatedEnv.SMTP_SERVICE }),
+export interface EmailConfiguration {
+  mailerOptions: MailerOptions;
+}
+
+const emailConfigFactory = (): EmailConfiguration => {
+  const baseEnv = EmailEnvSchema.parse(process.env);
+
+  const defaultMailerOptions = {
+    template: {
+      adapter: handlebarsAdapter,
+      options: {
+        strict: true,
       },
-      defaults: {
-        from: `"${validatedEnv.SMTP_FROM_NAME}" <${validatedEnv.SMTP_FROM_EMAIL}>`,
-      },
-      template: {
-        dir: validatedEnv.EMAIL_TEMPLATES_PATH,
-        adapter: handlebarsAdapter,
-        options: {
-          strict: true,
+    },
+  } as EmailConfiguration['mailerOptions'];
+
+  if (baseEnv.SMTP_SERVICE === 'SMTP') {
+    const smtpEnv = SMTP_ENV_SCHEMA.parse(process.env);
+
+    return {
+      mailerOptions: {
+        ...defaultMailerOptions,
+        defaults: {
+          from: smtpEnv.SMTP_FROM,
+        },
+        transport: {
+          host: smtpEnv.SMTP_HOST,
+          port: smtpEnv.SMTP_PORT,
+          secure: smtpEnv.SMTP_SECURE,
+          auth: {
+            user: smtpEnv.SMTP_USER,
+            pass: smtpEnv.SMTP_PASS,
+          },
         },
       },
-    } as MailerOptions, 
-  };
+    } as EmailConfiguration;
+  }
+
+  if (baseEnv.SMTP_SERVICE === 'Outlook365') {
+    const outlookEnv = OUTLOOK_ENV_SCHEMA.parse(process.env);
+
+    return {
+      mailerOptions: {
+        ...defaultMailerOptions,
+        defaults: {
+          from: outlookEnv.SMTP_FROM,
+        },
+        transport: {
+          service: 'Outlook365',
+          auth: {
+            user: outlookEnv.SMTP_USER,
+            pass: outlookEnv.SMTP_PASS,
+          },
+        },
+      },
+    } as EmailConfiguration;
+  }
 };
 
 export default registerAs('email', emailConfigFactory);

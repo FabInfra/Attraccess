@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useToastMessage } from '../../components/toastProvider';
-import { ArrowLeft, BookOpen, Trash, Wifi } from 'lucide-react';
+import { ArrowLeft, BookOpen, PenSquareIcon, ShapesIcon, Trash, Wifi } from 'lucide-react';
 import { Button } from '@heroui/button';
 import { Spinner, Link } from '@heroui/react';
 import { useDisclosure } from '@heroui/modal';
@@ -25,6 +25,7 @@ import { ManageResourceGroups } from './groups/ManageResourceGroups';
 import { DocumentationModal } from './documentation';
 import de from './resourceDetails.de.json';
 import en from './resourceDetails.en.json';
+import { ResourceEditModal } from './resourceEditModal';
 
 function ResourceDetailsComponent() {
   const { id } = useParams<{ id: string }>();
@@ -103,7 +104,12 @@ function ResourceDetailsComponent() {
       <div className="max-w-7xl mx-auto px-4 flex flex-col items-center justify-center min-h-screen">
         <h2 className="text-xl font-semibold mb-2">{t('error.resourceNotFound.title')}</h2>
         <p className="text-gray-500 mb-4">{t('error.resourceNotFound.description')}</p>
-        <Button onPress={() => navigate('/resources')} variant="light" startContent={<ArrowLeft className="w-4 h-4" />}>
+        <Button
+          onPress={() => navigate('/resources')}
+          variant="light"
+          startContent={<ArrowLeft className="w-4 h-4" />}
+          data-cy="back-to-resources-button"
+        >
           {t('error.resourceNotFound.backToResources')}
         </Button>
       </div>
@@ -114,22 +120,24 @@ function ResourceDetailsComponent() {
     <div className="max-w-7xl mx-auto px-4 py-8 min-h-screen">
       <PageHeader
         title={resource.name}
+        icon={<ShapesIcon className="w-6 h-6" />}
         subtitle={resource.description || undefined}
         backTo="/resources"
         actions={
-          <div className="flex space-x-2 flex-wrap justify-end">
+          <>
             <DocumentationModal resourceId={resourceId}>
               {(onOpenDocumentation) => (
                 <Button
                   variant="light"
                   startContent={<BookOpen className="w-4 h-4" />}
                   onPress={onOpenDocumentation}
+                  data-cy="documentation-button"
                 >
                   {t('actions.documentation')}
                 </Button>
               )}
             </DocumentationModal>
-            
+
             {canManageResourceGroups && (
               <>
                 <Button
@@ -137,22 +145,43 @@ function ResourceDetailsComponent() {
                   href={`/resources/${resourceId}/iot`}
                   variant="light"
                   startContent={<Wifi className="w-4 h-4" />}
+                  data-cy="iot-settings-button"
                 >
                   {t('navItems.iotSettings')}
                 </Button>
-                <Button onPress={onOpen} color="danger" variant="light" startContent={<Trash className="w-4 h-4" />}>
+
+                <ResourceEditModal resourceId={resourceId} closeOnSuccess>
+                  {(onOpen) => (
+                    <Button
+                      onPress={onOpen}
+                      variant="light"
+                      startContent={<PenSquareIcon className="w-4 h-4" />}
+                      data-cy="edit-resource-button"
+                    >
+                      {t('actions.edit')}
+                    </Button>
+                  )}
+                </ResourceEditModal>
+
+                <Button
+                  onPress={onOpen}
+                  color="danger"
+                  variant="light"
+                  startContent={<Trash className="w-4 h-4" />}
+                  data-cy="delete-resource-button"
+                >
                   {t('actions.delete')}
                 </Button>
               </>
             )}
-          </div>
+          </>
         }
       />
 
       {/* Full width Usage section for all devices */}
       <div className="w-full space-y-6 mb-8">
-        <ResourceUsageSession resourceId={resourceId} resource={resource} />
-        <ResourceUsageHistory resourceId={resourceId} />
+        <ResourceUsageSession resourceId={resourceId} resource={resource} data-cy="resource-usage-session" />
+        <ResourceUsageHistory resourceId={resourceId} data-cy="resource-usage-history" />
       </div>
 
       {/* 2-column layout for Introductions and Introducers on non-mobile */}
@@ -160,13 +189,13 @@ function ResourceDetailsComponent() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {showIntroductionsManagement && (
             <div className="w-full">
-              <ResourceIntroductions resourceId={resourceId} />
+              <ResourceIntroductions resourceId={resourceId} data-cy="resource-introductions" />
             </div>
           )}
 
           {showIntroducersManagement && (
             <div className="w-full">
-              <ManageIntroducers resourceId={resourceId} />
+              <ManageIntroducers resourceId={resourceId} data-cy="manage-introducers" />
             </div>
           )}
         </div>
@@ -175,7 +204,7 @@ function ResourceDetailsComponent() {
       {/* Add the ManageResourceGroups component */}
       {showGroupsManagement && (
         <div className="mt-8 w-full">
-          <ManageResourceGroups resourceId={resourceId} />
+          <ManageResourceGroups resourceId={resourceId} data-cy="manage-resource-groups" />
         </div>
       )}
 
@@ -186,6 +215,7 @@ function ResourceDetailsComponent() {
         onClose={() => onOpenChange()}
         onConfirm={handleDelete}
         itemName={resource.name}
+        data-cy="delete-confirmation-modal"
       />
     </div>
   );

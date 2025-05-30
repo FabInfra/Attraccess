@@ -1,3 +1,5 @@
+// /workspace/Attraccess/apps/api/src/email/templates/reset-password.template.ts
+export const RESET_PASSWORD_MJML_TEMPLATE = `
 <mjml>
   <mj-head>
     <mj-title>Reset your password</mj-title>
@@ -34,3 +36,4 @@
     </mj-section>
   </mj-body>
 </mjml>
+`;

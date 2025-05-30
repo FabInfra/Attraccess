@@ -86,20 +86,30 @@ export function ResourceList() {
 
   return (
     <>
-      <Toolbar onSearch={handleSearch} />
+      <Toolbar onSearch={handleSearch} data-cy="resource-list-toolbar" />
 
       <Accordion
         selectedKeys={selectedKeys}
         onSelectionChange={onAccordionSelectionChange}
         selectionMode={searchInput ? 'multiple' : 'single'}
+        data-cy="resource-group-accordion"
       >
         {allGroupLists.map((group) => (
-          <AccordionItem key={group.id} aria-label={group.name} title={group.name}>
-            <ResourcesInGroupList groupId={group.id} search={searchInput} />
+          <AccordionItem
+            key={group.id}
+            aria-label={group.name}
+            title={group.name}
+            data-cy={`resource-group-item-${group.id}`}
+          >
+            <ResourcesInGroupList
+              groupId={group.id}
+              search={searchInput}
+              data-cy={`resources-in-group-list-${group.id}`}
+            />
           </AccordionItem>
         ))}
       </Accordion>
-      {isFetchingNextPage && <Spinner variant="wave" />}
+      {isFetchingNextPage && <Spinner variant="wave" data-cy="loading-spinner" />}
       <div ref={lastItemRef} style={{ marginTop: '200px' }}>
         &nbsp;
       </div>

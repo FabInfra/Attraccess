@@ -32,17 +32,17 @@ function IntroducersListCard({ resourceId, t }: IntroducersListProps) {
 
 export type ManageIntroducersProps = {
   resourceId: number;
-};
+} & React.ComponentProps<typeof Card>;
 
 function ManageIntroducersComponent(props: ManageIntroducersProps) {
-  const { resourceId } = props;
+  const { resourceId, ...rest } = props;
   const { t } = useTranslations('manageIntroducers', {
     en,
     de,
   });
 
   return (
-    <Card>
+    <Card {...rest}>
       <CardHeader className="flex flex-col items-start gap-1">
         <h2 className="text-xl font-semibold">{t('title')}</h2>
         <p className="text-gray-500 dark:text-gray-400">{t('description')}</p>
