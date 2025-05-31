@@ -3,9 +3,11 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EmailService } from './email.service';
 import emailConfiguration, { EmailConfiguration } from './email.config';
+import { EmailTemplateModule } from '../email-template/email-template.module';
 
 @Module({
   imports: [
+    EmailTemplateModule,
     ConfigModule.forFeature(emailConfiguration),
     MailerModule.forRootAsync({
       // imports: [ConfigModule], // Not needed if ConfigModule.forFeature is used or ConfigModule is global

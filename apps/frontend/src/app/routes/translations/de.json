@@ -6,5 +6,6 @@
   "plugins": "Plugins",
   "NFCCards": "NFC-Karten",
   "FabReader": "FabReader",
-  "csvExport": "CSV-Export"
+  "csvExport": "CSV-Export",
+  "emailTemplates": "E-Mail-Vorlagen"
 }

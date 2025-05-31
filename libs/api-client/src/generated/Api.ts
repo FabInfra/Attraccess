@@ -352,6 +352,48 @@ export interface UpdateSSOProviderDto {
   oidcConfiguration?: UpdateOIDCConfigurationDto;
 }
 
+export interface CreateEmailTemplateDto {
+  /**
+   * Unique name for the template (e.g., verify-email, reset-password)
+   * @maxLength 255
+   * @example "verify-email"
+   */
+  name: string;
+  /**
+   * Email subject line
+   * @maxLength 255
+   * @example "Verify Your Email Address"
+   */
+  subject: string;
+  /**
+   * MJML content of the email body
+   * @example "<mjml><mj-body><mj-section><mj-column><mj-text>Hello World</mj-text></mj-column></mj-section></mj-body></mjml>"
+   */
+  mjmlContent: string;
+}
+
+export type EmailTemplate = object;
+
+export interface UpdateEmailTemplateDto {
+  /**
+   * Unique name for the template (e.g., verify-email, reset-password)
+   * @maxLength 255
+   * @example "verify-email"
+   */
+  name?: string;
+  /**
+   * Email subject line
+   * @maxLength 255
+   * @example "Verify Your Email Address"
+   */
+  subject?: string;
+  /**
+   * MJML content of the email body
+   * @example "<mjml><mj-body><mj-section><mj-column><mj-text>Hello World Updated</mj-text></mj-column></mj-section></mj-body></mjml>"
+   */
+  mjmlContent?: string;
+}
+
 export interface CreateResourceGroupDto {
   name: string;
   description?: string;
@@ -1643,6 +1685,16 @@ export interface OidcLoginCallbackParams {
 
 export type OidcLoginCallbackData = CreateSessionResponse;
 
+export type EmailTemplateControllerCreateData = EmailTemplate;
+
+export type EmailTemplateControllerFindAllData = EmailTemplate[];
+
+export type EmailTemplateControllerFindOneData = EmailTemplate;
+
+export type EmailTemplateControllerUpdateData = EmailTemplate;
+
+export type EmailTemplateControllerRemoveData = any;
+
 export type CreateOneResourceGroupData = ResourceGroup;
 
 export interface GetAllResourceGroupsParams {
@@ -2248,6 +2300,94 @@ export namespace Sso {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = OidcLoginCallbackData;
+  }
+}
+
+export namespace EmailTemplates {
+  /**
+   * No description
+   * @tags Email Templates
+   * @name EmailTemplateControllerCreate
+   * @summary Create a new email template
+   * @request POST:/api/email-templates
+   * @secure
+   */
+  export namespace EmailTemplateControllerCreate {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = CreateEmailTemplateDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = EmailTemplateControllerCreateData;
+  }
+
+  /**
+   * No description
+   * @tags Email Templates
+   * @name EmailTemplateControllerFindAll
+   * @summary List all email templates
+   * @request GET:/api/email-templates
+   * @secure
+   */
+  export namespace EmailTemplateControllerFindAll {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = EmailTemplateControllerFindAllData;
+  }
+
+  /**
+   * No description
+   * @tags Email Templates
+   * @name EmailTemplateControllerFindOne
+   * @summary Get an email template by ID
+   * @request GET:/api/email-templates/{id}
+   * @secure
+   */
+  export namespace EmailTemplateControllerFindOne {
+    export type RequestParams = {
+      id: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = EmailTemplateControllerFindOneData;
+  }
+
+  /**
+   * No description
+   * @tags Email Templates
+   * @name EmailTemplateControllerUpdate
+   * @summary Update an email template
+   * @request PATCH:/api/email-templates/{id}
+   * @secure
+   */
+  export namespace EmailTemplateControllerUpdate {
+    export type RequestParams = {
+      id: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateEmailTemplateDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = EmailTemplateControllerUpdateData;
+  }
+
+  /**
+   * No description
+   * @tags Email Templates
+   * @name EmailTemplateControllerRemove
+   * @summary Delete an email template
+   * @request DELETE:/api/email-templates/{id}
+   * @secure
+   */
+  export namespace EmailTemplateControllerRemove {
+    export type RequestParams = {
+      id: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = EmailTemplateControllerRemoveData;
   }
 }
 
@@ -4181,6 +4321,107 @@ export class Api<
         method: "GET",
         query: query,
         format: "json",
+        ...params,
+      }),
+  };
+  emailTemplates = {
+    /**
+     * No description
+     *
+     * @tags Email Templates
+     * @name EmailTemplateControllerCreate
+     * @summary Create a new email template
+     * @request POST:/api/email-templates
+     * @secure
+     */
+    emailTemplateControllerCreate: (
+      data: CreateEmailTemplateDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<EmailTemplateControllerCreateData, void>({
+        path: `/api/email-templates`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Email Templates
+     * @name EmailTemplateControllerFindAll
+     * @summary List all email templates
+     * @request GET:/api/email-templates
+     * @secure
+     */
+    emailTemplateControllerFindAll: (params: RequestParams = {}) =>
+      this.request<EmailTemplateControllerFindAllData, void>({
+        path: `/api/email-templates`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Email Templates
+     * @name EmailTemplateControllerFindOne
+     * @summary Get an email template by ID
+     * @request GET:/api/email-templates/{id}
+     * @secure
+     */
+    emailTemplateControllerFindOne: (id: string, params: RequestParams = {}) =>
+      this.request<EmailTemplateControllerFindOneData, void>({
+        path: `/api/email-templates/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Email Templates
+     * @name EmailTemplateControllerUpdate
+     * @summary Update an email template
+     * @request PATCH:/api/email-templates/{id}
+     * @secure
+     */
+    emailTemplateControllerUpdate: (
+      id: string,
+      data: UpdateEmailTemplateDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<EmailTemplateControllerUpdateData, void>({
+        path: `/api/email-templates/${id}`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Email Templates
+     * @name EmailTemplateControllerRemove
+     * @summary Delete an email template
+     * @request DELETE:/api/email-templates/{id}
+     * @secure
+     */
+    emailTemplateControllerRemove: (id: string, params: RequestParams = {}) =>
+      this.request<EmailTemplateControllerRemoveData, void>({
+        path: `/api/email-templates/${id}`,
+        method: "DELETE",
+        secure: true,
         ...params,
       }),
   };

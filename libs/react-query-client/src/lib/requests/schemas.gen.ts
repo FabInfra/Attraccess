@@ -478,6 +478,108 @@ export const $UpdateSSOProviderDto = {
     }
 } as const;
 
+export const $CreateEmailTemplateDto = {
+    type: 'object',
+    properties: {
+        name: {
+            type: 'string',
+            description: 'Unique name for the template (e.g., verify-email, reset-password)',
+            example: 'verify-email',
+            maxLength: 255
+        },
+        subject: {
+            type: 'string',
+            description: 'Email subject line',
+            example: 'Verify Your Email Address',
+            maxLength: 255
+        },
+        description: {
+            type: 'string',
+            description: 'Optional description for the template',
+            example: 'Template for verifying new user emails.'
+        },
+        mjmlContent: {
+            type: 'string',
+            description: 'MJML content of the email body',
+            example: '<mjml><mj-body><mj-section><mj-column><mj-text>Hello World</mj-text></mj-column></mj-section></mj-body></mjml>'
+        }
+    },
+    required: ['name', 'subject', 'mjmlContent']
+} as const;
+
+export const $EmailTemplate = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            description: 'The unique identifier of the email template',
+            example: 'd0646829-3e28-4e55-9879-7070d806e630'
+        },
+        name: {
+            type: 'string',
+            description: 'Unique internal name for the template',
+            example: 'verify-email'
+        },
+        subject: {
+            type: 'string',
+            description: 'Email subject line',
+            example: 'Verify Your Email Address'
+        },
+        description: {
+            type: 'string',
+            description: 'Optional description for the template in the admin UI',
+            example: 'Sent to new users to verify their email.'
+        },
+        mjmlContent: {
+            type: 'string',
+            description: 'MJML content of the email body'
+        },
+        htmlContent: {
+            type: 'string',
+            description: 'Compiled HTML content of the email body (auto-generated from MJML)'
+        },
+        createdAt: {
+            format: 'date-time',
+            type: 'string',
+            description: 'Timestamp of when the template was created'
+        },
+        updatedAt: {
+            format: 'date-time',
+            type: 'string',
+            description: 'Timestamp of when the template was last updated'
+        }
+    },
+    required: ['id', 'name', 'subject', 'mjmlContent', 'htmlContent', 'createdAt', 'updatedAt']
+} as const;
+
+export const $UpdateEmailTemplateDto = {
+    type: 'object',
+    properties: {
+        name: {
+            type: 'string',
+            description: 'Unique name for the template (e.g., verify-email, reset-password)',
+            example: 'verify-email',
+            maxLength: 255
+        },
+        subject: {
+            type: 'string',
+            description: 'Email subject line',
+            example: 'Verify Your Email Address',
+            maxLength: 255
+        },
+        description: {
+            type: 'string',
+            description: 'Optional description for the template',
+            example: 'Updated description for verifying emails.'
+        },
+        mjmlContent: {
+            type: 'string',
+            description: 'MJML content of the email body',
+            example: '<mjml><mj-body><mj-section><mj-column><mj-text>Hello World Updated</mj-text></mj-column></mj-section></mj-body></mjml>'
+        }
+    }
+} as const;
+
 export const $CreateResourceGroupDto = {
     type: 'object',
     properties: {

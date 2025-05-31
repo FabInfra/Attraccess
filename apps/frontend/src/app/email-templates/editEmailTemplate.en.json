@@ -1,0 +1,25 @@
+{
+  "title": "Edit Email Template",
+  "subtitle": "Modify the subject, description, and MJML content of the template.",
+  "form": {
+    "subject": "Subject",
+    "subjectPlaceholder": "Enter email subject",
+    "description": "Description",
+    "descriptionPlaceholder": "Enter a short description (optional)",
+    "mjmlContent": "MJML Content",
+    "mjmlContentPlaceholder": "Enter MJML for the email body",
+    "saveButton": "Save Changes",
+    "cancelButton": "Cancel",
+    "saving": "Saving..."
+  },
+  "notifications": {
+    "fetchError": "Failed to load email template.",
+    "updateSuccess": "Email template updated successfully!",
+    "updateError": "Failed to update email template.",
+    "missingIdError": "Email template ID is missing in URL. Redirecting...",
+    "mjmlPreviewError": "Error generating MJML preview."
+  },
+  "loadingOrRedirecting": "Loading or redirecting...",
+  "loading": "Loading template data...",
+  "templateName": "Template Name (ID)"
+}

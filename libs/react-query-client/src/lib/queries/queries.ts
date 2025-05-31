@@ -1,8 +1,8 @@
 // generated with @7nohe/openapi-react-query-codegen@1.6.2 
 
 import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
-import { AnalyticsService, ApplicationService, AuthenticationService, FabReaderNfcCardsService, FabReaderReadersService, MqttResourceConfigurationService, MqttServersService, PluginService, ResourceGroupsService, ResourceIntroducersService, ResourceIntroductionsService, ResourceUsageService, ResourcesService, SseService, SsoService, UsersService, WebhooksService } from "../requests/services.gen";
-import { AppKeyRequestDto, BulkUpdateUserPermissionsDto, ChangePasswordDto, CompleteIntroductionDto, CreateMqttResourceConfigDto, CreateMqttServerDto, CreateResourceDto, CreateResourceGroupDto, CreateSSOProviderDto, CreateUserDto, CreateWebhookConfigDto, EndUsageSessionDto, EnrollNfcCardDto, ResetNfcCardDto, ResetPasswordDto, RevokeIntroductionDto, StartUsageSessionDto, UnrevokeIntroductionDto, UpdateMqttResourceConfigDto, UpdateMqttServerDto, UpdateReaderDto, UpdateResourceDto, UpdateResourceGroupDto, UpdateSSOProviderDto, UpdateUserPermissionsDto, UpdateWebhookConfigDto, UploadPluginDto, VerifyEmailDto, WebhookStatusDto } from "../requests/types.gen";
+import { AnalyticsService, ApplicationService, AuthenticationService, EmailTemplatesService, FabReaderNfcCardsService, FabReaderReadersService, MqttResourceConfigurationService, MqttServersService, PluginService, ResourceGroupsService, ResourceIntroducersService, ResourceIntroductionsService, ResourceUsageService, ResourcesService, SseService, SsoService, UsersService, WebhooksService } from "../requests/services.gen";
+import { AppKeyRequestDto, BulkUpdateUserPermissionsDto, ChangePasswordDto, CompleteIntroductionDto, CreateEmailTemplateDto, CreateMqttResourceConfigDto, CreateMqttServerDto, CreateResourceDto, CreateResourceGroupDto, CreateSSOProviderDto, CreateUserDto, CreateWebhookConfigDto, EndUsageSessionDto, EnrollNfcCardDto, ResetNfcCardDto, ResetPasswordDto, RevokeIntroductionDto, StartUsageSessionDto, UnrevokeIntroductionDto, UpdateEmailTemplateDto, UpdateMqttResourceConfigDto, UpdateMqttServerDto, UpdateReaderDto, UpdateResourceDto, UpdateResourceGroupDto, UpdateSSOProviderDto, UpdateUserPermissionsDto, UpdateWebhookConfigDto, UploadPluginDto, VerifyEmailDto, WebhookStatusDto } from "../requests/types.gen";
 import * as Common from "./common";
 export const useApplicationServicePing2 = <TData = Common.ApplicationServicePing2DefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseApplicationServicePing2KeyFn(queryKey), queryFn: () => ApplicationService.ping2() as TData, ...options });
 export const useUsersServiceGetAllUsers = <TData = Common.UsersServiceGetAllUsersDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ limit, page, search }: {
@@ -38,6 +38,10 @@ export const useSsoServiceOidcLoginCallback = <TData = Common.SsoServiceOidcLogi
   sessionState: unknown;
   state: unknown;
 }, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseSsoServiceOidcLoginCallbackKeyFn({ code, iss, providerId, redirectTo, sessionState, state }, queryKey), queryFn: () => SsoService.oidcLoginCallback({ code, iss, providerId, redirectTo, sessionState, state }) as TData, ...options });
+export const useEmailTemplatesServiceEmailTemplateControllerFindAll = <TData = Common.EmailTemplatesServiceEmailTemplateControllerFindAllDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseEmailTemplatesServiceEmailTemplateControllerFindAllKeyFn(queryKey), queryFn: () => EmailTemplatesService.emailTemplateControllerFindAll() as TData, ...options });
+export const useEmailTemplatesServiceEmailTemplateControllerFindOne = <TData = Common.EmailTemplatesServiceEmailTemplateControllerFindOneDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ id }: {
+  id: string;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseEmailTemplatesServiceEmailTemplateControllerFindOneKeyFn({ id }, queryKey), queryFn: () => EmailTemplatesService.emailTemplateControllerFindOne({ id }) as TData, ...options });
 export const useResourceGroupsServiceGetAllResourceGroups = <TData = Common.ResourceGroupsServiceGetAllResourceGroupsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ limit, page, search }: {
   limit?: number;
   page?: number;
@@ -170,6 +174,11 @@ export const useSsoServiceCreateOneSsoProvider = <TData = Common.SsoServiceCreat
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   requestBody: CreateSSOProviderDto;
 }, TContext>({ mutationFn: ({ requestBody }) => SsoService.createOneSsoProvider({ requestBody }) as unknown as Promise<TData>, ...options });
+export const useEmailTemplatesServiceEmailTemplateControllerCreate = <TData = Common.EmailTemplatesServiceEmailTemplateControllerCreateMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  requestBody: CreateEmailTemplateDto;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  requestBody: CreateEmailTemplateDto;
+}, TContext>({ mutationFn: ({ requestBody }) => EmailTemplatesService.emailTemplateControllerCreate({ requestBody }) as unknown as Promise<TData>, ...options });
 export const useResourceGroupsServiceCreateOneResourceGroup = <TData = Common.ResourceGroupsServiceCreateOneResourceGroupMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   requestBody: CreateResourceGroupDto;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
@@ -353,6 +362,13 @@ export const useUsersServiceUpdatePermissions = <TData = Common.UsersServiceUpda
   id: number;
   requestBody: UpdateUserPermissionsDto;
 }, TContext>({ mutationFn: ({ id, requestBody }) => UsersService.updatePermissions({ id, requestBody }) as unknown as Promise<TData>, ...options });
+export const useEmailTemplatesServiceEmailTemplateControllerUpdate = <TData = Common.EmailTemplatesServiceEmailTemplateControllerUpdateMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  id: string;
+  requestBody: UpdateEmailTemplateDto;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  id: string;
+  requestBody: UpdateEmailTemplateDto;
+}, TContext>({ mutationFn: ({ id, requestBody }) => EmailTemplatesService.emailTemplateControllerUpdate({ id, requestBody }) as unknown as Promise<TData>, ...options });
 export const useResourceGroupsServiceUpdateOneResourceGroup = <TData = Common.ResourceGroupsServiceUpdateOneResourceGroupMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   id: number;
   requestBody: UpdateResourceGroupDto;
@@ -373,6 +389,11 @@ export const useSsoServiceDeleteOneSsoProvider = <TData = Common.SsoServiceDelet
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   id: number;
 }, TContext>({ mutationFn: ({ id }) => SsoService.deleteOneSsoProvider({ id }) as unknown as Promise<TData>, ...options });
+export const useEmailTemplatesServiceEmailTemplateControllerRemove = <TData = Common.EmailTemplatesServiceEmailTemplateControllerRemoveMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  id: string;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  id: string;
+}, TContext>({ mutationFn: ({ id }) => EmailTemplatesService.emailTemplateControllerRemove({ id }) as unknown as Promise<TData>, ...options });
 export const useResourceGroupsServiceDeleteOneResourceGroup = <TData = Common.ResourceGroupsServiceDeleteOneResourceGroupMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   id: number;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {

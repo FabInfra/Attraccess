@@ -319,6 +319,79 @@ export type UpdateSSOProviderDto = {
     oidcConfiguration?: UpdateOIDCConfigurationDto;
 };
 
+export type CreateEmailTemplateDto = {
+    /**
+     * Unique name for the template (e.g., verify-email, reset-password)
+     */
+    name: string;
+    /**
+     * Email subject line
+     */
+    subject: string;
+    /**
+     * Optional description for the template
+     */
+    description?: string;
+    /**
+     * MJML content of the email body
+     */
+    mjmlContent: string;
+};
+
+export type EmailTemplate = {
+    /**
+     * The unique identifier of the email template
+     */
+    id: string;
+    /**
+     * Unique internal name for the template
+     */
+    name: string;
+    /**
+     * Email subject line
+     */
+    subject: string;
+    /**
+     * Optional description for the template in the admin UI
+     */
+    description?: string;
+    /**
+     * MJML content of the email body
+     */
+    mjmlContent: string;
+    /**
+     * Compiled HTML content of the email body (auto-generated from MJML)
+     */
+    htmlContent: string;
+    /**
+     * Timestamp of when the template was created
+     */
+    createdAt: string;
+    /**
+     * Timestamp of when the template was last updated
+     */
+    updatedAt: string;
+};
+
+export type UpdateEmailTemplateDto = {
+    /**
+     * Unique name for the template (e.g., verify-email, reset-password)
+     */
+    name?: string;
+    /**
+     * Email subject line
+     */
+    subject?: string;
+    /**
+     * Optional description for the template
+     */
+    description?: string;
+    /**
+     * MJML content of the email body
+     */
+    mjmlContent?: string;
+};
+
 export type CreateResourceGroupDto = {
     name: string;
     description?: string;
@@ -1586,6 +1659,33 @@ export type OidcLoginCallbackData = {
 
 export type OidcLoginCallbackResponse = CreateSessionResponse;
 
+export type EmailTemplateControllerCreateData = {
+    requestBody: CreateEmailTemplateDto;
+};
+
+export type EmailTemplateControllerCreateResponse = EmailTemplate;
+
+export type EmailTemplateControllerFindAllResponse = Array<EmailTemplate>;
+
+export type EmailTemplateControllerFindOneData = {
+    id: string;
+};
+
+export type EmailTemplateControllerFindOneResponse = EmailTemplate;
+
+export type EmailTemplateControllerUpdateData = {
+    id: string;
+    requestBody: UpdateEmailTemplateDto;
+};
+
+export type EmailTemplateControllerUpdateResponse = EmailTemplate;
+
+export type EmailTemplateControllerRemoveData = {
+    id: string;
+};
+
+export type EmailTemplateControllerRemoveResponse = void;
+
 export type CreateOneResourceGroupData = {
     requestBody: CreateResourceGroupDto;
 };
@@ -2459,6 +2559,90 @@ export type $OpenApiTs = {
                  * The user has been logged in
                  */
                 200: CreateSessionResponse;
+            };
+        };
+    };
+    '/api/email-templates': {
+        post: {
+            req: EmailTemplateControllerCreateData;
+            res: {
+                /**
+                 * The template has been successfully created.
+                 */
+                201: EmailTemplate;
+                /**
+                 * Unauthorized
+                 */
+                401: unknown;
+                /**
+                 * Forbidden.
+                 */
+                403: unknown;
+            };
+        };
+        get: {
+            res: {
+                /**
+                 * List of email templates.
+                 */
+                200: Array<EmailTemplate>;
+                /**
+                 * Unauthorized
+                 */
+                401: unknown;
+            };
+        };
+    };
+    '/api/email-templates/{id}': {
+        get: {
+            req: EmailTemplateControllerFindOneData;
+            res: {
+                /**
+                 * The email template.
+                 */
+                200: EmailTemplate;
+                /**
+                 * Unauthorized
+                 */
+                401: unknown;
+                /**
+                 * Template not found.
+                 */
+                404: unknown;
+            };
+        };
+        patch: {
+            req: EmailTemplateControllerUpdateData;
+            res: {
+                /**
+                 * The template has been successfully updated.
+                 */
+                200: EmailTemplate;
+                /**
+                 * Unauthorized
+                 */
+                401: unknown;
+                /**
+                 * Template not found.
+                 */
+                404: unknown;
+            };
+        };
+        delete: {
+            req: EmailTemplateControllerRemoveData;
+            res: {
+                /**
+                 * The template has been successfully deleted.
+                 */
+                204: void;
+                /**
+                 * Unauthorized
+                 */
+                401: unknown;
+                /**
+                 * Template not found.
+                 */
+                404: unknown;
             };
         };
     };

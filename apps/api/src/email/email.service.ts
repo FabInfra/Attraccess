@@ -1,4 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { EmailTemplateService } from '../email-template/email-template.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import { User } from '@attraccess/database-entities';
@@ -14,7 +15,11 @@ export class EmailService {
   private readonly logger = new Logger(EmailService.name);
   private frontendUrl: string;
 
-  constructor(private readonly mailerService: MailerService, private readonly configService: ConfigService) {
+  constructor(
+    private readonly mailerService: MailerService,
+    private readonly configService: ConfigService,
+    private readonly emailTemplateService: EmailTemplateService,
+  ) {
     this.logger.debug('Initializing EmailService');
 
     this.loadTemplates();
@@ -69,24 +74,50 @@ export class EmailService {
     )}&token=${verificationToken}`;
     this.logger.debug(`Verification URL: ${verificationUrl}`);
 
-    const template = await this.getTemplate('verify-email');
-
-    const html = template({
+    let subject = 'Verify your email address';
+    let htmlContent: string;
+    const context = {
       username: user.username,
       verificationUrl,
       logoUrl: this.configService.get<string>(
         'app.logoUrl',
         'https://attraccess.fabinfra.dev/assets/logo_navbar-BhJ4pnsY.png'
-      ), // Using a default from a quick search, replace if a better one is configured
+      ),
       year: new Date().getFullYear(),
-    });
+    };
 
-    this.logger.debug(`Sending email to: ${user.email}`);
+    try {
+      const dbTemplate = await this.emailTemplateService.findOneByName('verify-email');
+      if (dbTemplate) {
+        this.logger.debug('Using verify-email template from database');
+        subject = dbTemplate.subject;
+        const compiledHtml = Handlebars.compile(dbTemplate.htmlContent);
+        htmlContent = compiledHtml(context);
+      } else {
+        this.logger.debug('verify-email template not found in DB, using static fallback.');
+        const staticTemplateCompiler = await this.getTemplate('verify-email');
+        htmlContent = staticTemplateCompiler(context);
+      }
+    } catch (error) {
+      this.logger.warn('Error fetching/compiling verify-email template (DB or static), attempting direct static MJML compilation.', error.stack);
+      try {
+        const mjmlOutput = mjml2html(VERIFY_EMAIL_MJML_TEMPLATE);
+        const staticHtmlCompiler = Handlebars.compile(mjmlOutput.html);
+        htmlContent = staticHtmlCompiler(context);
+      } catch (mjmlError) {
+        this.logger.error('CRITICAL: Failed to compile even the hardcoded MJML template for verify-email.', mjmlError.stack);
+        // As a last resort, send a plain text email or a very simple HTML
+        htmlContent = `Please verify your email by clicking this link: ${verificationUrl}`;
+        subject = 'Verify your email address (Fallback)';
+      }
+    }
+    
+    this.logger.debug(`Sending email to: ${user.email} with subject: ${subject}`);
     try {
       await this.mailerService.sendMail({
         to: user.email,
-        subject: 'Verify your email address',
-        html,
+        subject,
+        html: htmlContent,
       });
       this.logger.debug(`Verification email sent successfully to: ${user.email}`);
     } catch (error) {
@@ -100,9 +131,9 @@ export class EmailService {
     const resetUrl = `${this.frontendUrl}/reset-password?userId=${user.id}&token=${encodeURIComponent(resetToken)}`;
     this.logger.debug(`Reset URL: ${resetUrl}`);
 
-    const template = await this.getTemplate('reset-password');
-
-    const html = template({
+    let subject = 'Reset your password';
+    let htmlContent: string;
+    const context = {
       username: user.username,
       resetUrl,
       logoUrl: this.configService.get<string>(
@@ -110,14 +141,39 @@ export class EmailService {
         'https://attraccess.fabinfra.dev/assets/logo_navbar-BhJ4pnsY.png'
       ),
       year: new Date().getFullYear(),
-    });
+    };
 
-    this.logger.debug(`Sending reset email to: ${user.email}`);
+    try {
+      const dbTemplate = await this.emailTemplateService.findOneByName('reset-password');
+      if (dbTemplate) {
+        this.logger.debug('Using reset-password template from database');
+        subject = dbTemplate.subject;
+        const compiledHtml = Handlebars.compile(dbTemplate.htmlContent);
+        htmlContent = compiledHtml(context);
+      } else {
+        this.logger.debug('reset-password template not found in DB, using static fallback.');
+        const staticTemplateCompiler = await this.getTemplate('reset-password');
+        htmlContent = staticTemplateCompiler(context);
+      }
+    } catch (error) {
+      this.logger.warn('Error fetching/compiling reset-password template (DB or static), attempting direct static MJML compilation.', error.stack);
+      try {
+        const mjmlOutput = mjml2html(RESET_PASSWORD_MJML_TEMPLATE);
+        const staticHtmlCompiler = Handlebars.compile(mjmlOutput.html);
+        htmlContent = staticHtmlCompiler(context);
+      } catch (mjmlError) {
+        this.logger.error('CRITICAL: Failed to compile even the hardcoded MJML template for reset-password.', mjmlError.stack);
+        htmlContent = `Please reset your password by clicking this link: ${resetUrl}`;
+        subject = 'Reset your password (Fallback)';
+      }
+    }
+
+    this.logger.debug(`Sending reset email to: ${user.email} with subject: ${subject}`);
     try {
       await this.mailerService.sendMail({
         to: user.email,
-        subject: 'Reset your password',
-        html,
+        subject,
+        html: htmlContent,
       });
       this.logger.debug(`Password reset email sent successfully to: ${user.email}`);
     } catch (error) {

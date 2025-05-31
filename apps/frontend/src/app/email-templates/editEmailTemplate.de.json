@@ -1,0 +1,25 @@
+{
+  "title": "E-Mail-Vorlage bearbeiten",
+  "subtitle": "Ändern Sie Betreff, Beschreibung und MJML-Inhalt der Vorlage.",
+  "form": {
+    "subject": "Betreff",
+    "subjectPlaceholder": "E-Mail-Betreff eingeben",
+    "description": "Beschreibung",
+    "descriptionPlaceholder": "Kurze Beschreibung eingeben (optional)",
+    "mjmlContent": "MJML-Inhalt",
+    "mjmlContentPlaceholder": "MJML für den E-Mail-Textkörper eingeben",
+    "saveButton": "Änderungen speichern",
+    "cancelButton": "Abbrechen",
+    "saving": "Speichern..."
+  },
+  "notifications": {
+    "fetchError": "E-Mail-Vorlage konnte nicht geladen werden.",
+    "updateSuccess": "E-Mail-Vorlage erfolgreich aktualisiert!",
+    "updateError": "E-Mail-Vorlage konnte nicht aktualisiert werden.",
+    "missingIdError": "E-Mail-Vorlagen-ID fehlt in der URL. Weiterleitung...",
+    "mjmlPreviewError": "Fehler beim Generieren der MJML-Vorschau."
+  },
+  "loadingOrRedirecting": "Laden oder Weiterleiten...",
+  "loading": "Vorlagendaten werden geladen...",
+  "templateName": "Vorlagenname (ID)"
+}

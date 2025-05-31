@@ -15,6 +15,7 @@ import { Module } from '@nestjs/common';
 import { PluginModule } from '../plugin-system/plugin.module';
 import { FabReaderModule } from '../fabreader/fabreader.module';
 import { AnalyticsModule } from '../analytics/analytics.module';
+import { EmailTemplateModule } from '../email-template/email-template.module';
 
 @Module({
   imports: [
@@ -88,6 +89,7 @@ import { AnalyticsModule } from '../analytics/analytics.module';
     PluginModule.forRoot(),
     FabReaderModule,
     AnalyticsModule,
+    EmailTemplateModule,
   ],
   controllers: [AppController],
   providers: [AppService],

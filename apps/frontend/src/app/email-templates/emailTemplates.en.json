@@ -1,0 +1,13 @@
+{
+  "title": "Email Templates",
+  "subtitle": "Manage the email templates used by the system.",
+  "columns": {
+    "name": "Name",
+    "description": "Description",
+    "subject": "Subject",
+    "actions": "Actions"
+  },
+  "editButton": "Edit",
+  "noTemplates": "No email templates found.",
+  "loading": "Loading email templates..."
+}

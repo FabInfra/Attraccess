@@ -4,6 +4,7 @@
   "ssoProviders": "SSO Providers",
   "userManagement": "User Management",
   "plugins": "Plugins",
-  "csvExport": "CSV Export"
+  "csvExport": "CSV Export",
+  "emailTemplates": "Email Templates"
 }
 

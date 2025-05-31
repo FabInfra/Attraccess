@@ -1,4 +1,5 @@
 // Import entities
+import { EmailTemplate } from './email-template.entity';
 import { AuthenticationDetail } from './entities/authenticationDetail.entity';
 import { MqttResourceConfig } from './entities/mqttResourceConfig.entity';
 import { MqttServer } from './entities/mqttServer.entity';
@@ -42,6 +43,7 @@ export {
   WebhookConfig,
   NFCCard,
   FabReader,
+  EmailTemplate,
 };
 
 // Export the entities object
@@ -63,4 +65,5 @@ export const entities = {
   SSOProviderOIDCConfiguration,
   NFCCard,
   FabReader,
+  EmailTemplate,
 };

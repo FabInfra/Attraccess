@@ -1,7 +1,7 @@
 // generated with @7nohe/openapi-react-query-codegen@1.6.2 
 
 import { UseQueryResult } from "@tanstack/react-query";
-import { AnalyticsService, ApplicationService, AuthenticationService, FabReaderNfcCardsService, FabReaderReadersService, MqttResourceConfigurationService, MqttServersService, PluginService, ResourceGroupsService, ResourceIntroducersService, ResourceIntroductionsService, ResourceUsageService, ResourcesService, SseService, SsoService, UsersService, WebhooksService } from "../requests/services.gen";
+import { AnalyticsService, ApplicationService, AuthenticationService, EmailTemplatesService, FabReaderNfcCardsService, FabReaderReadersService, MqttResourceConfigurationService, MqttServersService, PluginService, ResourceGroupsService, ResourceIntroducersService, ResourceIntroductionsService, ResourceUsageService, ResourcesService, SseService, SsoService, UsersService, WebhooksService } from "../requests/services.gen";
 export type ApplicationServicePing2DefaultResponse = Awaited<ReturnType<typeof ApplicationService.ping2>>;
 export type ApplicationServicePing2QueryResult<TData = ApplicationServicePing2DefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useApplicationServicePing2Key = "ApplicationServicePing2";
@@ -66,6 +66,16 @@ export const UseSsoServiceOidcLoginCallbackKeyFn = ({ code, iss, providerId, red
   sessionState: unknown;
   state: unknown;
 }, queryKey?: Array<unknown>) => [useSsoServiceOidcLoginCallbackKey, ...(queryKey ?? [{ code, iss, providerId, redirectTo, sessionState, state }])];
+export type EmailTemplatesServiceEmailTemplateControllerFindAllDefaultResponse = Awaited<ReturnType<typeof EmailTemplatesService.emailTemplateControllerFindAll>>;
+export type EmailTemplatesServiceEmailTemplateControllerFindAllQueryResult<TData = EmailTemplatesServiceEmailTemplateControllerFindAllDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useEmailTemplatesServiceEmailTemplateControllerFindAllKey = "EmailTemplatesServiceEmailTemplateControllerFindAll";
+export const UseEmailTemplatesServiceEmailTemplateControllerFindAllKeyFn = (queryKey?: Array<unknown>) => [useEmailTemplatesServiceEmailTemplateControllerFindAllKey, ...(queryKey ?? [])];
+export type EmailTemplatesServiceEmailTemplateControllerFindOneDefaultResponse = Awaited<ReturnType<typeof EmailTemplatesService.emailTemplateControllerFindOne>>;
+export type EmailTemplatesServiceEmailTemplateControllerFindOneQueryResult<TData = EmailTemplatesServiceEmailTemplateControllerFindOneDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useEmailTemplatesServiceEmailTemplateControllerFindOneKey = "EmailTemplatesServiceEmailTemplateControllerFindOne";
+export const UseEmailTemplatesServiceEmailTemplateControllerFindOneKeyFn = ({ id }: {
+  id: string;
+}, queryKey?: Array<unknown>) => [useEmailTemplatesServiceEmailTemplateControllerFindOneKey, ...(queryKey ?? [{ id }])];
 export type ResourceGroupsServiceGetAllResourceGroupsDefaultResponse = Awaited<ReturnType<typeof ResourceGroupsService.getAllResourceGroups>>;
 export type ResourceGroupsServiceGetAllResourceGroupsQueryResult<TData = ResourceGroupsServiceGetAllResourceGroupsDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useResourceGroupsServiceGetAllResourceGroupsKey = "ResourceGroupsServiceGetAllResourceGroups";
@@ -255,6 +265,7 @@ export type UsersServiceChangePasswordViaResetTokenMutationResult = Awaited<Retu
 export type UsersServiceBulkUpdatePermissionsMutationResult = Awaited<ReturnType<typeof UsersService.bulkUpdatePermissions>>;
 export type AuthenticationServiceCreateSessionMutationResult = Awaited<ReturnType<typeof AuthenticationService.createSession>>;
 export type SsoServiceCreateOneSsoProviderMutationResult = Awaited<ReturnType<typeof SsoService.createOneSsoProvider>>;
+export type EmailTemplatesServiceEmailTemplateControllerCreateMutationResult = Awaited<ReturnType<typeof EmailTemplatesService.emailTemplateControllerCreate>>;
 export type ResourceGroupsServiceCreateOneResourceGroupMutationResult = Awaited<ReturnType<typeof ResourceGroupsService.createOneResourceGroup>>;
 export type ResourcesServiceCreateOneResourceMutationResult = Awaited<ReturnType<typeof ResourcesService.createOneResource>>;
 export type ResourcesServiceAddResourceToGroupMutationResult = Awaited<ReturnType<typeof ResourcesService.addResourceToGroup>>;
@@ -282,10 +293,12 @@ export type WebhooksServiceUpdateOneWebhookConfigurationMutationResult = Awaited
 export type WebhooksServiceUpdateStatusMutationResult = Awaited<ReturnType<typeof WebhooksService.updateStatus>>;
 export type MqttResourceConfigurationServiceUpdateMqttConfigurationMutationResult = Awaited<ReturnType<typeof MqttResourceConfigurationService.updateMqttConfiguration>>;
 export type UsersServiceUpdatePermissionsMutationResult = Awaited<ReturnType<typeof UsersService.updatePermissions>>;
+export type EmailTemplatesServiceEmailTemplateControllerUpdateMutationResult = Awaited<ReturnType<typeof EmailTemplatesService.emailTemplateControllerUpdate>>;
 export type ResourceGroupsServiceUpdateOneResourceGroupMutationResult = Awaited<ReturnType<typeof ResourceGroupsService.updateOneResourceGroup>>;
 export type FabReaderReadersServiceUpdateReaderMutationResult = Awaited<ReturnType<typeof FabReaderReadersService.updateReader>>;
 export type AuthenticationServiceEndSessionMutationResult = Awaited<ReturnType<typeof AuthenticationService.endSession>>;
 export type SsoServiceDeleteOneSsoProviderMutationResult = Awaited<ReturnType<typeof SsoService.deleteOneSsoProvider>>;
+export type EmailTemplatesServiceEmailTemplateControllerRemoveMutationResult = Awaited<ReturnType<typeof EmailTemplatesService.emailTemplateControllerRemove>>;
 export type ResourceGroupsServiceDeleteOneResourceGroupMutationResult = Awaited<ReturnType<typeof ResourceGroupsService.deleteOneResourceGroup>>;
 export type ResourcesServiceDeleteOneResourceMutationResult = Awaited<ReturnType<typeof ResourcesService.deleteOneResource>>;
 export type ResourcesServiceRemoveResourceFromGroupMutationResult = Awaited<ReturnType<typeof ResourcesService.removeResourceFromGroup>>;
