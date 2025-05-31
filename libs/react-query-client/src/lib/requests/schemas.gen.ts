@@ -2085,6 +2085,36 @@ export const $AppKeyResponseDto = {
     required: ['key']
 } as const;
 
+export const $SetNfcCardDisabledDto = {
+    type: 'object',
+    properties: {
+        cardId: {
+            type: 'number',
+            description: 'The ID of the NFC card to update disabled status'
+        },
+        isDisabled: {
+            type: 'boolean',
+            description: 'Whether the NFC card should be disabled'
+        }
+    },
+    required: ['cardId', 'isDisabled']
+} as const;
+
+export const $SetNfcCardDisabledResponseDto = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'number',
+            description: 'The ID of the NFC card'
+        },
+        isDisabled: {
+            type: 'boolean',
+            description: 'Whether the NFC card is now disabled'
+        }
+    },
+    required: ['id', 'isDisabled']
+} as const;
+
 export const $NFCCard = {
     type: 'object',
     properties: {
@@ -2100,6 +2130,10 @@ export const $NFCCard = {
             type: 'number',
             description: 'The ID of the user that owns the NFC card'
         },
+        isDisabled: {
+            type: 'boolean',
+            description: 'Whether the NFC card is temporarily disabled'
+        },
         createdAt: {
             format: 'date-time',
             type: 'string',
@@ -2111,5 +2145,5 @@ export const $NFCCard = {
             description: 'The date and time the NFC card was last updated'
         }
     },
-    required: ['id', 'uid', 'userId', 'createdAt', 'updatedAt']
+    required: ['id', 'uid', 'userId', 'isDisabled', 'createdAt', 'updatedAt']
 } as const;

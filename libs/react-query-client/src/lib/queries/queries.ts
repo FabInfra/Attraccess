@@ -2,7 +2,7 @@
 
 import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
 import { AnalyticsService, ApplicationService, AuthenticationService, FabReaderNfcCardsService, FabReaderReadersService, MqttResourceConfigurationService, MqttServersService, PluginService, ResourceGroupsService, ResourceIntroducersService, ResourceIntroductionsService, ResourceUsageService, ResourcesService, SseService, SsoService, UsersService, WebhooksService } from "../requests/services.gen";
-import { AppKeyRequestDto, BulkUpdateUserPermissionsDto, ChangePasswordDto, CompleteIntroductionDto, CreateMqttResourceConfigDto, CreateMqttServerDto, CreateResourceDto, CreateResourceGroupDto, CreateSSOProviderDto, CreateUserDto, CreateWebhookConfigDto, EndUsageSessionDto, EnrollNfcCardDto, ResetNfcCardDto, ResetPasswordDto, RevokeIntroductionDto, StartUsageSessionDto, UnrevokeIntroductionDto, UpdateMqttResourceConfigDto, UpdateMqttServerDto, UpdateReaderDto, UpdateResourceDto, UpdateResourceGroupDto, UpdateSSOProviderDto, UpdateUserPermissionsDto, UpdateWebhookConfigDto, UploadPluginDto, VerifyEmailDto, WebhookStatusDto } from "../requests/types.gen";
+import { AppKeyRequestDto, BulkUpdateUserPermissionsDto, ChangePasswordDto, CompleteIntroductionDto, CreateMqttResourceConfigDto, CreateMqttServerDto, CreateResourceDto, CreateResourceGroupDto, CreateSSOProviderDto, CreateUserDto, CreateWebhookConfigDto, EndUsageSessionDto, EnrollNfcCardDto, ResetNfcCardDto, ResetPasswordDto, RevokeIntroductionDto, SetNfcCardDisabledDto, StartUsageSessionDto, UnrevokeIntroductionDto, UpdateMqttResourceConfigDto, UpdateMqttServerDto, UpdateReaderDto, UpdateResourceDto, UpdateResourceGroupDto, UpdateSSOProviderDto, UpdateUserPermissionsDto, UpdateWebhookConfigDto, UploadPluginDto, VerifyEmailDto, WebhookStatusDto } from "../requests/types.gen";
 import * as Common from "./common";
 export const useApplicationServicePing2 = <TData = Common.ApplicationServicePing2DefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseApplicationServicePing2KeyFn(queryKey), queryFn: () => ApplicationService.ping2() as TData, ...options });
 export const useUsersServiceGetAllUsers = <TData = Common.UsersServiceGetAllUsersDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ limit, page, search }: {
@@ -291,6 +291,11 @@ export const useFabReaderNfcCardsServiceGetAppKeyByUid = <TData = Common.FabRead
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   requestBody: AppKeyRequestDto;
 }, TContext>({ mutationFn: ({ requestBody }) => FabReaderNfcCardsService.getAppKeyByUid({ requestBody }) as unknown as Promise<TData>, ...options });
+export const useFabReaderNfcCardsServiceSetCardDisabled = <TData = Common.FabReaderNfcCardsServiceSetCardDisabledMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  requestBody: SetNfcCardDisabledDto;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  requestBody: SetNfcCardDisabledDto;
+}, TContext>({ mutationFn: ({ requestBody }) => FabReaderNfcCardsService.setCardDisabled({ requestBody }) as unknown as Promise<TData>, ...options });
 export const useSsoServiceUpdateOneSsoProvider = <TData = Common.SsoServiceUpdateOneSsoProviderMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   id: number;
   requestBody: UpdateSSOProviderDto;

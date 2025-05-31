@@ -14,6 +14,7 @@ import {
   ModalFooter,
   ModalContent,
   Alert,
+  Chip,
 } from '@heroui/react';
 import { Card } from '@heroui/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -24,6 +25,7 @@ import {
   useFabReaderReadersServiceResetNfcCard,
   useUsersServiceGetOneUserById,
   useFabReaderReadersServiceEnrollNfcCard,
+  useFabReaderNfcCardsServiceSetCardDisabled,
 } from '@attraccess/react-query-client';
 import de from './NfcCardList.de.json';
 import en from './NfcCardList.en.json';
@@ -85,6 +87,7 @@ interface NfcCardTableCellProps {
   header: string;
   card: NFCCard;
   onDeleteClick: () => void;
+  onToggleDisabled: () => void;
 }
 
 const NfcCardTableCell = (props: NfcCardTableCellProps) => {
@@ -101,10 +104,26 @@ const NfcCardTableCell = (props: NfcCardTableCellProps) => {
     return <AttraccessUser user={user} />;
   }
 
+  if (props.header === 'isDisabled') {
+    return (
+      <Chip color={props.card.isDisabled ? 'danger' : 'success'}>
+        {props.card.isDisabled ? t('nfcCardsTable.status.disabled') : t('nfcCardsTable.status.enabled')}
+      </Chip>
+    );
+  }
+
   if (props.header === 'actions') {
     return (
-      <div>
-        <Button onPress={() => props.onDeleteClick()}>{t('nfcCardsTable.actions.delete')}</Button>
+      <div className="flex gap-2">
+        <Button 
+          color={props.card.isDisabled ? 'success' : 'warning'} 
+          onPress={() => props.onToggleDisabled()}
+        >
+          {props.card.isDisabled ? t('nfcCardsTable.actions.enable') : t('nfcCardsTable.actions.disable')}
+        </Button>
+        <Button color="danger" onPress={() => props.onDeleteClick()}>
+          {t('nfcCardsTable.actions.delete')}
+        </Button>
       </div>
     );
   }
@@ -168,13 +187,31 @@ export function NfcCardList() {
     en,
   });
 
-  const { data: cards, error: cardsError } = useFabReaderNfcCardsServiceGetAllCards(undefined, {
+  const { data: cards, error: cardsError, refetch: refetchCards } = useFabReaderNfcCardsServiceGetAllCards(undefined, {
     refetchInterval: 5000,
   });
 
   const toast = useToastMessage();
 
   const { user } = useAuth();
+
+  const { mutate: setCardDisabled } = useFabReaderNfcCardsServiceSetCardDisabled({
+    onSuccess: (data) => {
+      toast.success({
+        title: t('cardStatusUpdated'),
+        description: data.isDisabled 
+          ? t('cardDisabledSuccess', { id: data.id }) 
+          : t('cardEnabledSuccess', { id: data.id }),
+      });
+      refetchCards();
+    },
+    onError: (error) => {
+      toast.error({
+        title: t('errorUpdateCardStatus'),
+        description: (error as Error).message,
+      });
+    },
+  });
 
   useEffect(() => {
     if (cardsError) {
@@ -190,7 +227,7 @@ export function NfcCardList() {
   }, [user]);
 
   const headers = useMemo(() => {
-    const headers: Array<keyof NFCCard | 'actions'> = ['id', 'uid'];
+    const headers: Array<keyof NFCCard | 'actions'> = ['id', 'uid', 'isDisabled'];
     if (userCanManage) {
       headers.push('userId');
     }
@@ -201,6 +238,10 @@ export function NfcCardList() {
   }, [userCanManage]);
 
   const [cardToDeleteId, setCardToDeleteId] = useState<number | null>(null);
+
+  const handleSetDisabled = useCallback((cardId: number, isDisabled: boolean) => {
+    setCardDisabled({ requestBody: { cardId, isDisabled } });
+  }, [setCardDisabled]);
 
   return (
     <>
@@ -228,7 +269,12 @@ export function NfcCardList() {
                 <TableRow key={card.id}>
                   {headers.map((header) => (
                     <TableCell key={header}>
-                      <NfcCardTableCell header={header} card={card} onDeleteClick={() => setCardToDeleteId(card.id)} />
+                      <NfcCardTableCell 
+                        header={header} 
+                        card={card} 
+                        onDeleteClick={() => setCardToDeleteId(card.id)}
+                        onToggleDisabled={() => handleSetDisabled(card.id, !card.isDisabled)}
+                      />
                     </TableCell>
                   ))}
                 </TableRow>

@@ -53,6 +53,24 @@ export class FabreaderService {
     return await this.nfcCardRepository.delete(id);
   }
 
+  public async setNFCCardDisabledStatus(id: number, userId: number, isDisabled: boolean): Promise<NFCCard> {
+    const card = await this.getNFCCardByID(id);
+    
+    if (!card) {
+      throw new Error(`NFC Card with ID ${id} not found`);
+    }
+    
+    // Check if the user owns the card or has admin permissions
+    if (card.userId !== userId) {
+      throw new Error('You do not have permission to modify this card');
+    }
+    
+    // Set the disabled status directly
+    card.isDisabled = isDisabled;
+    
+    return await this.nfcCardRepository.save(card);
+  }
+
   public async createNewReader(): Promise<{ reader: FabReader; token: string }> {
     const token = nanoid(16);
     const apiTokenHash = await securelyHashToken(token);

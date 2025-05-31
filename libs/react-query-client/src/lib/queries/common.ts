@@ -274,6 +274,7 @@ export type PluginServiceUploadPluginMutationResult = Awaited<ReturnType<typeof 
 export type FabReaderReadersServiceEnrollNfcCardMutationResult = Awaited<ReturnType<typeof FabReaderReadersService.enrollNfcCard>>;
 export type FabReaderReadersServiceResetNfcCardMutationResult = Awaited<ReturnType<typeof FabReaderReadersService.resetNfcCard>>;
 export type FabReaderNfcCardsServiceGetAppKeyByUidMutationResult = Awaited<ReturnType<typeof FabReaderNfcCardsService.getAppKeyByUid>>;
+export type FabReaderNfcCardsServiceSetCardDisabledMutationResult = Awaited<ReturnType<typeof FabReaderNfcCardsService.setCardDisabled>>;
 export type SsoServiceUpdateOneSsoProviderMutationResult = Awaited<ReturnType<typeof SsoService.updateOneSsoProvider>>;
 export type ResourcesServiceUpdateOneResourceMutationResult = Awaited<ReturnType<typeof ResourcesService.updateOneResource>>;
 export type ResourceUsageServiceEndSessionMutationResult = Awaited<ReturnType<typeof ResourceUsageService.endSession>>;

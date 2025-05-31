@@ -5,6 +5,8 @@ import { ApiOperation, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
 import { FabreaderService } from './fabreader.service';
 import { AppKeyRequestDto } from './dtos/app-key-request.dto';
 import { AppKeyResponseDto } from './dtos/app-key-response.dto';
+import { SetNfcCardDisabledDto } from './dtos/set-nfc-card-disabled.dto';
+import { SetNfcCardDisabledResponseDto } from './dtos/set-nfc-card-disabled-response.dto';
 
 @ApiTags('FabReader NFC Cards')
 @Controller('fabreader/cards')
@@ -33,6 +35,31 @@ export class FabReaderNfcCardsController {
 
     return {
       key: this.fabreaderService.uint8ArrayToHexString(key),
+    };
+  }
+
+  @Post('set-disabled')
+  @Auth()
+  @ApiOperation({ summary: 'Set the disabled status of a card', operationId: 'setCardDisabled' })
+  @ApiBody({ type: SetNfcCardDisabledDto })
+  @ApiResponse({
+    status: 200,
+    description: 'The updated card status',
+    type: SetNfcCardDisabledResponseDto,
+  })
+  async setCardDisabled(
+    @Body() request: SetNfcCardDisabledDto,
+    @Req() req: AuthenticatedRequest
+  ): Promise<SetNfcCardDisabledResponseDto> {
+    const updatedCard = await this.fabreaderService.setNFCCardDisabledStatus(
+      request.cardId,
+      req.user.id,
+      request.isDisabled
+    );
+
+    return {
+      id: updatedCard.id,
+      isDisabled: updatedCard.isDisabled,
     };
   }
 

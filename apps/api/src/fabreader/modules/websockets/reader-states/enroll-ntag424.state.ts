@@ -162,6 +162,7 @@ export class EnrollNTAG424State implements ReaderState {
     const nfcCard = await this.services.fabreaderService.createNFCCard({
       uid: this.enrollment.cardUID,
       userId: this.userId,
+      isDisabled: false,
       keys: {
         [this.KEY_ZERO_MASTER]: this.enrollment.data.newKeys[this.KEY_ZERO_MASTER],
       },
