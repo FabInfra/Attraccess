@@ -30,38 +30,53 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Download existing site if available
-        run: |
-          echo "Downloading existing site if available..."
-          mkdir -p ./_site
-
-          # Try to download the current site, but don't fail if it doesn't exist
-          curl -s -f -o site.tar.gz "https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/site.tar.gz" || echo "No existing site archive found, starting fresh"
-
-          # Only try to extract if the file exists and has content
-          if [ -f "site.tar.gz" ] && [ -s "site.tar.gz" ]; then
-            # Check if it's a valid gzip file before extracting
-            if file site.tar.gz | grep -q "gzip compressed data"; then
-              echo "Valid archive found, extracting..."
-              tar -xzf site.tar.gz -C ./_site || echo "Extraction failed, continuing with empty site"
-            else
-              echo "Downloaded file is not a valid gzip archive, starting fresh"
-            fi
-          else
-            echo "No valid archive found, starting with a fresh site"
-          fi
-
       - name: Prepare site for deployment
         run: |
-          # Ensure firmware directory exists
-          mkdir -p ./_site/firmware
+          # Create the main staging directory for the new site
+          mkdir -p ./staging_site
 
-          # Copy docs to site root
-          cp -R docs/* ./_site/
+          # --- Download and preserve existing non-docs/non-index content ---
+          echo "Downloading existing site to preserve other files..."
+          mkdir -p ./current_live_site
+          DOWNLOAD_SUCCESS=false
+          if curl -s -f -o site.tar.gz "https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/site.tar.gz"; then
+            if file site.tar.gz | grep -q "gzip compressed data"; then
+              if tar -xzf site.tar.gz -C ./current_live_site; then
+                echo "Successfully downloaded and extracted existing site."
+                DOWNLOAD_SUCCESS=true
+                # Copy existing files/dirs from current_live_site to staging_site,
+                # excluding 'docs' directory and 'index.html' at the root.
+                echo "Copying preserved files from current site to staging area..."
+                find ./current_live_site -mindepth 1 -maxdepth 1 ! -name 'docs' ! -name 'index.html' -exec cp -R {} ./staging_site/ \;
+              else
+                echo "Extraction of existing site failed."
+              fi
+            else
+              echo "Downloaded site.tar.gz is not a valid gzip archive."
+            fi
+          else
+            echo "No existing site archive found or download failed."
+          fi
+          if [ "$DOWNLOAD_SUCCESS" = false ]; then
+              echo "Proceeding without preserving files from a previous deployment."
+          fi
+          # --- End of preservation ---
 
-          # Keep existing _headers file or create if it doesn't exist
-          if [ ! -f "./_site/_headers" ]; then
-            cat > ./_site/_headers << EOL
+          # Ensure essential directories like 'firmware' are explicitly created in staging_site
+          # if they weren't copied from a previous deployment or if they are always needed.
+          mkdir -p ./staging_site/firmware
+
+          # Ensure the /docs directory exists in staging_site
+          mkdir -p ./staging_site/docs
+
+          # Copy new docs content to staging_site/docs/
+          echo "Copying new documentation content..."
+          cp -R docs/* ./staging_site/docs/
+
+          # Create _headers file in staging_site/docs/ if it doesn't exist from 'docs/*'
+          if [ ! -f "./staging_site/docs/_headers" ]; then
+            echo "Creating _headers file in staging_site/docs/..."
+            cat > ./staging_site/docs/_headers << EOL
           /*
             Access-Control-Allow-Origin: *
             Access-Control-Allow-Methods: GET, OPTIONS
@@ -69,77 +84,30 @@ jobs:
           EOL
           fi
 
-          # Create or update the index.html file if not present in docs
-          if [ ! -f "./_site/index.html" ]; then
-            cat > ./_site/index.html << EOL
+          # Create the root index.html that redirects to /docs/
+          echo "Creating root redirect index.html..."
+          cat > ./staging_site/index.html << EOL
           <!DOCTYPE html>
-          <html lang="en">
+          <html>
           <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Attraccess Documentation</title>
-            <style>
-              body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 2rem; }
-              header { margin-bottom: 2rem; }
-              h1 { color: #333; }
-              .card { border: 1px solid #ddd; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-              .btn { display: inline-block; background-color: #0066cc; color: white; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; margin-top: 1rem; }
-              .btn:hover { background-color: #0052a3; }
-              .section { margin-bottom: 2rem; }
-              footer { margin-top: 3rem; border-top: 1px solid #eee; padding-top: 1rem; color: #666; font-size: 0.9rem; }
-            </style>
+              <meta charset="utf-8">
+              <title>Redirecting to Documentation</title>
+              <meta http-equiv="refresh" content="0; url=./docs/">
+              <link rel="canonical" href="./docs/">
           </head>
           <body>
-            <header>
-              <h1>Attraccess Documentation</h1>
-              <p>Welcome to the Attraccess project documentation.</p>
-            </header>
-            
-            <div class="section">
-              <h2>Documentation</h2>
-              <div class="card">
-                <h3>User Guides</h3>
-                <p>User guides and tutorials for using the Attraccess system.</p>
-                <a href="user/" class="btn">View User Docs</a>
-              </div>
-              
-              <div class="card">
-                <h3>Developer Documentation</h3>
-                <p>Technical documentation for developers working with the Attraccess codebase.</p>
-                <a href="developer/" class="btn">View Developer Docs</a>
-              </div>
-              
-              <div class="card">
-                <h3>Setup Instructions</h3>
-                <p>Instructions for setting up and configuring the Attraccess system.</p>
-                <a href="setup/" class="btn">View Setup Guides</a>
-              </div>
-            </div>
-            
-            <div class="section">
-              <h2>Tools</h2>
-              <div class="card">
-                <h3>Fabreader Firmware Installer</h3>
-                <p>Install or update the firmware on your Fabreader device directly from your web browser.</p>
-                <a href="firmware/" class="btn">Open Firmware Installer</a>
-              </div>
-            </div>
-            
-            <footer>
-              <p>Attraccess Project - Generated on $(date)</p>
-            </footer>
+              <p>If you are not redirected automatically, follow this <a href="./docs/">link to the documentation</a>.</p>
           </body>
           </html>
           EOL
-          fi
 
-          # Create a tarball of the site for future workflows to reference
-          tar -czf ./_site/site.tar.gz -C ./_site .
+          # The artifact upload will now use ./staging_site.
+          # No need to create a tarball here unless specifically needed for other purposes.
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './_site'
+          path: './staging_site'
 
       - name: Deploy to GitHub Pages
         id: deployment
