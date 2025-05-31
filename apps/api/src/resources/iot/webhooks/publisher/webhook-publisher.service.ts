@@ -6,6 +6,7 @@ import { WebhookConfig, Resource } from '@attraccess/database-entities';
 import {
   ResourceUsageStartedEvent,
   ResourceUsageEndedEvent,
+  ResourceUsageTakenOverEvent,
 } from '../../../../resources/usage/events/resource-usage.events';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosRequestConfig, AxiosError } from 'axios';
@@ -269,6 +270,9 @@ export class WebhookPublisherService {
 
       // Process webhooks
       for (const webhook of webhooks) {
+        if (!webhook.sendOnStart) {
+          continue;
+        }
         try {
           // Process template
           const payload = this.iotService.processTemplate(webhook.inUseTemplate, context);
@@ -352,6 +356,9 @@ export class WebhookPublisherService {
 
       // Process webhooks
       for (const webhook of webhooks) {
+        if (!webhook.sendOnStop) {
+          continue;
+        }
         try {
           // Process template
           const payload = this.iotService.processTemplate(webhook.notInUseTemplate, context);
@@ -506,4 +513,87 @@ export class WebhookPublisherService {
       }
     }
   }
+
+  @OnEvent('resource.usage.taken_over')
+  async handleResourceUsageTakenOver(event: ResourceUsageTakenOverEvent) {
+    try {
+      const { resourceId, takeoverTime, newUser, previousUser } = event;
+
+      const webhooks = await this.webhookConfigRepository.find({
+        where: { resourceId, active: true },
+      });
+
+      if (webhooks.length === 0) {
+        return;
+      }
+
+      const resource = await this.resourceRepository.findOne({
+        where: { id: resourceId },
+      });
+
+      if (!resource) {
+        this.logger.warn(`Cannot send webhooks for non-existent resource ${resourceId}`);
+        return;
+      }
+
+      const context: TemplateContext = {
+        id: resource.id,
+        name: resource.name,
+        timestamp: takeoverTime.toISOString(),
+        user: {
+          id: newUser.id,
+          username: newUser.username,
+        },
+        previousUser: previousUser
+          ? {
+              id: previousUser.id,
+              username: previousUser.username,
+            }
+          : null,
+      };
+
+      for (const webhook of webhooks) {
+        if (!webhook.sendOnTakeover || !webhook.takeoverTemplate) {
+          continue;
+        }
+
+        try {
+          const payload = this.iotService.processTemplate(webhook.takeoverTemplate, context);
+          const processedUrl = this.processUrlTemplate(webhook.url, context);
+
+          let headers: Record<string, string> = {};
+          if (webhook.headers) {
+            try {
+              headers = JSON.parse(webhook.headers);
+              headers = this.processHeaderTemplates(headers, context);
+            } catch (error) {
+              this.logger.warn(`Invalid headers JSON for webhook ${webhook.id}: ${error.message}`);
+            }
+          }
+
+          await this.queueWebhook(
+            webhook.id,
+            resourceId,
+            processedUrl,
+            webhook.method,
+            headers,
+            payload,
+            webhook.retryEnabled,
+            webhook.maxRetries,
+            webhook.retryDelay,
+            webhook.secret,
+            webhook.signatureHeader
+          );
+        } catch (error) {
+          this.logger.error(
+            `Error processing takeover webhook ${webhook.id} for resource ${resourceId}: ${error.message}`,
+            error.stack
+          );
+        }
+      }
+    } catch (error) {
+      this.logger.error(`Error handling resource.usage.taken_over event: ${error.message}`, error.stack);
+    }
+  }
+
 }

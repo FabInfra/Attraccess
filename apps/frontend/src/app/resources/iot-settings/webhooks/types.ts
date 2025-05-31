@@ -17,7 +17,11 @@ export interface WebhookFormValues {
   headers: string;
   inUseTemplate: string;
   notInUseTemplate: string;
+  takeoverTemplate: string; // Added
   active: boolean;
+  sendOnStart: boolean; // Added
+  sendOnStop: boolean; // Added
+  sendOnTakeover: boolean; // Added
   retryEnabled: boolean;
   maxRetries: number;
   retryDelay: number;
@@ -40,7 +44,11 @@ export const defaultFormValues: WebhookFormValues = {
   headers: '{}',
   inUseTemplate: exampleTemplates.inUse,
   notInUseTemplate: exampleTemplates.notInUse,
+  takeoverTemplate: '{"status": "taken_over", "resourceId": {{id}}, "resourceName": "{{name}}", "timestamp": "{{timestamp}}", "newUser": "{{user.username}}", "previousUser": "{{previousUser.username}}"}', // Added
   active: true,
+  sendOnStart: true, // Added
+  sendOnStop: true, // Added
+  sendOnTakeover: false, // Added
   retryEnabled: false,
   maxRetries: 3,
   retryDelay: 1000,
@@ -61,6 +69,12 @@ export const templateVariables = [
     name: 'user.username',
     description: 'Username (if available)',
     example: 'johndoe',
+  },
+  { name: 'previousUser.id', description: 'Previous User ID (if available, on takeover)', example: '456' },
+  {
+    name: 'previousUser.username',
+    description: 'Previous Username (if available, on takeover)',
+    example: 'janedoe',
   },
 ];
 
@@ -93,7 +107,11 @@ export const webhookToFormValues = (
     headers: parsedHeaders,
     inUseTemplate: webhook.inUseTemplate,
     notInUseTemplate: webhook.notInUseTemplate,
+    takeoverTemplate: webhook.takeoverTemplate || defaultFormValues.takeoverTemplate, // Added
     active: webhook.active,
+    sendOnStart: webhook.sendOnStart === undefined ? true : webhook.sendOnStart, // Added, default true
+    sendOnStop: webhook.sendOnStop === undefined ? true : webhook.sendOnStop, // Added, default true
+    sendOnTakeover: webhook.sendOnTakeover === undefined ? false : webhook.sendOnTakeover, // Added, default false
     retryEnabled: webhook.retryEnabled,
     maxRetries: webhook.maxRetries,
     retryDelay: webhook.retryDelay,

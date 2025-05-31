@@ -25,6 +25,11 @@ describe('MqttPublisherService', () => {
     notInUseTopic: 'resources/{{id}}/status',
     notInUseMessage: '{"status":"not_in_use","resourceId":{{id}},"resourceName":"{{name}}"}',
     server: { id: 2, name: 'Test Server' },
+    sendOnStart: true,
+    sendOnStop: true,
+    sendOnTakeover: false,
+    takeoverTopic: 'resources/{{id}}/takeover',
+    takeoverMessage: '{"status":"takeover"}',
   };
 
   const mockConfig2 = {
@@ -35,6 +40,11 @@ describe('MqttPublisherService', () => {
     notInUseTopic: 'devices/{{id}}/status',
     notInUseMessage: '{"state":"inactive","id":{{id}},"name":"{{name}}"}',
     server: { id: 3, name: 'Second Test Server' },
+    sendOnStart: true,
+    sendOnStop: true,
+    sendOnTakeover: false,
+    takeoverTopic: 'devices/{{id}}/takeover',
+    takeoverMessage: '{"status":"takeover"}',
   };
 
   const mockResource = {

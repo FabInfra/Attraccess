@@ -1,4 +1,5 @@
-import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsBoolean, IsOptional } from 'class-validator';
+import { ToBoolean } from '../../../../../common/request-transformers';
 import { PartialType } from '@nestjs/swagger';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -53,6 +54,57 @@ export class CreateMqttResourceConfigDto {
     example: '{"status":"not_in_use","resourceId":{{id}},"resourceName":"{{name}}"}',
   })
   notInUseMessage!: string;
+
+  @ApiProperty({
+    description: 'Whether to send an MQTT message when a resource usage starts',
+    example: true,
+    required: false,
+    default: true,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @ToBoolean()
+  sendOnStart?: boolean = true;
+
+  @ApiProperty({
+    description: 'Whether to send an MQTT message when a resource usage stops',
+    example: true,
+    required: false,
+    default: true,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @ToBoolean()
+  sendOnStop?: boolean = true;
+
+  @ApiProperty({
+    description: 'Whether to send an MQTT message when a resource usage is taken over',
+    example: false,
+    required: false,
+    default: false,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @ToBoolean()
+  sendOnTakeover?: boolean = false;
+
+  @ApiProperty({
+    description: 'Topic template for when resource usage is taken over',
+    example: 'resources/{{id}}/status',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  takeoverTopic?: string;
+
+  @ApiProperty({
+    description: 'Message template for when resource usage is taken over',
+    example: '{"status": "taken_over", "resourceId": "{{id}}", "newUser": "{{user.name}}", "previousUser": "{{previousUser.name}}", "timestamp": "{{timestamp}}"}',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  takeoverMessage?: string;
 }
 
 /**

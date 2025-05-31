@@ -133,6 +133,8 @@ export class MqttResourceConfigController {
         Handlebars.compile(config.inUseMessage);
         Handlebars.compile(config.notInUseTopic);
         Handlebars.compile(config.notInUseMessage);
+        if (config.takeoverTopic) Handlebars.compile(config.takeoverTopic);
+        if (config.takeoverMessage) Handlebars.compile(config.takeoverMessage);
 
         return {
           success: true,

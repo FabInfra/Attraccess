@@ -113,6 +113,35 @@ export class WebhookConfig {
   })
   signatureHeader!: string;
 
+  @Column({ default: true, type: 'boolean' })
+  @ApiProperty({
+    description: 'Whether to send a webhook when a resource usage starts',
+    example: true,
+  })
+  sendOnStart!: boolean;
+
+  @Column({ default: true, type: 'boolean' })
+  @ApiProperty({
+    description: 'Whether to send a webhook when a resource usage stops',
+    example: true,
+  })
+  sendOnStop!: boolean;
+
+  @Column({ default: false, type: 'boolean' })
+  @ApiProperty({
+    description: 'Whether to send a webhook when a resource usage is taken over',
+    example: false,
+  })
+  sendOnTakeover!: boolean;
+
+  @Column({ type: 'text', nullable: true })
+  @ApiProperty({
+    description: 'Template for payload when resource usage is taken over',
+    example: '{"status": "taken_over", "resource": "{{name}}", "newUser": "{{user.name}}", "previousUser": "{{previousUser.name}}", "timestamp": "{{timestamp}}"}',
+    required: false,
+  })
+  takeoverTemplate!: string | null;
+
   @CreateDateColumn()
   @ApiProperty({
     description: 'When the webhook configuration was created',

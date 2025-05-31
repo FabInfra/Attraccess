@@ -1058,6 +1058,26 @@ export interface WebhookConfigResponseDto {
    */
   signatureHeader: string;
   /**
+   * Whether to send a webhook when a resource usage starts
+   * @example true
+   */
+  sendOnStart: boolean;
+  /**
+   * Whether to send a webhook when a resource usage stops
+   * @example true
+   */
+  sendOnStop: boolean;
+  /**
+   * Whether to send a webhook when a resource usage is taken over
+   * @example false
+   */
+  sendOnTakeover: boolean;
+  /**
+   * Template for payload when resource usage is taken over
+   * @example "{"status": "taken_over", "resource": "{{name}}", "newUser": "{{user.name}}", "previousUser": "{{previousUser.name}}", "timestamp": "{{timestamp}}"}"
+   */
+  takeoverTemplate: string;
+  /**
    * When the webhook configuration was created
    * @format date-time
    */
@@ -1130,6 +1150,29 @@ export interface CreateWebhookConfigDto {
    * @example "X-Webhook-Signature"
    */
   signatureHeader?: string;
+  /**
+   * Whether to send a webhook when a resource usage starts
+   * @default true
+   * @example true
+   */
+  sendOnStart?: boolean;
+  /**
+   * Whether to send a webhook when a resource usage stops
+   * @default true
+   * @example true
+   */
+  sendOnStop?: boolean;
+  /**
+   * Whether to send a webhook when a resource usage is taken over
+   * @default false
+   * @example false
+   */
+  sendOnTakeover?: boolean;
+  /**
+   * Template for payload when resource usage is taken over
+   * @example "{"status": "taken_over", "resource": "{{name}}", "newUser": "{{user.name}}", "previousUser": "{{previousUser.name}}", "timestamp": "{{timestamp}}"}"
+   */
+  takeoverTemplate?: string;
 }
 
 export interface UpdateWebhookConfigDto {
@@ -1183,6 +1226,26 @@ export interface UpdateWebhookConfigDto {
    * @example "X-Webhook-Signature"
    */
   signatureHeader?: string;
+  /**
+   * Whether to send a webhook when a resource usage starts
+   * @example true
+   */
+  sendOnStart?: boolean;
+  /**
+   * Whether to send a webhook when a resource usage stops
+   * @example true
+   */
+  sendOnStop?: boolean;
+  /**
+   * Whether to send a webhook when a resource usage is taken over
+   * @example false
+   */
+  sendOnTakeover?: boolean;
+  /**
+   * Template for payload when resource usage is taken over
+   * @example "{"status": "taken_over", "resource": "{{name}}", "newUser": "{{user.name}}", "previousUser": "{{previousUser.name}}", "timestamp": "{{timestamp}}"}"
+   */
+  takeoverTemplate?: string;
 }
 
 export interface WebhookStatusDto {
@@ -1248,6 +1311,31 @@ export interface MqttResourceConfig {
    */
   notInUseMessage: string;
   /**
+   * Whether to send an MQTT message when a resource usage starts
+   * @example true
+   */
+  sendOnStart: boolean;
+  /**
+   * Whether to send an MQTT message when a resource usage stops
+   * @example true
+   */
+  sendOnStop: boolean;
+  /**
+   * Whether to send an MQTT message when a resource usage is taken over
+   * @example false
+   */
+  sendOnTakeover: boolean;
+  /**
+   * Topic template using Handlebars for takeover status
+   * @example "resources/{{id}}/status"
+   */
+  takeoverTopic?: string;
+  /**
+   * Message template using Handlebars for takeover status
+   * @example "{"status": "taken_over", "resourceId": "{{id}}", "newUser": "{{user.name}}", "previousUser": "{{previousUser.name}}", "timestamp": "{{timestamp}}"}"
+   */
+  takeoverMessage?: string;
+  /**
    * When the MQTT resource configuration was created
    * @format date-time
    */
@@ -1290,6 +1378,34 @@ export interface CreateMqttResourceConfigDto {
    * @example "{"status":"not_in_use","resourceId":{{id}},"resourceName":"{{name}}"}"
    */
   notInUseMessage: string;
+  /**
+   * Whether to send an MQTT message when a resource usage starts
+   * @default true
+   * @example true
+   */
+  sendOnStart?: boolean;
+  /**
+   * Whether to send an MQTT message when a resource usage stops
+   * @default true
+   * @example true
+   */
+  sendOnStop?: boolean;
+  /**
+   * Whether to send an MQTT message when a resource usage is taken over
+   * @default false
+   * @example false
+   */
+  sendOnTakeover?: boolean;
+  /**
+   * Topic template for when resource usage is taken over
+   * @example "resources/{{id}}/status"
+   */
+  takeoverTopic?: string;
+  /**
+   * Message template for when resource usage is taken over
+   * @example "{"status": "taken_over", "resourceId": "{{id}}", "newUser": "{{user.name}}", "previousUser": "{{previousUser.name}}", "timestamp": "{{timestamp}}"}"
+   */
+  takeoverMessage?: string;
 }
 
 export interface UpdateMqttResourceConfigDto {
@@ -1323,6 +1439,34 @@ export interface UpdateMqttResourceConfigDto {
    * @example "{"status":"not_in_use","resourceId":{{id}},"resourceName":"{{name}}"}"
    */
   notInUseMessage?: string;
+  /**
+   * Whether to send an MQTT message when a resource usage starts
+   * @default true
+   * @example true
+   */
+  sendOnStart?: boolean;
+  /**
+   * Whether to send an MQTT message when a resource usage stops
+   * @default true
+   * @example true
+   */
+  sendOnStop?: boolean;
+  /**
+   * Whether to send an MQTT message when a resource usage is taken over
+   * @default false
+   * @example false
+   */
+  sendOnTakeover?: boolean;
+  /**
+   * Topic template for when resource usage is taken over
+   * @example "resources/{{id}}/status"
+   */
+  takeoverTopic?: string;
+  /**
+   * Message template for when resource usage is taken over
+   * @example "{"status": "taken_over", "resourceId": "{{id}}", "newUser": "{{user.name}}", "previousUser": "{{previousUser.name}}", "timestamp": "{{timestamp}}"}"
+   */
+  takeoverMessage?: string;
 }
 
 export interface TestMqttConfigResponseDto {

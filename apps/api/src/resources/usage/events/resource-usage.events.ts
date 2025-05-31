@@ -16,3 +16,12 @@ export class ResourceUsageEndedEvent {
     public readonly user: User
   ) {}
 }
+
+export class ResourceUsageTakenOverEvent {
+  constructor(
+    public readonly resourceId: number,
+    public readonly takeoverTime: Date,
+    public readonly newUser: User,
+    public readonly previousUser: User | null // Previous user might not exist if resource was free
+  ) {}
+}
