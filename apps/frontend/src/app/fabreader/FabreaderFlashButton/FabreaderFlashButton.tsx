@@ -20,10 +20,8 @@ declare global {
   }
 }
 
-// GitHub repository information
-const GITHUB_OWNER = 'jappy'; // Replace with your GitHub username or organization
-const GITHUB_REPO = 'Attraccess';
-const MANIFEST_URL = `https://${GITHUB_OWNER}.github.io/${GITHUB_REPO}/firmware/manifest.json`;
+// Local manifest URL that points to the server-provided manifest
+const MANIFEST_URL = '/_fabreader_assets/manifest.json';
 
 export function FabreaderFlashButton(props: Omit<ButtonProps, 'slot' | 'onPress'>) {
   const { t } = useTranslations('fabreader-flash-button', {
