@@ -129,6 +129,19 @@ export class WaitForNFCTapState implements ReaderState {
       return this.onInvalidCard();
     }
 
+    // Check if the card is disabled
+    if (nfcCard.isDisabled) {
+      this.logger.debug(`NFC Card with UID ${data.payload.cardUID} is disabled`);
+      this.socket.sendMessage(
+        new FabreaderEvent(FabreaderEventType.DISPLAY_ERROR, {
+          message: `Card is disabled`,
+          duration: 3000,
+        })
+      );
+      await this.restart();
+      return;
+    }
+
     this.card = nfcCard;
 
     this.socket.sendMessage(

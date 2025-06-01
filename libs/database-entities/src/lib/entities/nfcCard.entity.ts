@@ -33,6 +33,14 @@ export class NFCCard {
   @ApiProperty({ description: 'The ID of the user that owns the NFC card' })
   userId!: number;
 
+  @Column({
+    type: 'boolean',
+    nullable: false,
+    default: false,
+  })
+  @ApiProperty({ description: 'Whether the NFC card is temporarily disabled' })
+  isDisabled!: boolean;
+
   @Column(() => NTag424Keys, { prefix: 'key_' })
   @Exclude()
   keys!: NTag424Keys;

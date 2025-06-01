@@ -253,6 +253,7 @@ describe('EnrollNTAG424State', () => {
       expect(mockServices.fabreaderService.createNFCCard).toHaveBeenCalledWith({
         uid: mockCardUID,
         userId: mockUserId,
+        isDisabled: false,
         keys: {
           0: mockNewMasterKey,
         },
