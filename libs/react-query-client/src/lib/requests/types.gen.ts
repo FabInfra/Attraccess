@@ -980,6 +980,22 @@ export type WebhookConfigResponseDto = {
      */
     signatureHeader: string;
     /**
+     * Whether to send a webhook when a resource usage starts
+     */
+    sendOnStart: boolean;
+    /**
+     * Whether to send a webhook when a resource usage stops
+     */
+    sendOnStop: boolean;
+    /**
+     * Whether to send a webhook when a resource usage is taken over
+     */
+    sendOnTakeover: boolean;
+    /**
+     * Template for payload when resource usage is taken over
+     */
+    takeoverTemplate: string;
+    /**
      * When the webhook configuration was created
      */
     createdAt: string;
@@ -1045,6 +1061,22 @@ export type CreateWebhookConfigDto = {
      * Name of the header that contains the signature
      */
     signatureHeader?: string;
+    /**
+     * Whether to send a webhook when a resource usage starts
+     */
+    sendOnStart?: boolean;
+    /**
+     * Whether to send a webhook when a resource usage stops
+     */
+    sendOnStop?: boolean;
+    /**
+     * Whether to send a webhook when a resource usage is taken over
+     */
+    sendOnTakeover?: boolean;
+    /**
+     * Template for payload when resource usage is taken over
+     */
+    takeoverTemplate?: string;
 };
 
 export type UpdateWebhookConfigDto = {
@@ -1088,6 +1120,22 @@ export type UpdateWebhookConfigDto = {
      * Name of the header that contains the signature
      */
     signatureHeader?: string;
+    /**
+     * Whether to send a webhook when a resource usage starts
+     */
+    sendOnStart?: boolean;
+    /**
+     * Whether to send a webhook when a resource usage stops
+     */
+    sendOnStop?: boolean;
+    /**
+     * Whether to send a webhook when a resource usage is taken over
+     */
+    sendOnTakeover?: boolean;
+    /**
+     * Template for payload when resource usage is taken over
+     */
+    takeoverTemplate?: string;
 };
 
 export type WebhookStatusDto = {
@@ -1142,6 +1190,26 @@ export type MqttResourceConfig = {
      */
     notInUseMessage: string;
     /**
+     * Whether to send an MQTT message when a resource usage starts
+     */
+    sendOnStart: boolean;
+    /**
+     * Whether to send an MQTT message when a resource usage stops
+     */
+    sendOnStop: boolean;
+    /**
+     * Whether to send an MQTT message when a resource usage is taken over
+     */
+    sendOnTakeover: boolean;
+    /**
+     * Topic template using Handlebars for takeover status
+     */
+    takeoverTopic?: string;
+    /**
+     * Message template using Handlebars for takeover status
+     */
+    takeoverMessage?: string;
+    /**
      * When the MQTT resource configuration was created
      */
     createdAt: string;
@@ -1176,6 +1244,26 @@ export type CreateMqttResourceConfigDto = {
      * Message template for when resource is not in use
      */
     notInUseMessage: string;
+    /**
+     * Whether to send an MQTT message when a resource usage starts
+     */
+    sendOnStart?: boolean;
+    /**
+     * Whether to send an MQTT message when a resource usage stops
+     */
+    sendOnStop?: boolean;
+    /**
+     * Whether to send an MQTT message when a resource usage is taken over
+     */
+    sendOnTakeover?: boolean;
+    /**
+     * Topic template for when resource usage is taken over
+     */
+    takeoverTopic?: string;
+    /**
+     * Message template for when resource usage is taken over
+     */
+    takeoverMessage?: string;
 };
 
 export type UpdateMqttResourceConfigDto = {
@@ -1203,6 +1291,26 @@ export type UpdateMqttResourceConfigDto = {
      * Message template for when resource is not in use
      */
     notInUseMessage?: string;
+    /**
+     * Whether to send an MQTT message when a resource usage starts
+     */
+    sendOnStart?: boolean;
+    /**
+     * Whether to send an MQTT message when a resource usage stops
+     */
+    sendOnStop?: boolean;
+    /**
+     * Whether to send an MQTT message when a resource usage is taken over
+     */
+    sendOnTakeover?: boolean;
+    /**
+     * Topic template for when resource usage is taken over
+     */
+    takeoverTopic?: string;
+    /**
+     * Message template for when resource usage is taken over
+     */
+    takeoverMessage?: string;
 };
 
 export type TestMqttConfigResponseDto = {

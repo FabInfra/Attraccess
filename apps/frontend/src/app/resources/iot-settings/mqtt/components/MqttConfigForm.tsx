@@ -13,6 +13,7 @@ import {
   ModalHeader,
   Spinner,
   Textarea,
+  Switch,
 } from '@heroui/react';
 import {
   useMqttResourceConfigurationServiceCreateMqttConfiguration,
@@ -47,19 +48,29 @@ const defaultTemplates = {
 interface MqttConfigFormValues {
   name: string;
   serverId: number;
+  sendOnStart: boolean; // Added
+  sendOnStop: boolean; // Added
+  sendOnTakeover: boolean; // Added
   inUseTopic: string;
   inUseMessage: string;
   notInUseTopic: string;
   notInUseMessage: string;
+  takeoverTopic: string; // Added
+  takeoverMessage: string; // Added
 }
 
 const initialFormValues: MqttConfigFormValues = {
   name: '',
   serverId: 0,
+  sendOnStart: true,
+  sendOnStop: true,
+  sendOnTakeover: false,
   inUseTopic: defaultTemplates.inUse.topic,
   inUseMessage: defaultTemplates.inUse.message,
   notInUseTopic: defaultTemplates.notInUse.topic,
   notInUseMessage: defaultTemplates.notInUse.message,
+  takeoverTopic: 'resources/{{id}}/status',
+  takeoverMessage: '{"status": "taken_over", "resourceId": {{id}}, "resourceName": "{{name}}", "timestamp": "{{timestamp}}", "newUser": "{{user.username}}", "previousUser": "{{previousUser.username}}"}',
 };
 
 interface MqttConfigFormProps {
@@ -96,6 +107,17 @@ function TemplateVariablesHelp() {
             </li>
             <li>
               <code className="bg-gray-200 dark:bg-gray-700 px-1 rounded">{'{{user.id}}'}</code> - {t('userIdDesc')}
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="font-medium text-sm mb-1">{t('previousUserVariables')}</h4>
+          <ul className="list-disc list-inside text-sm space-y-1">
+            <li>
+              <code className="bg-gray-200 dark:bg-gray-700 px-1 rounded">{'{{previousUser.username}}'}</code> - {t('previousUserUsernameDesc')}
+            </li>
+            <li>
+              <code className="bg-gray-200 dark:bg-gray-700 px-1 rounded">{'{{previousUser.id}}'}</code> - {t('previousUserIdDesc')}
             </li>
           </ul>
         </div>
@@ -138,10 +160,15 @@ export function MqttConfigForm({ resourceId, configId, isEdit = false }: MqttCon
       setFormValues({
         name: existingConfig.name,
         serverId: existingConfig.serverId,
+        sendOnStart: existingConfig.sendOnStart === undefined ? true : existingConfig.sendOnStart,
+        sendOnStop: existingConfig.sendOnStop === undefined ? true : existingConfig.sendOnStop,
+        sendOnTakeover: existingConfig.sendOnTakeover === undefined ? false : existingConfig.sendOnTakeover,
         inUseTopic: existingConfig.inUseTopic,
         inUseMessage: existingConfig.inUseMessage,
         notInUseTopic: existingConfig.notInUseTopic,
         notInUseMessage: existingConfig.notInUseMessage,
+        takeoverTopic: existingConfig.takeoverTopic || initialFormValues.takeoverTopic,
+        takeoverMessage: existingConfig.takeoverMessage || initialFormValues.takeoverMessage,
       });
     }
   }, [existingConfig]);
@@ -211,6 +238,16 @@ export function MqttConfigForm({ resourceId, configId, isEdit = false }: MqttCon
       setFormValues((prev) => ({
         ...prev,
         [name]: name === 'serverId' ? parseInt(value, 10) : value,
+      }));
+    },
+    [setFormValues]
+  );
+
+  const handleSwitchChange = useCallback(
+    (name: string, checked: boolean) => {
+      setFormValues((prev) => ({
+        ...prev,
+        [name]: checked,
       }));
     },
     [setFormValues]
@@ -312,6 +349,32 @@ export function MqttConfigForm({ resourceId, configId, isEdit = false }: MqttCon
                 {t('createServer')}
               </Button>
             </div>
+
+            {/* Event Triggers */}
+            <div className="mt-4 space-y-2 pt-2">
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('eventTriggersLabel')}</p>
+              <Switch
+                name="sendOnStart"
+                isSelected={formValues.sendOnStart}
+                onValueChange={(isSelected) => handleSwitchChange('sendOnStart', isSelected)}
+              >
+                {t('sendOnStartLabel')}
+              </Switch>
+              <Switch
+                name="sendOnStop"
+                isSelected={formValues.sendOnStop}
+                onValueChange={(isSelected) => handleSwitchChange('sendOnStop', isSelected)}
+              >
+                {t('sendOnStopLabel')}
+              </Switch>
+              <Switch
+                name="sendOnTakeover"
+                isSelected={formValues.sendOnTakeover}
+                onValueChange={(isSelected) => handleSwitchChange('sendOnTakeover', isSelected)}
+              >
+                {t('sendOnTakeoverLabel')}
+              </Switch>
+            </div>
           </CardBody>
         </Card>
 
@@ -367,6 +430,30 @@ export function MqttConfigForm({ resourceId, configId, isEdit = false }: MqttCon
               placeholder={t('messagePlaceholder')}
               rows={5}
               required
+            />
+          </CardBody>
+        </Card>
+
+        <Card fullWidth>
+          <CardHeader>{t('takeoverSettings')}</CardHeader>
+          <CardBody>
+            <Input
+              label={t('topicLabel')}
+              id="takeoverTopic"
+              name="takeoverTopic"
+              value={formValues.takeoverTopic}
+              onChange={handleInputChange}
+              placeholder={t('topicPlaceholder')}
+              className="mb-4"
+            />
+            <Textarea
+              label={t('messageLabel')}
+              id="takeoverMessage"
+              name="takeoverMessage"
+              value={formValues.takeoverMessage}
+              onChange={handleInputChange}
+              placeholder={t('messagePlaceholder')}
+              rows={5}
             />
           </CardBody>
         </Card>

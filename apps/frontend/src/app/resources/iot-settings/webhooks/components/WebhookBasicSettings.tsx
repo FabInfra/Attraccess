@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Textarea, Select, SelectItem } from '@heroui/react';
+import { Input, Textarea, Select, SelectItem, Switch } from '@heroui/react'; // Added Switch
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { useWebhookForm } from '../context/WebhookFormContext';
 import { WebhookHttpMethod } from '../types';
@@ -16,10 +16,20 @@ const WebhookBasicSettings: React.FC = () => {
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+    // @ts-expect-error - type is not available on HTMLTextAreaElement
+    const checked = type === 'checkbox' ? e.target.checked : undefined;
+
     setValues((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleSwitchChange = (name: string, checked: boolean) => {
+    setValues((prev) => ({
+      ...prev,
+      [name]: checked,
     }));
   };
 
@@ -73,6 +83,32 @@ const WebhookBasicSettings: React.FC = () => {
             <SelectItem key={method}>{method}</SelectItem>
           ))}
         </Select>
+      </div>
+
+      {/* Event Triggers */}
+      <div className="space-y-2 pt-2">
+        <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('eventTriggersLabel')}</p>
+        <Switch
+          name="sendOnStart"
+          isSelected={values.sendOnStart}
+          onValueChange={(isSelected) => handleSwitchChange('sendOnStart', isSelected)}
+        >
+          {t('sendOnStartLabel')}
+        </Switch>
+        <Switch
+          name="sendOnStop"
+          isSelected={values.sendOnStop}
+          onValueChange={(isSelected) => handleSwitchChange('sendOnStop', isSelected)}
+        >
+          {t('sendOnStopLabel')}
+        </Switch>
+        <Switch
+          name="sendOnTakeover"
+          isSelected={values.sendOnTakeover}
+          onValueChange={(isSelected) => handleSwitchChange('sendOnTakeover', isSelected)}
+        >
+          {t('sendOnTakeoverLabel')}
+        </Switch>
       </div>
 
       {/* Headers */}

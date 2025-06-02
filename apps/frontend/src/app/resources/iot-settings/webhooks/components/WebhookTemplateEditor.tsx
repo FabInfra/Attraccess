@@ -88,6 +88,32 @@ const WebhookTemplateEditor: React.FC = () => {
         </div>
       </AccordionItem>
 
+      <AccordionItem key="takeover" title={t('takeoverTab')}>
+        <div className="space-y-2 p-2">
+          <Textarea
+            name="takeoverTemplate"
+            value={values.takeoverTemplate}
+            onChange={handleInputChange}
+            label={t('takeoverTemplateLabel')}
+            minRows={5}
+            maxRows={12}
+            className="font-mono text-sm"
+          />
+          <div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('previewLabel')}</p>
+            <Snippet hideSymbol>
+              {previewTemplateJson(values.takeoverTemplate)
+                .split('\n')
+                .map((line, index) => (
+                  <span key={index} className="whitespace-pre-wrap">
+                    {line}
+                  </span>
+                ))}
+            </Snippet>
+          </div>
+        </div>
+      </AccordionItem>
+
       <AccordionItem key="variables" title={t('variablesTab')}>
         <div className="p-2">
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{t('variablesHelp')}</p>

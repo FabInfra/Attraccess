@@ -113,6 +113,48 @@ export class CreateWebhookConfigDto {
   @IsString()
   @IsOptional()
   signatureHeader?: string = 'X-Webhook-Signature';
+
+  @ApiProperty({
+    description: 'Whether to send a webhook when a resource usage starts',
+    example: true,
+    required: false,
+    default: true,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @ToBoolean()
+  sendOnStart?: boolean = true;
+
+  @ApiProperty({
+    description: 'Whether to send a webhook when a resource usage stops',
+    example: true,
+    required: false,
+    default: true,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @ToBoolean()
+  sendOnStop?: boolean = true;
+
+  @ApiProperty({
+    description: 'Whether to send a webhook when a resource usage is taken over',
+    example: false,
+    required: false,
+    default: false,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @ToBoolean()
+  sendOnTakeover?: boolean = false;
+
+  @ApiProperty({
+    description: 'Template for payload when resource usage is taken over',
+    example: '{"status": "taken_over", "resource": "{{name}}", "newUser": "{{user.name}}", "previousUser": "{{previousUser.name}}", "timestamp": "{{timestamp}}"}',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  takeoverTemplate?: string;
 }
 
 export class UpdateWebhookConfigDto {
@@ -213,6 +255,45 @@ export class UpdateWebhookConfigDto {
   @IsString()
   @IsOptional()
   signatureHeader?: string;
+
+  @ApiProperty({
+    description: 'Whether to send a webhook when a resource usage starts',
+    example: true,
+    required: false,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @ToBoolean()
+  sendOnStart?: boolean;
+
+  @ApiProperty({
+    description: 'Whether to send a webhook when a resource usage stops',
+    example: true,
+    required: false,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @ToBoolean()
+  sendOnStop?: boolean;
+
+  @ApiProperty({
+    description: 'Whether to send a webhook when a resource usage is taken over',
+    example: false,
+    required: false,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @ToBoolean()
+  sendOnTakeover?: boolean;
+
+  @ApiProperty({
+    description: 'Template for payload when resource usage is taken over',
+    example: '{"status": "taken_over", "resource": "{{name}}", "newUser": "{{user.name}}", "previousUser": "{{previousUser.name}}", "timestamp": "{{timestamp}}"}',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  takeoverTemplate?: string;
 }
 
 export class WebhookStatusDto {
@@ -319,6 +400,31 @@ export class WebhookConfigResponseDto {
     example: 'X-Webhook-Signature',
   })
   signatureHeader: string;
+
+  @ApiProperty({
+    description: 'Whether to send a webhook when a resource usage starts',
+    example: true,
+  })
+  sendOnStart: boolean;
+
+  @ApiProperty({
+    description: 'Whether to send a webhook when a resource usage stops',
+    example: true,
+  })
+  sendOnStop: boolean;
+
+  @ApiProperty({
+    description: 'Whether to send a webhook when a resource usage is taken over',
+    example: false,
+  })
+  sendOnTakeover: boolean;
+
+  @ApiProperty({
+    description: 'Template for payload when resource usage is taken over',
+    example: '{"status": "taken_over", "resource": "{{name}}", "newUser": "{{user.name}}", "previousUser": "{{previousUser.name}}", "timestamp": "{{timestamp}}"}',
+  })
+  takeoverTemplate: string | null;
+
 
   @ApiProperty({
     description: 'When the webhook configuration was created',

@@ -69,6 +69,43 @@ export class MqttResourceConfig {
   })
   notInUseMessage!: string;
 
+  @Column({ default: true, type: 'boolean' })
+  @ApiProperty({
+    description: 'Whether to send an MQTT message when a resource usage starts',
+    example: true,
+  })
+  sendOnStart!: boolean;
+
+  @Column({ default: true, type: 'boolean' })
+  @ApiProperty({
+    description: 'Whether to send an MQTT message when a resource usage stops',
+    example: true,
+  })
+  sendOnStop!: boolean;
+
+  @Column({ default: false, type: 'boolean' })
+  @ApiProperty({
+    description: 'Whether to send an MQTT message when a resource usage is taken over',
+    example: false,
+  })
+  sendOnTakeover!: boolean;
+
+  @Column({ type: 'text', nullable: true })
+  @ApiProperty({
+    description: 'Topic template using Handlebars for takeover status',
+    example: 'resources/{{id}}/status',
+    required: false,
+  })
+  takeoverTopic!: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  @ApiProperty({
+    description: 'Message template using Handlebars for takeover status',
+    example: '{"status": "taken_over", "resourceId": "{{id}}", "newUser": "{{user.name}}", "previousUser": "{{previousUser.name}}", "timestamp": "{{timestamp}}"}',
+    required: false,
+  })
+  takeoverMessage!: string | null;
+
   @CreateDateColumn()
   @ApiProperty({
     description: 'When the MQTT resource configuration was created',

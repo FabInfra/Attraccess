@@ -8,7 +8,7 @@ import { EndUsageSessionDto } from './dtos/endUsageSession.dto';
 import { ResourceIntroductionService } from '../introduction/resourceIntroduction.service';
 import { ResourceNotFoundException } from '../../exceptions/resource.notFound.exception';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { ResourceUsageStartedEvent, ResourceUsageEndedEvent } from './events/resource-usage.events';
+import { ResourceUsageStartedEvent, ResourceUsageEndedEvent, ResourceUsageTakenOverEvent } from './events/resource-usage.events';
 
 @Injectable()
 export class ResourceUsageService {
@@ -69,10 +69,17 @@ export class ResourceUsageService {
           .where('id = :id', { id: existingActiveSession.id })
           .execute();
 
+        const takeoverTime = new Date();
         // Emit event for the ended session
         this.eventEmitter.emit(
           'resource.usage.ended',
-          new ResourceUsageEndedEvent(resourceId, existingActiveSession.startTime, new Date(), user)
+          new ResourceUsageEndedEvent(resourceId, existingActiveSession.startTime, takeoverTime, existingActiveSession.user)
+        );
+
+        // Emit event for the takeover
+        this.eventEmitter.emit(
+          'resource.usage.taken_over',
+          new ResourceUsageTakenOverEvent(resourceId, takeoverTime, user, existingActiveSession.user)
         );
       } else if (dto.forceTakeOver && !resource.allowTakeOver) {
         throw new BadRequestException('This resource does not allow overtaking');
