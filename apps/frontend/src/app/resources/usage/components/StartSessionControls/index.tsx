@@ -85,6 +85,7 @@ export function StartSessionControls({ resourceId }: StartSessionControlsProps) 
             isLoading={startSession.isPending}
             startContent={<PlayIcon className="w-4 h-4" />}
             onPress={immediatelyStartSession}
+            data-cy="start-resource-usage-button"
           >
             {t('startSession')}
           </Button>

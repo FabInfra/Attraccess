@@ -86,6 +86,7 @@ export function ActiveSessionDisplay({ resourceId, startTime }: ActiveSessionDis
             isLoading={endSession.isPending}
             startContent={<StopCircle className="w-4 h-4" />}
             onPress={immediatelyEndSession}
+            data-cy="stop-resource-usage-button"
           >
             {t('endSession')}
           </Button>

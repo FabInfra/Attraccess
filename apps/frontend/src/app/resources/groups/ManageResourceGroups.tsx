@@ -163,6 +163,7 @@ export function ManageResourceGroups({ resourceId, ...rest }: ManageResourceGrou
             onValueChange={setSearchTerm}
             startContent={<Search className="w-4 h-4 text-gray-500" />}
             aria-label={t('searchGroupsPlaceholder')}
+            data-cy="search-resource-groups-input"
           />
           {isLoadingSearchResults && debouncedSearchTerm && (
             <div className="flex items-center space-x-2 text-gray-500">
@@ -194,6 +195,7 @@ export function ManageResourceGroups({ resourceId, ...rest }: ManageResourceGrou
                       startContent={<Plus className="w-4 h-4" />}
                       isLoading={isAddingResourceToGroup}
                       aria-label={`Add ${group.name}`}
+                      data-cy="add-resource-to-group-button"
                     >
                       {t('addGroupButton')}
                     </Button>
