@@ -8,8 +8,8 @@ import { useWebhookForm } from '../context/WebhookFormContext';
 import en from './WebhookFormActions.en.json';
 import de from './WebhookFormActions.de.json';
 import {
-  useWebhooksServiceDeleteOneWebhookConfiguration,
-  useWebhooksServiceTest,
+  useWebhooksServiceWebhookConfigDeleteOne,
+  useWebhooksServiceWebhookConfigTest,
 } from '@attraccess/react-query-client';
 import { useToastMessage } from '../../../../../components/toastProvider';
 
@@ -27,8 +27,8 @@ const WebhookFormActions: React.FC<WebhookFormActionsProps> = ({ onCancel, onSub
   const { success, error: showError } = useToastMessage();
 
   // API hooks specific to this component
-  const deleteWebhook = useWebhooksServiceDeleteOneWebhookConfiguration();
-  const testWebhook = useWebhooksServiceTest();
+  const deleteWebhook = useWebhooksServiceWebhookConfigDeleteOne();
+  const testWebhook = useWebhooksServiceWebhookConfigTest();
 
   // Local state
   const [isTesting, setIsTesting] = useState(false);

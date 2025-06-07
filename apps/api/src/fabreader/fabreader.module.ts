@@ -12,6 +12,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { FabReader, NFCCard } from '@attraccess/database-entities';
 import { UsersAndAuthModule } from '../users-and-auth/users-and-auth.module';
 import { ResourcesModule } from '../resources/resources.module';
+import { ResourceUsageModule } from '../resources/usage/resourceUsage.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ResourcesModule } from '../resources/resources.module';
     TypeOrmModule.forFeature([FabReader, NFCCard]),
     UsersAndAuthModule,
     ResourcesModule,
+    ResourceUsageModule,
   ],
   providers: [FabreaderService, WebsocketService, FabreaderGateway, WebSocketEventService],
   controllers: [FabReaderController, FabReaderNfcCardsController],

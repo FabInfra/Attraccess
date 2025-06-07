@@ -10,10 +10,10 @@ import WebhookFormActions from './WebhookFormActions';
 import * as en from '../translations/en';
 import * as de from '../translations/de';
 import {
-  useWebhooksServiceCreateOneWebhookConfiguration,
-  useWebhooksServiceGetOneWebhookConfigurationById,
-  useWebhooksServiceUpdateOneWebhookConfiguration,
-  UseWebhooksServiceGetAllWebhookConfigurationsKeyFn,
+  useWebhooksServiceWebhookConfigCreateOne,
+  useWebhooksServiceWebhookConfigGetOneById,
+  useWebhooksServiceWebhookConfigUpdateOne,
+  UseWebhooksServiceWebhookConfigGetAllKeyFn,
 } from '@attraccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { useToastMessage } from '../../../../../components/toastProvider';
@@ -41,11 +41,11 @@ const WebhookForm: React.FC<WebhookFormProps> = ({ webhookId, resourceId, initia
   const [isLoaded, setIsLoaded] = useState(!!initialValues);
 
   // API hooks - main form only needs create and update
-  const createWebhook = useWebhooksServiceCreateOneWebhookConfiguration();
-  const updateWebhook = useWebhooksServiceUpdateOneWebhookConfiguration();
+  const createWebhook = useWebhooksServiceWebhookConfigCreateOne();
+  const updateWebhook = useWebhooksServiceWebhookConfigUpdateOne();
 
   // Data fetching hook - only used when webhookId is provided and no initialValues
-  const { data: webhookData, isFetching } = useWebhooksServiceGetOneWebhookConfigurationById(
+  const { data: webhookData, isFetching } = useWebhooksServiceWebhookConfigGetOneById(
     {
       resourceId,
       id: webhookId ?? 0,
@@ -104,7 +104,7 @@ const WebhookForm: React.FC<WebhookFormProps> = ({ webhookId, resourceId, initia
           requestBody: values,
         });
         queryClient.invalidateQueries({
-          queryKey: UseWebhooksServiceGetAllWebhookConfigurationsKeyFn({ resourceId }),
+          queryKey: UseWebhooksServiceWebhookConfigGetAllKeyFn({ resourceId }),
         });
         success({
           title: t('webhookUpdated'),
@@ -117,7 +117,7 @@ const WebhookForm: React.FC<WebhookFormProps> = ({ webhookId, resourceId, initia
           requestBody: values,
         });
         queryClient.invalidateQueries({
-          queryKey: UseWebhooksServiceGetAllWebhookConfigurationsKeyFn({ resourceId }),
+          queryKey: UseWebhooksServiceWebhookConfigGetAllKeyFn({ resourceId }),
         });
         success({
           title: t('webhookCreated'),

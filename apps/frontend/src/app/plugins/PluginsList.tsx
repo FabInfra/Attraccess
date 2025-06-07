@@ -1,4 +1,4 @@
-import { usePluginServiceDeletePlugin, usePluginServiceGetPlugins } from '@attraccess/react-query-client';
+import { usePluginsServiceDeletePlugin, usePluginsServiceGetPlugins } from '@attraccess/react-query-client';
 import { useState } from 'react';
 import {
   Card,
@@ -29,13 +29,13 @@ import { UploadPluginModal } from './UploadPluginModal';
 import { useToastMessage } from '../../components/toastProvider';
 
 export function PluginsList() {
-  const { data: plugins, isLoading } = usePluginServiceGetPlugins();
+  const { data: plugins, isLoading } = usePluginsServiceGetPlugins();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [pluginToDelete, setPluginToDelete] = useState<string | null>(null);
   const toast = useToastMessage();
 
-  const { mutate: deletePlugin, isPending: isDeleting } = usePluginServiceDeletePlugin({
+  const { mutate: deletePlugin, isPending: isDeleting } = usePluginsServiceDeletePlugin({
     onSuccess: () => {
       setTimeout(() => {
         window.location.reload();
@@ -89,7 +89,12 @@ export function PluginsList() {
       <Card className="w-full" data-cy="plugins-list-card">
         <CardHeader className="flex justify-between items-center">
           <h1 className="text-xl font-bold">{t('title')}</h1>
-          <Button color="primary" startContent={<Upload size={18} />} onPress={() => setUploadModalOpen(true)} data-cy="plugins-list-upload-plugin-button">
+          <Button
+            color="primary"
+            startContent={<Upload size={18} />}
+            onPress={() => setUploadModalOpen(true)}
+            data-cy="plugins-list-upload-plugin-button"
+          >
             {t('uploadButton')}
           </Button>
         </CardHeader>
@@ -118,7 +123,13 @@ export function PluginsList() {
                     <TableCell>{plugin.pluginDirectory || '-'}</TableCell>
                     <TableCell>
                       <Tooltip content={t('deleteTooltip')}>
-                        <Button isIconOnly variant="light" color="danger" onPress={() => handleDeleteClick(plugin.id)} data-cy={`plugins-list-delete-plugin-button-${plugin.id}`}>
+                        <Button
+                          isIconOnly
+                          variant="light"
+                          color="danger"
+                          onPress={() => handleDeleteClick(plugin.id)}
+                          data-cy={`plugins-list-delete-plugin-button-${plugin.id}`}
+                        >
                           <Trash2 size={18} />
                         </Button>
                       </Tooltip>
@@ -132,7 +143,11 @@ export function PluginsList() {
           )}
         </CardBody>
 
-        <Modal isOpen={deleteModalOpen} onOpenChange={setDeleteModalOpen} data-cy="plugins-list-delete-confirmation-modal">
+        <Modal
+          isOpen={deleteModalOpen}
+          onOpenChange={setDeleteModalOpen}
+          data-cy="plugins-list-delete-confirmation-modal"
+        >
           <ModalContent>
             <ModalHeader>{t('deleteConfirmation.title')}</ModalHeader>
             <ModalBody>
@@ -141,10 +156,20 @@ export function PluginsList() {
               })}
             </ModalBody>
             <ModalFooter>
-              <Button variant="flat" onPress={handleDeleteCancel} isDisabled={isDeleting} data-cy="plugins-list-delete-confirmation-cancel-button">
+              <Button
+                variant="flat"
+                onPress={handleDeleteCancel}
+                isDisabled={isDeleting}
+                data-cy="plugins-list-delete-confirmation-cancel-button"
+              >
                 {t('deleteConfirmation.cancel')}
               </Button>
-              <Button color="danger" onPress={handleDeleteConfirm} isLoading={isDeleting} data-cy="plugins-list-delete-confirmation-delete-button">
+              <Button
+                color="danger"
+                onPress={handleDeleteConfirm}
+                isLoading={isDeleting}
+                data-cy="plugins-list-delete-confirmation-delete-button"
+              >
                 {t('deleteConfirmation.delete')}
               </Button>
             </ModalFooter>

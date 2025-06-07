@@ -7,11 +7,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import * as en from './registrationForm.en.json';
 import * as de from './registrationForm.de.json';
-import {
-  useUsersServiceCreateOneUser,
-  UseUsersServiceGetAllUsersKeyFn,
-  ApiError,
-} from '@attraccess/react-query-client';
+import { useUsersServiceCreateOneUser, UseUsersServiceFindManyKeyFn, ApiError } from '@attraccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface RegisterFormProps {
@@ -27,7 +23,7 @@ export function RegistrationForm({ onHasAccount }: RegisterFormProps) {
   const createUser = useUsersServiceCreateOneUser({
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [UseUsersServiceGetAllUsersKeyFn()[0]],
+        queryKey: [UseUsersServiceFindManyKeyFn()[0]],
       });
     },
   });
@@ -98,7 +94,13 @@ export function RegistrationForm({ onHasAccount }: RegisterFormProps) {
         <h2 className="text-3xl font-bold">{t('title')}</h2>
         <p className="mt-2 text-gray-600 dark:text-gray-300">
           {t('hasAccount')}{' '}
-          <Button onPress={onHasAccount} variant="light" color="secondary" isDisabled={createUser.isPending} data-cy="registration-form-sign-in-button">
+          <Button
+            onPress={onHasAccount}
+            variant="light"
+            color="secondary"
+            isDisabled={createUser.isPending}
+            data-cy="registration-form-sign-in-button"
+          >
             {t('signInButton')}
           </Button>
         </p>
@@ -161,10 +163,17 @@ export function RegistrationForm({ onHasAccount }: RegisterFormProps) {
           {createUser.isPending ? t('creatingAccount') : t('createAccountButton')}
         </Button>
 
-        {error && <Alert color="danger" title={t('error.title')} description={error} data-cy="registration-form-error-alert" />}
+        {error && (
+          <Alert color="danger" title={t('error.title')} description={error} data-cy="registration-form-error-alert" />
+        )}
       </form>
 
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="inside" data-cy="registration-form-success-modal">
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        scrollBehavior="inside"
+        data-cy="registration-form-success-modal"
+      >
         <ModalContent>
           {(onClose) => (
             <>
@@ -180,7 +189,12 @@ export function RegistrationForm({ onHasAccount }: RegisterFormProps) {
                 </p>
               </ModalBody>
               <ModalFooter>
-                <Button color="primary" fullWidth onPress={onClose} data-cy="registration-form-success-modal-close-button">
+                <Button
+                  color="primary"
+                  fullWidth
+                  onPress={onClose}
+                  data-cy="registration-form-success-modal-close-button"
+                >
                   {t('success.closeButton')}
                 </Button>
               </ModalFooter>

@@ -9,15 +9,16 @@ import { makePaginatedResponse } from '../../types/response';
 import { GetResourceHistoryQueryDto } from './dtos/getResourceHistoryQuery.dto';
 import { GetResourceHistoryResponseDto } from './dtos/GetResourceHistoryResponse.dto';
 import { GetActiveUsageSessionDto } from './dtos/getActiveUsageSession.dto';
+import { CanControlResponseDto } from './dtos/canControl.response.dto';
 
-@ApiTags('Resource Usage')
+@ApiTags('Resources')
 @Controller('resources/:resourceId/usage')
 export class ResourceUsageController {
   constructor(private readonly resourceUsageService: ResourceUsageService) {}
 
   @Post('start')
   @Auth()
-  @ApiOperation({ summary: 'Start a resource usage session', operationId: 'startSession' })
+  @ApiOperation({ summary: 'Start a resource usage session', operationId: 'resourceUsageStartSession' })
   @ApiResponse({
     status: 201,
     description: 'Usage session started successfully.',
@@ -45,7 +46,7 @@ export class ResourceUsageController {
 
   @Put('end')
   @Auth()
-  @ApiOperation({ summary: 'End a resource usage session', operationId: 'endSession' })
+  @ApiOperation({ summary: 'End a resource usage session', operationId: 'resourceUsageEndSession' })
   @ApiResponse({
     status: 200,
     description: 'Usage session ended successfully.',
@@ -73,7 +74,7 @@ export class ResourceUsageController {
 
   @Get('history')
   @Auth()
-  @ApiOperation({ summary: 'Get usage history for a resource', operationId: 'getHistoryOfResourceUsage' })
+  @ApiOperation({ summary: 'Get usage history for a resource', operationId: 'resourceUsageGetHistory' })
   @ApiResponse({
     status: 200,
     description: 'Resource usage history retrieved successfully.',
@@ -122,7 +123,7 @@ export class ResourceUsageController {
 
   @Get('active')
   @Auth()
-  @ApiOperation({ summary: 'Get active usage session for current user', operationId: 'getActiveSession' })
+  @ApiOperation({ summary: 'Get active usage session for current user', operationId: 'resourceUsageGetActiveSession' })
   @ApiResponse({
     status: 200,
     description: 'Active session retrieved successfully.',
@@ -139,5 +140,22 @@ export class ResourceUsageController {
   async getActiveSession(@Param('resourceId', ParseIntPipe) resourceId: number): Promise<GetActiveUsageSessionDto> {
     const activeSession = await this.resourceUsageService.getActiveSession(resourceId);
     return { usage: activeSession || null };
+  }
+
+  @Get('can-control')
+  @Auth()
+  @ApiOperation({ summary: 'Check if the current user can control a resource', operationId: 'resourceUsageCanControl' })
+  @ApiResponse({
+    status: 200,
+    description: 'User can control resource',
+    type: CanControlResponseDto,
+  })
+  async canControl(
+    @Param('resourceId', ParseIntPipe) resourceId: number,
+    @Req() req: AuthenticatedRequest
+  ): Promise<CanControlResponseDto> {
+    return {
+      canControl: await this.resourceUsageService.canControllResource(resourceId, req.user),
+    } as CanControlResponseDto;
   }
 }

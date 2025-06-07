@@ -12,7 +12,7 @@ import {
 import { Auth } from '@attraccess/plugins-backend-sdk';
 import { MqttClientService } from '../mqtt-client.service';
 
-@ApiTags('MQTT Servers')
+@ApiTags('MQTT')
 @Auth('canManageResources')
 @Controller('mqtt/servers')
 export class MqttServerController {
@@ -22,7 +22,7 @@ export class MqttServerController {
   ) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get all MQTT servers', operationId: 'getAllMqttServers' })
+  @ApiOperation({ summary: 'Get all MQTT servers', operationId: 'mqttServersGetAll' })
   @ApiResponse({
     status: 200,
     description: 'Returns all MQTT servers',
@@ -33,7 +33,7 @@ export class MqttServerController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get MQTT server by ID', operationId: 'getOneMQTTServerById' })
+  @ApiOperation({ summary: 'Get MQTT server by ID', operationId: 'mqttServersGetOneById' })
   @ApiResponse({
     status: 200,
     description: 'Returns the MQTT server with the specified ID',
@@ -45,7 +45,7 @@ export class MqttServerController {
   }
 
   @Post()
-  @ApiOperation({ summary: 'Create new MQTT server', operationId: 'createOneMqttServer' })
+  @ApiOperation({ summary: 'Create new MQTT server', operationId: 'mqttServersCreateOne' })
   @ApiResponse({
     status: 201,
     description: 'MQTT server created successfully',
@@ -56,7 +56,7 @@ export class MqttServerController {
   }
 
   @Put(':id')
-  @ApiOperation({ summary: 'Update MQTT server', operationId: 'updateOneMQTTServer' })
+  @ApiOperation({ summary: 'Update MQTT server', operationId: 'mqttServersUpdateOne' })
   @ApiResponse({
     status: 200,
     description: 'MQTT server updated successfully',
@@ -71,7 +71,7 @@ export class MqttServerController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete MQTT server', operationId: 'deleteOneMQTTServer' })
+  @ApiOperation({ summary: 'Delete MQTT server', operationId: 'mqttServersDeleteOne' })
   @ApiResponse({ status: 200, description: 'MQTT server deleted successfully' })
   @ApiResponse({ status: 404, description: 'MQTT server not found' })
   async deleteOne(@Param('id', ParseIntPipe) id: number): Promise<void> {
@@ -81,7 +81,7 @@ export class MqttServerController {
   @Post(':id/test')
   @ApiOperation({
     summary: 'Test MQTT server connection',
-    operationId: 'testConnection',
+    operationId: 'mqttServersTestConnection',
   })
   @ApiResponse({
     status: 200,
@@ -114,7 +114,7 @@ export class MqttServerController {
   @Get(':id/status')
   @ApiOperation({
     summary: 'Get MQTT server connection status and statistics',
-    operationId: 'getStatusOfOne',
+    operationId: 'mqttServersGetStatusOfOne',
   })
   @ApiResponse({
     status: 200,
@@ -129,7 +129,7 @@ export class MqttServerController {
   @Get('status')
   @ApiOperation({
     summary: 'Get all MQTT server connection statuses and statistics',
-    operationId: 'getStatusOfAll',
+    operationId: 'mqttServersGetStatusOfAll',
   })
   @ApiResponse({
     status: 200,

@@ -11,7 +11,7 @@ import {
   ResourceIntroductionHistoryItem,
   IntroductionHistoryAction,
 } from './entities/resourceIntroductionHistoryItem.entity';
-import { ResourceIntroductionUser } from './entities/resourceIntroductionUser.entity';
+import { ResourceIntroducer } from './entities/resourceIntroducer.entity';
 import { ResourceUsage } from './entities/resourceUsage.entity';
 import { RevokedToken } from './entities/revokedToken.entity';
 import { SSOProvider, SSOProviderType } from './entities/ssoProvider.entity';
@@ -31,7 +31,7 @@ export {
   ResourceIntroduction,
   ResourceIntroductionHistoryItem,
   IntroductionHistoryAction,
-  ResourceIntroductionUser,
+  ResourceIntroducer,
   ResourceUsage,
   RevokedToken,
   SSOProvider,
@@ -56,7 +56,7 @@ export const entities = {
   ResourceGroup,
   ResourceUsage,
   ResourceIntroduction,
-  ResourceIntroductionUser,
+  ResourceIntroducer,
   ResourceIntroductionHistoryItem,
   MqttServer,
   MqttResourceConfig,

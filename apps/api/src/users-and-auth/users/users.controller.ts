@@ -17,21 +17,20 @@ import { UsersService } from './users.service';
 import { AuthenticatedRequest, Auth } from '@attraccess/plugins-backend-sdk';
 import { AuthService } from '../auth/auth.service';
 import { EmailService } from '../../email/email.service';
-import { GetUsersQueryDto } from './dtos/getUsersQuery.dto';
+import { FindManyUsersQueryDto } from './dtos/findManyUsersQuery.dto';
 import { VerifyEmailDto } from './dtos/verifyEmail.dto';
-import { AuthenticationDetail, User } from '@attraccess/database-entities';
+import { AuthenticationDetail, User, SystemPermissions } from '@attraccess/database-entities';
 import { ApiTags, ApiResponse, ApiOperation } from '@nestjs/swagger';
 import { CreateUserDto } from './dtos/createUser.dto';
 import { PaginatedUsersResponseDto } from './dtos/paginatedUsersResponse.dto';
 import { UserNotFoundException } from '../../exceptions/user.notFound.exception';
 import { UpdateUserPermissionsDto } from './dtos/updateUserPermissions.dto';
 import { BulkUpdateUserPermissionsDto } from './dtos/bulkUpdateUserPermissions.dto';
-import { SystemPermissions } from '@attraccess/database-entities';
 import { GetUsersWithPermissionQueryDto, PermissionFilter } from './dtos/getUsersWithPermissionQuery.dto';
 import { ResetPasswordDto } from './dtos/resetPassword.dto';
 import { ChangePasswordDto } from './dtos/changePassword.dto';
 
-@ApiTags('users')
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   private readonly logger = new Logger(UsersController.name);
@@ -256,7 +255,7 @@ export class UsersController {
 
   @Get()
   @Auth()
-  @ApiOperation({ summary: 'Get a paginated list of users', operationId: 'getAllUsers' })
+  @ApiOperation({ summary: 'Get a paginated list of users', operationId: 'findMany' })
   @ApiResponse({
     status: 200,
     description: 'List of users.',
@@ -266,11 +265,12 @@ export class UsersController {
     status: 403,
     description: 'Forbidden - User does not have permission to manage users.',
   })
-  async getAll(@Query() query: GetUsersQueryDto): Promise<PaginatedUsersResponseDto> {
-    const result = (await this.usersService.findAll({
+  async findMany(@Query() query: FindManyUsersQueryDto): Promise<PaginatedUsersResponseDto> {
+    const result = (await this.usersService.findMany({
       page: query.page,
       limit: query.limit,
       search: query.search,
+      ids: query.ids,
     })) as PaginatedUsersResponseDto;
     this.logger.debug(`Found ${result.total} users total, returning ${result.data.length} users`);
     return result;

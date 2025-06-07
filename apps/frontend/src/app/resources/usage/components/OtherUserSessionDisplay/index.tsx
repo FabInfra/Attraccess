@@ -4,13 +4,13 @@ import { UserX, ChevronDownIcon } from 'lucide-react';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { AttraccessUser, DateTimeDisplay } from '@attraccess/plugins-frontend-ui';
 import {
-  useResourceUsageServiceStartSession,
-  UseResourceUsageServiceGetActiveSessionKeyFn,
-  UseResourceUsageServiceGetHistoryOfResourceUsageKeyFn,
+  useResourcesServiceResourceUsageStartSession,
+  UseResourcesServiceResourceUsageGetActiveSessionKeyFn,
+  UseResourcesServiceResourceUsageGetHistoryKeyFn,
+  useResourcesServiceResourceUsageGetActiveSession,
+  useAccessControlServiceResourceIntroducersGetMany,
+  useResourcesServiceResourceUsageCanControl,
   useResourcesServiceGetOneResourceById,
-  useResourceUsageServiceGetActiveSession,
-  useResourceIntroductionsServiceCheckStatus,
-  useResourceIntroducersServiceGetAllResourceIntroducers,
 } from '@attraccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../../../../../hooks/useAuth';
@@ -25,47 +25,46 @@ interface OtherUserSessionDisplayProps {
 
 export function OtherUserSessionDisplay({ resourceId }: OtherUserSessionDisplayProps) {
   const { t } = useTranslations('otherUserSessionDisplay', { en, de });
-  const { hasPermission, user: currentUser } = useAuth();
+  const { hasPermission, user } = useAuth();
   const { success, error: showError } = useToastMessage();
   const queryClient = useQueryClient();
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
 
   // Fetch resource data
-  const { data: resource } = useResourcesServiceGetOneResourceById({ id: resourceId });
+  // const { data: resource } = useResourcesServiceGetOneResourceById({ id: resourceId });
 
   // Fetch active session data
-  const { data: activeSessionResponse } = useResourceUsageServiceGetActiveSession({ resourceId });
+  const { data: activeSessionResponse } = useResourcesServiceResourceUsageGetActiveSession({ resourceId });
   const activeSession = useMemo(() => activeSessionResponse?.usage, [activeSessionResponse]);
 
-  // Check if user has completed the introduction
-  const { data: introduction } = useResourceIntroductionsServiceCheckStatus({ resourceId });
+  const { data: access } = useResourcesServiceResourceUsageCanControl({ resourceId });
 
   // Get list of users who can give introductions
-  const { data: introducers } = useResourceIntroducersServiceGetAllResourceIntroducers({ resourceId });
+  const { data: introducers } = useAccessControlServiceResourceIntroducersGetMany({ resourceId });
 
   // Calculate permissions
   const canManageResources = hasPermission('canManageResources');
   const isIntroducer = useMemo(() => {
-    return introducers?.some((introducer) => introducer.user?.id === currentUser?.id);
-  }, [introducers, currentUser]);
+    return introducers?.some((introducer) => introducer.userId === user?.id);
+  }, [introducers, user]);
 
-  const canStartSession = canManageResources || introduction?.hasValidIntroduction || isIntroducer;
+  const { data: resource } = useResourcesServiceGetOneResourceById({ id: resourceId });
 
-  // Check if takeover is possible - user must be able to start sessions and resource must allow takeover
+  const canStartSession = canManageResources || access?.canControl || isIntroducer;
   const canTakeover = resource?.allowTakeOver && canStartSession;
 
-  const startSession = useResourceUsageServiceStartSession({
+  const startSession = useResourcesServiceResourceUsageStartSession({
     onSuccess: () => {
       setIsNotesModalOpen(false);
 
       // Invalidate the active session query to refetch data
       queryClient.invalidateQueries({
-        queryKey: UseResourceUsageServiceGetActiveSessionKeyFn({ resourceId }),
+        queryKey: UseResourcesServiceResourceUsageGetActiveSessionKeyFn({ resourceId }),
       });
       // Invalidate all history queries for this resource (regardless of pagination/user filters)
       queryClient.invalidateQueries({
         predicate: (query) => {
-          const baseHistoryKey = UseResourceUsageServiceGetHistoryOfResourceUsageKeyFn({ resourceId });
+          const baseHistoryKey = UseResourcesServiceResourceUsageGetHistoryKeyFn({ resourceId });
           return (
             query.queryKey[0] === baseHistoryKey[0] &&
             query.queryKey.length > 1 &&
@@ -106,7 +105,7 @@ export function OtherUserSessionDisplay({ resourceId }: OtherUserSessionDisplayP
   };
 
   // Early return if no active session or it belongs to current user
-  if (!activeSession || activeSession.userId === currentUser?.id) {
+  if (!activeSession || activeSession.userId === user?.id) {
     return null;
   }
 

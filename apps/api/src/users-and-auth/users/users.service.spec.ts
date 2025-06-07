@@ -8,7 +8,7 @@ import { UserNotFoundException } from '../../exceptions/user.notFound.exception'
 
 describe('UsersService', () => {
   let service: UsersService;
-  let userRepository: Repository<User>;
+  let userRepository: jest.Mocked<Repository<User>>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,7 +29,7 @@ describe('UsersService', () => {
     }).compile();
 
     service = module.get<UsersService>(UsersService);
-    userRepository = module.get<Repository<User>>(getRepositoryToken(User));
+    userRepository = module.get(getRepositoryToken(User)) as jest.Mocked<Repository<User>>;
   });
 
   it('should be defined', () => {
@@ -38,9 +38,7 @@ describe('UsersService', () => {
 
   describe('findOne', () => {
     it('should validate options using Zod', async () => {
-      await expect(service.findOne({})).rejects.toThrow(
-        'At least one search criteria must be provided'
-      );
+      await expect(service.findOne({})).rejects.toThrow('At least one search criteria must be provided');
     });
 
     it('should find a user by id', async () => {
@@ -68,9 +66,7 @@ describe('UsersService', () => {
     });
 
     it('should validate email format', async () => {
-      await expect(
-        service.findOne({ email: 'invalid-email' })
-      ).rejects.toThrow();
+      await expect(service.findOne({ email: 'invalid-email' })).rejects.toThrow();
     });
   });
 
@@ -132,13 +128,9 @@ describe('UsersService', () => {
     });
 
     it('should throw if email already exists', async () => {
-      jest
-        .spyOn(userRepository, 'findOne')
-        .mockResolvedValueOnce({ id: 1 } as User);
+      jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce({ id: 1 } as User);
 
-      await expect(
-        service.createOne('test', 'existing@example.com')
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.createOne('test', 'existing@example.com')).rejects.toThrow(BadRequestException);
     });
 
     it('should throw if username already exists', async () => {
@@ -147,9 +139,7 @@ describe('UsersService', () => {
         .mockResolvedValueOnce(null) // email check
         .mockResolvedValueOnce({ id: 1 } as User); // username check
 
-      await expect(
-        service.createOne('existing', 'test@example.com')
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.createOne('existing', 'test@example.com')).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -160,9 +150,7 @@ describe('UsersService', () => {
         username: 'test',
         email: 'test@example.com',
       } as User;
-      jest
-        .spyOn(userRepository, 'update')
-        .mockResolvedValue({ affected: 1 } as UpdateResult);
+      jest.spyOn(userRepository, 'update').mockResolvedValue({ affected: 1 } as UpdateResult);
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(user);
 
       const result = await service.updateUser(1, { username: 'updated' });
@@ -173,18 +161,14 @@ describe('UsersService', () => {
       const existingUsers = [{ id: 2, email: 'existing@example.com' } as User];
       jest.spyOn(userRepository, 'find').mockResolvedValue(existingUsers);
 
-      await expect(
-        service.updateUser(1, { email: 'existing@example.com' })
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.updateUser(1, { email: 'existing@example.com' })).rejects.toThrow(BadRequestException);
     });
 
     it('should allow updating to same email', async () => {
       const user = { id: 1, email: 'test@example.com' } as User;
       const existingUsers = [user];
       jest.spyOn(userRepository, 'find').mockResolvedValue(existingUsers);
-      jest
-        .spyOn(userRepository, 'update')
-        .mockResolvedValue({ affected: 1 } as UpdateResult);
+      jest.spyOn(userRepository, 'update').mockResolvedValue({ affected: 1 } as UpdateResult);
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(user);
 
       const result = await service.updateUser(1, { email: 'test@example.com' });
@@ -192,30 +176,82 @@ describe('UsersService', () => {
     });
 
     it('should throw if user not found', async () => {
-      jest
-        .spyOn(userRepository, 'update')
-        .mockResolvedValue({ affected: 1 } as UpdateResult);
+      jest.spyOn(userRepository, 'update').mockResolvedValue({ affected: 1 } as UpdateResult);
       jest.spyOn(userRepository, 'findOne').mockResolvedValue(null);
 
-      await expect(service.updateUser(1, { username: 'test' })).rejects.toThrow(
-        UserNotFoundException
-      );
+      await expect(service.updateUser(1, { username: 'test' })).rejects.toThrow(UserNotFoundException);
     });
   });
 
-  describe('findAll', () => {
+  describe('findMany', () => {
     it('should return paginated users', async () => {
-      const users = [{ id: 1 }, { id: 2 }] as User[];
-      jest.spyOn(userRepository, 'findAndCount').mockResolvedValue([users, 2]);
+      const mockUsers = [
+        {
+          id: 1,
+          username: 'user1',
+          email: 'user1@example.com',
+          systemPermissions: {
+            canManageResources: false,
+            canManageSystemConfiguration: false,
+            canManageUsers: false,
+          },
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          isEmailVerified: false,
+          emailVerificationToken: null,
+          emailVerificationTokenExpiresAt: null,
+          passwordResetToken: null,
+          passwordResetTokenExpiresAt: null,
+          resourceIntroductions: [],
+          resourceUsages: [],
+          resourceIntroducers: [],
+          groupMemberships: [],
+          nfcCards: [],
+          revokedTokens: [],
+          authenticationDetails: [],
+          resourceIntroducerPermissions: [],
+        } as User,
+        {
+          id: 2,
+          username: 'user2',
+          email: 'user2@example.com',
+          systemPermissions: {
+            canManageResources: false,
+            canManageSystemConfiguration: false,
+            canManageUsers: false,
+          },
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          isEmailVerified: false,
+          emailVerificationToken: null,
+          emailVerificationTokenExpiresAt: null,
+          passwordResetToken: null,
+          passwordResetTokenExpiresAt: null,
+          resourceIntroductions: [],
+          resourceUsages: [],
+          resourceIntroducers: [],
+          groupMemberships: [],
+          nfcCards: [],
+          revokedTokens: [],
+          authenticationDetails: [],
+          resourceIntroducerPermissions: [],
+        } as User,
+      ];
 
-      const result = await service.findAll({ page: 1, limit: 10 });
-      expect(result.data).toEqual(users);
-      expect(result.total).toBe(2);
+      userRepository.findAndCount.mockResolvedValue([mockUsers, 2]);
+
+      const result = await service.findMany({ page: 1, limit: 10 });
+
+      expect(result.data).toEqual(mockUsers);
+      expect(result.total).toEqual(2);
+      expect(result.page).toEqual(1);
+      expect(result.limit).toEqual(10);
+      expect(userRepository.findAndCount).toHaveBeenCalled();
     });
 
-    it('should validate pagination options', async () => {
-      await expect(service.findAll({ page: 0, limit: 10 })).rejects.toThrow();
-      await expect(service.findAll({ page: 1, limit: 0 })).rejects.toThrow();
+    it('should throw error for invalid pagination options', async () => {
+      await expect(service.findMany({ page: 0, limit: 10 })).rejects.toThrow();
+      await expect(service.findMany({ page: 1, limit: 0 })).rejects.toThrow();
     });
   });
 });

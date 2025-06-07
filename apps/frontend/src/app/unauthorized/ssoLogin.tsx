@@ -4,7 +4,7 @@ import * as de from './ssoLogin.de.json';
 import * as en from './ssoLogin.en.json';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useSsoServiceGetAllSsoProviders, SSOProvider } from '@attraccess/react-query-client';
+import { useAuthenticationServiceGetAllSsoProviders, SSOProvider } from '@attraccess/react-query-client';
 import { getBaseUrl } from '../../api';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -20,7 +20,7 @@ interface SSOLoginButtonProps {
   provider: SSOProvider;
 }
 
-function SSOLoginButton(props: SSOLoginButtonProps) {
+function SSOLoginButton(props: Readonly<SSOLoginButtonProps>) {
   const { t } = useTranslations('ssoLoginButton', {
     de,
     en,
@@ -37,7 +37,7 @@ function SSOLoginButton(props: SSOLoginButtonProps) {
 }
 
 export function SSOLogin() {
-  const { isLoading, data: providers } = useSsoServiceGetAllSsoProviders();
+  const { isLoading, data: providers } = useAuthenticationServiceGetAllSsoProviders();
   const location = useLocation();
   const { jwtTokenLogin } = useAuth();
 

@@ -1,22 +1,22 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, ILike, FindOptionsWhere, IsNull, In } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Resource } from '@attraccess/database-entities';
 import { CreateResourceDto } from './dtos/createResource.dto';
 import { UpdateResourceDto } from './dtos/updateResource.dto';
 import { PaginatedResponse, makePaginatedResponse } from '../types/response';
-import { ResourceImageService } from '../common/services/resource-image.service';
+import { ResourceImageService } from './resourceImage.service';
 import { FileUpload } from '../common/types/file-upload.types';
 import { ResourceNotFoundException } from '../exceptions/resource.notFound.exception';
-import { ResourceGroupsService } from './groups/resourceGroups.service';
 
 @Injectable()
 export class ResourcesService {
+  private readonly logger = new Logger(ResourcesService.name);
+
   constructor(
     @InjectRepository(Resource)
-    private resourceRepository: Repository<Resource>,
-    private resourceImageService: ResourceImageService,
-    private resourceGroupsService: ResourceGroupsService
+    private readonly resourceRepository: Repository<Resource>,
+    private readonly resourceImageService: ResourceImageService
   ) {}
 
   async createResource(dto: CreateResourceDto, image?: FileUpload): Promise<Resource> {
@@ -131,56 +131,51 @@ export class ResourcesService {
 
     const { page = 1, limit = 10, search, groupId } = options;
 
-    const where: FindOptionsWhere<Resource> = {};
-
     let ids = options.ids;
     if (typeof ids === 'number') {
       ids = [ids];
     }
 
+    // Create the query builder
+    const queryBuilder = this.resourceRepository
+      .createQueryBuilder('resource')
+      .leftJoinAndSelect('resource.groups', 'groups')
+      .orderBy('resource.createdAt', 'DESC');
+
+    // Handle IDs filtering
     if (ids && ids.length > 0) {
-      where.id = In(ids);
+      queryBuilder.andWhere('resource.id IN (:...ids)', { ids });
     }
 
-    if (groupId) {
-      where.groups = { id: groupId };
+    // Handle group filtering
+    if (groupId !== undefined) {
+      if (groupId === -1) {
+        // Special case: resources with no groups
+        queryBuilder.andWhere('groups.id IS NULL');
+      } else {
+        // Resources belonging to a specific group
+        queryBuilder.andWhere('groups.id = :groupId', { groupId });
+      }
     }
 
-    if (groupId === -1) {
-      where.groups = {
-        id: IsNull(),
-      };
-    }
-
+    // Handle search filtering (OR condition for name and description)
     if (search) {
-      where.name = ILike(`%${search}%`);
-      where.description = ILike(`%${search}%`);
+      queryBuilder.andWhere(
+        '(LOWER(resource.name) LIKE LOWER(:search) OR LOWER(resource.description) LIKE LOWER(:search))',
+        {
+          search: `%${search}%`,
+        }
+      );
     }
 
-    const [resources, total] = await this.resourceRepository.findAndCount({
-      where,
-      relations: ['groups'],
-      skip: (page - 1) * limit,
-      take: limit,
-      order: {
-        createdAt: 'DESC',
-      },
-    });
+    this.logger.debug('Listing resources with query:', queryBuilder.getSql());
+
+    // Execute query with pagination
+    const [resources, total] = await queryBuilder
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
 
     return makePaginatedResponse({ page, limit }, resources, total);
-  }
-
-  async addResourceToGroup(resourceId: number, groupId: number): Promise<void> {
-    // Ensure resource exists first (optional, group service might also check)
-    await this.getResourceById(resourceId);
-    // Call the method in ResourceGroupsService
-    await this.resourceGroupsService.addResourceToGroup(resourceId, groupId);
-  }
-
-  async removeResourceFromGroup(resourceId: number, groupId: number): Promise<void> {
-    // Ensure resource exists first (optional, group service might also check)
-    await this.getResourceById(resourceId);
-    // Call the method in ResourceGroupsService
-    await this.resourceGroupsService.removeResourceFromGroup(resourceId, groupId);
   }
 }

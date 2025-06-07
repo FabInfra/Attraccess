@@ -14,7 +14,6 @@ export const ConfigForm: React.FC = () => {
   const { data: config, isLoading, refetch, isSuccess } = useConfig();
 
   useEffect(() => {
-    console.log('refetching config');
     refetch();
   }, [refetch]);
 

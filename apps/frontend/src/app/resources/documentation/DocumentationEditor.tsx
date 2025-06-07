@@ -161,7 +161,12 @@ function DocumentationEditorComponent() {
           <Button onPress={() => refetchResource()} color="primary" data-cy="documentation-editor-error-retry-button">
             {t('actions.retry')}
           </Button>
-          <Button onPress={() => navigate('/resources')} variant="flat" startContent={<ArrowLeft size={16} />} data-cy="documentation-editor-error-back-to-resources-button">
+          <Button
+            onPress={() => navigate('/resources')}
+            variant="flat"
+            startContent={<ArrowLeft size={16} />}
+            data-cy="documentation-editor-error-back-to-resources-button"
+          >
             {t('actions.backToResources')}
           </Button>
         </CardFooter>
@@ -180,7 +185,12 @@ function DocumentationEditorComponent() {
           <p>{t('notFound.message')}</p>
         </CardBody>
         <CardFooter className="justify-center">
-          <Button onPress={() => navigate('/resources')} variant="flat" startContent={<ArrowLeft size={16} />} data-cy="documentation-editor-not-found-back-to-resources-button">
+          <Button
+            onPress={() => navigate('/resources')}
+            variant="flat"
+            startContent={<ArrowLeft size={16} />}
+            data-cy="documentation-editor-not-found-back-to-resources-button"
+          >
             {t('actions.backToResources')}
           </Button>
         </CardFooter>
@@ -217,13 +227,21 @@ function DocumentationEditorComponent() {
             isDisabled={updateResource.isPending}
             data-cy="documentation-editor-type-radiogroup"
           >
-            <Radio value={DocumentationType.MARKDOWN} data-cy="documentation-editor-type-markdown-radio">{t('documentationType.markdown')}</Radio>
-            <Radio value={DocumentationType.URL} data-cy="documentation-editor-type-url-radio">{t('documentationType.url')}</Radio>
+            <Radio value={DocumentationType.MARKDOWN} data-cy="documentation-editor-type-markdown-radio">
+              {t('documentationType.markdown')}
+            </Radio>
+            <Radio value={DocumentationType.URL} data-cy="documentation-editor-type-url-radio">
+              {t('documentationType.url')}
+            </Radio>
           </RadioGroup>
         </CardHeader>
         <CardBody>
           {documentationType === DocumentationType.MARKDOWN && (
-            <Tabs selectedKey={selectedTab} onSelectionChange={(key) => setSelectedTab(key.toString())} data-cy="documentation-editor-markdown-tabs">
+            <Tabs
+              selectedKey={selectedTab}
+              onSelectionChange={(key) => setSelectedTab(key.toString())}
+              data-cy="documentation-editor-markdown-tabs"
+            >
               <Tab key="edit" title={t('edit')} data-cy="documentation-editor-markdown-edit-tab">
                 <Textarea
                   label={t('markdownContent.label')}
@@ -272,7 +290,12 @@ function DocumentationEditorComponent() {
             >
               {t('actions.cancel')}
             </Button>
-            <Button color="primary" onPress={handleSave} isLoading={updateResource.isPending} data-cy="documentation-editor-footer-save-button">
+            <Button
+              color="primary"
+              onPress={handleSave}
+              isLoading={updateResource.isPending}
+              data-cy="documentation-editor-footer-save-button"
+            >
               {t('actions.save')}
             </Button>
           </div>

@@ -8,10 +8,10 @@ import { OtherUserSessionDisplay } from '../OtherUserSessionDisplay';
 import { IntroductionRequiredDisplay } from '../IntroductionRequiredDisplay';
 import { StartSessionControls } from '../StartSessionControls';
 import {
-  useResourceIntroducersServiceGetAllResourceIntroducers,
-  useResourceIntroductionsServiceCheckStatus,
-  useResourceUsageServiceGetActiveSession,
+  useAccessControlServiceResourceIntroducersGetMany,
+  useResourcesServiceResourceUsageGetActiveSession,
   Resource,
+  useResourcesServiceResourceUsageCanControl,
 } from '@attraccess/react-query-client';
 import * as en from './translations/en.json';
 import * as de from './translations/de.json';
@@ -27,21 +27,25 @@ export function ResourceUsageSession({ resourceId, resource, ...rest }: Resource
   const canManageResources = hasPermission('canManageResources');
 
   // Check if user has completed the introduction
-  const { data: introduction, isLoading: isLoadingIntroStatus } = useResourceIntroductionsServiceCheckStatus({
-    resourceId,
-  });
-
-  // Get list of users who can give introductions
-  const { data: introducers, isLoading: isLoadingIntroducers } = useResourceIntroducersServiceGetAllResourceIntroducers(
-    { resourceId }
-  );
-
-  // Get active session
-  const { data: activeSessionResponse, isLoading: isLoadingSession } = useResourceUsageServiceGetActiveSession(
+  const { data: access, isLoading: isLoadingIntroStatus } = useResourcesServiceResourceUsageCanControl(
     { resourceId },
     undefined,
     {
-      refetchInterval: 1000,
+      refetchInterval: 3000,
+    }
+  );
+
+  // Get list of users who can give introductions
+  const { data: introducers, isLoading: isLoadingIntroducers } = useAccessControlServiceResourceIntroducersGetMany({
+    resourceId,
+  });
+
+  // Get active session
+  const { data: activeSessionResponse, isLoading: isLoadingSession } = useResourcesServiceResourceUsageGetActiveSession(
+    { resourceId },
+    undefined,
+    {
+      refetchInterval: 3000,
     }
   );
 
@@ -50,11 +54,11 @@ export function ResourceUsageSession({ resourceId, resource, ...rest }: Resource
   const isLoading = isLoadingSession ?? isLoadingIntroStatus ?? isLoadingIntroducers;
 
   const isIntroducer = useMemo(() => {
-    return introducers?.some((introducer) => introducer.user?.id === user?.id);
+    return introducers?.some((introducer) => introducer.userId === user?.id);
   }, [introducers, user]);
 
   // Users with canManageResources permission can always start a session
-  const canStartSession = canManageResources ?? introduction?.hasValidIntroduction ?? isIntroducer;
+  const canStartSession = canManageResources || access?.canControl || isIntroducer;
 
   const renderContent = () => {
     if (isLoading) {

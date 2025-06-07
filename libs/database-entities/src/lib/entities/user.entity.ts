@@ -5,7 +5,7 @@ import { ResourceIntroduction } from './resourceIntroduction.entity';
 import { ResourceUsage } from './resourceUsage.entity';
 import { RevokedToken } from './revokedToken.entity';
 import { AuthenticationDetail } from './authenticationDetail.entity';
-import { ResourceIntroductionUser } from './resourceIntroductionUser.entity';
+import { ResourceIntroducer } from './resourceIntroducer.entity';
 
 export class SystemPermissions {
   @Column({ default: false, type: 'boolean' })
@@ -121,8 +121,8 @@ export class User {
   })
   authenticationDetails!: AuthenticationDetail[];
 
-  @OneToMany(() => ResourceIntroductionUser, (introducer) => introducer.user, {
+  @OneToMany(() => ResourceIntroducer, (introducer) => introducer.user, {
     onDelete: 'CASCADE',
   })
-  resourceIntroducerPermissions!: ResourceIntroductionUser[];
+  resourceIntroducerPermissions!: ResourceIntroducer[];
 }

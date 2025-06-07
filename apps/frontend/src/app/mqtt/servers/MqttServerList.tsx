@@ -16,9 +16,9 @@ import en from './translations/list/en.json';
 import de from './translations/list/de.json';
 import { useState } from 'react';
 import {
-  useMqttServersServiceGetAllMqttServers,
-  useMqttServersServiceDeleteOneMqttServer,
-  UseMqttServersServiceGetAllMqttServersKeyFn,
+  useMqttServiceMqttServersGetAll,
+  useMqttServiceMqttServersDeleteOne,
+  UseMqttServiceMqttServersGetAllKeyFn,
 } from '@attraccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -43,10 +43,22 @@ function ServerListItem({ id, name, host, port, onEdit, onDelete, t }: ServerLis
         </p>
       </div>
       <div className="space-x-2">
-        <Button color="secondary" variant="flat" size="sm" onPress={() => onEdit(id)} data-cy={`mqtt-server-list-item-edit-button-${id}`}>
+        <Button
+          color="secondary"
+          variant="flat"
+          size="sm"
+          onPress={() => onEdit(id)}
+          data-cy={`mqtt-server-list-item-edit-button-${id}`}
+        >
           {t('editServer')}
         </Button>
-        <Button color="danger" variant="flat" size="sm" onPress={() => onDelete(id)} data-cy={`mqtt-server-list-item-delete-button-${id}`}>
+        <Button
+          color="danger"
+          variant="flat"
+          size="sm"
+          onPress={() => onDelete(id)}
+          data-cy={`mqtt-server-list-item-delete-button-${id}`}
+        >
           {t('deleteServer')}
         </Button>
       </div>
@@ -63,17 +75,17 @@ export function MqttServerList() {
   const [serverToDelete, setServerToDelete] = useState<number | null>(null);
 
   // Fetch MQTT servers
-  const { data: servers = [], isLoading, error } = useMqttServersServiceGetAllMqttServers();
+  const { data: servers = [], isLoading, error } = useMqttServiceMqttServersGetAll();
 
   // Delete server mutation
-  const deleteServer = useMqttServersServiceDeleteOneMqttServer({
+  const deleteServer = useMqttServiceMqttServersDeleteOne({
     onSuccess: () => {
       success({
         title: t('serverDeleted'),
         description: t('serverDeletedDesc'),
       });
       queryClient.invalidateQueries({
-        queryKey: [UseMqttServersServiceGetAllMqttServersKeyFn()[0]],
+        queryKey: [UseMqttServiceMqttServersGetAllKeyFn()[0]],
       });
       onClose();
     },
@@ -86,7 +98,7 @@ export function MqttServerList() {
   });
 
   const handleEditServer = (serverId: number) => {
-    navigate(`/mqtt/servers/${serverId}/edit`);
+    navigate(`/mqtt/servers/${serverId}`);
   };
 
   const handleDeleteServer = (serverId: number) => {
@@ -109,11 +121,19 @@ export function MqttServerList() {
   }
 
   if (error) {
-    return <Alert color="danger" data-cy="mqtt-server-list-error-alert">{t('errorLoading')}</Alert>;
+    return (
+      <Alert color="danger" data-cy="mqtt-server-list-error-alert">
+        {t('errorLoading')}
+      </Alert>
+    );
   }
 
   if (servers.length === 0) {
-    return <Alert color="warning" data-cy="mqtt-server-list-no-servers-alert">{t('noServersConfigured')}</Alert>;
+    return (
+      <Alert color="warning" data-cy="mqtt-server-list-no-servers-alert">
+        {t('noServersConfigured')}
+      </Alert>
+    );
   }
 
   return (
@@ -140,10 +160,20 @@ export function MqttServerList() {
             <p>{t('deleteConfirmation')}</p>
           </ModalBody>
           <ModalFooter>
-            <Button color="default" variant="flat" onPress={onClose} data-cy="mqtt-server-list-delete-confirmation-cancel-button">
+            <Button
+              color="default"
+              variant="flat"
+              onPress={onClose}
+              data-cy="mqtt-server-list-delete-confirmation-cancel-button"
+            >
               {t('cancel')}
             </Button>
-            <Button color="danger" onPress={confirmDelete} isLoading={deleteServer.isPending} data-cy="mqtt-server-list-delete-confirmation-delete-button">
+            <Button
+              color="danger"
+              onPress={confirmDelete}
+              isLoading={deleteServer.isPending}
+              data-cy="mqtt-server-list-delete-confirmation-delete-button"
+            >
               {t('deleteServer')}
             </Button>
           </ModalFooter>

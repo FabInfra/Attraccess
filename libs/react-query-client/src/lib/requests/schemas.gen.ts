@@ -576,93 +576,6 @@ export const $UpdateEmailTemplateDto = {
     }
 } as const;
 
-export const $CreateResourceGroupDto = {
-    type: 'object',
-    properties: {
-        name: {
-            type: 'string'
-        },
-        description: {
-            type: 'string'
-        }
-    },
-    required: ['name']
-} as const;
-
-export const $ResourceGroup = {
-    type: 'object',
-    properties: {
-        id: {
-            type: 'number',
-            description: 'The unique identifier of the resource group',
-            example: 1
-        },
-        name: {
-            type: 'string',
-            description: 'The name of the resource',
-            example: '3D Printer'
-        },
-        description: {
-            type: 'string',
-            description: 'A detailed description of the resource',
-            example: 'Prusa i3 MK3S+ 3D printer with 0.4mm nozzle'
-        },
-        createdAt: {
-            format: 'date-time',
-            type: 'string',
-            description: 'When the resource was created'
-        },
-        updatedAt: {
-            format: 'date-time',
-            type: 'string',
-            description: 'When the resource was last updated'
-        }
-    },
-    required: ['id', 'name', 'createdAt', 'updatedAt']
-} as const;
-
-export const $PaginatedResourceGroupResponseDto = {
-    type: 'object',
-    properties: {
-        total: {
-            type: 'number'
-        },
-        page: {
-            type: 'number'
-        },
-        limit: {
-            type: 'number'
-        },
-        nextPage: {
-            type: 'integer',
-            nullable: true,
-            description: 'The next page number, or null if it is the last page.'
-        },
-        totalPages: {
-            type: 'number'
-        },
-        data: {
-            type: 'array',
-            items: {
-                '$ref': '#/components/schemas/ResourceGroup'
-            }
-        }
-    },
-    required: ['total', 'page', 'limit', 'nextPage', 'totalPages', 'data']
-} as const;
-
-export const $UpdateResourceGroupDto = {
-    type: 'object',
-    properties: {
-        name: {
-            type: 'string'
-        },
-        description: {
-            type: 'string'
-        }
-    }
-} as const;
-
 export const $CreateResourceDto = {
     type: 'object',
     properties: {
@@ -707,6 +620,38 @@ This is a markdown documentation for the resource.`
         }
     },
     required: ['name']
+} as const;
+
+export const $ResourceGroup = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'number',
+            description: 'The unique identifier of the resource group',
+            example: 1
+        },
+        name: {
+            type: 'string',
+            description: 'The name of the resource',
+            example: '3D Printer'
+        },
+        description: {
+            type: 'string',
+            description: 'A detailed description of the resource',
+            example: 'Prusa i3 MK3S+ 3D printer with 0.4mm nozzle'
+        },
+        createdAt: {
+            format: 'date-time',
+            type: 'string',
+            description: 'When the resource was created'
+        },
+        updatedAt: {
+            format: 'date-time',
+            type: 'string',
+            description: 'When the resource was last updated'
+        }
+    },
+    required: ['id', 'name', 'createdAt', 'updatedAt']
 } as const;
 
 export const $Resource = {
@@ -854,367 +799,6 @@ This is a markdown documentation for the resource.`
             example: false
         }
     }
-} as const;
-
-export const $StartUsageSessionDto = {
-    type: 'object',
-    properties: {
-        notes: {
-            type: 'string',
-            description: 'Optional notes about the usage session',
-            example: 'Printing a prototype case'
-        },
-        forceTakeOver: {
-            type: 'boolean',
-            description: 'Whether to force takeover of an existing session (only works if resource allows takeover)',
-            example: false,
-            default: false
-        }
-    }
-} as const;
-
-export const $ResourceUsage = {
-    type: 'object',
-    properties: {
-        id: {
-            type: 'number',
-            description: 'The unique identifier of the resource usage',
-            example: 1
-        },
-        resourceId: {
-            type: 'number',
-            description: 'The ID of the resource being used',
-            example: 1
-        },
-        userId: {
-            type: 'number',
-            description: 'The ID of the user using the resource (null if user was deleted)',
-            example: 1
-        },
-        startTime: {
-            format: 'date-time',
-            type: 'string',
-            description: 'When the usage session started'
-        },
-        startNotes: {
-            type: 'string',
-            description: 'Notes provided when starting the session',
-            example: 'Starting prototype development for client XYZ'
-        },
-        endTime: {
-            format: 'date-time',
-            type: 'string',
-            description: 'When the usage session ended'
-        },
-        endNotes: {
-            type: 'string',
-            description: 'Notes provided when ending the session',
-            example: 'Completed initial prototype, material usage: 500g'
-        },
-        resource: {
-            description: 'The resource being used',
-            allOf: [
-                {
-                    '$ref': '#/components/schemas/Resource'
-                }
-            ]
-        },
-        user: {
-            description: 'The user who used the resource',
-            allOf: [
-                {
-                    '$ref': '#/components/schemas/User'
-                }
-            ]
-        },
-        usageInMinutes: {
-            type: 'number',
-            description: 'The duration of the usage session in minutes',
-            example: 120
-        }
-    },
-    required: ['id', 'resourceId', 'startTime', 'usageInMinutes']
-} as const;
-
-export const $EndUsageSessionDto = {
-    type: 'object',
-    properties: {
-        notes: {
-            type: 'string',
-            description: 'Additional notes about the completed session',
-            example: 'Print completed successfully'
-        },
-        endTime: {
-            format: 'date-time',
-            type: 'string',
-            description: 'The end time of the session. If not provided, current time will be used.'
-        }
-    }
-} as const;
-
-export const $GetResourceHistoryResponseDto = {
-    type: 'object',
-    properties: {
-        total: {
-            type: 'number'
-        },
-        page: {
-            type: 'number'
-        },
-        limit: {
-            type: 'number'
-        },
-        nextPage: {
-            type: 'integer',
-            nullable: true,
-            description: 'The next page number, or null if it is the last page.'
-        },
-        totalPages: {
-            type: 'number'
-        },
-        data: {
-            type: 'array',
-            items: {
-                '$ref': '#/components/schemas/ResourceUsage'
-            }
-        }
-    },
-    required: ['total', 'page', 'limit', 'nextPage', 'totalPages', 'data']
-} as const;
-
-export const $GetActiveUsageSessionDto = {
-    type: 'object',
-    properties: {
-        usage: {
-            description: 'The active usage session or null if none exists',
-            nullable: true,
-            allOf: [
-                {
-                    '$ref': '#/components/schemas/ResourceUsage'
-                }
-            ]
-        }
-    },
-    required: ['usage']
-} as const;
-
-export const $CompleteIntroductionDto = {
-    type: 'object',
-    properties: {
-        userId: {
-            type: 'number',
-            description: 'User ID',
-            example: 1
-        }
-    }
-} as const;
-
-export const $ResourceIntroductionHistoryItem = {
-    type: 'object',
-    properties: {
-        id: {
-            type: 'number',
-            description: 'The unique identifier of the introduction history entry',
-            example: 1
-        },
-        introductionId: {
-            type: 'number',
-            description: 'The ID of the related introduction',
-            example: 1
-        },
-        action: {
-            type: 'string',
-            description: 'The action performed (revoke or unrevoke)',
-            enum: ['revoke', 'unrevoke'],
-            example: 'revoke'
-        },
-        performedByUserId: {
-            type: 'number',
-            description: 'The ID of the user who performed the action',
-            example: 1
-        },
-        comment: {
-            type: 'string',
-            description: 'Optional comment explaining the reason for the action',
-            example: 'User no longer requires access to this resource'
-        },
-        createdAt: {
-            format: 'date-time',
-            type: 'string',
-            description: 'When the action was performed',
-            example: '2021-01-01T00:00:00.000Z'
-        },
-        performedByUser: {
-            description: 'The user who performed the action',
-            allOf: [
-                {
-                    '$ref': '#/components/schemas/User'
-                }
-            ]
-        }
-    },
-    required: ['id', 'introductionId', 'action', 'performedByUserId', 'createdAt', 'performedByUser']
-} as const;
-
-export const $ResourceIntroduction = {
-    type: 'object',
-    properties: {
-        id: {
-            type: 'number',
-            description: 'The unique identifier of the introduction',
-            example: 1
-        },
-        resourceId: {
-            type: 'number',
-            description: 'The ID of the resource',
-            example: 1
-        },
-        receiverUserId: {
-            type: 'number',
-            description: 'The ID of the user who received the introduction',
-            example: 1
-        },
-        tutorUserId: {
-            type: 'number',
-            description: 'The ID of the user who tutored the receiver',
-            example: 2
-        },
-        completedAt: {
-            format: 'date-time',
-            type: 'string',
-            description: 'When the introduction was completed',
-            example: '2021-01-01T00:00:00.000Z'
-        },
-        createdAt: {
-            format: 'date-time',
-            type: 'string',
-            description: 'When the introduction record was created',
-            example: '2021-01-01T00:00:00.000Z'
-        },
-        receiverUser: {
-            description: 'The user who received the introduction',
-            allOf: [
-                {
-                    '$ref': '#/components/schemas/User'
-                }
-            ]
-        },
-        tutorUser: {
-            description: 'The user who tutored the receiver',
-            allOf: [
-                {
-                    '$ref': '#/components/schemas/User'
-                }
-            ]
-        },
-        history: {
-            description: 'History of revoke/unrevoke actions for this introduction',
-            type: 'array',
-            items: {
-                '$ref': '#/components/schemas/ResourceIntroductionHistoryItem'
-            }
-        }
-    },
-    required: ['id', 'resourceId', 'receiverUserId', 'tutorUserId', 'completedAt', 'createdAt', 'receiverUser', 'tutorUser', 'history']
-} as const;
-
-export const $PaginatedResourceIntroductionResponseDto = {
-    type: 'object',
-    properties: {
-        total: {
-            type: 'number'
-        },
-        page: {
-            type: 'number'
-        },
-        limit: {
-            type: 'number'
-        },
-        nextPage: {
-            type: 'integer',
-            nullable: true,
-            description: 'The next page number, or null if it is the last page.'
-        },
-        totalPages: {
-            type: 'number'
-        },
-        data: {
-            type: 'array',
-            items: {
-                '$ref': '#/components/schemas/ResourceIntroduction'
-            }
-        }
-    },
-    required: ['total', 'page', 'limit', 'nextPage', 'totalPages', 'data']
-} as const;
-
-export const $RevokeIntroductionDto = {
-    type: 'object',
-    properties: {
-        comment: {
-            type: 'string',
-            description: 'Optional comment explaining the reason for revoking access',
-            example: 'User no longer works on this project'
-        }
-    }
-} as const;
-
-export const $UnrevokeIntroductionDto = {
-    type: 'object',
-    properties: {
-        comment: {
-            type: 'string',
-            description: 'Optional comment explaining the reason for unrevoking access',
-            example: 'User rejoined the project'
-        }
-    }
-} as const;
-
-export const $ResourceIntroductionUser = {
-    type: 'object',
-    properties: {
-        id: {
-            type: 'number',
-            description: 'The unique identifier of the introduction permission',
-            example: 1
-        },
-        resourceId: {
-            type: 'number',
-            description: 'The ID of the resource',
-            example: 1
-        },
-        userId: {
-            type: 'number',
-            description: 'The ID of the user who can give introductions',
-            example: 1
-        },
-        grantedAt: {
-            format: 'date-time',
-            type: 'string',
-            description: 'When the permission was granted'
-        },
-        user: {
-            description: 'The user who can give introductions',
-            allOf: [
-                {
-                    '$ref': '#/components/schemas/User'
-                }
-            ]
-        }
-    },
-    required: ['id', 'resourceId', 'userId', 'grantedAt', 'user']
-} as const;
-
-export const $CanManageIntroducersResponseDto = {
-    type: 'object',
-    properties: {
-        canManageIntroducers: {
-            type: 'boolean',
-            description: 'Whether the user can manage introducers for the resource',
-            example: true
-        }
-    },
-    required: ['canManageIntroducers']
 } as const;
 
 export const $MqttServer = {
@@ -1892,6 +1476,391 @@ export const $TestMqttConfigResponseDto = {
         }
     },
     required: ['success', 'message']
+} as const;
+
+export const $CreateResourceGroupDto = {
+    type: 'object',
+    properties: {
+        name: {
+            type: 'string',
+            description: 'The name of the resource group',
+            example: 'Resource Group 1'
+        },
+        description: {
+            type: 'string',
+            description: 'The description of the resource group',
+            example: 'This is a resource group'
+        }
+    },
+    required: ['name']
+} as const;
+
+export const $UpdateResourceGroupDto = {
+    type: 'object',
+    properties: {
+        name: {
+            type: 'string',
+            description: 'The name of the resource group',
+            example: 'Resource Group 1'
+        },
+        description: {
+            type: 'string',
+            description: 'The description of the resource group',
+            example: 'This is a resource group'
+        }
+    },
+    required: ['name']
+} as const;
+
+export const $ResourceIntroductionHistoryItem = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'number',
+            description: 'The unique identifier of the introduction history entry',
+            example: 1
+        },
+        introductionId: {
+            type: 'number',
+            description: 'The ID of the related introduction',
+            example: 1
+        },
+        action: {
+            type: 'string',
+            description: 'The action performed (revoke or grant)',
+            enum: ['revoke', 'grant'],
+            example: 'revoke'
+        },
+        performedByUserId: {
+            type: 'number',
+            description: 'The ID of the user who performed the action',
+            example: 1
+        },
+        comment: {
+            type: 'string',
+            description: 'Optional comment explaining the reason for the action',
+            example: 'User no longer requires access to this resource'
+        },
+        createdAt: {
+            format: 'date-time',
+            type: 'string',
+            description: 'When the action was performed',
+            example: '2021-01-01T00:00:00.000Z'
+        },
+        performedByUser: {
+            description: 'The user who performed the action',
+            allOf: [
+                {
+                    '$ref': '#/components/schemas/User'
+                }
+            ]
+        }
+    },
+    required: ['id', 'introductionId', 'action', 'performedByUserId', 'createdAt', 'performedByUser']
+} as const;
+
+export const $ResourceIntroduction = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'number',
+            description: 'The unique identifier of the introduction',
+            example: 1
+        },
+        resourceId: {
+            type: 'number',
+            description: 'The ID of the resource (if this is a resource-specific introduction)',
+            example: 1
+        },
+        receiverUserId: {
+            type: 'number',
+            description: 'The ID of the user who received the introduction',
+            example: 1
+        },
+        tutorUserId: {
+            type: 'number',
+            description: 'The ID of the user who tutored the receiver',
+            example: 2
+        },
+        resourceGroupId: {
+            type: 'number',
+            description: 'The ID of the resource group (if this is a group-level introduction)',
+            example: 1
+        },
+        completedAt: {
+            format: 'date-time',
+            type: 'string',
+            description: 'When the introduction was completed',
+            example: '2021-01-01T00:00:00.000Z'
+        },
+        createdAt: {
+            format: 'date-time',
+            type: 'string',
+            description: 'When the introduction record was created',
+            example: '2021-01-01T00:00:00.000Z'
+        },
+        receiverUser: {
+            description: 'The user who received the introduction',
+            allOf: [
+                {
+                    '$ref': '#/components/schemas/User'
+                }
+            ]
+        },
+        tutorUser: {
+            description: 'The user who tutored the receiver',
+            allOf: [
+                {
+                    '$ref': '#/components/schemas/User'
+                }
+            ]
+        },
+        history: {
+            description: 'History of revoke/unrevoke actions for this introduction',
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/ResourceIntroductionHistoryItem'
+            }
+        }
+    },
+    required: ['id', 'receiverUserId', 'tutorUserId', 'completedAt', 'createdAt', 'receiverUser', 'tutorUser', 'history']
+} as const;
+
+export const $UpdateResourceGroupIntroductionDto = {
+    type: 'object',
+    properties: {
+        comment: {
+            type: 'string',
+            description: 'The comment for the action',
+            example: 'This is a comment'
+        }
+    }
+} as const;
+
+export const $ResourceIntroducer = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'number',
+            description: 'The unique identifier of the introduction permission',
+            example: 1
+        },
+        resourceId: {
+            type: 'number',
+            description: 'The ID of the resource (if permission is for a specific resource)',
+            example: 1
+        },
+        userId: {
+            type: 'number',
+            description: 'The ID of the user who can give introductions',
+            example: 1
+        },
+        resourceGroupId: {
+            type: 'number',
+            description: 'The ID of the resource group (if permission is for a group)',
+            example: 1
+        },
+        grantedAt: {
+            format: 'date-time',
+            type: 'string',
+            description: 'When the permission was granted'
+        },
+        user: {
+            description: 'The user who can give introductions',
+            allOf: [
+                {
+                    '$ref': '#/components/schemas/User'
+                }
+            ]
+        }
+    },
+    required: ['id', 'userId', 'grantedAt', 'user']
+} as const;
+
+export const $IsResourceGroupIntroducerResponseDto = {
+    type: 'object',
+    properties: {
+        isIntroducer: {
+            type: 'boolean',
+            description: 'Whether the user is an introducer for the resource'
+        }
+    },
+    required: ['isIntroducer']
+} as const;
+
+export const $StartUsageSessionDto = {
+    type: 'object',
+    properties: {
+        notes: {
+            type: 'string',
+            description: 'Optional notes about the usage session',
+            example: 'Printing a prototype case'
+        },
+        forceTakeOver: {
+            type: 'boolean',
+            description: 'Whether to force takeover of an existing session (only works if resource allows takeover)',
+            example: false,
+            default: false
+        }
+    }
+} as const;
+
+export const $ResourceUsage = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'number',
+            description: 'The unique identifier of the resource usage',
+            example: 1
+        },
+        resourceId: {
+            type: 'number',
+            description: 'The ID of the resource being used',
+            example: 1
+        },
+        userId: {
+            type: 'number',
+            description: 'The ID of the user using the resource (null if user was deleted)',
+            example: 1
+        },
+        startTime: {
+            format: 'date-time',
+            type: 'string',
+            description: 'When the usage session started'
+        },
+        startNotes: {
+            type: 'string',
+            description: 'Notes provided when starting the session',
+            example: 'Starting prototype development for client XYZ'
+        },
+        endTime: {
+            format: 'date-time',
+            type: 'string',
+            description: 'When the usage session ended'
+        },
+        endNotes: {
+            type: 'string',
+            description: 'Notes provided when ending the session',
+            example: 'Completed initial prototype, material usage: 500g'
+        },
+        resource: {
+            description: 'The resource being used',
+            allOf: [
+                {
+                    '$ref': '#/components/schemas/Resource'
+                }
+            ]
+        },
+        user: {
+            description: 'The user who used the resource',
+            allOf: [
+                {
+                    '$ref': '#/components/schemas/User'
+                }
+            ]
+        },
+        usageInMinutes: {
+            type: 'number',
+            description: 'The duration of the usage session in minutes',
+            example: 120
+        }
+    },
+    required: ['id', 'resourceId', 'startTime', 'usageInMinutes']
+} as const;
+
+export const $EndUsageSessionDto = {
+    type: 'object',
+    properties: {
+        notes: {
+            type: 'string',
+            description: 'Additional notes about the completed session',
+            example: 'Print completed successfully'
+        },
+        endTime: {
+            format: 'date-time',
+            type: 'string',
+            description: 'The end time of the session. If not provided, current time will be used.'
+        }
+    }
+} as const;
+
+export const $GetResourceHistoryResponseDto = {
+    type: 'object',
+    properties: {
+        total: {
+            type: 'number'
+        },
+        page: {
+            type: 'number'
+        },
+        limit: {
+            type: 'number'
+        },
+        nextPage: {
+            type: 'integer',
+            nullable: true,
+            description: 'The next page number, or null if it is the last page.'
+        },
+        totalPages: {
+            type: 'number'
+        },
+        data: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/ResourceUsage'
+            }
+        }
+    },
+    required: ['total', 'page', 'limit', 'nextPage', 'totalPages', 'data']
+} as const;
+
+export const $GetActiveUsageSessionDto = {
+    type: 'object',
+    properties: {
+        usage: {
+            description: 'The active usage session or null if none exists',
+            nullable: true,
+            allOf: [
+                {
+                    '$ref': '#/components/schemas/ResourceUsage'
+                }
+            ]
+        }
+    },
+    required: ['usage']
+} as const;
+
+export const $CanControlResponseDto = {
+    type: 'object',
+    properties: {
+        canControl: {
+            type: 'boolean',
+            description: 'Whether the user can control the resource'
+        }
+    },
+    required: ['canControl']
+} as const;
+
+export const $IsResourceIntroducerResponseDto = {
+    type: 'object',
+    properties: {
+        isIntroducer: {
+            type: 'boolean',
+            description: 'Whether the user is an introducer for the resource'
+        }
+    },
+    required: ['isIntroducer']
+} as const;
+
+export const $UpdateResourceIntroductionDto = {
+    type: 'object',
+    properties: {
+        comment: {
+            type: 'string',
+            description: 'The comment for the action',
+            example: 'This is a comment'
+        }
+    }
 } as const;
 
 export const $PluginMainFrontend = {

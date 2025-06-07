@@ -1,0 +1,51 @@
+{
+  "form": {
+    "title": "Details",
+    "subtitle": "Edit the group name and description",
+    "fields": {
+      "name": {
+        "label": "Group Name",
+        "placeholder": "Enter group name"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Enter group description (optional)"
+      }
+    },
+    "buttons": {
+      "save": "Save Changes",
+      "delete": "Delete Group"
+    }
+  },
+  "states": {
+    "loading": "Loading group details..."
+  },
+  "errors": {
+    "load": {
+      "title": "Failed to load group",
+      "description": "There was an error loading the group details. Please try refreshing the page."
+    }
+  },
+  "operations": {
+    "update": {
+      "success": {
+        "title": "Group updated successfully",
+        "description": "The group details have been saved"
+      },
+      "error": {
+        "title": "Failed to update group",
+        "description": "There was an error updating the group: {{error}}"
+      }
+    },
+    "delete": {
+      "success": {
+        "title": "Group deleted successfully",
+        "description": "The group has been deleted"
+      },
+      "error": {
+        "title": "Failed to delete group",
+        "description": "There was an error deleting the group: {{error}}"
+      }
+    }
+  }
+}

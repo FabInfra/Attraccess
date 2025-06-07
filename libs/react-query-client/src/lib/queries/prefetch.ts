@@ -1,14 +1,15 @@
 // generated with @7nohe/openapi-react-query-codegen@1.6.2 
 
 import { type QueryClient } from "@tanstack/react-query";
-import { AnalyticsService, ApplicationService, EmailTemplatesService, FabReaderNfcCardsService, FabReaderReadersService, MqttResourceConfigurationService, MqttServersService, PluginService, ResourceGroupsService, ResourceIntroducersService, ResourceIntroductionsService, ResourceUsageService, ResourcesService, SseService, SsoService, UsersService, WebhooksService } from "../requests/services.gen";
+import { AccessControlService, AnalyticsService, AuthenticationService, EmailTemplatesService, FabReaderService, MqttService, PluginsService, ResourcesService, SystemService, UsersService, WebhooksService } from "../requests/services.gen";
 import * as Common from "./common";
-export const prefetchUseApplicationServiceInfo = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseApplicationServiceInfoKeyFn(), queryFn: () => ApplicationService.info() });
-export const prefetchUseUsersServiceGetAllUsers = (queryClient: QueryClient, { limit, page, search }: {
+export const prefetchUseSystemServiceInfo = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseSystemServiceInfoKeyFn(), queryFn: () => SystemService.info() });
+export const prefetchUseUsersServiceFindMany = (queryClient: QueryClient, { ids, limit, page, search }: {
+  ids?: number[];
   limit?: number;
   page?: number;
   search?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseUsersServiceGetAllUsersKeyFn({ limit, page, search }), queryFn: () => UsersService.getAllUsers({ limit, page, search }) });
+} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseUsersServiceFindManyKeyFn({ ids, limit, page, search }), queryFn: () => UsersService.findMany({ ids, limit, page, search }) });
 export const prefetchUseUsersServiceGetCurrent = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseUsersServiceGetCurrentKeyFn(), queryFn: () => UsersService.getCurrent() });
 export const prefetchUseUsersServiceGetOneUserById = (queryClient: QueryClient, { id }: {
   id: number;
@@ -21,34 +22,26 @@ export const prefetchUseUsersServiceGetAllWithPermission = (queryClient: QueryCl
   page?: number;
   permission?: "canManageResources" | "canManageSystemConfiguration" | "canManageUsers";
 } = {}) => queryClient.prefetchQuery({ queryKey: Common.UseUsersServiceGetAllWithPermissionKeyFn({ limit, page, permission }), queryFn: () => UsersService.getAllWithPermission({ limit, page, permission }) });
-export const prefetchUseSsoServiceGetAllSsoProviders = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseSsoServiceGetAllSsoProvidersKeyFn(), queryFn: () => SsoService.getAllSsoProviders() });
-export const prefetchUseSsoServiceGetOneSsoProviderById = (queryClient: QueryClient, { id }: {
+export const prefetchUseAuthenticationServiceGetAllSsoProviders = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseAuthenticationServiceGetAllSsoProvidersKeyFn(), queryFn: () => AuthenticationService.getAllSsoProviders() });
+export const prefetchUseAuthenticationServiceGetOneSsoProviderById = (queryClient: QueryClient, { id }: {
   id: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseSsoServiceGetOneSsoProviderByIdKeyFn({ id }), queryFn: () => SsoService.getOneSsoProviderById({ id }) });
-export const prefetchUseSsoServiceLoginWithOidc = (queryClient: QueryClient, { providerId, redirectTo }: {
+}) => queryClient.prefetchQuery({ queryKey: Common.UseAuthenticationServiceGetOneSsoProviderByIdKeyFn({ id }), queryFn: () => AuthenticationService.getOneSsoProviderById({ id }) });
+export const prefetchUseAuthenticationServiceLoginWithOidc = (queryClient: QueryClient, { providerId, redirectTo }: {
   providerId: string;
   redirectTo?: unknown;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseSsoServiceLoginWithOidcKeyFn({ providerId, redirectTo }), queryFn: () => SsoService.loginWithOidc({ providerId, redirectTo }) });
-export const prefetchUseSsoServiceOidcLoginCallback = (queryClient: QueryClient, { code, iss, providerId, redirectTo, sessionState, state }: {
+}) => queryClient.prefetchQuery({ queryKey: Common.UseAuthenticationServiceLoginWithOidcKeyFn({ providerId, redirectTo }), queryFn: () => AuthenticationService.loginWithOidc({ providerId, redirectTo }) });
+export const prefetchUseAuthenticationServiceOidcLoginCallback = (queryClient: QueryClient, { code, iss, providerId, redirectTo, sessionState, state }: {
   code: unknown;
   iss: unknown;
   providerId: string;
   redirectTo: string;
   sessionState: unknown;
   state: unknown;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseSsoServiceOidcLoginCallbackKeyFn({ code, iss, providerId, redirectTo, sessionState, state }), queryFn: () => SsoService.oidcLoginCallback({ code, iss, providerId, redirectTo, sessionState, state }) });
+}) => queryClient.prefetchQuery({ queryKey: Common.UseAuthenticationServiceOidcLoginCallbackKeyFn({ code, iss, providerId, redirectTo, sessionState, state }), queryFn: () => AuthenticationService.oidcLoginCallback({ code, iss, providerId, redirectTo, sessionState, state }) });
 export const prefetchUseEmailTemplatesServiceEmailTemplateControllerFindAll = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseEmailTemplatesServiceEmailTemplateControllerFindAllKeyFn(), queryFn: () => EmailTemplatesService.emailTemplateControllerFindAll() });
 export const prefetchUseEmailTemplatesServiceEmailTemplateControllerFindOne = (queryClient: QueryClient, { type }: {
   type: "verify-email" | "reset-password";
 }) => queryClient.prefetchQuery({ queryKey: Common.UseEmailTemplatesServiceEmailTemplateControllerFindOneKeyFn({ type }), queryFn: () => EmailTemplatesService.emailTemplateControllerFindOne({ type }) });
-export const prefetchUseResourceGroupsServiceGetAllResourceGroups = (queryClient: QueryClient, { limit, page, search }: {
-  limit?: number;
-  page?: number;
-  search?: string;
-} = {}) => queryClient.prefetchQuery({ queryKey: Common.UseResourceGroupsServiceGetAllResourceGroupsKeyFn({ limit, page, search }), queryFn: () => ResourceGroupsService.getAllResourceGroups({ limit, page, search }) });
-export const prefetchUseResourceGroupsServiceGetOneResourceGroupById = (queryClient: QueryClient, { id }: {
-  id: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseResourceGroupsServiceGetOneResourceGroupByIdKeyFn({ id }), queryFn: () => ResourceGroupsService.getOneResourceGroupById({ id }) });
 export const prefetchUseResourcesServiceGetAllResources = (queryClient: QueryClient, { groupId, ids, limit, page, search }: {
   groupId?: number;
   ids?: number[];
@@ -59,79 +52,85 @@ export const prefetchUseResourcesServiceGetAllResources = (queryClient: QueryCli
 export const prefetchUseResourcesServiceGetOneResourceById = (queryClient: QueryClient, { id }: {
   id: number;
 }) => queryClient.prefetchQuery({ queryKey: Common.UseResourcesServiceGetOneResourceByIdKeyFn({ id }), queryFn: () => ResourcesService.getOneResourceById({ id }) });
-export const prefetchUseResourceUsageServiceGetHistoryOfResourceUsage = (queryClient: QueryClient, { limit, page, resourceId, userId }: {
+export const prefetchUseResourcesServiceSseControllerStreamEvents = (queryClient: QueryClient, { resourceId }: {
+  resourceId: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseResourcesServiceSseControllerStreamEventsKeyFn({ resourceId }), queryFn: () => ResourcesService.sseControllerStreamEvents({ resourceId }) });
+export const prefetchUseResourcesServiceResourceGroupsGetMany = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseResourcesServiceResourceGroupsGetManyKeyFn(), queryFn: () => ResourcesService.resourceGroupsGetMany() });
+export const prefetchUseResourcesServiceResourceGroupsGetOne = (queryClient: QueryClient, { id }: {
+  id: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseResourcesServiceResourceGroupsGetOneKeyFn({ id }), queryFn: () => ResourcesService.resourceGroupsGetOne({ id }) });
+export const prefetchUseResourcesServiceResourceUsageGetHistory = (queryClient: QueryClient, { limit, page, resourceId, userId }: {
   limit?: number;
   page?: number;
   resourceId: number;
   userId?: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseResourceUsageServiceGetHistoryOfResourceUsageKeyFn({ limit, page, resourceId, userId }), queryFn: () => ResourceUsageService.getHistoryOfResourceUsage({ limit, page, resourceId, userId }) });
-export const prefetchUseResourceUsageServiceGetActiveSession = (queryClient: QueryClient, { resourceId }: {
+}) => queryClient.prefetchQuery({ queryKey: Common.UseResourcesServiceResourceUsageGetHistoryKeyFn({ limit, page, resourceId, userId }), queryFn: () => ResourcesService.resourceUsageGetHistory({ limit, page, resourceId, userId }) });
+export const prefetchUseResourcesServiceResourceUsageGetActiveSession = (queryClient: QueryClient, { resourceId }: {
   resourceId: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseResourceUsageServiceGetActiveSessionKeyFn({ resourceId }), queryFn: () => ResourceUsageService.getActiveSession({ resourceId }) });
-export const prefetchUseResourceIntroductionsServiceGetAllResourceIntroductions = (queryClient: QueryClient, { limit, page, resourceId }: {
-  limit: number;
-  page?: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseResourcesServiceResourceUsageGetActiveSessionKeyFn({ resourceId }), queryFn: () => ResourcesService.resourceUsageGetActiveSession({ resourceId }) });
+export const prefetchUseResourcesServiceResourceUsageCanControl = (queryClient: QueryClient, { resourceId }: {
   resourceId: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseResourceIntroductionsServiceGetAllResourceIntroductionsKeyFn({ limit, page, resourceId }), queryFn: () => ResourceIntroductionsService.getAllResourceIntroductions({ limit, page, resourceId }) });
-export const prefetchUseResourceIntroductionsServiceCheckStatus = (queryClient: QueryClient, { resourceId }: {
-  resourceId: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseResourceIntroductionsServiceCheckStatusKeyFn({ resourceId }), queryFn: () => ResourceIntroductionsService.checkStatus({ resourceId }) });
-export const prefetchUseResourceIntroductionsServiceGetHistoryOfIntroduction = (queryClient: QueryClient, { introductionId, resourceId }: {
-  introductionId: number;
-  resourceId: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseResourceIntroductionsServiceGetHistoryOfIntroductionKeyFn({ introductionId, resourceId }), queryFn: () => ResourceIntroductionsService.getHistoryOfIntroduction({ introductionId, resourceId }) });
-export const prefetchUseResourceIntroductionsServiceCheckIsRevokedStatus = (queryClient: QueryClient, { introductionId, resourceId }: {
-  introductionId: number;
-  resourceId: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseResourceIntroductionsServiceCheckIsRevokedStatusKeyFn({ introductionId, resourceId }), queryFn: () => ResourceIntroductionsService.checkIsRevokedStatus({ introductionId, resourceId }) });
-export const prefetchUseResourceIntroductionsServiceGetOneResourceIntroduction = (queryClient: QueryClient, { introductionId, resourceId }: {
-  introductionId: number;
-  resourceId: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseResourceIntroductionsServiceGetOneResourceIntroductionKeyFn({ introductionId, resourceId }), queryFn: () => ResourceIntroductionsService.getOneResourceIntroduction({ introductionId, resourceId }) });
-export const prefetchUseResourceIntroductionsServiceCheckCanManagePermission = (queryClient: QueryClient, { resourceId }: {
-  resourceId: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseResourceIntroductionsServiceCheckCanManagePermissionKeyFn({ resourceId }), queryFn: () => ResourceIntroductionsService.checkCanManagePermission({ resourceId }) });
-export const prefetchUseResourceIntroducersServiceGetAllResourceIntroducers = (queryClient: QueryClient, { resourceId }: {
-  resourceId: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseResourceIntroducersServiceGetAllResourceIntroducersKeyFn({ resourceId }), queryFn: () => ResourceIntroducersService.getAllResourceIntroducers({ resourceId }) });
-export const prefetchUseResourceIntroducersServiceCheckCanManagePermission = (queryClient: QueryClient, { resourceId }: {
-  resourceId: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseResourceIntroducersServiceCheckCanManagePermissionKeyFn({ resourceId }), queryFn: () => ResourceIntroducersService.checkCanManagePermission({ resourceId }) });
-export const prefetchUseMqttServersServiceGetAllMqttServers = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseMqttServersServiceGetAllMqttServersKeyFn(), queryFn: () => MqttServersService.getAllMqttServers() });
-export const prefetchUseMqttServersServiceGetOneMqttServerById = (queryClient: QueryClient, { id }: {
+}) => queryClient.prefetchQuery({ queryKey: Common.UseResourcesServiceResourceUsageCanControlKeyFn({ resourceId }), queryFn: () => ResourcesService.resourceUsageCanControl({ resourceId }) });
+export const prefetchUseMqttServiceMqttServersGetAll = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseMqttServiceMqttServersGetAllKeyFn(), queryFn: () => MqttService.mqttServersGetAll() });
+export const prefetchUseMqttServiceMqttServersGetOneById = (queryClient: QueryClient, { id }: {
   id: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseMqttServersServiceGetOneMqttServerByIdKeyFn({ id }), queryFn: () => MqttServersService.getOneMqttServerById({ id }) });
-export const prefetchUseMqttServersServiceGetStatusOfOne = (queryClient: QueryClient, { id }: {
+}) => queryClient.prefetchQuery({ queryKey: Common.UseMqttServiceMqttServersGetOneByIdKeyFn({ id }), queryFn: () => MqttService.mqttServersGetOneById({ id }) });
+export const prefetchUseMqttServiceMqttServersGetStatusOfOne = (queryClient: QueryClient, { id }: {
   id: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseMqttServersServiceGetStatusOfOneKeyFn({ id }), queryFn: () => MqttServersService.getStatusOfOne({ id }) });
-export const prefetchUseMqttServersServiceGetStatusOfAll = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseMqttServersServiceGetStatusOfAllKeyFn(), queryFn: () => MqttServersService.getStatusOfAll() });
-export const prefetchUseSseServiceSseControllerStreamEvents = (queryClient: QueryClient, { resourceId }: {
+}) => queryClient.prefetchQuery({ queryKey: Common.UseMqttServiceMqttServersGetStatusOfOneKeyFn({ id }), queryFn: () => MqttService.mqttServersGetStatusOfOne({ id }) });
+export const prefetchUseMqttServiceMqttServersGetStatusOfAll = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseMqttServiceMqttServersGetStatusOfAllKeyFn(), queryFn: () => MqttService.mqttServersGetStatusOfAll() });
+export const prefetchUseMqttServiceMqttResourceConfigGetAll = (queryClient: QueryClient, { resourceId }: {
   resourceId: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseSseServiceSseControllerStreamEventsKeyFn({ resourceId }), queryFn: () => SseService.sseControllerStreamEvents({ resourceId }) });
-export const prefetchUseWebhooksServiceGetAllWebhookConfigurations = (queryClient: QueryClient, { resourceId }: {
-  resourceId: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseWebhooksServiceGetAllWebhookConfigurationsKeyFn({ resourceId }), queryFn: () => WebhooksService.getAllWebhookConfigurations({ resourceId }) });
-export const prefetchUseWebhooksServiceGetOneWebhookConfigurationById = (queryClient: QueryClient, { id, resourceId }: {
-  id: number;
-  resourceId: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseWebhooksServiceGetOneWebhookConfigurationByIdKeyFn({ id, resourceId }), queryFn: () => WebhooksService.getOneWebhookConfigurationById({ id, resourceId }) });
-export const prefetchUseMqttResourceConfigurationServiceGetAllMqttConfigurations = (queryClient: QueryClient, { resourceId }: {
-  resourceId: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseMqttResourceConfigurationServiceGetAllMqttConfigurationsKeyFn({ resourceId }), queryFn: () => MqttResourceConfigurationService.getAllMqttConfigurations({ resourceId }) });
-export const prefetchUseMqttResourceConfigurationServiceGetOneMqttConfiguration = (queryClient: QueryClient, { configId, resourceId }: {
+}) => queryClient.prefetchQuery({ queryKey: Common.UseMqttServiceMqttResourceConfigGetAllKeyFn({ resourceId }), queryFn: () => MqttService.mqttResourceConfigGetAll({ resourceId }) });
+export const prefetchUseMqttServiceMqttResourceConfigGetOne = (queryClient: QueryClient, { configId, resourceId }: {
   configId: number;
   resourceId: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseMqttResourceConfigurationServiceGetOneMqttConfigurationKeyFn({ configId, resourceId }), queryFn: () => MqttResourceConfigurationService.getOneMqttConfiguration({ configId, resourceId }) });
-export const prefetchUsePluginServiceGetPlugins = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UsePluginServiceGetPluginsKeyFn(), queryFn: () => PluginService.getPlugins() });
-export const prefetchUsePluginServiceGetFrontendPluginFile = (queryClient: QueryClient, { filePath, pluginName }: {
+}) => queryClient.prefetchQuery({ queryKey: Common.UseMqttServiceMqttResourceConfigGetOneKeyFn({ configId, resourceId }), queryFn: () => MqttService.mqttResourceConfigGetOne({ configId, resourceId }) });
+export const prefetchUseWebhooksServiceWebhookConfigGetAll = (queryClient: QueryClient, { resourceId }: {
+  resourceId: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseWebhooksServiceWebhookConfigGetAllKeyFn({ resourceId }), queryFn: () => WebhooksService.webhookConfigGetAll({ resourceId }) });
+export const prefetchUseWebhooksServiceWebhookConfigGetOneById = (queryClient: QueryClient, { id, resourceId }: {
+  id: number;
+  resourceId: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseWebhooksServiceWebhookConfigGetOneByIdKeyFn({ id, resourceId }), queryFn: () => WebhooksService.webhookConfigGetOneById({ id, resourceId }) });
+export const prefetchUseAccessControlServiceResourceGroupIntroductionsGetMany = (queryClient: QueryClient, { groupId }: {
+  groupId: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseAccessControlServiceResourceGroupIntroductionsGetManyKeyFn({ groupId }), queryFn: () => AccessControlService.resourceGroupIntroductionsGetMany({ groupId }) });
+export const prefetchUseAccessControlServiceResourceGroupIntroductionsGetHistory = (queryClient: QueryClient, { groupId, userId }: {
+  groupId: number;
+  userId: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseAccessControlServiceResourceGroupIntroductionsGetHistoryKeyFn({ groupId, userId }), queryFn: () => AccessControlService.resourceGroupIntroductionsGetHistory({ groupId, userId }) });
+export const prefetchUseAccessControlServiceResourceGroupIntroducersGetMany = (queryClient: QueryClient, { groupId }: {
+  groupId: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseAccessControlServiceResourceGroupIntroducersGetManyKeyFn({ groupId }), queryFn: () => AccessControlService.resourceGroupIntroducersGetMany({ groupId }) });
+export const prefetchUseAccessControlServiceResourceGroupIntroducersIsIntroducer = (queryClient: QueryClient, { groupId, userId }: {
+  groupId: number;
+  userId: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseAccessControlServiceResourceGroupIntroducersIsIntroducerKeyFn({ groupId, userId }), queryFn: () => AccessControlService.resourceGroupIntroducersIsIntroducer({ groupId, userId }) });
+export const prefetchUseAccessControlServiceResourceIntroducersIsIntroducer = (queryClient: QueryClient, { resourceId, userId }: {
+  resourceId: number;
+  userId: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseAccessControlServiceResourceIntroducersIsIntroducerKeyFn({ resourceId, userId }), queryFn: () => AccessControlService.resourceIntroducersIsIntroducer({ resourceId, userId }) });
+export const prefetchUseAccessControlServiceResourceIntroducersGetMany = (queryClient: QueryClient, { resourceId }: {
+  resourceId: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseAccessControlServiceResourceIntroducersGetManyKeyFn({ resourceId }), queryFn: () => AccessControlService.resourceIntroducersGetMany({ resourceId }) });
+export const prefetchUseAccessControlServiceResourceIntroductionsGetMany = (queryClient: QueryClient, { resourceId }: {
+  resourceId: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseAccessControlServiceResourceIntroductionsGetManyKeyFn({ resourceId }), queryFn: () => AccessControlService.resourceIntroductionsGetMany({ resourceId }) });
+export const prefetchUseAccessControlServiceResourceIntroductionsGetHistory = (queryClient: QueryClient, { resourceId, userId }: {
+  resourceId: number;
+  userId: number;
+}) => queryClient.prefetchQuery({ queryKey: Common.UseAccessControlServiceResourceIntroductionsGetHistoryKeyFn({ resourceId, userId }), queryFn: () => AccessControlService.resourceIntroductionsGetHistory({ resourceId, userId }) });
+export const prefetchUsePluginsServiceGetPlugins = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UsePluginsServiceGetPluginsKeyFn(), queryFn: () => PluginsService.getPlugins() });
+export const prefetchUsePluginsServiceGetFrontendPluginFile = (queryClient: QueryClient, { filePath, pluginName }: {
   filePath: string;
   pluginName: string;
-}) => queryClient.prefetchQuery({ queryKey: Common.UsePluginServiceGetFrontendPluginFileKeyFn({ filePath, pluginName }), queryFn: () => PluginService.getFrontendPluginFile({ filePath, pluginName }) });
-export const prefetchUseFabReaderReadersServiceGetReaderById = (queryClient: QueryClient, { readerId }: {
+}) => queryClient.prefetchQuery({ queryKey: Common.UsePluginsServiceGetFrontendPluginFileKeyFn({ filePath, pluginName }), queryFn: () => PluginsService.getFrontendPluginFile({ filePath, pluginName }) });
+export const prefetchUseFabReaderServiceGetReaderById = (queryClient: QueryClient, { readerId }: {
   readerId: number;
-}) => queryClient.prefetchQuery({ queryKey: Common.UseFabReaderReadersServiceGetReaderByIdKeyFn({ readerId }), queryFn: () => FabReaderReadersService.getReaderById({ readerId }) });
-export const prefetchUseFabReaderReadersServiceGetReaders = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseFabReaderReadersServiceGetReadersKeyFn(), queryFn: () => FabReaderReadersService.getReaders() });
-export const prefetchUseFabReaderNfcCardsServiceGetAllCards = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseFabReaderNfcCardsServiceGetAllCardsKeyFn(), queryFn: () => FabReaderNfcCardsService.getAllCards() });
+}) => queryClient.prefetchQuery({ queryKey: Common.UseFabReaderServiceGetReaderByIdKeyFn({ readerId }), queryFn: () => FabReaderService.getReaderById({ readerId }) });
+export const prefetchUseFabReaderServiceGetReaders = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseFabReaderServiceGetReadersKeyFn(), queryFn: () => FabReaderService.getReaders() });
+export const prefetchUseFabReaderServiceGetAllCards = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseFabReaderServiceGetAllCardsKeyFn(), queryFn: () => FabReaderService.getAllCards() });
 export const prefetchUseAnalyticsServiceAnalyticsControllerGetResourceUsageHoursInDateRange = (queryClient: QueryClient, { end, start }: {
   end: string;
   start: string;

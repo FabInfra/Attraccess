@@ -5,7 +5,7 @@ import { useDateTimeFormatter, useTranslations } from '@attraccess/plugins-front
 import { FabreaderEditor } from '../FabreaderEditor/FabreaderEditor';
 import de from './FabreaderList.de.json';
 import en from './FabreaderList.en.json';
-import { useFabReaderReadersServiceGetReaders } from '@attraccess/react-query-client';
+import { useFabReaderServiceGetReaders } from '@attraccess/react-query-client';
 import { useToastMessage } from '../../../components/toastProvider';
 import { PageHeader } from '../../../components/pageHeader';
 import { FabreaderFlasher } from '../FabreaderFlasher/FabreaderFlasher';
@@ -20,7 +20,7 @@ export const FabreaderList = () => {
     data: readers,
     error: readersError,
     isLoading,
-  } = useFabReaderReadersServiceGetReaders(undefined, {
+  } = useFabReaderServiceGetReaders(undefined, {
     refetchInterval: 5000,
   });
 
@@ -46,7 +46,12 @@ export const FabreaderList = () => {
         actions={
           <FabreaderFlasher>
             {(onOpen) => (
-              <Button variant="light" startContent={<CpuIcon className="w-4 h-4" />} onPress={onOpen} data-cy="fabreader-list-open-flasher-button">
+              <Button
+                variant="light"
+                startContent={<CpuIcon className="w-4 h-4" />}
+                onPress={onOpen}
+                data-cy="fabreader-list-open-flasher-button"
+              >
                 {t('page.actions.openFlasher')}
               </Button>
             )}
@@ -83,7 +88,12 @@ export const FabreaderList = () => {
                 </Chip>
               </TableCell>
               <TableCell>
-                <Button onPress={() => setOpenedReaderEditor(reader.id)} data-cy={`fabreader-list-edit-reader-button-${reader.id}`}>{t('table.actions.editReader')}</Button>
+                <Button
+                  onPress={() => setOpenedReaderEditor(reader.id)}
+                  data-cy={`fabreader-list-edit-reader-button-${reader.id}`}
+                >
+                  {t('table.actions.editReader')}
+                </Button>
               </TableCell>
             </TableRow>
           )}

@@ -1,8 +1,7 @@
 import { Alert, Divider, Spinner } from '@heroui/react';
 import { Users } from 'lucide-react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
-import { AttraccessUser } from '@attraccess/plugins-frontend-ui';
-import { useResourceIntroducersServiceGetAllResourceIntroducers } from '@attraccess/react-query-client';
+import { useTranslations, AttraccessUser } from '@attraccess/plugins-frontend-ui';
+import { useAccessControlServiceResourceIntroducersGetMany } from '@attraccess/react-query-client';
 import * as en from './translations/en.json';
 import * as de from './translations/de.json';
 
@@ -10,13 +9,13 @@ interface IntroductionRequiredDisplayProps {
   resourceId: number;
 }
 
-export function IntroductionRequiredDisplay({ resourceId }: IntroductionRequiredDisplayProps) {
+export function IntroductionRequiredDisplay({ resourceId }: Readonly<IntroductionRequiredDisplayProps>) {
   const { t } = useTranslations('introductionRequiredDisplay', { en, de });
 
   // Get list of users who can give introductions
-  const { data: introducers, isLoading: isLoadingIntroducers } = useResourceIntroducersServiceGetAllResourceIntroducers(
-    { resourceId }
-  );
+  const { data: introducers, isLoading: isLoadingIntroducers } = useAccessControlServiceResourceIntroducersGetMany({
+    resourceId,
+  });
 
   if (isLoadingIntroducers) {
     return (
@@ -38,7 +37,7 @@ export function IntroductionRequiredDisplay({ resourceId }: IntroductionRequired
           </p>
           <Divider className="my-2" />
           <div className="space-y-2 mt-2">
-            {introducers.map((introducer) => (
+            {introducers?.map((introducer) => (
               <AttraccessUser key={introducer.id} user={introducer.user} />
             ))}
           </div>

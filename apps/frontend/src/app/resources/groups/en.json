@@ -1,0 +1,8 @@
+{
+  "title": "Groups",
+  "subtitle": "Manage groups",
+  "columns": {
+    "group": "Group",
+    "actions": "Actions"
+  }
+}

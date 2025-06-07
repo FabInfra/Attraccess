@@ -1,4 +1,4 @@
-import { useFabReaderReadersServiceGetReaders } from '@attraccess/react-query-client';
+import { useFabReaderServiceGetReaders } from '@attraccess/react-query-client';
 import { Select, SelectItem } from '@heroui/react';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export function FabreaderSelect(props: Props) {
-  const { data: readers } = useFabReaderReadersServiceGetReaders();
+  const { data: readers } = useFabReaderServiceGetReaders();
 
   const selectionToSet = useCallback((selection: Props['selection']) => {
     return new Set(selection ? [selection] : []);
@@ -37,7 +37,12 @@ export function FabreaderSelect(props: Props) {
       data-cy="fabreader-select"
     >
       {(reader) => (
-        <SelectItem aria-disabled={!reader.connected} aria-label={reader.name} key={reader.id} data-cy={`fabreader-select-item-${reader.id}`}>
+        <SelectItem
+          aria-disabled={!reader.connected}
+          aria-label={reader.name}
+          key={reader.id}
+          data-cy={`fabreader-select-item-${reader.id}`}
+        >
           {reader.name} ({reader.id})
         </SelectItem>
       )}

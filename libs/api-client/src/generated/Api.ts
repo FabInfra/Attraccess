@@ -424,54 +424,6 @@ export interface UpdateEmailTemplateDto {
   body?: string;
 }
 
-export interface CreateResourceGroupDto {
-  name: string;
-  description?: string;
-}
-
-export interface ResourceGroup {
-  /**
-   * The unique identifier of the resource group
-   * @example 1
-   */
-  id: number;
-  /**
-   * The name of the resource
-   * @example "3D Printer"
-   */
-  name: string;
-  /**
-   * A detailed description of the resource
-   * @example "Prusa i3 MK3S+ 3D printer with 0.4mm nozzle"
-   */
-  description?: string;
-  /**
-   * When the resource was created
-   * @format date-time
-   */
-  createdAt: string;
-  /**
-   * When the resource was last updated
-   * @format date-time
-   */
-  updatedAt: string;
-}
-
-export interface PaginatedResourceGroupResponseDto {
-  total: number;
-  page: number;
-  limit: number;
-  /** The next page number, or null if it is the last page. */
-  nextPage: number | null;
-  totalPages: number;
-  data: ResourceGroup[];
-}
-
-export interface UpdateResourceGroupDto {
-  name?: string;
-  description?: string;
-}
-
 export interface CreateResourceDto {
   /**
    * The name of the resource
@@ -511,6 +463,34 @@ export interface CreateResourceDto {
    * @example false
    */
   allowTakeOver?: boolean;
+}
+
+export interface ResourceGroup {
+  /**
+   * The unique identifier of the resource group
+   * @example 1
+   */
+  id: number;
+  /**
+   * The name of the resource
+   * @example "3D Printer"
+   */
+  name: string;
+  /**
+   * A detailed description of the resource
+   * @example "Prusa i3 MK3S+ 3D printer with 0.4mm nozzle"
+   */
+  description?: string;
+  /**
+   * When the resource was created
+   * @format date-time
+   */
+  createdAt: string;
+  /**
+   * When the resource was last updated
+   * @format date-time
+   */
+  updatedAt: string;
 }
 
 export interface Resource {
@@ -624,239 +604,6 @@ export interface UpdateResourceDto {
    * @example false
    */
   allowTakeOver?: boolean;
-}
-
-export interface StartUsageSessionDto {
-  /**
-   * Optional notes about the usage session
-   * @example "Printing a prototype case"
-   */
-  notes?: string;
-  /**
-   * Whether to force takeover of an existing session (only works if resource allows takeover)
-   * @default false
-   * @example false
-   */
-  forceTakeOver?: boolean;
-}
-
-export interface ResourceUsage {
-  /**
-   * The unique identifier of the resource usage
-   * @example 1
-   */
-  id: number;
-  /**
-   * The ID of the resource being used
-   * @example 1
-   */
-  resourceId: number;
-  /**
-   * The ID of the user using the resource (null if user was deleted)
-   * @example 1
-   */
-  userId?: number;
-  /**
-   * When the usage session started
-   * @format date-time
-   */
-  startTime: string;
-  /**
-   * Notes provided when starting the session
-   * @example "Starting prototype development for client XYZ"
-   */
-  startNotes?: string;
-  /**
-   * When the usage session ended
-   * @format date-time
-   */
-  endTime?: string;
-  /**
-   * Notes provided when ending the session
-   * @example "Completed initial prototype, material usage: 500g"
-   */
-  endNotes?: string;
-  /** The resource being used */
-  resource?: Resource;
-  /** The user who used the resource */
-  user?: User;
-  /**
-   * The duration of the usage session in minutes
-   * @example 120
-   */
-  usageInMinutes: number;
-}
-
-export interface EndUsageSessionDto {
-  /**
-   * Additional notes about the completed session
-   * @example "Print completed successfully"
-   */
-  notes?: string;
-  /**
-   * The end time of the session. If not provided, current time will be used.
-   * @format date-time
-   */
-  endTime?: string;
-}
-
-export interface GetResourceHistoryResponseDto {
-  total: number;
-  page: number;
-  limit: number;
-  /** The next page number, or null if it is the last page. */
-  nextPage: number | null;
-  totalPages: number;
-  data: ResourceUsage[];
-}
-
-export interface GetActiveUsageSessionDto {
-  /** The active usage session or null if none exists */
-  usage: ResourceUsage | null;
-}
-
-export interface CompleteIntroductionDto {
-  /**
-   * User ID
-   * @example 1
-   */
-  userId?: number;
-}
-
-export interface ResourceIntroductionHistoryItem {
-  /**
-   * The unique identifier of the introduction history entry
-   * @example 1
-   */
-  id: number;
-  /**
-   * The ID of the related introduction
-   * @example 1
-   */
-  introductionId: number;
-  /**
-   * The action performed (revoke or unrevoke)
-   * @example "revoke"
-   */
-  action: "revoke" | "unrevoke";
-  /**
-   * The ID of the user who performed the action
-   * @example 1
-   */
-  performedByUserId: number;
-  /**
-   * Optional comment explaining the reason for the action
-   * @example "User no longer requires access to this resource"
-   */
-  comment?: string;
-  /**
-   * When the action was performed
-   * @format date-time
-   * @example "2021-01-01T00:00:00.000Z"
-   */
-  createdAt: string;
-  /** The user who performed the action */
-  performedByUser: User;
-}
-
-export interface ResourceIntroduction {
-  /**
-   * The unique identifier of the introduction
-   * @example 1
-   */
-  id: number;
-  /**
-   * The ID of the resource
-   * @example 1
-   */
-  resourceId: number;
-  /**
-   * The ID of the user who received the introduction
-   * @example 1
-   */
-  receiverUserId: number;
-  /**
-   * The ID of the user who tutored the receiver
-   * @example 2
-   */
-  tutorUserId: number;
-  /**
-   * When the introduction was completed
-   * @format date-time
-   * @example "2021-01-01T00:00:00.000Z"
-   */
-  completedAt: string;
-  /**
-   * When the introduction record was created
-   * @format date-time
-   * @example "2021-01-01T00:00:00.000Z"
-   */
-  createdAt: string;
-  /** The user who received the introduction */
-  receiverUser: User;
-  /** The user who tutored the receiver */
-  tutorUser: User;
-  /** History of revoke/unrevoke actions for this introduction */
-  history: ResourceIntroductionHistoryItem[];
-}
-
-export interface PaginatedResourceIntroductionResponseDto {
-  total: number;
-  page: number;
-  limit: number;
-  /** The next page number, or null if it is the last page. */
-  nextPage: number | null;
-  totalPages: number;
-  data: ResourceIntroduction[];
-}
-
-export interface RevokeIntroductionDto {
-  /**
-   * Optional comment explaining the reason for revoking access
-   * @example "User no longer works on this project"
-   */
-  comment?: string;
-}
-
-export interface UnrevokeIntroductionDto {
-  /**
-   * Optional comment explaining the reason for unrevoking access
-   * @example "User rejoined the project"
-   */
-  comment?: string;
-}
-
-export interface ResourceIntroductionUser {
-  /**
-   * The unique identifier of the introduction permission
-   * @example 1
-   */
-  id: number;
-  /**
-   * The ID of the resource
-   * @example 1
-   */
-  resourceId: number;
-  /**
-   * The ID of the user who can give introductions
-   * @example 1
-   */
-  userId: number;
-  /**
-   * When the permission was granted
-   * @format date-time
-   */
-  grantedAt: string;
-  /** The user who can give introductions */
-  user: User;
-}
-
-export interface CanManageIntroducersResponseDto {
-  /**
-   * Whether the user can manage introducers for the resource
-   * @example true
-   */
-  canManageIntroducers: boolean;
 }
 
 export interface MqttServer {
@@ -1410,6 +1157,265 @@ export interface TestMqttConfigResponseDto {
   message: string;
 }
 
+export interface CreateResourceGroupDto {
+  /**
+   * The name of the resource group
+   * @example "Resource Group 1"
+   */
+  name: string;
+  /**
+   * The description of the resource group
+   * @example "This is a resource group"
+   */
+  description?: string;
+}
+
+export interface UpdateResourceGroupDto {
+  /**
+   * The name of the resource group
+   * @example "Resource Group 1"
+   */
+  name: string;
+  /**
+   * The description of the resource group
+   * @example "This is a resource group"
+   */
+  description?: string;
+}
+
+export interface ResourceIntroductionHistoryItem {
+  /**
+   * The unique identifier of the introduction history entry
+   * @example 1
+   */
+  id: number;
+  /**
+   * The ID of the related introduction
+   * @example 1
+   */
+  introductionId: number;
+  /**
+   * The action performed (revoke or grant)
+   * @example "revoke"
+   */
+  action: "revoke" | "grant";
+  /**
+   * The ID of the user who performed the action
+   * @example 1
+   */
+  performedByUserId: number;
+  /**
+   * Optional comment explaining the reason for the action
+   * @example "User no longer requires access to this resource"
+   */
+  comment?: string;
+  /**
+   * When the action was performed
+   * @format date-time
+   * @example "2021-01-01T00:00:00.000Z"
+   */
+  createdAt: string;
+  /** The user who performed the action */
+  performedByUser: User;
+}
+
+export interface ResourceIntroduction {
+  /**
+   * The unique identifier of the introduction
+   * @example 1
+   */
+  id: number;
+  /**
+   * The ID of the resource (if this is a resource-specific introduction)
+   * @example 1
+   */
+  resourceId?: number;
+  /**
+   * The ID of the user who received the introduction
+   * @example 1
+   */
+  receiverUserId: number;
+  /**
+   * The ID of the user who tutored the receiver
+   * @example 2
+   */
+  tutorUserId: number;
+  /**
+   * The ID of the resource group (if this is a group-level introduction)
+   * @example 1
+   */
+  resourceGroupId?: number;
+  /**
+   * When the introduction was completed
+   * @format date-time
+   * @example "2021-01-01T00:00:00.000Z"
+   */
+  completedAt: string;
+  /**
+   * When the introduction record was created
+   * @format date-time
+   * @example "2021-01-01T00:00:00.000Z"
+   */
+  createdAt: string;
+  /** The user who received the introduction */
+  receiverUser: User;
+  /** The user who tutored the receiver */
+  tutorUser: User;
+  /** History of revoke/unrevoke actions for this introduction */
+  history: ResourceIntroductionHistoryItem[];
+}
+
+export interface UpdateResourceGroupIntroductionDto {
+  /**
+   * The comment for the action
+   * @example "This is a comment"
+   */
+  comment?: string;
+}
+
+export interface ResourceIntroducer {
+  /**
+   * The unique identifier of the introduction permission
+   * @example 1
+   */
+  id: number;
+  /**
+   * The ID of the resource (if permission is for a specific resource)
+   * @example 1
+   */
+  resourceId?: number;
+  /**
+   * The ID of the user who can give introductions
+   * @example 1
+   */
+  userId: number;
+  /**
+   * The ID of the resource group (if permission is for a group)
+   * @example 1
+   */
+  resourceGroupId?: number;
+  /**
+   * When the permission was granted
+   * @format date-time
+   */
+  grantedAt: string;
+  /** The user who can give introductions */
+  user: User;
+}
+
+export interface StartUsageSessionDto {
+  /**
+   * Optional notes about the usage session
+   * @example "Printing a prototype case"
+   */
+  notes?: string;
+  /**
+   * Whether to force takeover of an existing session (only works if resource allows takeover)
+   * @default false
+   * @example false
+   */
+  forceTakeOver?: boolean;
+}
+
+export interface ResourceUsage {
+  /**
+   * The unique identifier of the resource usage
+   * @example 1
+   */
+  id: number;
+  /**
+   * The ID of the resource being used
+   * @example 1
+   */
+  resourceId: number;
+  /**
+   * The ID of the user using the resource (null if user was deleted)
+   * @example 1
+   */
+  userId?: number;
+  /**
+   * When the usage session started
+   * @format date-time
+   */
+  startTime: string;
+  /**
+   * Notes provided when starting the session
+   * @example "Starting prototype development for client XYZ"
+   */
+  startNotes?: string;
+  /**
+   * When the usage session ended
+   * @format date-time
+   */
+  endTime?: string;
+  /**
+   * Notes provided when ending the session
+   * @example "Completed initial prototype, material usage: 500g"
+   */
+  endNotes?: string;
+  /** The resource being used */
+  resource?: Resource;
+  /** The user who used the resource */
+  user?: User;
+  /**
+   * The duration of the usage session in minutes
+   * @example 120
+   */
+  usageInMinutes: number;
+}
+
+export interface EndUsageSessionDto {
+  /**
+   * Additional notes about the completed session
+   * @example "Print completed successfully"
+   */
+  notes?: string;
+  /**
+   * The end time of the session. If not provided, current time will be used.
+   * @format date-time
+   */
+  endTime?: string;
+}
+
+export interface GetResourceHistoryResponseDto {
+  total: number;
+  page: number;
+  limit: number;
+  /** The next page number, or null if it is the last page. */
+  nextPage: number | null;
+  totalPages: number;
+  data: ResourceUsage[];
+}
+
+export interface GetActiveUsageSessionDto {
+  /** The active usage session or null if none exists */
+  usage: ResourceUsage | null;
+}
+
+export interface GetIntroducerStatusResponseDto {
+  /**
+   * Whether the user is an introducer for the resource
+   * @example true
+   */
+  isIntroducer: boolean;
+}
+
+export interface UpdateResourceIntroductionDto {
+  /**
+   * The comment for the action
+   * @example "This is a comment"
+   */
+  comment?: string;
+}
+
+export interface GetIntroductionStatusResponseDto {
+  /**
+   * Whether the user has a valid introduction for the resource
+   * @example true
+   */
+  hasValidIntroduction: boolean;
+}
+
 export interface PluginMainFrontend {
   /**
    * The directory of the plugins frontend files
@@ -1627,16 +1633,18 @@ export interface InfoData {
 
 export type CreateOneUserData = User;
 
-export interface GetAllUsersParams {
+export interface FindManyParams {
   /** Page number (1-based) */
   page?: number;
   /** Number of items per page */
   limit?: number;
   /** Search query */
   search?: string;
+  /** User IDs */
+  ids?: number[];
 }
 
-export type GetAllUsersData = PaginatedUsersResponseDto;
+export type FindManyData = PaginatedUsersResponseDto;
 
 export interface VerifyEmailData {
   /** @example "Email verified successfully" */
@@ -1725,34 +1733,6 @@ export type EmailTemplateControllerFindOneData = EmailTemplate;
 
 export type EmailTemplateControllerUpdateData = EmailTemplate;
 
-export type CreateOneResourceGroupData = ResourceGroup;
-
-export interface GetAllResourceGroupsParams {
-  /**
-   * Page number
-   * @min 1
-   * @default 1
-   */
-  page?: number;
-  /**
-   * Number of items per page
-   * @min 1
-   * @max 100
-   * @default 10
-   */
-  limit?: number;
-  /** Search term for name or description */
-  search?: string;
-}
-
-export type GetAllResourceGroupsData = PaginatedResourceGroupResponseDto;
-
-export type GetOneResourceGroupByIdData = ResourceGroup;
-
-export type UpdateOneResourceGroupData = ResourceGroup;
-
-export type DeleteOneResourceGroupData = any;
-
 export type CreateOneResourceData = Resource;
 
 export interface GetAllResourcesParams {
@@ -1784,15 +1764,88 @@ export type UpdateOneResourceData = Resource;
 
 export type DeleteOneResourceData = any;
 
-export type AddResourceToGroupData = Resource;
+export type MqttServersGetAllData = MqttServer[];
 
-export type RemoveResourceFromGroupData = any;
+export type MqttServersCreateOneData = MqttServer;
 
-export type StartSessionData = ResourceUsage;
+export type MqttServersGetOneByIdData = MqttServer;
 
-export type EndSessionResult = ResourceUsage;
+export type MqttServersUpdateOneData = MqttServer;
 
-export interface GetHistoryOfResourceUsageParams {
+export type MqttServersDeleteOneData = any;
+
+export type MqttServersTestConnectionData = TestConnectionResponseDto;
+
+export type MqttServersGetStatusOfOneData = MqttServerStatusDto;
+
+export type MqttServersGetStatusOfAllData = AllMqttServerStatusesDto;
+
+export type SseControllerStreamEventsData = any;
+
+export type WebhookConfigGetAllData = WebhookConfigResponseDto[];
+
+export type WebhookConfigCreateOneData = WebhookConfigResponseDto;
+
+export type WebhookConfigGetOneByIdData = WebhookConfigResponseDto;
+
+export type WebhookConfigUpdateOneData = WebhookConfigResponseDto;
+
+export type WebhookConfigDeleteOneData = any;
+
+export type WebhookConfigUpdateStatusData = WebhookConfigResponseDto;
+
+export type WebhookConfigTestData = WebhookTestResponseDto;
+
+export type WebhookConfigRegenerateSecretData = WebhookConfigResponseDto;
+
+export type MqttResourceConfigGetAllData = MqttResourceConfig[];
+
+export type MqttResourceConfigCreateData = MqttResourceConfig;
+
+export type MqttResourceConfigGetOneData = MqttResourceConfig;
+
+export type MqttResourceConfigUpdateData = MqttResourceConfig;
+
+export type MqttResourceConfigDeleteOneData = any;
+
+export type MqttResourceConfigTestOneData = TestMqttConfigResponseDto;
+
+export type ResourceGroupsCreateOneData = ResourceGroup;
+
+export type ResourceGroupsGetManyData = ResourceGroup[];
+
+export type ResourceGroupsGetOneData = ResourceGroup;
+
+export type ResourceGroupsUpdateOneData = ResourceGroup;
+
+export type ResourceGroupsAddResourceData = any;
+
+export type ResourceGroupsRemoveResourceData = any;
+
+export type ResourceGroupsDeleteOneData = any;
+
+export type ResourceGroupIntroductionsGetManyData = ResourceIntroduction[];
+
+export type ResourceGroupIntroductionsGetHistoryData =
+  ResourceIntroductionHistoryItem[];
+
+export type ResourceGroupIntroductionsGrantData =
+  ResourceIntroductionHistoryItem;
+
+export type ResourceGroupIntroductionsRevokeData =
+  ResourceIntroductionHistoryItem;
+
+export type ResourceGroupIntroducersGetManyData = ResourceIntroducer[];
+
+export type ResourceGroupIntroducersGrantData = any;
+
+export type ResourceGroupIntroducersRevokeData = any;
+
+export type ResourceUsageStartSessionData = ResourceUsage;
+
+export type ResourceUsageEndSessionData = ResourceUsage;
+
+export interface ResourceUsageGetHistoryParams {
   /**
    * The page number to retrieve
    * @example 1
@@ -1811,105 +1864,29 @@ export interface GetHistoryOfResourceUsageParams {
   resourceId: number;
 }
 
-export type GetHistoryOfResourceUsageData = GetResourceHistoryResponseDto;
+export type ResourceUsageGetHistoryData = GetResourceHistoryResponseDto;
 
-export type GetActiveSessionData = GetActiveUsageSessionDto;
+export type ResourceUsageGetActiveSessionData = GetActiveUsageSessionDto;
 
-export type MarkCompletedData = ResourceIntroduction;
+export type ResourceIntroducersGetManyData = ResourceIntroducer[];
 
-export interface GetAllResourceIntroductionsParams {
-  /**
-   * Page number (1-based)
-   * @min 1
-   * @default 1
-   */
-  page?: number;
-  /**
-   * Number of items per page
-   * @min 1
-   * @max 100
-   * @default 10
-   */
-  limit: number;
-  resourceId: number;
-}
+export type ResourceIntroducersGrantData = ResourceIntroducer;
 
-export type GetAllResourceIntroductionsData =
-  PaginatedResourceIntroductionResponseDto;
+export type ResourceIntroducersRevokeData = ResourceIntroducer;
 
-export interface CheckStatusData {
-  hasValidIntroduction?: boolean;
-}
+export type ResourceIntroducersGetStatusData = GetIntroducerStatusResponseDto;
 
-export type MarkRevokedData = ResourceIntroductionHistoryItem;
+export type ResourceIntroductionsGetManyData = ResourceIntroduction[];
 
-export type MarkUnrevokedData = ResourceIntroductionHistoryItem;
+export type ResourceIntroductionsGrantData = ResourceIntroductionHistoryItem;
 
-export type GetHistoryOfIntroductionData = ResourceIntroductionHistoryItem[];
+export type ResourceIntroductionsRevokeData = ResourceIntroductionHistoryItem;
 
-export interface CheckIsRevokedStatusData {
-  isRevoked?: boolean;
-}
+export type ResourceIntroductionsGetStatusData =
+  GetIntroductionStatusResponseDto;
 
-export type GetOneResourceIntroductionData = ResourceIntroduction;
-
-export interface CheckCanManagePermissionData {
-  canManageIntroductions?: boolean;
-}
-
-export type GetAllResourceIntroducersData = ResourceIntroductionUser[];
-
-export type AddOneData = ResourceIntroductionUser;
-
-export type RemoveOneData = any;
-
-export type CheckCanManagePermissionResult = CanManageIntroducersResponseDto;
-
-export type GetAllMqttServersData = MqttServer[];
-
-export type CreateOneMqttServerData = MqttServer;
-
-export type GetOneMqttServerByIdData = MqttServer;
-
-export type UpdateOneMqttServerData = MqttServer;
-
-export type DeleteOneMqttServerData = any;
-
-export type TestConnectionData = TestConnectionResponseDto;
-
-export type GetStatusOfOneData = MqttServerStatusDto;
-
-export type GetStatusOfAllData = AllMqttServerStatusesDto;
-
-export type SseControllerStreamEventsData = any;
-
-export type GetAllWebhookConfigurationsData = WebhookConfigResponseDto[];
-
-export type CreateOneWebhookConfigurationData = WebhookConfigResponseDto;
-
-export type GetOneWebhookConfigurationByIdData = WebhookConfigResponseDto;
-
-export type UpdateOneWebhookConfigurationData = WebhookConfigResponseDto;
-
-export type DeleteOneWebhookConfigurationData = any;
-
-export type UpdateStatusData = WebhookConfigResponseDto;
-
-export type TestData = WebhookTestResponseDto;
-
-export type RegenerateSecretData = WebhookConfigResponseDto;
-
-export type GetAllMqttConfigurationsData = MqttResourceConfig[];
-
-export type CreateMqttConfigurationData = MqttResourceConfig;
-
-export type GetOneMqttConfigurationData = MqttResourceConfig;
-
-export type UpdateMqttConfigurationData = MqttResourceConfig;
-
-export type DeleteOneMqttConfigurationData = any;
-
-export type TestOneData = TestMqttConfigResponseDto;
+export type ResourceIntroductionsGetHistoryData =
+  ResourceIntroductionHistoryItem[];
 
 export type GetPluginsData = LoadedPluginManifest[];
 
@@ -1949,10 +1926,10 @@ export interface AnalyticsControllerGetResourceUsageHoursInDateRangeParams {
 export type AnalyticsControllerGetResourceUsageHoursInDateRangeData =
   ResourceUsage[];
 
-export namespace Application {
+export namespace System {
   /**
    * No description
-   * @tags Application
+   * @tags System
    * @name Info
    * @summary Return API information
    * @request GET:/api/info
@@ -1969,7 +1946,7 @@ export namespace Application {
 export namespace Users {
   /**
    * No description
-   * @tags users
+   * @tags Users
    * @name CreateOneUser
    * @summary Create a new user
    * @request POST:/api/users
@@ -1984,13 +1961,13 @@ export namespace Users {
 
   /**
    * No description
-   * @tags users
-   * @name GetAllUsers
+   * @tags Users
+   * @name FindMany
    * @summary Get a paginated list of users
    * @request GET:/api/users
    * @secure
    */
-  export namespace GetAllUsers {
+  export namespace FindMany {
     export type RequestParams = {};
     export type RequestQuery = {
       /** Page number (1-based) */
@@ -1999,15 +1976,17 @@ export namespace Users {
       limit?: number;
       /** Search query */
       search?: string;
+      /** User IDs */
+      ids?: number[];
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = GetAllUsersData;
+    export type ResponseBody = FindManyData;
   }
 
   /**
    * No description
-   * @tags users
+   * @tags Users
    * @name VerifyEmail
    * @summary Verify a user email address
    * @request POST:/api/users/verify-email
@@ -2022,7 +2001,7 @@ export namespace Users {
 
   /**
    * No description
-   * @tags users
+   * @tags Users
    * @name RequestPasswordReset
    * @summary Request a password reset
    * @request POST:/api/users/reset-password
@@ -2037,7 +2016,7 @@ export namespace Users {
 
   /**
    * No description
-   * @tags users
+   * @tags Users
    * @name ChangePasswordViaResetToken
    * @summary Change a user password after password reset
    * @request POST:/api/users/{userId}/change-password
@@ -2054,7 +2033,7 @@ export namespace Users {
 
   /**
    * No description
-   * @tags users
+   * @tags Users
    * @name GetCurrent
    * @summary Get the current authenticated user
    * @request GET:/api/users/me
@@ -2070,7 +2049,7 @@ export namespace Users {
 
   /**
    * No description
-   * @tags users
+   * @tags Users
    * @name GetOneUserById
    * @summary Get a user by ID
    * @request GET:/api/users/{id}
@@ -2088,7 +2067,7 @@ export namespace Users {
 
   /**
    * No description
-   * @tags users
+   * @tags Users
    * @name UpdatePermissions
    * @summary Update a user's system permissions
    * @request PATCH:/api/users/{id}/permissions
@@ -2106,7 +2085,7 @@ export namespace Users {
 
   /**
    * No description
-   * @tags users
+   * @tags Users
    * @name GetPermissions
    * @summary Get a user's system permissions
    * @request GET:/api/users/{id}/permissions
@@ -2124,7 +2103,7 @@ export namespace Users {
 
   /**
    * No description
-   * @tags users
+   * @tags Users
    * @name BulkUpdatePermissions
    * @summary Bulk update user permissions
    * @request POST:/api/users/permissions
@@ -2140,7 +2119,7 @@ export namespace Users {
 
   /**
    * No description
-   * @tags users
+   * @tags Users
    * @name GetAllWithPermission
    * @summary Get users with a specific permission
    * @request GET:/api/users/with-permission
@@ -2196,12 +2175,10 @@ export namespace Authentication {
     export type RequestHeaders = {};
     export type ResponseBody = EndSessionData;
   }
-}
 
-export namespace Sso {
   /**
    * No description
-   * @tags SSO
+   * @tags Authentication
    * @name GetAllSsoProviders
    * @summary Get all SSO providers
    * @request GET:/api/auth/sso/providers
@@ -2216,7 +2193,7 @@ export namespace Sso {
 
   /**
    * No description
-   * @tags SSO
+   * @tags Authentication
    * @name CreateOneSsoProvider
    * @summary Create a new SSO provider
    * @request POST:/api/auth/sso/providers
@@ -2232,7 +2209,7 @@ export namespace Sso {
 
   /**
    * No description
-   * @tags SSO
+   * @tags Authentication
    * @name GetOneSsoProviderById
    * @summary Get SSO provider by ID with full configuration
    * @request GET:/api/auth/sso/providers/{id}
@@ -2251,7 +2228,7 @@ export namespace Sso {
 
   /**
    * No description
-   * @tags SSO
+   * @tags Authentication
    * @name UpdateOneSsoProvider
    * @summary Update an existing SSO provider
    * @request PUT:/api/auth/sso/providers/{id}
@@ -2270,7 +2247,7 @@ export namespace Sso {
 
   /**
    * No description
-   * @tags SSO
+   * @tags Authentication
    * @name DeleteOneSsoProvider
    * @summary Delete an SSO provider
    * @request DELETE:/api/auth/sso/providers/{id}
@@ -2289,7 +2266,7 @@ export namespace Sso {
 
   /**
    * @description Login with OIDC and redirect to the callback URL (optional), if you intend to redirect to your frontned, your frontend should pass the query parameters back to the sso callback endpoint to retreive a JWT token for furhter authentication
-   * @tags SSO
+   * @tags Authentication
    * @name LoginWithOidc
    * @summary Login with OIDC
    * @request GET:/api/auth/sso/OIDC/{providerId}/login
@@ -2310,7 +2287,7 @@ export namespace Sso {
 
   /**
    * No description
-   * @tags SSO
+   * @tags Authentication
    * @name OidcLoginCallback
    * @summary Callback for OIDC login
    * @request GET:/api/auth/sso/OIDC/{providerId}/callback
@@ -2402,113 +2379,6 @@ export namespace EmailTemplates {
     export type RequestBody = UpdateEmailTemplateDto;
     export type RequestHeaders = {};
     export type ResponseBody = EmailTemplateControllerUpdateData;
-  }
-}
-
-export namespace ResourceGroups {
-  /**
-   * No description
-   * @tags Resource Groups
-   * @name CreateOneResourceGroup
-   * @summary Create a new resource group
-   * @request POST:/api/resources/groups
-   * @secure
-   */
-  export namespace CreateOneResourceGroup {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = CreateResourceGroupDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = CreateOneResourceGroupData;
-  }
-
-  /**
-   * No description
-   * @tags Resource Groups
-   * @name GetAllResourceGroups
-   * @summary Retrieve all resource groups
-   * @request GET:/api/resources/groups
-   * @secure
-   */
-  export namespace GetAllResourceGroups {
-    export type RequestParams = {};
-    export type RequestQuery = {
-      /**
-       * Page number
-       * @min 1
-       * @default 1
-       */
-      page?: number;
-      /**
-       * Number of items per page
-       * @min 1
-       * @max 100
-       * @default 10
-       */
-      limit?: number;
-      /** Search term for name or description */
-      search?: string;
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = GetAllResourceGroupsData;
-  }
-
-  /**
-   * No description
-   * @tags Resource Groups
-   * @name GetOneResourceGroupById
-   * @summary Retrieve a specific resource group by ID
-   * @request GET:/api/resources/groups/{id}
-   * @secure
-   */
-  export namespace GetOneResourceGroupById {
-    export type RequestParams = {
-      /** Resource Group ID */
-      id: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = GetOneResourceGroupByIdData;
-  }
-
-  /**
-   * No description
-   * @tags Resource Groups
-   * @name UpdateOneResourceGroup
-   * @summary Update a specific resource group by ID
-   * @request PATCH:/api/resources/groups/{id}
-   * @secure
-   */
-  export namespace UpdateOneResourceGroup {
-    export type RequestParams = {
-      /** Resource Group ID */
-      id: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = UpdateResourceGroupDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = UpdateOneResourceGroupData;
-  }
-
-  /**
-   * No description
-   * @tags Resource Groups
-   * @name DeleteOneResourceGroup
-   * @summary Delete a specific resource group by ID
-   * @request DELETE:/api/resources/groups/{id}
-   * @secure
-   */
-  export namespace DeleteOneResourceGroup {
-    export type RequestParams = {
-      /** Resource Group ID */
-      id: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = DeleteOneResourceGroupData;
   }
 }
 
@@ -2621,88 +2491,193 @@ export namespace Resources {
   /**
    * No description
    * @tags Resources
-   * @name AddResourceToGroup
-   * @summary Add a resource to a group
-   * @request POST:/api/resources/{id}/groups/{groupId}
-   * @secure
+   * @name SseControllerStreamEvents
+   * @request GET:/api/resources/{resourceId}/events
    */
-  export namespace AddResourceToGroup {
+  export namespace SseControllerStreamEvents {
     export type RequestParams = {
-      id: number;
-      groupId: number;
+      resourceId: number;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = AddResourceToGroupData;
+    export type ResponseBody = SseControllerStreamEventsData;
   }
 
   /**
    * No description
    * @tags Resources
-   * @name RemoveResourceFromGroup
-   * @summary Remove a resource from a group
-   * @request DELETE:/api/resources/{id}/groups/{groupId}
+   * @name ResourceGroupsCreateOne
+   * @summary Create a new resource group
+   * @request POST:/api/resource-groups
    * @secure
    */
-  export namespace RemoveResourceFromGroup {
+  export namespace ResourceGroupsCreateOne {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = CreateResourceGroupDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsCreateOneData;
+  }
+
+  /**
+   * No description
+   * @tags Resources
+   * @name ResourceGroupsGetMany
+   * @summary Get many resource groups
+   * @request GET:/api/resource-groups
+   */
+  export namespace ResourceGroupsGetMany {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsGetManyData;
+  }
+
+  /**
+   * No description
+   * @tags Resources
+   * @name ResourceGroupsGetOne
+   * @summary Get a resource group by ID
+   * @request GET:/api/resource-groups/{id}
+   */
+  export namespace ResourceGroupsGetOne {
     export type RequestParams = {
+      /** The ID of the resource group */
       id: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsGetOneData;
+  }
+
+  /**
+   * No description
+   * @tags Resources
+   * @name ResourceGroupsUpdateOne
+   * @summary Update a resource group by ID
+   * @request PUT:/api/resource-groups/{id}
+   * @secure
+   */
+  export namespace ResourceGroupsUpdateOne {
+    export type RequestParams = {
+      /** The ID of the resource group */
+      id: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateResourceGroupDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsUpdateOneData;
+  }
+
+  /**
+   * No description
+   * @tags Resources
+   * @name ResourceGroupsAddResource
+   * @summary Add a resource to a resource group
+   * @request POST:/api/resource-groups/{groupId}/resources/{resourceId}
+   * @secure
+   */
+  export namespace ResourceGroupsAddResource {
+    export type RequestParams = {
+      /** The ID of the resource group */
+      groupId: number;
+      /** The ID of the resource */
+      resourceId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsAddResourceData;
+  }
+
+  /**
+   * No description
+   * @tags Resources
+   * @name ResourceGroupsRemoveResource
+   * @summary Remove a resource from a resource group
+   * @request DELETE:/api/resource-groups/{groupId}/resources/{resourceId}
+   * @secure
+   */
+  export namespace ResourceGroupsRemoveResource {
+    export type RequestParams = {
+      /** The ID of the resource group */
+      groupId: number;
+      /** The ID of the resource */
+      resourceId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupsRemoveResourceData;
+  }
+
+  /**
+   * No description
+   * @tags Resources
+   * @name ResourceGroupsDeleteOne
+   * @summary Delete a resource group by ID
+   * @request DELETE:/api/resource-groups/{groupId}
+   * @secure
+   */
+  export namespace ResourceGroupsDeleteOne {
+    export type RequestParams = {
+      /** The ID of the resource group */
       groupId: number;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = RemoveResourceFromGroupData;
+    export type ResponseBody = ResourceGroupsDeleteOneData;
   }
-}
 
-export namespace ResourceUsage {
   /**
    * No description
-   * @tags Resource Usage
-   * @name StartSession
+   * @tags Resources
+   * @name ResourceUsageStartSession
    * @summary Start a resource usage session
    * @request POST:/api/resources/{resourceId}/usage/start
    * @secure
    */
-  export namespace StartSession {
+  export namespace ResourceUsageStartSession {
     export type RequestParams = {
       resourceId: number;
     };
     export type RequestQuery = {};
     export type RequestBody = StartUsageSessionDto;
     export type RequestHeaders = {};
-    export type ResponseBody = StartSessionData;
+    export type ResponseBody = ResourceUsageStartSessionData;
   }
 
   /**
    * No description
-   * @tags Resource Usage
-   * @name EndSession
+   * @tags Resources
+   * @name ResourceUsageEndSession
    * @summary End a resource usage session
    * @request PUT:/api/resources/{resourceId}/usage/end
    * @secure
    */
-  export namespace EndSession {
+  export namespace ResourceUsageEndSession {
     export type RequestParams = {
       resourceId: number;
     };
     export type RequestQuery = {};
     export type RequestBody = EndUsageSessionDto;
     export type RequestHeaders = {};
-    export type ResponseBody = EndSessionResult;
+    export type ResponseBody = ResourceUsageEndSessionData;
   }
 
   /**
    * No description
-   * @tags Resource Usage
-   * @name GetHistoryOfResourceUsage
+   * @tags Resources
+   * @name ResourceUsageGetHistory
    * @summary Get usage history for a resource
    * @request GET:/api/resources/{resourceId}/usage/history
    * @secure
    */
-  export namespace GetHistoryOfResourceUsage {
+  export namespace ResourceUsageGetHistory {
     export type RequestParams = {
       resourceId: number;
     };
@@ -2725,442 +2700,277 @@ export namespace ResourceUsage {
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = GetHistoryOfResourceUsageData;
+    export type ResponseBody = ResourceUsageGetHistoryData;
   }
 
   /**
    * No description
-   * @tags Resource Usage
-   * @name GetActiveSession
+   * @tags Resources
+   * @name ResourceUsageGetActiveSession
    * @summary Get active usage session for current user
    * @request GET:/api/resources/{resourceId}/usage/active
    * @secure
    */
-  export namespace GetActiveSession {
+  export namespace ResourceUsageGetActiveSession {
     export type RequestParams = {
       resourceId: number;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = GetActiveSessionData;
+    export type ResponseBody = ResourceUsageGetActiveSessionData;
   }
 }
 
-export namespace ResourceIntroductions {
-  /**
-   * @description Complete an introduction for a user identified by their user ID, username, or email.
-   * @tags Resource Introductions
-   * @name MarkCompleted
-   * @summary Mark resource introduction as completed for a user
-   * @request POST:/api/resources/{resourceId}/introductions/complete
-   * @secure
-   */
-  export namespace MarkCompleted {
-    export type RequestParams = {
-      resourceId: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = CompleteIntroductionDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = MarkCompletedData;
-  }
-
-  /**
-   * @description Retrieve introductions for a resource, possibly paginated
-   * @tags Resource Introductions
-   * @name GetAllResourceIntroductions
-   * @summary Get introductions for a specific resource
-   * @request GET:/api/resources/{resourceId}/introductions
-   * @secure
-   */
-  export namespace GetAllResourceIntroductions {
-    export type RequestParams = {
-      resourceId: number;
-    };
-    export type RequestQuery = {
-      /**
-       * Page number (1-based)
-       * @min 1
-       * @default 1
-       */
-      page?: number;
-      /**
-       * Number of items per page
-       * @min 1
-       * @max 100
-       * @default 10
-       */
-      limit: number;
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = GetAllResourceIntroductionsData;
-  }
-
-  /**
-   * @description Check if the current user has completed the introduction for this resource and it is not revoked
-   * @tags Resource Introductions
-   * @name CheckStatus
-   * @summary Check if current user has a valid introduction
-   * @request GET:/api/resources/{resourceId}/introductions/status
-   * @secure
-   */
-  export namespace CheckStatus {
-    export type RequestParams = {
-      resourceId: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = CheckStatusData;
-  }
-
-  /**
-   * @description Revoke access for a user by marking their introduction as revoked
-   * @tags Resource Introductions
-   * @name MarkRevoked
-   * @summary Revoke an introduction
-   * @request POST:/api/resources/{resourceId}/introductions/{introductionId}/revoke
-   * @secure
-   */
-  export namespace MarkRevoked {
-    export type RequestParams = {
-      resourceId: number;
-      introductionId: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = RevokeIntroductionDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = MarkRevokedData;
-  }
-
-  /**
-   * @description Restore access for a user by unrevoking their introduction
-   * @tags Resource Introductions
-   * @name MarkUnrevoked
-   * @summary Unrevoke an introduction
-   * @request POST:/api/resources/{resourceId}/introductions/{introductionId}/unrevoke
-   * @secure
-   */
-  export namespace MarkUnrevoked {
-    export type RequestParams = {
-      resourceId: number;
-      introductionId: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = UnrevokeIntroductionDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = MarkUnrevokedData;
-  }
-
-  /**
-   * @description Retrieve the history of revoke/unrevoke actions for an introduction
-   * @tags Resource Introductions
-   * @name GetHistoryOfIntroduction
-   * @summary Get history for a specific introduction
-   * @request GET:/api/resources/{resourceId}/introductions/{introductionId}/history
-   * @secure
-   */
-  export namespace GetHistoryOfIntroduction {
-    export type RequestParams = {
-      resourceId: number;
-      introductionId: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = GetHistoryOfIntroductionData;
-  }
-
-  /**
-   * @description Determine if a specific introduction is currently revoked
-   * @tags Resource Introductions
-   * @name CheckIsRevokedStatus
-   * @summary Check if an introduction is revoked
-   * @request GET:/api/resources/{resourceId}/introductions/{introductionId}/revoked
-   * @secure
-   */
-  export namespace CheckIsRevokedStatus {
-    export type RequestParams = {
-      resourceId: number;
-      introductionId: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = CheckIsRevokedStatusData;
-  }
-
-  /**
-   * @description Retrieve detailed information about a specific introduction
-   * @tags Resource Introductions
-   * @name GetOneResourceIntroduction
-   * @summary Get a single resource introduction
-   * @request GET:/api/resources/{resourceId}/introductions/{introductionId}
-   * @secure
-   */
-  export namespace GetOneResourceIntroduction {
-    export type RequestParams = {
-      resourceId: number;
-      introductionId: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = GetOneResourceIntroductionData;
-  }
-
+export namespace Mqtt {
   /**
    * No description
-   * @tags Resource Introductions
-   * @name CheckCanManagePermission
-   * @summary Check if user can manage introductions for the resource
-   * @request GET:/api/resources/{resourceId}/introductions/permissions/manage
-   * @secure
-   */
-  export namespace CheckCanManagePermission {
-    export type RequestParams = {
-      resourceId: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = CheckCanManagePermissionData;
-  }
-}
-
-export namespace ResourceIntroducers {
-  /**
-   * No description
-   * @tags Resource Introducers
-   * @name GetAllResourceIntroducers
-   * @summary Get all authorized introducers for a resource
-   * @request GET:/api/resources/{resourceId}/introducers
-   * @secure
-   */
-  export namespace GetAllResourceIntroducers {
-    export type RequestParams = {
-      resourceId: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = GetAllResourceIntroducersData;
-  }
-
-  /**
-   * No description
-   * @tags Resource Introducers
-   * @name AddOne
-   * @summary Add a user as an introducer for a resource
-   * @request POST:/api/resources/{resourceId}/introducers/{userId}
-   * @secure
-   */
-  export namespace AddOne {
-    export type RequestParams = {
-      resourceId: number;
-      userId: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = AddOneData;
-  }
-
-  /**
-   * No description
-   * @tags Resource Introducers
-   * @name RemoveOne
-   * @summary Remove a user as an introducer for a resource
-   * @request DELETE:/api/resources/{resourceId}/introducers/{userId}
-   * @secure
-   */
-  export namespace RemoveOne {
-    export type RequestParams = {
-      resourceId: number;
-      userId: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = RemoveOneData;
-  }
-
-  /**
-   * No description
-   * @tags Resource Introducers
-   * @name CheckCanManagePermission
-   * @summary Check if the current user can manage introducers for a resource
-   * @request GET:/api/resources/{resourceId}/introducers/can-manage
-   * @secure
-   */
-  export namespace CheckCanManagePermission {
-    export type RequestParams = {
-      resourceId: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = CheckCanManagePermissionResult;
-  }
-}
-
-export namespace MqttServers {
-  /**
-   * No description
-   * @tags MQTT Servers
-   * @name GetAllMqttServers
+   * @tags MQTT
+   * @name MqttServersGetAll
    * @summary Get all MQTT servers
    * @request GET:/api/mqtt/servers
    * @secure
    */
-  export namespace GetAllMqttServers {
+  export namespace MqttServersGetAll {
     export type RequestParams = {};
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = GetAllMqttServersData;
+    export type ResponseBody = MqttServersGetAllData;
   }
 
   /**
    * No description
-   * @tags MQTT Servers
-   * @name CreateOneMqttServer
+   * @tags MQTT
+   * @name MqttServersCreateOne
    * @summary Create new MQTT server
    * @request POST:/api/mqtt/servers
    * @secure
    */
-  export namespace CreateOneMqttServer {
+  export namespace MqttServersCreateOne {
     export type RequestParams = {};
     export type RequestQuery = {};
     export type RequestBody = CreateMqttServerDto;
     export type RequestHeaders = {};
-    export type ResponseBody = CreateOneMqttServerData;
+    export type ResponseBody = MqttServersCreateOneData;
   }
 
   /**
    * No description
-   * @tags MQTT Servers
-   * @name GetOneMqttServerById
+   * @tags MQTT
+   * @name MqttServersGetOneById
    * @summary Get MQTT server by ID
    * @request GET:/api/mqtt/servers/{id}
    * @secure
    */
-  export namespace GetOneMqttServerById {
+  export namespace MqttServersGetOneById {
     export type RequestParams = {
       id: number;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = GetOneMqttServerByIdData;
+    export type ResponseBody = MqttServersGetOneByIdData;
   }
 
   /**
    * No description
-   * @tags MQTT Servers
-   * @name UpdateOneMqttServer
+   * @tags MQTT
+   * @name MqttServersUpdateOne
    * @summary Update MQTT server
    * @request PUT:/api/mqtt/servers/{id}
    * @secure
    */
-  export namespace UpdateOneMqttServer {
+  export namespace MqttServersUpdateOne {
     export type RequestParams = {
       id: number;
     };
     export type RequestQuery = {};
     export type RequestBody = UpdateMqttServerDto;
     export type RequestHeaders = {};
-    export type ResponseBody = UpdateOneMqttServerData;
+    export type ResponseBody = MqttServersUpdateOneData;
   }
 
   /**
    * No description
-   * @tags MQTT Servers
-   * @name DeleteOneMqttServer
+   * @tags MQTT
+   * @name MqttServersDeleteOne
    * @summary Delete MQTT server
    * @request DELETE:/api/mqtt/servers/{id}
    * @secure
    */
-  export namespace DeleteOneMqttServer {
+  export namespace MqttServersDeleteOne {
     export type RequestParams = {
       id: number;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = DeleteOneMqttServerData;
+    export type ResponseBody = MqttServersDeleteOneData;
   }
 
   /**
    * No description
-   * @tags MQTT Servers
-   * @name TestConnection
+   * @tags MQTT
+   * @name MqttServersTestConnection
    * @summary Test MQTT server connection
    * @request POST:/api/mqtt/servers/{id}/test
    * @secure
    */
-  export namespace TestConnection {
+  export namespace MqttServersTestConnection {
     export type RequestParams = {
       id: number;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = TestConnectionData;
+    export type ResponseBody = MqttServersTestConnectionData;
   }
 
   /**
    * No description
-   * @tags MQTT Servers
-   * @name GetStatusOfOne
+   * @tags MQTT
+   * @name MqttServersGetStatusOfOne
    * @summary Get MQTT server connection status and statistics
    * @request GET:/api/mqtt/servers/{id}/status
    * @secure
    */
-  export namespace GetStatusOfOne {
+  export namespace MqttServersGetStatusOfOne {
     export type RequestParams = {
       id: number;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = GetStatusOfOneData;
+    export type ResponseBody = MqttServersGetStatusOfOneData;
   }
 
   /**
    * No description
-   * @tags MQTT Servers
-   * @name GetStatusOfAll
+   * @tags MQTT
+   * @name MqttServersGetStatusOfAll
    * @summary Get all MQTT server connection statuses and statistics
    * @request GET:/api/mqtt/servers/status
    * @secure
    */
-  export namespace GetStatusOfAll {
+  export namespace MqttServersGetStatusOfAll {
     export type RequestParams = {};
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = GetStatusOfAllData;
+    export type ResponseBody = MqttServersGetStatusOfAllData;
   }
-}
 
-export namespace Sse {
   /**
    * No description
-   * @tags SSE
-   * @name SseControllerStreamEvents
-   * @request GET:/api/resources/{resourceId}/events
+   * @tags MQTT
+   * @name MqttResourceConfigGetAll
+   * @summary Get all MQTT configurations for a resource
+   * @request GET:/api/resources/{resourceId}/mqtt/config
+   * @secure
    */
-  export namespace SseControllerStreamEvents {
+  export namespace MqttResourceConfigGetAll {
     export type RequestParams = {
       resourceId: number;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = SseControllerStreamEventsData;
+    export type ResponseBody = MqttResourceConfigGetAllData;
+  }
+
+  /**
+   * No description
+   * @tags MQTT
+   * @name MqttResourceConfigCreate
+   * @summary Create a new MQTT configuration for a resource
+   * @request POST:/api/resources/{resourceId}/mqtt/config
+   * @secure
+   */
+  export namespace MqttResourceConfigCreate {
+    export type RequestParams = {
+      resourceId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = CreateMqttResourceConfigDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = MqttResourceConfigCreateData;
+  }
+
+  /**
+   * No description
+   * @tags MQTT
+   * @name MqttResourceConfigGetOne
+   * @summary Get a specific MQTT configuration for a resource
+   * @request GET:/api/resources/{resourceId}/mqtt/config/{configId}
+   * @secure
+   */
+  export namespace MqttResourceConfigGetOne {
+    export type RequestParams = {
+      resourceId: number;
+      configId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = MqttResourceConfigGetOneData;
+  }
+
+  /**
+   * No description
+   * @tags MQTT
+   * @name MqttResourceConfigUpdate
+   * @summary Update a specific MQTT configuration
+   * @request PUT:/api/resources/{resourceId}/mqtt/config/{configId}
+   * @secure
+   */
+  export namespace MqttResourceConfigUpdate {
+    export type RequestParams = {
+      resourceId: number;
+      configId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateMqttResourceConfigDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = MqttResourceConfigUpdateData;
+  }
+
+  /**
+   * No description
+   * @tags MQTT
+   * @name MqttResourceConfigDeleteOne
+   * @summary Delete a specific MQTT configuration
+   * @request DELETE:/api/resources/{resourceId}/mqtt/config/{configId}
+   * @secure
+   */
+  export namespace MqttResourceConfigDeleteOne {
+    export type RequestParams = {
+      resourceId: number;
+      configId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = MqttResourceConfigDeleteOneData;
+  }
+
+  /**
+   * No description
+   * @tags MQTT
+   * @name MqttResourceConfigTestOne
+   * @summary Test a specific MQTT configuration
+   * @request POST:/api/resources/{resourceId}/mqtt/config/{configId}/test
+   * @secure
+   */
+  export namespace MqttResourceConfigTestOne {
+    export type RequestParams = {
+      resourceId: number;
+      configId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = MqttResourceConfigTestOneData;
   }
 }
 
@@ -3168,12 +2978,12 @@ export namespace Webhooks {
   /**
    * No description
    * @tags Webhooks
-   * @name GetAllWebhookConfigurations
+   * @name WebhookConfigGetAll
    * @summary Get all webhook configurations for a resource
    * @request GET:/api/resources/{resourceId}/webhooks
    * @secure
    */
-  export namespace GetAllWebhookConfigurations {
+  export namespace WebhookConfigGetAll {
     export type RequestParams = {
       /** Resource ID */
       resourceId: number;
@@ -3181,18 +2991,18 @@ export namespace Webhooks {
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = GetAllWebhookConfigurationsData;
+    export type ResponseBody = WebhookConfigGetAllData;
   }
 
   /**
    * @description Creates a new webhook configuration for a resource. ## URL Templating The webhook URL can include Handlebars templates that will be replaced with context values when the webhook is triggered. Example: `https://example.com/webhooks/{{id}}/{{event}}` ## Header Templating Header values can include Handlebars templates that will be replaced with context values when the webhook is triggered. Example: `{"Authorization": "Bearer {{user.id}}", "X-Resource-Name": "{{name}}"}` ## Available Template Variables Available template variables for URLs, headers, and payloads: - `id`: Resource ID - `name`: Resource name - `description`: Resource description - `timestamp`: ISO timestamp of the event - `user.id`: ID of the user who triggered the event - `event`: Either "started" or "ended" depending on the resource usage state
    * @tags Webhooks
-   * @name CreateOneWebhookConfiguration
+   * @name WebhookConfigCreateOne
    * @summary Create a new webhook configuration
    * @request POST:/api/resources/{resourceId}/webhooks
    * @secure
    */
-  export namespace CreateOneWebhookConfiguration {
+  export namespace WebhookConfigCreateOne {
     export type RequestParams = {
       /** Resource ID */
       resourceId: number;
@@ -3200,18 +3010,18 @@ export namespace Webhooks {
     export type RequestQuery = {};
     export type RequestBody = CreateWebhookConfigDto;
     export type RequestHeaders = {};
-    export type ResponseBody = CreateOneWebhookConfigurationData;
+    export type ResponseBody = WebhookConfigCreateOneData;
   }
 
   /**
    * No description
    * @tags Webhooks
-   * @name GetOneWebhookConfigurationById
+   * @name WebhookConfigGetOneById
    * @summary Get webhook configuration by ID
    * @request GET:/api/resources/{resourceId}/webhooks/{id}
    * @secure
    */
-  export namespace GetOneWebhookConfigurationById {
+  export namespace WebhookConfigGetOneById {
     export type RequestParams = {
       /** Resource ID */
       resourceId: number;
@@ -3221,18 +3031,18 @@ export namespace Webhooks {
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = GetOneWebhookConfigurationByIdData;
+    export type ResponseBody = WebhookConfigGetOneByIdData;
   }
 
   /**
    * No description
    * @tags Webhooks
-   * @name UpdateOneWebhookConfiguration
+   * @name WebhookConfigUpdateOne
    * @summary Update webhook configuration
    * @request PUT:/api/resources/{resourceId}/webhooks/{id}
    * @secure
    */
-  export namespace UpdateOneWebhookConfiguration {
+  export namespace WebhookConfigUpdateOne {
     export type RequestParams = {
       /** Resource ID */
       resourceId: number;
@@ -3242,18 +3052,18 @@ export namespace Webhooks {
     export type RequestQuery = {};
     export type RequestBody = UpdateWebhookConfigDto;
     export type RequestHeaders = {};
-    export type ResponseBody = UpdateOneWebhookConfigurationData;
+    export type ResponseBody = WebhookConfigUpdateOneData;
   }
 
   /**
    * No description
    * @tags Webhooks
-   * @name DeleteOneWebhookConfiguration
+   * @name WebhookConfigDeleteOne
    * @summary Delete webhook configuration
    * @request DELETE:/api/resources/{resourceId}/webhooks/{id}
    * @secure
    */
-  export namespace DeleteOneWebhookConfiguration {
+  export namespace WebhookConfigDeleteOne {
     export type RequestParams = {
       /** Resource ID */
       resourceId: number;
@@ -3263,18 +3073,18 @@ export namespace Webhooks {
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = DeleteOneWebhookConfigurationData;
+    export type ResponseBody = WebhookConfigDeleteOneData;
   }
 
   /**
    * No description
    * @tags Webhooks
-   * @name UpdateStatus
+   * @name WebhookConfigUpdateStatus
    * @summary Enable or disable webhook
    * @request PUT:/api/resources/{resourceId}/webhooks/{id}/status
    * @secure
    */
-  export namespace UpdateStatus {
+  export namespace WebhookConfigUpdateStatus {
     export type RequestParams = {
       /** Resource ID */
       resourceId: number;
@@ -3284,18 +3094,18 @@ export namespace Webhooks {
     export type RequestQuery = {};
     export type RequestBody = WebhookStatusDto;
     export type RequestHeaders = {};
-    export type ResponseBody = UpdateStatusData;
+    export type ResponseBody = WebhookConfigUpdateStatusData;
   }
 
   /**
    * No description
    * @tags Webhooks
-   * @name Test
+   * @name WebhookConfigTest
    * @summary Test webhook
    * @request POST:/api/resources/{resourceId}/webhooks/{id}/test
    * @secure
    */
-  export namespace Test {
+  export namespace WebhookConfigTest {
     export type RequestParams = {
       /** Resource ID */
       resourceId: number;
@@ -3305,18 +3115,18 @@ export namespace Webhooks {
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = TestData;
+    export type ResponseBody = WebhookConfigTestData;
   }
 
   /**
    * @description When signature verification is enabled, each webhook request includes: 1. A timestamp header (X-Webhook-Timestamp) 2. A signature header (configurable, default: X-Webhook-Signature) To verify the signature: 1. Extract the timestamp from the X-Webhook-Timestamp header 2. Combine the timestamp and payload as "${timestamp}.${payload}" 3. Compute the HMAC-SHA256 signature using your webhook secret 4. Compare the resulting signature with the value in the signature header Example (Node.js): ```javascript const crypto = require('crypto'); function verifySignature(payload, timestamp, signature, secret) { const signaturePayload = `${timestamp}.${payload}`; const expectedSignature = crypto .createHmac('sha256', secret) .update(signaturePayload) .digest('hex'); return crypto.timingSafeEqual( Buffer.from(signature), Buffer.from(expectedSignature) ); } ```
    * @tags Webhooks
-   * @name RegenerateSecret
+   * @name WebhookConfigRegenerateSecret
    * @summary Regenerate webhook secret
    * @request POST:/api/resources/{resourceId}/webhooks/{id}/regenerate-secret
    * @secure
    */
-  export namespace RegenerateSecret {
+  export namespace WebhookConfigRegenerateSecret {
     export type RequestParams = {
       /** Resource ID */
       resourceId: number;
@@ -3326,128 +3136,325 @@ export namespace Webhooks {
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = RegenerateSecretData;
+    export type ResponseBody = WebhookConfigRegenerateSecretData;
   }
 }
 
-export namespace MqttResourceConfiguration {
+export namespace AccessControl {
   /**
    * No description
-   * @tags MQTT Resource Configuration
-   * @name GetAllMqttConfigurations
-   * @summary Get all MQTT configurations for a resource
-   * @request GET:/api/resources/{resourceId}/mqtt/config
+   * @tags Access Control
+   * @name ResourceGroupIntroductionsGetMany
+   * @summary Get many introductions by group ID
+   * @request GET:/api/resource-groups/{groupId}/introductions
    * @secure
    */
-  export namespace GetAllMqttConfigurations {
+  export namespace ResourceGroupIntroductionsGetMany {
+    export type RequestParams = {
+      /** The ID of the resource group */
+      groupId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupIntroductionsGetManyData;
+  }
+
+  /**
+   * No description
+   * @tags Access Control
+   * @name ResourceGroupIntroductionsGetHistory
+   * @summary Get history of introductions by group ID and user ID
+   * @request GET:/api/resource-groups/{groupId}/introductions/{userId}/history
+   * @secure
+   */
+  export namespace ResourceGroupIntroductionsGetHistory {
+    export type RequestParams = {
+      /** The ID of the resource group */
+      groupId: number;
+      /** The ID of the user */
+      userId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupIntroductionsGetHistoryData;
+  }
+
+  /**
+   * No description
+   * @tags Access Control
+   * @name ResourceGroupIntroductionsGrant
+   * @summary Grant introduction permission for a resource group to a user
+   * @request POST:/api/resource-groups/{groupId}/introductions/{userId}/grant
+   * @secure
+   */
+  export namespace ResourceGroupIntroductionsGrant {
+    export type RequestParams = {
+      /** The ID of the resource group */
+      groupId: number;
+      /** The ID of the user */
+      userId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateResourceGroupIntroductionDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupIntroductionsGrantData;
+  }
+
+  /**
+   * No description
+   * @tags Access Control
+   * @name ResourceGroupIntroductionsRevoke
+   * @summary Revoke introduction permission for a resource group from a user
+   * @request POST:/api/resource-groups/{groupId}/introductions/{userId}/revoke
+   * @secure
+   */
+  export namespace ResourceGroupIntroductionsRevoke {
+    export type RequestParams = {
+      /** The ID of the resource group */
+      groupId: number;
+      /** The ID of the user */
+      userId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateResourceGroupIntroductionDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupIntroductionsRevokeData;
+  }
+
+  /**
+   * No description
+   * @tags Access Control
+   * @name ResourceGroupIntroducersGetMany
+   * @summary Get all introducers for a resource group
+   * @request GET:/api/resource-groups/{groupId}/introducers
+   */
+  export namespace ResourceGroupIntroducersGetMany {
+    export type RequestParams = {
+      /** The ID of the resource group */
+      groupId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupIntroducersGetManyData;
+  }
+
+  /**
+   * No description
+   * @tags Access Control
+   * @name ResourceGroupIntroducersGrant
+   * @summary Grant a user introduction permission for a resource group
+   * @request POST:/api/resource-groups/{groupId}/introducers/{userId}/grant
+   * @secure
+   */
+  export namespace ResourceGroupIntroducersGrant {
+    export type RequestParams = {
+      /** The ID of the user */
+      userId: number;
+      /** The ID of the resource group */
+      groupId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupIntroducersGrantData;
+  }
+
+  /**
+   * No description
+   * @tags Access Control
+   * @name ResourceGroupIntroducersRevoke
+   * @summary Revoke a user introduction permission for a resource group
+   * @request POST:/api/resource-groups/{groupId}/introducers/{userId}/revoke
+   * @secure
+   */
+  export namespace ResourceGroupIntroducersRevoke {
+    export type RequestParams = {
+      /** The ID of the user */
+      userId: number;
+      /** The ID of the resource group */
+      groupId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceGroupIntroducersRevokeData;
+  }
+
+  /**
+   * No description
+   * @tags Access Control
+   * @name ResourceIntroducersGetMany
+   * @summary Get all introducers for a resource
+   * @request GET:/api/resources/{resourceId}/introducers
+   */
+  export namespace ResourceIntroducersGetMany {
     export type RequestParams = {
       resourceId: number;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = GetAllMqttConfigurationsData;
+    export type ResponseBody = ResourceIntroducersGetManyData;
   }
 
   /**
    * No description
-   * @tags MQTT Resource Configuration
-   * @name CreateMqttConfiguration
-   * @summary Create a new MQTT configuration for a resource
-   * @request POST:/api/resources/{resourceId}/mqtt/config
+   * @tags Access Control
+   * @name ResourceIntroducersGrant
+   * @summary Grant a user introduction permission for a resource
+   * @request POST:/api/resources/{resourceId}/introducers/{userId}/grant
    * @secure
    */
-  export namespace CreateMqttConfiguration {
+  export namespace ResourceIntroducersGrant {
     export type RequestParams = {
       resourceId: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = CreateMqttResourceConfigDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = CreateMqttConfigurationData;
-  }
-
-  /**
-   * No description
-   * @tags MQTT Resource Configuration
-   * @name GetOneMqttConfiguration
-   * @summary Get a specific MQTT configuration for a resource
-   * @request GET:/api/resources/{resourceId}/mqtt/config/{configId}
-   * @secure
-   */
-  export namespace GetOneMqttConfiguration {
-    export type RequestParams = {
-      resourceId: number;
-      configId: number;
+      userId: number;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = GetOneMqttConfigurationData;
+    export type ResponseBody = ResourceIntroducersGrantData;
   }
 
   /**
    * No description
-   * @tags MQTT Resource Configuration
-   * @name UpdateMqttConfiguration
-   * @summary Update a specific MQTT configuration
-   * @request PUT:/api/resources/{resourceId}/mqtt/config/{configId}
+   * @tags Access Control
+   * @name ResourceIntroducersRevoke
+   * @summary Revoke a user introduction permission for a resource
+   * @request DELETE:/api/resources/{resourceId}/introducers/{userId}/revoke
    * @secure
    */
-  export namespace UpdateMqttConfiguration {
+  export namespace ResourceIntroducersRevoke {
     export type RequestParams = {
       resourceId: number;
-      configId: number;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = UpdateMqttResourceConfigDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = UpdateMqttConfigurationData;
-  }
-
-  /**
-   * No description
-   * @tags MQTT Resource Configuration
-   * @name DeleteOneMqttConfiguration
-   * @summary Delete a specific MQTT configuration
-   * @request DELETE:/api/resources/{resourceId}/mqtt/config/{configId}
-   * @secure
-   */
-  export namespace DeleteOneMqttConfiguration {
-    export type RequestParams = {
-      resourceId: number;
-      configId: number;
+      userId: number;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = DeleteOneMqttConfigurationData;
+    export type ResponseBody = ResourceIntroducersRevokeData;
   }
 
   /**
    * No description
-   * @tags MQTT Resource Configuration
-   * @name TestOne
-   * @summary Test a specific MQTT configuration
-   * @request POST:/api/resources/{resourceId}/mqtt/config/{configId}/test
-   * @secure
+   * @tags Access Control
+   * @name ResourceIntroducersGetStatus
+   * @summary Get the status of an introducer for a user
+   * @request GET:/api/resources/{resourceId}/introducers/{userId}/status
    */
-  export namespace TestOne {
+  export namespace ResourceIntroducersGetStatus {
     export type RequestParams = {
       resourceId: number;
-      configId: number;
+      userId: number;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = TestOneData;
+    export type ResponseBody = ResourceIntroducersGetStatusData;
+  }
+
+  /**
+   * No description
+   * @tags Access Control
+   * @name ResourceIntroductionsGetMany
+   * @summary Get all introductions for a resource
+   * @request GET:/api/resources/{resourceId}/introductions
+   */
+  export namespace ResourceIntroductionsGetMany {
+    export type RequestParams = {
+      resourceId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceIntroductionsGetManyData;
+  }
+
+  /**
+   * No description
+   * @tags Access Control
+   * @name ResourceIntroductionsGrant
+   * @summary Grant a user usage permission for a resource
+   * @request POST:/api/resources/{resourceId}/introductions/{userId}/grant
+   * @secure
+   */
+  export namespace ResourceIntroductionsGrant {
+    export type RequestParams = {
+      resourceId: number;
+      userId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateResourceIntroductionDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceIntroductionsGrantData;
+  }
+
+  /**
+   * No description
+   * @tags Access Control
+   * @name ResourceIntroductionsRevoke
+   * @summary Revoke a user usage permission for a resource
+   * @request DELETE:/api/resources/{resourceId}/introductions/{userId}/revoke
+   * @secure
+   */
+  export namespace ResourceIntroductionsRevoke {
+    export type RequestParams = {
+      resourceId: number;
+      userId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateResourceIntroductionDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceIntroductionsRevokeData;
+  }
+
+  /**
+   * No description
+   * @tags Access Control
+   * @name ResourceIntroductionsGetStatus
+   * @summary Get the status of an introduction for a user
+   * @request GET:/api/resources/{resourceId}/introductions/{userId}/status
+   */
+  export namespace ResourceIntroductionsGetStatus {
+    export type RequestParams = {
+      resourceId: number;
+      userId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceIntroductionsGetStatusData;
+  }
+
+  /**
+   * No description
+   * @tags Access Control
+   * @name ResourceIntroductionsGetHistory
+   * @summary Get history of introductions by resource ID and user ID
+   * @request GET:/api/resources/{resourceId}/introductions/{userId}/history
+   * @secure
+   */
+  export namespace ResourceIntroductionsGetHistory {
+    export type RequestParams = {
+      /** The ID of the resource */
+      resourceId: number;
+      /** The ID of the user */
+      userId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ResourceIntroductionsGetHistoryData;
   }
 }
 
-export namespace Plugin {
+export namespace Plugins {
   /**
    * No description
-   * @tags Plugin
+   * @tags Plugins
    * @name GetPlugins
    * @summary Get all plugins
    * @request GET:/api/plugins
@@ -3462,7 +3469,7 @@ export namespace Plugin {
 
   /**
    * No description
-   * @tags Plugin
+   * @tags Plugins
    * @name UploadPlugin
    * @summary Upload a new plugin
    * @request POST:/api/plugins
@@ -3478,7 +3485,7 @@ export namespace Plugin {
 
   /**
    * No description
-   * @tags Plugin
+   * @tags Plugins
    * @name GetFrontendPluginFile
    * @summary Get any frontend plugin file
    * @request GET:/api/plugins/{pluginName}/frontend/module-federation/{filePath}
@@ -3496,7 +3503,7 @@ export namespace Plugin {
 
   /**
    * No description
-   * @tags Plugin
+   * @tags Plugins
    * @name DeletePlugin
    * @summary Delete a plugin
    * @request DELETE:/api/plugins/{pluginId}
@@ -3513,10 +3520,10 @@ export namespace Plugin {
   }
 }
 
-export namespace FabReaderReaders {
+export namespace FabReader {
   /**
    * No description
-   * @tags FabReader Readers
+   * @tags FabReader
    * @name EnrollNfcCard
    * @summary Enroll a new NFC card
    * @request POST:/api/fabreader/readers/enroll-nfc-card
@@ -3532,7 +3539,7 @@ export namespace FabReaderReaders {
 
   /**
    * No description
-   * @tags FabReader Readers
+   * @tags FabReader
    * @name ResetNfcCard
    * @summary Reset an NFC card
    * @request POST:/api/fabreader/readers/reset-nfc-card
@@ -3548,7 +3555,7 @@ export namespace FabReaderReaders {
 
   /**
    * No description
-   * @tags FabReader Readers
+   * @tags FabReader
    * @name UpdateReader
    * @summary Update reader name and connected resources
    * @request PATCH:/api/fabreader/readers/{readerId}
@@ -3570,7 +3577,7 @@ export namespace FabReaderReaders {
 
   /**
    * No description
-   * @tags FabReader Readers
+   * @tags FabReader
    * @name GetReaderById
    * @summary Get a reader by ID
    * @request GET:/api/fabreader/readers/{readerId}
@@ -3592,7 +3599,7 @@ export namespace FabReaderReaders {
 
   /**
    * No description
-   * @tags FabReader Readers
+   * @tags FabReader
    * @name GetReaders
    * @summary Get all readers
    * @request GET:/api/fabreader/readers
@@ -3605,12 +3612,10 @@ export namespace FabReaderReaders {
     export type RequestHeaders = {};
     export type ResponseBody = GetReadersData;
   }
-}
 
-export namespace FabReaderNfcCards {
   /**
    * No description
-   * @tags FabReader NFC Cards
+   * @tags FabReader
    * @name GetAppKeyByUid
    * @summary Get the app key for a card by UID
    * @request POST:/api/fabreader/cards/keys
@@ -3626,7 +3631,7 @@ export namespace FabReaderNfcCards {
 
   /**
    * No description
-   * @tags FabReader NFC Cards
+   * @tags FabReader
    * @name GetAllCards
    * @summary Get all cards (to which you have access)
    * @request GET:/api/fabreader/cards
@@ -3926,11 +3931,11 @@ export class HttpClient<SecurityDataType = unknown> {
 export class Api<
   SecurityDataType extends unknown,
 > extends HttpClient<SecurityDataType> {
-  application = {
+  system = {
     /**
      * No description
      *
-     * @tags Application
+     * @tags System
      * @name Info
      * @summary Return API information
      * @request GET:/api/info
@@ -3947,7 +3952,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags users
+     * @tags Users
      * @name CreateOneUser
      * @summary Create a new user
      * @request POST:/api/users
@@ -3965,14 +3970,14 @@ export class Api<
     /**
      * No description
      *
-     * @tags users
-     * @name GetAllUsers
+     * @tags Users
+     * @name FindMany
      * @summary Get a paginated list of users
      * @request GET:/api/users
      * @secure
      */
-    getAllUsers: (query: GetAllUsersParams, params: RequestParams = {}) =>
-      this.request<GetAllUsersData, void>({
+    findMany: (query: FindManyParams, params: RequestParams = {}) =>
+      this.request<FindManyData, void>({
         path: `/api/users`,
         method: "GET",
         query: query,
@@ -3984,7 +3989,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags users
+     * @tags Users
      * @name VerifyEmail
      * @summary Verify a user email address
      * @request POST:/api/users/verify-email
@@ -4002,7 +4007,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags users
+     * @tags Users
      * @name RequestPasswordReset
      * @summary Request a password reset
      * @request POST:/api/users/reset-password
@@ -4022,7 +4027,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags users
+     * @tags Users
      * @name ChangePasswordViaResetToken
      * @summary Change a user password after password reset
      * @request POST:/api/users/{userId}/change-password
@@ -4043,7 +4048,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags users
+     * @tags Users
      * @name GetCurrent
      * @summary Get the current authenticated user
      * @request GET:/api/users/me
@@ -4061,7 +4066,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags users
+     * @tags Users
      * @name GetOneUserById
      * @summary Get a user by ID
      * @request GET:/api/users/{id}
@@ -4079,7 +4084,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags users
+     * @tags Users
      * @name UpdatePermissions
      * @summary Update a user's system permissions
      * @request PATCH:/api/users/{id}/permissions
@@ -4103,7 +4108,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags users
+     * @tags Users
      * @name GetPermissions
      * @summary Get a user's system permissions
      * @request GET:/api/users/{id}/permissions
@@ -4121,7 +4126,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags users
+     * @tags Users
      * @name BulkUpdatePermissions
      * @summary Bulk update user permissions
      * @request POST:/api/users/permissions
@@ -4144,7 +4149,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags users
+     * @tags Users
      * @name GetAllWithPermission
      * @summary Get users with a specific permission
      * @request GET:/api/users/with-permission
@@ -4199,12 +4204,11 @@ export class Api<
         format: "json",
         ...params,
       }),
-  };
-  sso = {
+
     /**
      * No description
      *
-     * @tags SSO
+     * @tags Authentication
      * @name GetAllSsoProviders
      * @summary Get all SSO providers
      * @request GET:/api/auth/sso/providers
@@ -4220,7 +4224,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags SSO
+     * @tags Authentication
      * @name CreateOneSsoProvider
      * @summary Create a new SSO provider
      * @request POST:/api/auth/sso/providers
@@ -4243,7 +4247,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags SSO
+     * @tags Authentication
      * @name GetOneSsoProviderById
      * @summary Get SSO provider by ID with full configuration
      * @request GET:/api/auth/sso/providers/{id}
@@ -4261,7 +4265,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags SSO
+     * @tags Authentication
      * @name UpdateOneSsoProvider
      * @summary Update an existing SSO provider
      * @request PUT:/api/auth/sso/providers/{id}
@@ -4285,7 +4289,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags SSO
+     * @tags Authentication
      * @name DeleteOneSsoProvider
      * @summary Delete an SSO provider
      * @request DELETE:/api/auth/sso/providers/{id}
@@ -4302,7 +4306,7 @@ export class Api<
     /**
      * @description Login with OIDC and redirect to the callback URL (optional), if you intend to redirect to your frontned, your frontend should pass the query parameters back to the sso callback endpoint to retreive a JWT token for furhter authentication
      *
-     * @tags SSO
+     * @tags Authentication
      * @name LoginWithOidc
      * @summary Login with OIDC
      * @request GET:/api/auth/sso/OIDC/{providerId}/login
@@ -4321,7 +4325,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags SSO
+     * @tags Authentication
      * @name OidcLoginCallback
      * @summary Callback for OIDC login
      * @request GET:/api/auth/sso/OIDC/{providerId}/callback
@@ -4422,111 +4426,6 @@ export class Api<
         secure: true,
         type: ContentType.Json,
         format: "json",
-        ...params,
-      }),
-  };
-  resourceGroups = {
-    /**
-     * No description
-     *
-     * @tags Resource Groups
-     * @name CreateOneResourceGroup
-     * @summary Create a new resource group
-     * @request POST:/api/resources/groups
-     * @secure
-     */
-    createOneResourceGroup: (
-      data: CreateResourceGroupDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<CreateOneResourceGroupData, void>({
-        path: `/api/resources/groups`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resource Groups
-     * @name GetAllResourceGroups
-     * @summary Retrieve all resource groups
-     * @request GET:/api/resources/groups
-     * @secure
-     */
-    getAllResourceGroups: (
-      query: GetAllResourceGroupsParams,
-      params: RequestParams = {},
-    ) =>
-      this.request<GetAllResourceGroupsData, void>({
-        path: `/api/resources/groups`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resource Groups
-     * @name GetOneResourceGroupById
-     * @summary Retrieve a specific resource group by ID
-     * @request GET:/api/resources/groups/{id}
-     * @secure
-     */
-    getOneResourceGroupById: (id: number, params: RequestParams = {}) =>
-      this.request<GetOneResourceGroupByIdData, void>({
-        path: `/api/resources/groups/${id}`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resource Groups
-     * @name UpdateOneResourceGroup
-     * @summary Update a specific resource group by ID
-     * @request PATCH:/api/resources/groups/{id}
-     * @secure
-     */
-    updateOneResourceGroup: (
-      id: number,
-      data: UpdateResourceGroupDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<UpdateOneResourceGroupData, void>({
-        path: `/api/resources/groups/${id}`,
-        method: "PATCH",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resource Groups
-     * @name DeleteOneResourceGroup
-     * @summary Delete a specific resource group by ID
-     * @request DELETE:/api/resources/groups/{id}
-     * @secure
-     */
-    deleteOneResourceGroup: (id: number, params: RequestParams = {}) =>
-      this.request<DeleteOneResourceGroupData, void>({
-        path: `/api/resources/groups/${id}`,
-        method: "DELETE",
-        secure: true,
         ...params,
       }),
   };
@@ -4636,578 +4535,6 @@ export class Api<
      * No description
      *
      * @tags Resources
-     * @name AddResourceToGroup
-     * @summary Add a resource to a group
-     * @request POST:/api/resources/{id}/groups/{groupId}
-     * @secure
-     */
-    addResourceToGroup: (
-      id: number,
-      groupId: number,
-      params: RequestParams = {},
-    ) =>
-      this.request<AddResourceToGroupData, void>({
-        path: `/api/resources/${id}/groups/${groupId}`,
-        method: "POST",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resources
-     * @name RemoveResourceFromGroup
-     * @summary Remove a resource from a group
-     * @request DELETE:/api/resources/{id}/groups/{groupId}
-     * @secure
-     */
-    removeResourceFromGroup: (
-      id: number,
-      groupId: number,
-      params: RequestParams = {},
-    ) =>
-      this.request<RemoveResourceFromGroupData, void>({
-        path: `/api/resources/${id}/groups/${groupId}`,
-        method: "DELETE",
-        secure: true,
-        ...params,
-      }),
-  };
-  resourceUsage = {
-    /**
-     * No description
-     *
-     * @tags Resource Usage
-     * @name StartSession
-     * @summary Start a resource usage session
-     * @request POST:/api/resources/{resourceId}/usage/start
-     * @secure
-     */
-    startSession: (
-      resourceId: number,
-      data: StartUsageSessionDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<StartSessionData, void>({
-        path: `/api/resources/${resourceId}/usage/start`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resource Usage
-     * @name EndSession
-     * @summary End a resource usage session
-     * @request PUT:/api/resources/{resourceId}/usage/end
-     * @secure
-     */
-    endSession: (
-      resourceId: number,
-      data: EndUsageSessionDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<EndSessionResult, void>({
-        path: `/api/resources/${resourceId}/usage/end`,
-        method: "PUT",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resource Usage
-     * @name GetHistoryOfResourceUsage
-     * @summary Get usage history for a resource
-     * @request GET:/api/resources/{resourceId}/usage/history
-     * @secure
-     */
-    getHistoryOfResourceUsage: (
-      { resourceId, ...query }: GetHistoryOfResourceUsageParams,
-      params: RequestParams = {},
-    ) =>
-      this.request<GetHistoryOfResourceUsageData, void>({
-        path: `/api/resources/${resourceId}/usage/history`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resource Usage
-     * @name GetActiveSession
-     * @summary Get active usage session for current user
-     * @request GET:/api/resources/{resourceId}/usage/active
-     * @secure
-     */
-    getActiveSession: (resourceId: number, params: RequestParams = {}) =>
-      this.request<GetActiveSessionData, void>({
-        path: `/api/resources/${resourceId}/usage/active`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-  };
-  resourceIntroductions = {
-    /**
-     * @description Complete an introduction for a user identified by their user ID, username, or email.
-     *
-     * @tags Resource Introductions
-     * @name MarkCompleted
-     * @summary Mark resource introduction as completed for a user
-     * @request POST:/api/resources/{resourceId}/introductions/complete
-     * @secure
-     */
-    markCompleted: (
-      resourceId: number,
-      data: CompleteIntroductionDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<MarkCompletedData, void>({
-        path: `/api/resources/${resourceId}/introductions/complete`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * @description Retrieve introductions for a resource, possibly paginated
-     *
-     * @tags Resource Introductions
-     * @name GetAllResourceIntroductions
-     * @summary Get introductions for a specific resource
-     * @request GET:/api/resources/{resourceId}/introductions
-     * @secure
-     */
-    getAllResourceIntroductions: (
-      { resourceId, ...query }: GetAllResourceIntroductionsParams,
-      params: RequestParams = {},
-    ) =>
-      this.request<GetAllResourceIntroductionsData, void>({
-        path: `/api/resources/${resourceId}/introductions`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * @description Check if the current user has completed the introduction for this resource and it is not revoked
-     *
-     * @tags Resource Introductions
-     * @name CheckStatus
-     * @summary Check if current user has a valid introduction
-     * @request GET:/api/resources/{resourceId}/introductions/status
-     * @secure
-     */
-    checkStatus: (resourceId: number, params: RequestParams = {}) =>
-      this.request<CheckStatusData, void>({
-        path: `/api/resources/${resourceId}/introductions/status`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * @description Revoke access for a user by marking their introduction as revoked
-     *
-     * @tags Resource Introductions
-     * @name MarkRevoked
-     * @summary Revoke an introduction
-     * @request POST:/api/resources/{resourceId}/introductions/{introductionId}/revoke
-     * @secure
-     */
-    markRevoked: (
-      resourceId: number,
-      introductionId: number,
-      data: RevokeIntroductionDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<MarkRevokedData, void>({
-        path: `/api/resources/${resourceId}/introductions/${introductionId}/revoke`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * @description Restore access for a user by unrevoking their introduction
-     *
-     * @tags Resource Introductions
-     * @name MarkUnrevoked
-     * @summary Unrevoke an introduction
-     * @request POST:/api/resources/{resourceId}/introductions/{introductionId}/unrevoke
-     * @secure
-     */
-    markUnrevoked: (
-      resourceId: number,
-      introductionId: number,
-      data: UnrevokeIntroductionDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<MarkUnrevokedData, void>({
-        path: `/api/resources/${resourceId}/introductions/${introductionId}/unrevoke`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * @description Retrieve the history of revoke/unrevoke actions for an introduction
-     *
-     * @tags Resource Introductions
-     * @name GetHistoryOfIntroduction
-     * @summary Get history for a specific introduction
-     * @request GET:/api/resources/{resourceId}/introductions/{introductionId}/history
-     * @secure
-     */
-    getHistoryOfIntroduction: (
-      resourceId: number,
-      introductionId: number,
-      params: RequestParams = {},
-    ) =>
-      this.request<GetHistoryOfIntroductionData, void>({
-        path: `/api/resources/${resourceId}/introductions/${introductionId}/history`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * @description Determine if a specific introduction is currently revoked
-     *
-     * @tags Resource Introductions
-     * @name CheckIsRevokedStatus
-     * @summary Check if an introduction is revoked
-     * @request GET:/api/resources/{resourceId}/introductions/{introductionId}/revoked
-     * @secure
-     */
-    checkIsRevokedStatus: (
-      resourceId: number,
-      introductionId: number,
-      params: RequestParams = {},
-    ) =>
-      this.request<CheckIsRevokedStatusData, void>({
-        path: `/api/resources/${resourceId}/introductions/${introductionId}/revoked`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * @description Retrieve detailed information about a specific introduction
-     *
-     * @tags Resource Introductions
-     * @name GetOneResourceIntroduction
-     * @summary Get a single resource introduction
-     * @request GET:/api/resources/{resourceId}/introductions/{introductionId}
-     * @secure
-     */
-    getOneResourceIntroduction: (
-      resourceId: number,
-      introductionId: number,
-      params: RequestParams = {},
-    ) =>
-      this.request<GetOneResourceIntroductionData, void>({
-        path: `/api/resources/${resourceId}/introductions/${introductionId}`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resource Introductions
-     * @name CheckCanManagePermission
-     * @summary Check if user can manage introductions for the resource
-     * @request GET:/api/resources/{resourceId}/introductions/permissions/manage
-     * @secure
-     */
-    checkCanManagePermission: (
-      resourceId: number,
-      params: RequestParams = {},
-    ) =>
-      this.request<CheckCanManagePermissionData, void>({
-        path: `/api/resources/${resourceId}/introductions/permissions/manage`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-  };
-  resourceIntroducers = {
-    /**
-     * No description
-     *
-     * @tags Resource Introducers
-     * @name GetAllResourceIntroducers
-     * @summary Get all authorized introducers for a resource
-     * @request GET:/api/resources/{resourceId}/introducers
-     * @secure
-     */
-    getAllResourceIntroducers: (
-      resourceId: number,
-      params: RequestParams = {},
-    ) =>
-      this.request<GetAllResourceIntroducersData, void>({
-        path: `/api/resources/${resourceId}/introducers`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resource Introducers
-     * @name AddOne
-     * @summary Add a user as an introducer for a resource
-     * @request POST:/api/resources/{resourceId}/introducers/{userId}
-     * @secure
-     */
-    addOne: (resourceId: number, userId: number, params: RequestParams = {}) =>
-      this.request<AddOneData, void>({
-        path: `/api/resources/${resourceId}/introducers/${userId}`,
-        method: "POST",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resource Introducers
-     * @name RemoveOne
-     * @summary Remove a user as an introducer for a resource
-     * @request DELETE:/api/resources/{resourceId}/introducers/{userId}
-     * @secure
-     */
-    removeOne: (
-      resourceId: number,
-      userId: number,
-      params: RequestParams = {},
-    ) =>
-      this.request<RemoveOneData, void>({
-        path: `/api/resources/${resourceId}/introducers/${userId}`,
-        method: "DELETE",
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Resource Introducers
-     * @name CheckCanManagePermission
-     * @summary Check if the current user can manage introducers for a resource
-     * @request GET:/api/resources/{resourceId}/introducers/can-manage
-     * @secure
-     */
-    checkCanManagePermission: (
-      resourceId: number,
-      params: RequestParams = {},
-    ) =>
-      this.request<CheckCanManagePermissionResult, void>({
-        path: `/api/resources/${resourceId}/introducers/can-manage`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-  };
-  mqttServers = {
-    /**
-     * No description
-     *
-     * @tags MQTT Servers
-     * @name GetAllMqttServers
-     * @summary Get all MQTT servers
-     * @request GET:/api/mqtt/servers
-     * @secure
-     */
-    getAllMqttServers: (params: RequestParams = {}) =>
-      this.request<GetAllMqttServersData, void>({
-        path: `/api/mqtt/servers`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags MQTT Servers
-     * @name CreateOneMqttServer
-     * @summary Create new MQTT server
-     * @request POST:/api/mqtt/servers
-     * @secure
-     */
-    createOneMqttServer: (
-      data: CreateMqttServerDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<CreateOneMqttServerData, void>({
-        path: `/api/mqtt/servers`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags MQTT Servers
-     * @name GetOneMqttServerById
-     * @summary Get MQTT server by ID
-     * @request GET:/api/mqtt/servers/{id}
-     * @secure
-     */
-    getOneMqttServerById: (id: number, params: RequestParams = {}) =>
-      this.request<GetOneMqttServerByIdData, void>({
-        path: `/api/mqtt/servers/${id}`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags MQTT Servers
-     * @name UpdateOneMqttServer
-     * @summary Update MQTT server
-     * @request PUT:/api/mqtt/servers/{id}
-     * @secure
-     */
-    updateOneMqttServer: (
-      id: number,
-      data: UpdateMqttServerDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<UpdateOneMqttServerData, void>({
-        path: `/api/mqtt/servers/${id}`,
-        method: "PUT",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags MQTT Servers
-     * @name DeleteOneMqttServer
-     * @summary Delete MQTT server
-     * @request DELETE:/api/mqtt/servers/{id}
-     * @secure
-     */
-    deleteOneMqttServer: (id: number, params: RequestParams = {}) =>
-      this.request<DeleteOneMqttServerData, void>({
-        path: `/api/mqtt/servers/${id}`,
-        method: "DELETE",
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags MQTT Servers
-     * @name TestConnection
-     * @summary Test MQTT server connection
-     * @request POST:/api/mqtt/servers/{id}/test
-     * @secure
-     */
-    testConnection: (id: number, params: RequestParams = {}) =>
-      this.request<TestConnectionData, void>({
-        path: `/api/mqtt/servers/${id}/test`,
-        method: "POST",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags MQTT Servers
-     * @name GetStatusOfOne
-     * @summary Get MQTT server connection status and statistics
-     * @request GET:/api/mqtt/servers/{id}/status
-     * @secure
-     */
-    getStatusOfOne: (id: number, params: RequestParams = {}) =>
-      this.request<GetStatusOfOneData, void>({
-        path: `/api/mqtt/servers/${id}/status`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags MQTT Servers
-     * @name GetStatusOfAll
-     * @summary Get all MQTT server connection statuses and statistics
-     * @request GET:/api/mqtt/servers/status
-     * @secure
-     */
-    getStatusOfAll: (params: RequestParams = {}) =>
-      this.request<GetStatusOfAllData, void>({
-        path: `/api/mqtt/servers/status`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-  };
-  sse = {
-    /**
-     * No description
-     *
-     * @tags SSE
      * @name SseControllerStreamEvents
      * @request GET:/api/resources/{resourceId}/events
      */
@@ -5220,22 +4547,538 @@ export class Api<
         method: "GET",
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @tags Resources
+     * @name ResourceGroupsCreateOne
+     * @summary Create a new resource group
+     * @request POST:/api/resource-groups
+     * @secure
+     */
+    resourceGroupsCreateOne: (
+      data: CreateResourceGroupDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceGroupsCreateOneData, void>({
+        path: `/api/resource-groups`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resources
+     * @name ResourceGroupsGetMany
+     * @summary Get many resource groups
+     * @request GET:/api/resource-groups
+     */
+    resourceGroupsGetMany: (params: RequestParams = {}) =>
+      this.request<ResourceGroupsGetManyData, any>({
+        path: `/api/resource-groups`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resources
+     * @name ResourceGroupsGetOne
+     * @summary Get a resource group by ID
+     * @request GET:/api/resource-groups/{id}
+     */
+    resourceGroupsGetOne: (id: number, params: RequestParams = {}) =>
+      this.request<ResourceGroupsGetOneData, void>({
+        path: `/api/resource-groups/${id}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resources
+     * @name ResourceGroupsUpdateOne
+     * @summary Update a resource group by ID
+     * @request PUT:/api/resource-groups/{id}
+     * @secure
+     */
+    resourceGroupsUpdateOne: (
+      id: number,
+      data: UpdateResourceGroupDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceGroupsUpdateOneData, void>({
+        path: `/api/resource-groups/${id}`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resources
+     * @name ResourceGroupsAddResource
+     * @summary Add a resource to a resource group
+     * @request POST:/api/resource-groups/{groupId}/resources/{resourceId}
+     * @secure
+     */
+    resourceGroupsAddResource: (
+      groupId: number,
+      resourceId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceGroupsAddResourceData, void>({
+        path: `/api/resource-groups/${groupId}/resources/${resourceId}`,
+        method: "POST",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resources
+     * @name ResourceGroupsRemoveResource
+     * @summary Remove a resource from a resource group
+     * @request DELETE:/api/resource-groups/{groupId}/resources/{resourceId}
+     * @secure
+     */
+    resourceGroupsRemoveResource: (
+      groupId: number,
+      resourceId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceGroupsRemoveResourceData, void>({
+        path: `/api/resource-groups/${groupId}/resources/${resourceId}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resources
+     * @name ResourceGroupsDeleteOne
+     * @summary Delete a resource group by ID
+     * @request DELETE:/api/resource-groups/{groupId}
+     * @secure
+     */
+    resourceGroupsDeleteOne: (groupId: number, params: RequestParams = {}) =>
+      this.request<ResourceGroupsDeleteOneData, void>({
+        path: `/api/resource-groups/${groupId}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resources
+     * @name ResourceUsageStartSession
+     * @summary Start a resource usage session
+     * @request POST:/api/resources/{resourceId}/usage/start
+     * @secure
+     */
+    resourceUsageStartSession: (
+      resourceId: number,
+      data: StartUsageSessionDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceUsageStartSessionData, void>({
+        path: `/api/resources/${resourceId}/usage/start`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resources
+     * @name ResourceUsageEndSession
+     * @summary End a resource usage session
+     * @request PUT:/api/resources/{resourceId}/usage/end
+     * @secure
+     */
+    resourceUsageEndSession: (
+      resourceId: number,
+      data: EndUsageSessionDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceUsageEndSessionData, void>({
+        path: `/api/resources/${resourceId}/usage/end`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resources
+     * @name ResourceUsageGetHistory
+     * @summary Get usage history for a resource
+     * @request GET:/api/resources/{resourceId}/usage/history
+     * @secure
+     */
+    resourceUsageGetHistory: (
+      { resourceId, ...query }: ResourceUsageGetHistoryParams,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceUsageGetHistoryData, void>({
+        path: `/api/resources/${resourceId}/usage/history`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resources
+     * @name ResourceUsageGetActiveSession
+     * @summary Get active usage session for current user
+     * @request GET:/api/resources/{resourceId}/usage/active
+     * @secure
+     */
+    resourceUsageGetActiveSession: (
+      resourceId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceUsageGetActiveSessionData, void>({
+        path: `/api/resources/${resourceId}/usage/active`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+  };
+  mqtt = {
+    /**
+     * No description
+     *
+     * @tags MQTT
+     * @name MqttServersGetAll
+     * @summary Get all MQTT servers
+     * @request GET:/api/mqtt/servers
+     * @secure
+     */
+    mqttServersGetAll: (params: RequestParams = {}) =>
+      this.request<MqttServersGetAllData, void>({
+        path: `/api/mqtt/servers`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MQTT
+     * @name MqttServersCreateOne
+     * @summary Create new MQTT server
+     * @request POST:/api/mqtt/servers
+     * @secure
+     */
+    mqttServersCreateOne: (
+      data: CreateMqttServerDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<MqttServersCreateOneData, void>({
+        path: `/api/mqtt/servers`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MQTT
+     * @name MqttServersGetOneById
+     * @summary Get MQTT server by ID
+     * @request GET:/api/mqtt/servers/{id}
+     * @secure
+     */
+    mqttServersGetOneById: (id: number, params: RequestParams = {}) =>
+      this.request<MqttServersGetOneByIdData, void>({
+        path: `/api/mqtt/servers/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MQTT
+     * @name MqttServersUpdateOne
+     * @summary Update MQTT server
+     * @request PUT:/api/mqtt/servers/{id}
+     * @secure
+     */
+    mqttServersUpdateOne: (
+      id: number,
+      data: UpdateMqttServerDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<MqttServersUpdateOneData, void>({
+        path: `/api/mqtt/servers/${id}`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MQTT
+     * @name MqttServersDeleteOne
+     * @summary Delete MQTT server
+     * @request DELETE:/api/mqtt/servers/{id}
+     * @secure
+     */
+    mqttServersDeleteOne: (id: number, params: RequestParams = {}) =>
+      this.request<MqttServersDeleteOneData, void>({
+        path: `/api/mqtt/servers/${id}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MQTT
+     * @name MqttServersTestConnection
+     * @summary Test MQTT server connection
+     * @request POST:/api/mqtt/servers/{id}/test
+     * @secure
+     */
+    mqttServersTestConnection: (id: number, params: RequestParams = {}) =>
+      this.request<MqttServersTestConnectionData, void>({
+        path: `/api/mqtt/servers/${id}/test`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MQTT
+     * @name MqttServersGetStatusOfOne
+     * @summary Get MQTT server connection status and statistics
+     * @request GET:/api/mqtt/servers/{id}/status
+     * @secure
+     */
+    mqttServersGetStatusOfOne: (id: number, params: RequestParams = {}) =>
+      this.request<MqttServersGetStatusOfOneData, void>({
+        path: `/api/mqtt/servers/${id}/status`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MQTT
+     * @name MqttServersGetStatusOfAll
+     * @summary Get all MQTT server connection statuses and statistics
+     * @request GET:/api/mqtt/servers/status
+     * @secure
+     */
+    mqttServersGetStatusOfAll: (params: RequestParams = {}) =>
+      this.request<MqttServersGetStatusOfAllData, void>({
+        path: `/api/mqtt/servers/status`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MQTT
+     * @name MqttResourceConfigGetAll
+     * @summary Get all MQTT configurations for a resource
+     * @request GET:/api/resources/{resourceId}/mqtt/config
+     * @secure
+     */
+    mqttResourceConfigGetAll: (
+      resourceId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<MqttResourceConfigGetAllData, void>({
+        path: `/api/resources/${resourceId}/mqtt/config`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MQTT
+     * @name MqttResourceConfigCreate
+     * @summary Create a new MQTT configuration for a resource
+     * @request POST:/api/resources/{resourceId}/mqtt/config
+     * @secure
+     */
+    mqttResourceConfigCreate: (
+      resourceId: number,
+      data: CreateMqttResourceConfigDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<MqttResourceConfigCreateData, void>({
+        path: `/api/resources/${resourceId}/mqtt/config`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MQTT
+     * @name MqttResourceConfigGetOne
+     * @summary Get a specific MQTT configuration for a resource
+     * @request GET:/api/resources/{resourceId}/mqtt/config/{configId}
+     * @secure
+     */
+    mqttResourceConfigGetOne: (
+      resourceId: number,
+      configId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<MqttResourceConfigGetOneData, void>({
+        path: `/api/resources/${resourceId}/mqtt/config/${configId}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MQTT
+     * @name MqttResourceConfigUpdate
+     * @summary Update a specific MQTT configuration
+     * @request PUT:/api/resources/{resourceId}/mqtt/config/{configId}
+     * @secure
+     */
+    mqttResourceConfigUpdate: (
+      resourceId: number,
+      configId: number,
+      data: UpdateMqttResourceConfigDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<MqttResourceConfigUpdateData, void>({
+        path: `/api/resources/${resourceId}/mqtt/config/${configId}`,
+        method: "PUT",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MQTT
+     * @name MqttResourceConfigDeleteOne
+     * @summary Delete a specific MQTT configuration
+     * @request DELETE:/api/resources/{resourceId}/mqtt/config/{configId}
+     * @secure
+     */
+    mqttResourceConfigDeleteOne: (
+      resourceId: number,
+      configId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<MqttResourceConfigDeleteOneData, void>({
+        path: `/api/resources/${resourceId}/mqtt/config/${configId}`,
+        method: "DELETE",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags MQTT
+     * @name MqttResourceConfigTestOne
+     * @summary Test a specific MQTT configuration
+     * @request POST:/api/resources/{resourceId}/mqtt/config/{configId}/test
+     * @secure
+     */
+    mqttResourceConfigTestOne: (
+      resourceId: number,
+      configId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<MqttResourceConfigTestOneData, void>({
+        path: `/api/resources/${resourceId}/mqtt/config/${configId}/test`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
   };
   webhooks = {
     /**
      * No description
      *
      * @tags Webhooks
-     * @name GetAllWebhookConfigurations
+     * @name WebhookConfigGetAll
      * @summary Get all webhook configurations for a resource
      * @request GET:/api/resources/{resourceId}/webhooks
      * @secure
      */
-    getAllWebhookConfigurations: (
-      resourceId: number,
-      params: RequestParams = {},
-    ) =>
-      this.request<GetAllWebhookConfigurationsData, void>({
+    webhookConfigGetAll: (resourceId: number, params: RequestParams = {}) =>
+      this.request<WebhookConfigGetAllData, void>({
         path: `/api/resources/${resourceId}/webhooks`,
         method: "GET",
         secure: true,
@@ -5247,17 +5090,17 @@ export class Api<
      * @description Creates a new webhook configuration for a resource. ## URL Templating The webhook URL can include Handlebars templates that will be replaced with context values when the webhook is triggered. Example: `https://example.com/webhooks/{{id}}/{{event}}` ## Header Templating Header values can include Handlebars templates that will be replaced with context values when the webhook is triggered. Example: `{"Authorization": "Bearer {{user.id}}", "X-Resource-Name": "{{name}}"}` ## Available Template Variables Available template variables for URLs, headers, and payloads: - `id`: Resource ID - `name`: Resource name - `description`: Resource description - `timestamp`: ISO timestamp of the event - `user.id`: ID of the user who triggered the event - `event`: Either "started" or "ended" depending on the resource usage state
      *
      * @tags Webhooks
-     * @name CreateOneWebhookConfiguration
+     * @name WebhookConfigCreateOne
      * @summary Create a new webhook configuration
      * @request POST:/api/resources/{resourceId}/webhooks
      * @secure
      */
-    createOneWebhookConfiguration: (
+    webhookConfigCreateOne: (
       resourceId: number,
       data: CreateWebhookConfigDto,
       params: RequestParams = {},
     ) =>
-      this.request<CreateOneWebhookConfigurationData, void>({
+      this.request<WebhookConfigCreateOneData, void>({
         path: `/api/resources/${resourceId}/webhooks`,
         method: "POST",
         body: data,
@@ -5271,17 +5114,17 @@ export class Api<
      * No description
      *
      * @tags Webhooks
-     * @name GetOneWebhookConfigurationById
+     * @name WebhookConfigGetOneById
      * @summary Get webhook configuration by ID
      * @request GET:/api/resources/{resourceId}/webhooks/{id}
      * @secure
      */
-    getOneWebhookConfigurationById: (
+    webhookConfigGetOneById: (
       resourceId: number,
       id: number,
       params: RequestParams = {},
     ) =>
-      this.request<GetOneWebhookConfigurationByIdData, void>({
+      this.request<WebhookConfigGetOneByIdData, void>({
         path: `/api/resources/${resourceId}/webhooks/${id}`,
         method: "GET",
         secure: true,
@@ -5293,18 +5136,18 @@ export class Api<
      * No description
      *
      * @tags Webhooks
-     * @name UpdateOneWebhookConfiguration
+     * @name WebhookConfigUpdateOne
      * @summary Update webhook configuration
      * @request PUT:/api/resources/{resourceId}/webhooks/{id}
      * @secure
      */
-    updateOneWebhookConfiguration: (
+    webhookConfigUpdateOne: (
       resourceId: number,
       id: number,
       data: UpdateWebhookConfigDto,
       params: RequestParams = {},
     ) =>
-      this.request<UpdateOneWebhookConfigurationData, void>({
+      this.request<WebhookConfigUpdateOneData, void>({
         path: `/api/resources/${resourceId}/webhooks/${id}`,
         method: "PUT",
         body: data,
@@ -5318,17 +5161,17 @@ export class Api<
      * No description
      *
      * @tags Webhooks
-     * @name DeleteOneWebhookConfiguration
+     * @name WebhookConfigDeleteOne
      * @summary Delete webhook configuration
      * @request DELETE:/api/resources/{resourceId}/webhooks/{id}
      * @secure
      */
-    deleteOneWebhookConfiguration: (
+    webhookConfigDeleteOne: (
       resourceId: number,
       id: number,
       params: RequestParams = {},
     ) =>
-      this.request<DeleteOneWebhookConfigurationData, void>({
+      this.request<WebhookConfigDeleteOneData, void>({
         path: `/api/resources/${resourceId}/webhooks/${id}`,
         method: "DELETE",
         secure: true,
@@ -5339,18 +5182,18 @@ export class Api<
      * No description
      *
      * @tags Webhooks
-     * @name UpdateStatus
+     * @name WebhookConfigUpdateStatus
      * @summary Enable or disable webhook
      * @request PUT:/api/resources/{resourceId}/webhooks/{id}/status
      * @secure
      */
-    updateStatus: (
+    webhookConfigUpdateStatus: (
       resourceId: number,
       id: number,
       data: WebhookStatusDto,
       params: RequestParams = {},
     ) =>
-      this.request<UpdateStatusData, void>({
+      this.request<WebhookConfigUpdateStatusData, void>({
         path: `/api/resources/${resourceId}/webhooks/${id}/status`,
         method: "PUT",
         body: data,
@@ -5364,13 +5207,17 @@ export class Api<
      * No description
      *
      * @tags Webhooks
-     * @name Test
+     * @name WebhookConfigTest
      * @summary Test webhook
      * @request POST:/api/resources/{resourceId}/webhooks/{id}/test
      * @secure
      */
-    test: (resourceId: number, id: number, params: RequestParams = {}) =>
-      this.request<TestData, void>({
+    webhookConfigTest: (
+      resourceId: number,
+      id: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<WebhookConfigTestData, void>({
         path: `/api/resources/${resourceId}/webhooks/${id}/test`,
         method: "POST",
         secure: true,
@@ -5382,17 +5229,17 @@ export class Api<
      * @description When signature verification is enabled, each webhook request includes: 1. A timestamp header (X-Webhook-Timestamp) 2. A signature header (configurable, default: X-Webhook-Signature) To verify the signature: 1. Extract the timestamp from the X-Webhook-Timestamp header 2. Combine the timestamp and payload as "${timestamp}.${payload}" 3. Compute the HMAC-SHA256 signature using your webhook secret 4. Compare the resulting signature with the value in the signature header Example (Node.js): ```javascript const crypto = require('crypto'); function verifySignature(payload, timestamp, signature, secret) { const signaturePayload = `${timestamp}.${payload}`; const expectedSignature = crypto .createHmac('sha256', secret) .update(signaturePayload) .digest('hex'); return crypto.timingSafeEqual( Buffer.from(signature), Buffer.from(expectedSignature) ); } ```
      *
      * @tags Webhooks
-     * @name RegenerateSecret
+     * @name WebhookConfigRegenerateSecret
      * @summary Regenerate webhook secret
      * @request POST:/api/resources/{resourceId}/webhooks/{id}/regenerate-secret
      * @secure
      */
-    regenerateSecret: (
+    webhookConfigRegenerateSecret: (
       resourceId: number,
       id: number,
       params: RequestParams = {},
     ) =>
-      this.request<RegenerateSecretData, void>({
+      this.request<WebhookConfigRegenerateSecretData, void>({
         path: `/api/resources/${resourceId}/webhooks/${id}/regenerate-secret`,
         method: "POST",
         secure: true,
@@ -5400,22 +5247,22 @@ export class Api<
         ...params,
       }),
   };
-  mqttResourceConfiguration = {
+  accessControl = {
     /**
      * No description
      *
-     * @tags MQTT Resource Configuration
-     * @name GetAllMqttConfigurations
-     * @summary Get all MQTT configurations for a resource
-     * @request GET:/api/resources/{resourceId}/mqtt/config
+     * @tags Access Control
+     * @name ResourceGroupIntroductionsGetMany
+     * @summary Get many introductions by group ID
+     * @request GET:/api/resource-groups/{groupId}/introductions
      * @secure
      */
-    getAllMqttConfigurations: (
-      resourceId: number,
+    resourceGroupIntroductionsGetMany: (
+      groupId: number,
       params: RequestParams = {},
     ) =>
-      this.request<GetAllMqttConfigurationsData, void>({
-        path: `/api/resources/${resourceId}/mqtt/config`,
+      this.request<ResourceGroupIntroductionsGetManyData, void>({
+        path: `/api/resource-groups/${groupId}/introductions`,
         method: "GET",
         secure: true,
         format: "json",
@@ -5425,19 +5272,42 @@ export class Api<
     /**
      * No description
      *
-     * @tags MQTT Resource Configuration
-     * @name CreateMqttConfiguration
-     * @summary Create a new MQTT configuration for a resource
-     * @request POST:/api/resources/{resourceId}/mqtt/config
+     * @tags Access Control
+     * @name ResourceGroupIntroductionsGetHistory
+     * @summary Get history of introductions by group ID and user ID
+     * @request GET:/api/resource-groups/{groupId}/introductions/{userId}/history
      * @secure
      */
-    createMqttConfiguration: (
-      resourceId: number,
-      data: CreateMqttResourceConfigDto,
+    resourceGroupIntroductionsGetHistory: (
+      groupId: number,
+      userId: number,
       params: RequestParams = {},
     ) =>
-      this.request<CreateMqttConfigurationData, void>({
-        path: `/api/resources/${resourceId}/mqtt/config`,
+      this.request<ResourceGroupIntroductionsGetHistoryData, void>({
+        path: `/api/resource-groups/${groupId}/introductions/${userId}/history`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Access Control
+     * @name ResourceGroupIntroductionsGrant
+     * @summary Grant introduction permission for a resource group to a user
+     * @request POST:/api/resource-groups/{groupId}/introductions/{userId}/grant
+     * @secure
+     */
+    resourceGroupIntroductionsGrant: (
+      groupId: number,
+      userId: number,
+      data: UpdateResourceGroupIntroductionDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceGroupIntroductionsGrantData, void>({
+        path: `/api/resource-groups/${groupId}/introductions/${userId}/grant`,
         method: "POST",
         body: data,
         secure: true,
@@ -5449,43 +5319,21 @@ export class Api<
     /**
      * No description
      *
-     * @tags MQTT Resource Configuration
-     * @name GetOneMqttConfiguration
-     * @summary Get a specific MQTT configuration for a resource
-     * @request GET:/api/resources/{resourceId}/mqtt/config/{configId}
+     * @tags Access Control
+     * @name ResourceGroupIntroductionsRevoke
+     * @summary Revoke introduction permission for a resource group from a user
+     * @request POST:/api/resource-groups/{groupId}/introductions/{userId}/revoke
      * @secure
      */
-    getOneMqttConfiguration: (
-      resourceId: number,
-      configId: number,
+    resourceGroupIntroductionsRevoke: (
+      groupId: number,
+      userId: number,
+      data: UpdateResourceGroupIntroductionDto,
       params: RequestParams = {},
     ) =>
-      this.request<GetOneMqttConfigurationData, void>({
-        path: `/api/resources/${resourceId}/mqtt/config/${configId}`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags MQTT Resource Configuration
-     * @name UpdateMqttConfiguration
-     * @summary Update a specific MQTT configuration
-     * @request PUT:/api/resources/{resourceId}/mqtt/config/{configId}
-     * @secure
-     */
-    updateMqttConfiguration: (
-      resourceId: number,
-      configId: number,
-      data: UpdateMqttResourceConfigDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<UpdateMqttConfigurationData, void>({
-        path: `/api/resources/${resourceId}/mqtt/config/${configId}`,
-        method: "PUT",
+      this.request<ResourceGroupIntroductionsRevokeData, void>({
+        path: `/api/resource-groups/${groupId}/introductions/${userId}/revoke`,
+        method: "POST",
         body: data,
         secure: true,
         type: ContentType.Json,
@@ -5496,51 +5344,263 @@ export class Api<
     /**
      * No description
      *
-     * @tags MQTT Resource Configuration
-     * @name DeleteOneMqttConfiguration
-     * @summary Delete a specific MQTT configuration
-     * @request DELETE:/api/resources/{resourceId}/mqtt/config/{configId}
-     * @secure
+     * @tags Access Control
+     * @name ResourceGroupIntroducersGetMany
+     * @summary Get all introducers for a resource group
+     * @request GET:/api/resource-groups/{groupId}/introducers
      */
-    deleteOneMqttConfiguration: (
-      resourceId: number,
-      configId: number,
+    resourceGroupIntroducersGetMany: (
+      groupId: number,
       params: RequestParams = {},
     ) =>
-      this.request<DeleteOneMqttConfigurationData, void>({
-        path: `/api/resources/${resourceId}/mqtt/config/${configId}`,
+      this.request<ResourceGroupIntroducersGetManyData, void>({
+        path: `/api/resource-groups/${groupId}/introducers`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Access Control
+     * @name ResourceGroupIntroducersGrant
+     * @summary Grant a user introduction permission for a resource group
+     * @request POST:/api/resource-groups/{groupId}/introducers/{userId}/grant
+     * @secure
+     */
+    resourceGroupIntroducersGrant: (
+      userId: number,
+      groupId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceGroupIntroducersGrantData, void>({
+        path: `/api/resource-groups/${groupId}/introducers/${userId}/grant`,
+        method: "POST",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Access Control
+     * @name ResourceGroupIntroducersRevoke
+     * @summary Revoke a user introduction permission for a resource group
+     * @request POST:/api/resource-groups/{groupId}/introducers/{userId}/revoke
+     * @secure
+     */
+    resourceGroupIntroducersRevoke: (
+      userId: number,
+      groupId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceGroupIntroducersRevokeData, void>({
+        path: `/api/resource-groups/${groupId}/introducers/${userId}/revoke`,
+        method: "POST",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Access Control
+     * @name ResourceIntroducersGetMany
+     * @summary Get all introducers for a resource
+     * @request GET:/api/resources/{resourceId}/introducers
+     */
+    resourceIntroducersGetMany: (
+      resourceId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceIntroducersGetManyData, any>({
+        path: `/api/resources/${resourceId}/introducers`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Access Control
+     * @name ResourceIntroducersGrant
+     * @summary Grant a user introduction permission for a resource
+     * @request POST:/api/resources/{resourceId}/introducers/{userId}/grant
+     * @secure
+     */
+    resourceIntroducersGrant: (
+      resourceId: number,
+      userId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceIntroducersGrantData, void>({
+        path: `/api/resources/${resourceId}/introducers/${userId}/grant`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Access Control
+     * @name ResourceIntroducersRevoke
+     * @summary Revoke a user introduction permission for a resource
+     * @request DELETE:/api/resources/{resourceId}/introducers/{userId}/revoke
+     * @secure
+     */
+    resourceIntroducersRevoke: (
+      resourceId: number,
+      userId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceIntroducersRevokeData, void>({
+        path: `/api/resources/${resourceId}/introducers/${userId}/revoke`,
         method: "DELETE",
         secure: true,
+        format: "json",
         ...params,
       }),
 
     /**
      * No description
      *
-     * @tags MQTT Resource Configuration
-     * @name TestOne
-     * @summary Test a specific MQTT configuration
-     * @request POST:/api/resources/{resourceId}/mqtt/config/{configId}/test
-     * @secure
+     * @tags Access Control
+     * @name ResourceIntroducersGetStatus
+     * @summary Get the status of an introducer for a user
+     * @request GET:/api/resources/{resourceId}/introducers/{userId}/status
      */
-    testOne: (
+    resourceIntroducersGetStatus: (
       resourceId: number,
-      configId: number,
+      userId: number,
       params: RequestParams = {},
     ) =>
-      this.request<TestOneData, void>({
-        path: `/api/resources/${resourceId}/mqtt/config/${configId}/test`,
+      this.request<ResourceIntroducersGetStatusData, any>({
+        path: `/api/resources/${resourceId}/introducers/${userId}/status`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Access Control
+     * @name ResourceIntroductionsGetMany
+     * @summary Get all introductions for a resource
+     * @request GET:/api/resources/{resourceId}/introductions
+     */
+    resourceIntroductionsGetMany: (
+      resourceId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceIntroductionsGetManyData, any>({
+        path: `/api/resources/${resourceId}/introductions`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Access Control
+     * @name ResourceIntroductionsGrant
+     * @summary Grant a user usage permission for a resource
+     * @request POST:/api/resources/{resourceId}/introductions/{userId}/grant
+     * @secure
+     */
+    resourceIntroductionsGrant: (
+      resourceId: number,
+      userId: number,
+      data: UpdateResourceIntroductionDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceIntroductionsGrantData, void>({
+        path: `/api/resources/${resourceId}/introductions/${userId}/grant`,
         method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Access Control
+     * @name ResourceIntroductionsRevoke
+     * @summary Revoke a user usage permission for a resource
+     * @request DELETE:/api/resources/{resourceId}/introductions/{userId}/revoke
+     * @secure
+     */
+    resourceIntroductionsRevoke: (
+      resourceId: number,
+      userId: number,
+      data: UpdateResourceIntroductionDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceIntroductionsRevokeData, void>({
+        path: `/api/resources/${resourceId}/introductions/${userId}/revoke`,
+        method: "DELETE",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Access Control
+     * @name ResourceIntroductionsGetStatus
+     * @summary Get the status of an introduction for a user
+     * @request GET:/api/resources/{resourceId}/introductions/{userId}/status
+     */
+    resourceIntroductionsGetStatus: (
+      resourceId: number,
+      userId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceIntroductionsGetStatusData, any>({
+        path: `/api/resources/${resourceId}/introductions/${userId}/status`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Access Control
+     * @name ResourceIntroductionsGetHistory
+     * @summary Get history of introductions by resource ID and user ID
+     * @request GET:/api/resources/{resourceId}/introductions/{userId}/history
+     * @secure
+     */
+    resourceIntroductionsGetHistory: (
+      resourceId: number,
+      userId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<ResourceIntroductionsGetHistoryData, void>({
+        path: `/api/resources/${resourceId}/introductions/${userId}/history`,
+        method: "GET",
         secure: true,
         format: "json",
         ...params,
       }),
   };
-  plugin = {
+  plugins = {
     /**
      * No description
      *
-     * @tags Plugin
+     * @tags Plugins
      * @name GetPlugins
      * @summary Get all plugins
      * @request GET:/api/plugins
@@ -5556,7 +5616,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags Plugin
+     * @tags Plugins
      * @name UploadPlugin
      * @summary Upload a new plugin
      * @request POST:/api/plugins
@@ -5575,7 +5635,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags Plugin
+     * @tags Plugins
      * @name GetFrontendPluginFile
      * @summary Get any frontend plugin file
      * @request GET:/api/plugins/{pluginName}/frontend/module-federation/{filePath}
@@ -5595,7 +5655,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags Plugin
+     * @tags Plugins
      * @name DeletePlugin
      * @summary Delete a plugin
      * @request DELETE:/api/plugins/{pluginId}
@@ -5609,11 +5669,11 @@ export class Api<
         ...params,
       }),
   };
-  fabReaderReaders = {
+  fabReader = {
     /**
      * No description
      *
-     * @tags FabReader Readers
+     * @tags FabReader
      * @name EnrollNfcCard
      * @summary Enroll a new NFC card
      * @request POST:/api/fabreader/readers/enroll-nfc-card
@@ -5633,7 +5693,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags FabReader Readers
+     * @tags FabReader
      * @name ResetNfcCard
      * @summary Reset an NFC card
      * @request POST:/api/fabreader/readers/reset-nfc-card
@@ -5653,7 +5713,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags FabReader Readers
+     * @tags FabReader
      * @name UpdateReader
      * @summary Update reader name and connected resources
      * @request PATCH:/api/fabreader/readers/{readerId}
@@ -5677,7 +5737,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags FabReader Readers
+     * @tags FabReader
      * @name GetReaderById
      * @summary Get a reader by ID
      * @request GET:/api/fabreader/readers/{readerId}
@@ -5695,7 +5755,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags FabReader Readers
+     * @tags FabReader
      * @name GetReaders
      * @summary Get all readers
      * @request GET:/api/fabreader/readers
@@ -5709,12 +5769,11 @@ export class Api<
         format: "json",
         ...params,
       }),
-  };
-  fabReaderNfcCards = {
+
     /**
      * No description
      *
-     * @tags FabReader NFC Cards
+     * @tags FabReader
      * @name GetAppKeyByUid
      * @summary Get the app key for a card by UID
      * @request POST:/api/fabreader/cards/keys
@@ -5734,7 +5793,7 @@ export class Api<
     /**
      * No description
      *
-     * @tags FabReader NFC Cards
+     * @tags FabReader
      * @name GetAllCards
      * @summary Get all cards (to which you have access)
      * @request GET:/api/fabreader/cards

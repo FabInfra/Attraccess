@@ -5,9 +5,9 @@ import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { useToastMessage } from '../../../../../components/toastProvider';
 import { SessionNotesModal, SessionModalMode } from '../SessionNotesModal';
 import {
-  useResourceUsageServiceStartSession,
-  UseResourceUsageServiceGetActiveSessionKeyFn,
-  UseResourceUsageServiceGetHistoryOfResourceUsageKeyFn,
+  useResourcesServiceResourceUsageStartSession,
+  UseResourcesServiceResourceUsageGetActiveSessionKeyFn,
+  UseResourcesServiceResourceUsageGetHistoryKeyFn,
 } from '@attraccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 import * as en from './translations/en.json';
@@ -17,25 +17,25 @@ interface StartSessionControlsProps {
   resourceId: number;
 }
 
-export function StartSessionControls({ resourceId }: StartSessionControlsProps) {
+export function StartSessionControls({ resourceId }: Readonly<StartSessionControlsProps>) {
   const { t } = useTranslations('startSessionControls', { en, de });
   const { success, error: showError } = useToastMessage();
   const queryClient = useQueryClient();
 
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
 
-  const startSession = useResourceUsageServiceStartSession({
+  const startSession = useResourcesServiceResourceUsageStartSession({
     onSuccess: () => {
       setIsNotesModalOpen(false);
 
       // Invalidate the active session query to refetch data
       queryClient.invalidateQueries({
-        queryKey: UseResourceUsageServiceGetActiveSessionKeyFn({ resourceId }),
+        queryKey: UseResourcesServiceResourceUsageGetActiveSessionKeyFn({ resourceId }),
       });
       // Invalidate all history queries for this resource (regardless of pagination/user filters)
       queryClient.invalidateQueries({
         predicate: (query) => {
-          const baseHistoryKey = UseResourceUsageServiceGetHistoryOfResourceUsageKeyFn({ resourceId });
+          const baseHistoryKey = UseResourcesServiceResourceUsageGetHistoryKeyFn({ resourceId });
           return (
             query.queryKey[0] === baseHistoryKey[0] &&
             query.queryKey.length > 1 &&

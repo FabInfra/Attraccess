@@ -14,11 +14,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Resource } from '@attraccess/database-entities';
 import { ResourceUsageStartedEvent, ResourceUsageEndedEvent } from '../usage/events/resource-usage.events';
+import { ApiTags } from '@nestjs/swagger';
 
 interface MessageEvent {
   data: object;
 }
 
+@ApiTags('Resources')
 @Controller('resources')
 export class SSEController implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(SSEController.name);

@@ -6,7 +6,7 @@ import { CreateResourceDto } from './dtos/createResource.dto';
 import { UpdateResourceDto } from './dtos/updateResource.dto';
 import { NotFoundException } from '@nestjs/common';
 import { PaginatedResponse } from '../types/response';
-import { ResourceImageService } from '../common/services/resource-image.service';
+import { ResourceImageService } from './resourceImage.service';
 
 describe('ResourcesController', () => {
   let controller: ResourcesController;
@@ -20,8 +20,6 @@ describe('ResourcesController', () => {
       createResource: jest.fn(),
       updateResource: jest.fn(),
       deleteResource: jest.fn(),
-      addResourceToGroup: jest.fn(),
-      removeResourceFromGroup: jest.fn(),
     };
 
     const mockResourceImageService = {
@@ -232,26 +230,6 @@ describe('ResourcesController', () => {
       jest.spyOn(service, 'deleteResource').mockRejectedValue(new NotFoundException());
 
       await expect(controller.deleteOne(999)).rejects.toThrow(NotFoundException);
-    });
-  });
-
-  describe('addResourceToGroup', () => {
-    it('should add a resource to a group', async () => {
-      jest.spyOn(service, 'addResourceToGroup').mockResolvedValue(undefined);
-
-      await controller.addResourceToGroup(1, 2);
-
-      expect(service.addResourceToGroup).toHaveBeenCalledWith(1, 2);
-    });
-  });
-
-  describe('removeResourceFromGroup', () => {
-    it('should remove a resource from a group', async () => {
-      jest.spyOn(service, 'removeResourceFromGroup').mockResolvedValue(undefined);
-
-      await controller.removeResourceFromGroup(1, 2);
-
-      expect(service.removeResourceFromGroup).toHaveBeenCalledWith(1, 2);
     });
   });
 });

@@ -19,7 +19,7 @@ export function IoTSettings() {
     data: resource,
     isLoading: isLoadingResource,
     error: resourceError,
-  } = useResourcesServiceGetOneResourceById({id: resourceId});
+  } = useResourcesServiceGetOneResourceById({ id: resourceId });
 
   const canManageResources = hasPermission('canManageResources');
 
@@ -42,8 +42,7 @@ export function IoTSettings() {
       <div className="max-w-7xl mx-auto px-4 flex flex-col items-center justify-center min-h-screen">
         <h2 className="text-xl font-semibold mb-2">Resource not found</h2>
         <p className="text-gray-500 mb-4">
-          The requested resource could not be found or you don't have permission
-          to view it.
+          The requested resource could not be found or you don't have permission to view it.
         </p>
         <Button
           onPress={() => navigate('/resources')}

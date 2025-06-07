@@ -9,18 +9,18 @@ import {
   WebhookConfigResponseDto,
 } from './dtos/webhook-config.dto';
 import { WebhookConfig } from '@attraccess/database-entities';
-import { CanManageResources } from '../../../../resources/guards/can-manage-resources.decorator';
+import { Auth } from '@attraccess/plugins-backend-sdk';
 
 @ApiTags('Webhooks')
 @Controller('resources/:resourceId/webhooks')
-@CanManageResources()
+@Auth('canManageResources')
 export class WebhookConfigController {
   constructor(private readonly webhookConfigService: WebhookConfigService) {}
 
   @Get()
   @ApiOperation({
     summary: 'Get all webhook configurations for a resource',
-    operationId: 'getAllWebhookConfigurations',
+    operationId: 'webhookConfigGetAll',
   })
   @ApiParam({ name: 'resourceId', type: 'number', description: 'Resource ID' })
   @ApiResponse({
@@ -33,7 +33,7 @@ export class WebhookConfigController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get webhook configuration by ID', operationId: 'getOneWebhookConfigurationById' })
+  @ApiOperation({ summary: 'Get webhook configuration by ID', operationId: 'webhookConfigGetOneById' })
   @ApiParam({ name: 'resourceId', type: 'number', description: 'Resource ID' })
   @ApiParam({
     name: 'id',
@@ -81,7 +81,7 @@ export class WebhookConfigController {
       - \`user.id\`: ID of the user who triggered the event
       - \`event\`: Either "started" or "ended" depending on the resource usage state
     `,
-    operationId: 'createOneWebhookConfiguration',
+    operationId: 'webhookConfigCreateOne',
   })
   @ApiParam({ name: 'resourceId', type: 'number', description: 'Resource ID' })
   @ApiResponse({
@@ -99,7 +99,7 @@ export class WebhookConfigController {
   }
 
   @Put(':id')
-  @ApiOperation({ summary: 'Update webhook configuration', operationId: 'updateOneWebhookConfiguration' })
+  @ApiOperation({ summary: 'Update webhook configuration', operationId: 'webhookConfigUpdateOne' })
   @ApiParam({ name: 'resourceId', type: 'number', description: 'Resource ID' })
   @ApiParam({
     name: 'id',
@@ -122,7 +122,7 @@ export class WebhookConfigController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete webhook configuration', operationId: 'deleteOneWebhookConfiguration' })
+  @ApiOperation({ summary: 'Delete webhook configuration', operationId: 'webhookConfigDeleteOne' })
   @ApiParam({ name: 'resourceId', type: 'number', description: 'Resource ID' })
   @ApiParam({
     name: 'id',
@@ -143,7 +143,7 @@ export class WebhookConfigController {
   }
 
   @Put(':id/status')
-  @ApiOperation({ summary: 'Enable or disable webhook', operationId: 'updateStatus' })
+  @ApiOperation({ summary: 'Enable or disable webhook', operationId: 'webhookConfigUpdateStatus' })
   @ApiParam({ name: 'resourceId', type: 'number', description: 'Resource ID' })
   @ApiParam({
     name: 'id',
@@ -166,7 +166,7 @@ export class WebhookConfigController {
   }
 
   @Post(':id/test')
-  @ApiOperation({ summary: 'Test webhook', operationId: 'test' })
+  @ApiOperation({ summary: 'Test webhook', operationId: 'webhookConfigTest' })
   @ApiParam({ name: 'resourceId', type: 'number', description: 'Resource ID' })
   @ApiParam({
     name: 'id',
@@ -187,7 +187,7 @@ export class WebhookConfigController {
   }
 
   @Post(':id/regenerate-secret')
-  @ApiOperation({ summary: 'Regenerate webhook secret', operationId: 'regenerateSecret' })
+  @ApiOperation({ summary: 'Regenerate webhook secret', operationId: 'webhookConfigRegenerateSecret' })
   @ApiParam({ name: 'resourceId', type: 'number', description: 'Resource ID' })
   @ApiParam({
     name: 'id',

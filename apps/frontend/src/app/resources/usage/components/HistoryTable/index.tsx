@@ -5,7 +5,7 @@ import * as en from './utils/translations/en';
 import * as de from './utils/translations/de';
 import { generateHeaderColumns } from './utils/tableHeaders';
 import { generateRowCells } from './utils/tableRows';
-import { useResourceUsageServiceGetHistoryOfResourceUsage, ResourceUsage } from '@attraccess/react-query-client';
+import { useResourcesServiceResourceUsageGetHistory, ResourceUsage } from '@attraccess/react-query-client';
 import { useAuth } from '../../../../../hooks/useAuth';
 import { Select } from '../../../../../components/select';
 
@@ -52,7 +52,7 @@ export const HistoryTable = ({
     data: usageHistory,
     isLoading,
     error,
-  } = useResourceUsageServiceGetHistoryOfResourceUsage(
+  } = useResourcesServiceResourceUsageGetHistory(
     {
       resourceId,
       page,
@@ -97,7 +97,7 @@ export const HistoryTable = ({
               label="Rows per page"
             />
           </div>
-          <Pagination total={usageHistory?.totalPages || 1} page={page} onChange={handlePageChange} />
+          <Pagination total={usageHistory?.totalPages ?? 1} page={page} onChange={handlePageChange} />
         </div>
       }
     >

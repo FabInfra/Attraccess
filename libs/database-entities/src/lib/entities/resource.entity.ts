@@ -13,7 +13,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { ResourceIntroduction } from './resourceIntroduction.entity';
 import { ResourceUsage } from './resourceUsage.entity';
-import { ResourceIntroductionUser } from './resourceIntroductionUser.entity';
+import { ResourceIntroducer } from './resourceIntroducer.entity';
 import { MqttResourceConfig } from './mqttResourceConfig.entity';
 import { WebhookConfig } from './webhookConfig.entity';
 import { ResourceGroup } from './resourceGroup.entity';
@@ -104,8 +104,8 @@ export class Resource {
   @OneToMany(() => ResourceUsage, (usage) => usage.resource)
   usages!: ResourceUsage[];
 
-  @OneToMany(() => ResourceIntroductionUser, (introducer) => introducer.resource)
-  introducers!: ResourceIntroductionUser[];
+  @OneToMany(() => ResourceIntroducer, (introducer) => introducer.resource)
+  introducers!: ResourceIntroducer[];
 
   @OneToMany(() => MqttResourceConfig, (config) => config.resource)
   mqttConfigs!: MqttResourceConfig[];

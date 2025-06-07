@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { Repository, ILike, FindOneOptions as TypeormFindOneOptions, FindOperator } from 'typeorm';
+import { Repository, ILike, FindOneOptions as TypeormFindOneOptions, FindOptionsWhere, In } from 'typeorm';
 import { SystemPermissions, User } from '@attraccess/database-entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { makePaginatedResponse, PaginatedResponse } from '../../types/response';
@@ -160,28 +160,43 @@ export class UsersService {
     return updatedUser;
   }
 
-  async findAll(options: PaginationOptions & { search?: string }): Promise<PaginatedResponse<User>> {
+  async findMany(options: PaginationOptions & { search?: string; ids?: number[] }): Promise<PaginatedResponse<User>> {
     this.logger.debug(`Finding all users with options: ${JSON.stringify(options)}`);
     const paginationOptions = PaginationOptionsSchema.parse(options);
     const { search } = options;
     const { page, limit } = paginationOptions;
     const skip = (page - 1) * limit;
 
-    const whereCondition: {
-      username?: FindOperator<string>;
-      email?: FindOperator<string>;
-    } = {};
+    let whereCondition: FindOptionsWhere<User>[] | FindOptionsWhere<User> = {};
+
+    if (Array.isArray(options.ids)) {
+      if (options.ids.length === 0) {
+        return makePaginatedResponse(
+          {
+            page: paginationOptions.page,
+            limit: paginationOptions.limit,
+          },
+          [],
+          0
+        );
+      }
+
+      whereCondition = { id: In(options.ids) };
+    }
+
     if (search) {
       this.logger.debug(`Searching for users with query: ${search}`);
-      whereCondition.username = ILike(`%${search}%`);
-      whereCondition.email = ILike(`%${search}%`);
+      whereCondition = [
+        { ...whereCondition, username: ILike(`%${search}%`) },
+        { ...whereCondition, email: ILike(`%${search}%`) },
+      ];
     }
 
     this.logger.debug(`Executing find with skip: ${skip}, take: ${limit}`);
     const [users, total] = await this.userRepository.findAndCount({
       skip,
       take: limit,
-      where: search ? [{ username: ILike(`%${search}%`) }, { email: ILike(`%${search}%`) }] : undefined,
+      where: whereCondition,
     });
 
     this.logger.debug(`Found ${total} total users, returning page ${page} with ${users.length} results`);

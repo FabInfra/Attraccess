@@ -30,12 +30,12 @@ import {
   SSOProvider,
   SSOProviderType,
   UpdateSSOProviderDto,
-  useSsoServiceCreateOneSsoProvider,
-  useSsoServiceDeleteOneSsoProvider,
-  useSsoServiceGetAllSsoProviders,
-  useSsoServiceGetOneSsoProviderById,
-  useSsoServiceUpdateOneSsoProvider,
-  UseSsoServiceGetAllSsoProvidersKeyFn,
+  useAuthenticationServiceCreateOneSsoProvider,
+  useAuthenticationServiceDeleteOneSsoProvider,
+  useAuthenticationServiceGetAllSsoProviders,
+  useAuthenticationServiceGetOneSsoProviderById,
+  useAuthenticationServiceUpdateOneSsoProvider,
+  UseAuthenticationServiceGetAllSsoProvidersKeyFn,
 } from '@attraccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -67,7 +67,7 @@ export interface SSOProvidersListRef {
 
 export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentPropsWithoutRef<'div'>>((props, ref) => {
   const { t } = useTranslations('ssoProvidersList', { en, de });
-  const { data: providers, isLoading, error } = useSsoServiceGetAllSsoProviders();
+  const { data: providers, isLoading, error } = useAuthenticationServiceGetAllSsoProviders();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [editingProvider, setEditingProvider] = useState<SSOProvider | null>(null);
   const [formValues, setFormValues] = useState<CreateSSOProviderDto>(defaultProviderValues);
@@ -79,28 +79,28 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
   const queryClient = useQueryClient();
 
   const { success, error: showError } = useToastMessage();
-  const createSSOProvider = useSsoServiceCreateOneSsoProvider({
+  const createSSOProvider = useAuthenticationServiceCreateOneSsoProvider({
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [UseSsoServiceGetAllSsoProvidersKeyFn()[0]],
+        queryKey: [UseAuthenticationServiceGetAllSsoProvidersKeyFn()[0]],
       });
     },
   });
-  const updateSSOProvider = useSsoServiceUpdateOneSsoProvider({
+  const updateSSOProvider = useAuthenticationServiceUpdateOneSsoProvider({
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [UseSsoServiceGetAllSsoProvidersKeyFn()[0]],
+        queryKey: [UseAuthenticationServiceGetAllSsoProvidersKeyFn()[0]],
       });
     },
   });
-  const deleteSSOProvider = useSsoServiceDeleteOneSsoProvider({
+  const deleteSSOProvider = useAuthenticationServiceDeleteOneSsoProvider({
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [UseSsoServiceGetAllSsoProvidersKeyFn()[0]],
+        queryKey: [UseAuthenticationServiceGetAllSsoProvidersKeyFn()[0]],
       });
     },
   });
-  const { data: providerDetails } = useSsoServiceGetOneSsoProviderById(
+  const { data: providerDetails } = useAuthenticationServiceGetOneSsoProviderById(
     { id: editingProvider?.id as number },
     undefined,
     {
@@ -147,8 +147,8 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
           userInfoURL: config.userinfo_endpoint,
           // We don't get clientId and clientSecret from the discovery endpoint
           // Preserve existing values if they exist
-          clientId: prev.oidcConfiguration?.clientId || '',
-          clientSecret: prev.oidcConfiguration?.clientSecret || '',
+          clientId: prev.oidcConfiguration?.clientId ?? '',
+          clientSecret: prev.oidcConfiguration?.clientSecret ?? '',
         },
       }));
 
@@ -235,7 +235,7 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
       if (section === 'oidcConfiguration') {
         setFormValues((prev) => {
           // Ensure we have a valid oidcConfiguration object
-          const currentConfig = prev.oidcConfiguration || {
+          const currentConfig = prev.oidcConfiguration ?? {
             issuer: '',
             authorizationURL: '',
             tokenURL: '',
@@ -293,12 +293,13 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
 
       // Invalidate query after successful submission - Already handled by onSuccess handlers
       // queryClient.invalidateQueries({
-      //   queryKey: UseSsoServiceGetAllSsoProvidersKeyFn(),
+      //   queryKey: UseAuthenticationServiceGetAllSsoProvidersKeyFn(),
       // });
     } catch (err) {
+      const errorDescription = editingProvider ? t('failedToUpdate') : t('failedToCreate');
       showError({
         title: t('errorGeneric'),
-        description: err instanceof Error ? err.message : editingProvider ? t('failedToUpdate') : t('failedToCreate'),
+        description: err instanceof Error ? err.message : errorDescription,
       });
     }
   };
@@ -337,7 +338,13 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <Tooltip content={t('edit')}>
-                      <Button size="sm" variant="ghost" isIconOnly onPress={() => handleEdit(provider)} data-cy={`sso-provider-edit-button-${provider.id}`}>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        isIconOnly
+                        onPress={() => handleEdit(provider)}
+                        data-cy={`sso-provider-edit-button-${provider.id}`}
+                      >
                         <Pencil size={16} />
                       </Button>
                     </Tooltip>
@@ -419,7 +426,13 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
       </Modal>
 
       {/* Main Provider Form Modal */}
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="2xl" scrollBehavior="inside" data-cy="sso-provider-form-modal">
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        size="2xl"
+        scrollBehavior="inside"
+        data-cy="sso-provider-form-modal"
+      >
         <ModalContent>
           {(onClose) => (
             <>
@@ -443,7 +456,9 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
                     isRequired
                     data-cy="sso-provider-form-type-select"
                   >
-                    <SelectItem key="OIDC" data-cy="sso-provider-form-type-oidc-select-item">{t('oidc')}</SelectItem>
+                    <SelectItem key="OIDC" data-cy="sso-provider-form-type-oidc-select-item">
+                      {t('oidc')}
+                    </SelectItem>
                   </Select>
 
                   {formValues.type === 'OIDC' && (
@@ -469,7 +484,7 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
                       <Input
                         label={t('issuer')}
                         name="oidcConfiguration.issuer"
-                        value={formValues.oidcConfiguration?.issuer || ''}
+                        value={formValues.oidcConfiguration?.issuer ?? ''}
                         onChange={handleInputChange}
                         placeholder="https://sso.example.com/auth/realms/example"
                         isRequired
@@ -479,7 +494,7 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
                       <Input
                         label={t('authorizationURL')}
                         name="oidcConfiguration.authorizationURL"
-                        value={formValues.oidcConfiguration?.authorizationURL || ''}
+                        value={formValues.oidcConfiguration?.authorizationURL ?? ''}
                         onChange={handleInputChange}
                         placeholder="https://sso.example.com/auth/realms/example/protocol/openid-connect/auth"
                         isRequired
@@ -489,7 +504,7 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
                       <Input
                         label={t('tokenURL')}
                         name="oidcConfiguration.tokenURL"
-                        value={formValues.oidcConfiguration?.tokenURL || ''}
+                        value={formValues.oidcConfiguration?.tokenURL ?? ''}
                         onChange={handleInputChange}
                         placeholder="https://sso.example.com/auth/realms/example/protocol/openid-connect/token"
                         isRequired
@@ -499,7 +514,7 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
                       <Input
                         label={t('userInfoURL')}
                         name="oidcConfiguration.userInfoURL"
-                        value={formValues.oidcConfiguration?.userInfoURL || ''}
+                        value={formValues.oidcConfiguration?.userInfoURL ?? ''}
                         onChange={handleInputChange}
                         placeholder="https://sso.example.com/auth/realms/example/protocol/openid-connect/userinfo"
                         isRequired
@@ -509,7 +524,7 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
                       <Input
                         label={t('clientId')}
                         name="oidcConfiguration.clientId"
-                        value={formValues.oidcConfiguration?.clientId || ''}
+                        value={formValues.oidcConfiguration?.clientId ?? ''}
                         onChange={handleInputChange}
                         placeholder="your-client-id"
                         isRequired
@@ -520,7 +535,7 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
                         type={showClientSecret ? 'text' : 'password'}
                         label={t('clientSecret')}
                         name="oidcConfiguration.clientSecret"
-                        value={formValues.oidcConfiguration?.clientSecret || ''}
+                        value={formValues.oidcConfiguration?.clientSecret ?? ''}
                         onChange={handleInputChange}
                         placeholder="••••••••••••••••"
                         isRequired

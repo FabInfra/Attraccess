@@ -7,10 +7,10 @@ import en from './translations/edit/en.json';
 import de from './translations/edit/de.json';
 import { useState, useEffect } from 'react';
 import {
-  useMqttServersServiceUpdateOneMqttServer,
-  useMqttServersServiceGetOneMqttServerById,
-  UpdateMqttServerDto,
-  UseMqttServersServiceGetAllMqttServersKeyFn,
+  useMqttServiceMqttServersUpdateOne,
+  useMqttServiceMqttServersGetOneById,
+  CreateMqttServerDto,
+  UseMqttServiceMqttServersGetAllKeyFn,
 } from '@attraccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -21,7 +21,7 @@ export function EditMqttServerPage() {
   const { success, error: showError } = useToastMessage();
   const queryClient = useQueryClient();
 
-  const [formValues, setFormValues] = useState<UpdateMqttServerDto>({
+  const [formValues, setFormValues] = useState<CreateMqttServerDto>({
     name: '',
     host: '',
     port: 1883,
@@ -36,7 +36,7 @@ export function EditMqttServerPage() {
     data: server,
     isLoading: isLoadingServer,
     isError,
-  } = useMqttServersServiceGetOneMqttServerById({ id: Number(serverId) });
+  } = useMqttServiceMqttServersGetOneById({ id: Number(serverId) });
 
   // Update form values when server data is loaded
   useEffect(() => {
@@ -45,22 +45,22 @@ export function EditMqttServerPage() {
         name: server.name,
         host: server.host,
         port: server.port,
-        clientId: server.clientId || '',
-        username: server.username || '',
-        password: server.password || '',
+        clientId: server.clientId ?? '',
+        username: server.username ?? '',
+        password: server.password ?? '',
         useTls: server.useTls,
       });
     }
   }, [server]);
 
-  const updateMqttServer = useMqttServersServiceUpdateOneMqttServer({
+  const updateMqttServer = useMqttServiceMqttServersUpdateOne({
     onSuccess: () => {
       success({
         title: t('serverUpdated'),
         description: t('serverUpdatedDesc'),
       });
       queryClient.invalidateQueries({
-        queryKey: [UseMqttServersServiceGetAllMqttServersKeyFn()[0]],
+        queryKey: [UseMqttServiceMqttServersGetAllKeyFn()[0]],
       });
       navigate('/mqtt/servers');
     },
@@ -114,7 +114,13 @@ export function EditMqttServerPage() {
         <CardHeader>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Button isIconOnly variant="light" onPress={handleCancel} aria-label={t('back')} data-cy="edit-mqtt-server-page-back-button">
+              <Button
+                isIconOnly
+                variant="light"
+                onPress={handleCancel}
+                aria-label={t('back')}
+                data-cy="edit-mqtt-server-page-back-button"
+              >
                 <ArrowLeft size={20} />
               </Button>
               <h2>{t('editMqttServer')}</h2>
@@ -234,10 +240,20 @@ export function EditMqttServerPage() {
             </div>
 
             <div className="flex justify-end space-x-3">
-              <Button color="default" variant="flat" onPress={handleCancel} data-cy="edit-mqtt-server-form-cancel-button">
+              <Button
+                color="default"
+                variant="flat"
+                onPress={handleCancel}
+                data-cy="edit-mqtt-server-form-cancel-button"
+              >
                 {t('cancel')}
               </Button>
-              <Button color="primary" type="submit" isLoading={updateMqttServer.isPending} data-cy="edit-mqtt-server-form-update-button">
+              <Button
+                color="primary"
+                type="submit"
+                isLoading={updateMqttServer.isPending}
+                data-cy="edit-mqtt-server-form-update-button"
+              >
                 {t('update')}
               </Button>
             </div>

@@ -5,9 +5,6 @@
   "projectType": "application",
   "tags": [],
   "targets": {
-    "serve": {
-      "dependsOn": ["copy-fabreader-assets", "react-query-client:build"]
-    },
     "build": {
       "dependsOn": ["copy-fabreader-assets", "react-query-client:build"],
       "cache": true,

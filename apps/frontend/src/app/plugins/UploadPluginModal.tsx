@@ -1,4 +1,4 @@
-import { usePluginServiceUploadPlugin } from '@attraccess/react-query-client';
+import { usePluginsServiceUploadPlugin } from '@attraccess/react-query-client';
 import { useState, useRef } from 'react';
 import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input } from '@heroui/react';
 import { Upload } from 'lucide-react';
@@ -19,7 +19,7 @@ export function UploadPluginModal({ isOpen, onClose }: UploadPluginModalProps) {
   const toast = useToastMessage();
   const { t } = useTranslations('upload-plugin-modal', { en, de });
 
-  const { mutate: uploadPlugin, isPending } = usePluginServiceUploadPlugin({
+  const { mutate: uploadPlugin, isPending } = usePluginsServiceUploadPlugin({
     onSuccess: () => {
       setTimeout(() => {
         window.location.reload();
@@ -102,7 +102,12 @@ export function UploadPluginModal({ isOpen, onClose }: UploadPluginModalProps) {
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button variant="flat" onPress={handleCancel} isDisabled={isPending} data-cy="upload-plugin-modal-cancel-button">
+          <Button
+            variant="flat"
+            onPress={handleCancel}
+            isDisabled={isPending}
+            data-cy="upload-plugin-modal-cancel-button"
+          >
             {t('cancel')}
           </Button>
           <Button

@@ -1,4 +1,4 @@
-import { OpenAPI, LoadedPluginManifest, usePluginServiceGetPlugins } from '@attraccess/react-query-client';
+import { OpenAPI, LoadedPluginManifest, usePluginsServiceGetPlugins } from '@attraccess/react-query-client';
 import { PropsWithChildren, useCallback, useEffect, useRef } from 'react';
 import { createPluginStore, PluginProvider as PluginProviderBase, RendererPlugin } from 'react-pluggable';
 import usePluginState from './plugin.state';
@@ -21,7 +21,7 @@ export class PluginLoadedEvent extends Event {
 
 const pluginStore = createPluginStore();
 export function PluginProvider(props: PropsWithChildren) {
-  const { refetch: refetchPlugins } = usePluginServiceGetPlugins();
+  const { refetch: refetchPlugins } = usePluginsServiceGetPlugins();
   const { addPlugin, isInstalled, plugins } = usePluginState();
   const toast = useToastMessage();
   const { user } = useAuth();

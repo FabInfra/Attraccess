@@ -1,0 +1,13 @@
+{
+  "modal": {
+    "title": "Verlauf",
+    "closeButton": "Schließen"
+  },
+  "table": {
+    "columns": {
+      "date": "Datum",
+      "action": "Aktion",
+      "comment": "Kommentar"
+    }
+  }
+}

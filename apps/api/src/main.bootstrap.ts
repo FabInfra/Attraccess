@@ -71,7 +71,6 @@ export async function bootstrap() {
 
   const globalPrefix = appConfig.GLOBAL_PREFIX;
   app.setGlobalPrefix(globalPrefix);
-  app.enableCors();
 
   app.useWebSocketAdapter(new WsAdapter(app));
 
@@ -97,6 +96,11 @@ export async function bootstrap() {
   );
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get('Reflector')));
+  app.enableCors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key'],
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Attraccess API')

@@ -1,0 +1,11 @@
+{
+  "selectedUsers": {
+    "columns": {
+      "user": "User",
+      "actions": "Actions"
+    },
+    "actions": {
+      "remove": "Remove"
+    }
+  }
+}

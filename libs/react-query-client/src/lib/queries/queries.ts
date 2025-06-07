@@ -1,15 +1,16 @@
 // generated with @7nohe/openapi-react-query-codegen@1.6.2 
 
 import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
-import { AnalyticsService, ApplicationService, AuthenticationService, EmailTemplatesService, FabReaderNfcCardsService, FabReaderReadersService, MqttResourceConfigurationService, MqttServersService, PluginService, ResourceGroupsService, ResourceIntroducersService, ResourceIntroductionsService, ResourceUsageService, ResourcesService, SseService, SsoService, UsersService, WebhooksService } from "../requests/services.gen";
-import { AppKeyRequestDto, BulkUpdateUserPermissionsDto, ChangePasswordDto, CompleteIntroductionDto, CreateMqttResourceConfigDto, CreateMqttServerDto, CreateResourceDto, CreateResourceGroupDto, CreateSSOProviderDto, CreateUserDto, CreateWebhookConfigDto, EndUsageSessionDto, EnrollNfcCardDto, PreviewMjmlDto, ResetNfcCardDto, ResetPasswordDto, RevokeIntroductionDto, StartUsageSessionDto, UnrevokeIntroductionDto, UpdateEmailTemplateDto, UpdateMqttResourceConfigDto, UpdateMqttServerDto, UpdateReaderDto, UpdateResourceDto, UpdateResourceGroupDto, UpdateSSOProviderDto, UpdateUserPermissionsDto, UpdateWebhookConfigDto, UploadPluginDto, VerifyEmailDto, WebhookStatusDto } from "../requests/types.gen";
+import { AccessControlService, AnalyticsService, AuthenticationService, EmailTemplatesService, FabReaderService, MqttService, PluginsService, ResourcesService, SystemService, UsersService, WebhooksService } from "../requests/services.gen";
+import { AppKeyRequestDto, BulkUpdateUserPermissionsDto, ChangePasswordDto, CreateMqttResourceConfigDto, CreateMqttServerDto, CreateResourceDto, CreateResourceGroupDto, CreateSSOProviderDto, CreateUserDto, CreateWebhookConfigDto, EndUsageSessionDto, EnrollNfcCardDto, PreviewMjmlDto, ResetNfcCardDto, ResetPasswordDto, StartUsageSessionDto, UpdateEmailTemplateDto, UpdateMqttResourceConfigDto, UpdateMqttServerDto, UpdateReaderDto, UpdateResourceDto, UpdateResourceGroupDto, UpdateResourceGroupIntroductionDto, UpdateResourceIntroductionDto, UpdateSSOProviderDto, UpdateUserPermissionsDto, UpdateWebhookConfigDto, UploadPluginDto, VerifyEmailDto, WebhookStatusDto } from "../requests/types.gen";
 import * as Common from "./common";
-export const useApplicationServiceInfo = <TData = Common.ApplicationServiceInfoDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseApplicationServiceInfoKeyFn(queryKey), queryFn: () => ApplicationService.info() as TData, ...options });
-export const useUsersServiceGetAllUsers = <TData = Common.UsersServiceGetAllUsersDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ limit, page, search }: {
+export const useSystemServiceInfo = <TData = Common.SystemServiceInfoDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseSystemServiceInfoKeyFn(queryKey), queryFn: () => SystemService.info() as TData, ...options });
+export const useUsersServiceFindMany = <TData = Common.UsersServiceFindManyDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ ids, limit, page, search }: {
+  ids?: number[];
   limit?: number;
   page?: number;
   search?: string;
-} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseUsersServiceGetAllUsersKeyFn({ limit, page, search }, queryKey), queryFn: () => UsersService.getAllUsers({ limit, page, search }) as TData, ...options });
+} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseUsersServiceFindManyKeyFn({ ids, limit, page, search }, queryKey), queryFn: () => UsersService.findMany({ ids, limit, page, search }) as TData, ...options });
 export const useUsersServiceGetCurrent = <TData = Common.UsersServiceGetCurrentDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseUsersServiceGetCurrentKeyFn(queryKey), queryFn: () => UsersService.getCurrent() as TData, ...options });
 export const useUsersServiceGetOneUserById = <TData = Common.UsersServiceGetOneUserByIdDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ id }: {
   id: number;
@@ -22,34 +23,26 @@ export const useUsersServiceGetAllWithPermission = <TData = Common.UsersServiceG
   page?: number;
   permission?: "canManageResources" | "canManageSystemConfiguration" | "canManageUsers";
 } = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseUsersServiceGetAllWithPermissionKeyFn({ limit, page, permission }, queryKey), queryFn: () => UsersService.getAllWithPermission({ limit, page, permission }) as TData, ...options });
-export const useSsoServiceGetAllSsoProviders = <TData = Common.SsoServiceGetAllSsoProvidersDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseSsoServiceGetAllSsoProvidersKeyFn(queryKey), queryFn: () => SsoService.getAllSsoProviders() as TData, ...options });
-export const useSsoServiceGetOneSsoProviderById = <TData = Common.SsoServiceGetOneSsoProviderByIdDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ id }: {
+export const useAuthenticationServiceGetAllSsoProviders = <TData = Common.AuthenticationServiceGetAllSsoProvidersDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseAuthenticationServiceGetAllSsoProvidersKeyFn(queryKey), queryFn: () => AuthenticationService.getAllSsoProviders() as TData, ...options });
+export const useAuthenticationServiceGetOneSsoProviderById = <TData = Common.AuthenticationServiceGetOneSsoProviderByIdDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ id }: {
   id: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseSsoServiceGetOneSsoProviderByIdKeyFn({ id }, queryKey), queryFn: () => SsoService.getOneSsoProviderById({ id }) as TData, ...options });
-export const useSsoServiceLoginWithOidc = <TData = Common.SsoServiceLoginWithOidcDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ providerId, redirectTo }: {
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseAuthenticationServiceGetOneSsoProviderByIdKeyFn({ id }, queryKey), queryFn: () => AuthenticationService.getOneSsoProviderById({ id }) as TData, ...options });
+export const useAuthenticationServiceLoginWithOidc = <TData = Common.AuthenticationServiceLoginWithOidcDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ providerId, redirectTo }: {
   providerId: string;
   redirectTo?: unknown;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseSsoServiceLoginWithOidcKeyFn({ providerId, redirectTo }, queryKey), queryFn: () => SsoService.loginWithOidc({ providerId, redirectTo }) as TData, ...options });
-export const useSsoServiceOidcLoginCallback = <TData = Common.SsoServiceOidcLoginCallbackDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ code, iss, providerId, redirectTo, sessionState, state }: {
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseAuthenticationServiceLoginWithOidcKeyFn({ providerId, redirectTo }, queryKey), queryFn: () => AuthenticationService.loginWithOidc({ providerId, redirectTo }) as TData, ...options });
+export const useAuthenticationServiceOidcLoginCallback = <TData = Common.AuthenticationServiceOidcLoginCallbackDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ code, iss, providerId, redirectTo, sessionState, state }: {
   code: unknown;
   iss: unknown;
   providerId: string;
   redirectTo: string;
   sessionState: unknown;
   state: unknown;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseSsoServiceOidcLoginCallbackKeyFn({ code, iss, providerId, redirectTo, sessionState, state }, queryKey), queryFn: () => SsoService.oidcLoginCallback({ code, iss, providerId, redirectTo, sessionState, state }) as TData, ...options });
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseAuthenticationServiceOidcLoginCallbackKeyFn({ code, iss, providerId, redirectTo, sessionState, state }, queryKey), queryFn: () => AuthenticationService.oidcLoginCallback({ code, iss, providerId, redirectTo, sessionState, state }) as TData, ...options });
 export const useEmailTemplatesServiceEmailTemplateControllerFindAll = <TData = Common.EmailTemplatesServiceEmailTemplateControllerFindAllDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseEmailTemplatesServiceEmailTemplateControllerFindAllKeyFn(queryKey), queryFn: () => EmailTemplatesService.emailTemplateControllerFindAll() as TData, ...options });
 export const useEmailTemplatesServiceEmailTemplateControllerFindOne = <TData = Common.EmailTemplatesServiceEmailTemplateControllerFindOneDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ type }: {
   type: "verify-email" | "reset-password";
 }, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseEmailTemplatesServiceEmailTemplateControllerFindOneKeyFn({ type }, queryKey), queryFn: () => EmailTemplatesService.emailTemplateControllerFindOne({ type }) as TData, ...options });
-export const useResourceGroupsServiceGetAllResourceGroups = <TData = Common.ResourceGroupsServiceGetAllResourceGroupsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ limit, page, search }: {
-  limit?: number;
-  page?: number;
-  search?: string;
-} = {}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceGroupsServiceGetAllResourceGroupsKeyFn({ limit, page, search }, queryKey), queryFn: () => ResourceGroupsService.getAllResourceGroups({ limit, page, search }) as TData, ...options });
-export const useResourceGroupsServiceGetOneResourceGroupById = <TData = Common.ResourceGroupsServiceGetOneResourceGroupByIdDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ id }: {
-  id: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceGroupsServiceGetOneResourceGroupByIdKeyFn({ id }, queryKey), queryFn: () => ResourceGroupsService.getOneResourceGroupById({ id }) as TData, ...options });
 export const useResourcesServiceGetAllResources = <TData = Common.ResourcesServiceGetAllResourcesDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId, ids, limit, page, search }: {
   groupId?: number;
   ids?: number[];
@@ -60,79 +53,85 @@ export const useResourcesServiceGetAllResources = <TData = Common.ResourcesServi
 export const useResourcesServiceGetOneResourceById = <TData = Common.ResourcesServiceGetOneResourceByIdDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ id }: {
   id: number;
 }, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourcesServiceGetOneResourceByIdKeyFn({ id }, queryKey), queryFn: () => ResourcesService.getOneResourceById({ id }) as TData, ...options });
-export const useResourceUsageServiceGetHistoryOfResourceUsage = <TData = Common.ResourceUsageServiceGetHistoryOfResourceUsageDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ limit, page, resourceId, userId }: {
+export const useResourcesServiceSseControllerStreamEvents = <TData = Common.ResourcesServiceSseControllerStreamEventsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
+  resourceId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourcesServiceSseControllerStreamEventsKeyFn({ resourceId }, queryKey), queryFn: () => ResourcesService.sseControllerStreamEvents({ resourceId }) as TData, ...options });
+export const useResourcesServiceResourceGroupsGetMany = <TData = Common.ResourcesServiceResourceGroupsGetManyDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourcesServiceResourceGroupsGetManyKeyFn(queryKey), queryFn: () => ResourcesService.resourceGroupsGetMany() as TData, ...options });
+export const useResourcesServiceResourceGroupsGetOne = <TData = Common.ResourcesServiceResourceGroupsGetOneDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ id }: {
+  id: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourcesServiceResourceGroupsGetOneKeyFn({ id }, queryKey), queryFn: () => ResourcesService.resourceGroupsGetOne({ id }) as TData, ...options });
+export const useResourcesServiceResourceUsageGetHistory = <TData = Common.ResourcesServiceResourceUsageGetHistoryDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ limit, page, resourceId, userId }: {
   limit?: number;
   page?: number;
   resourceId: number;
   userId?: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceUsageServiceGetHistoryOfResourceUsageKeyFn({ limit, page, resourceId, userId }, queryKey), queryFn: () => ResourceUsageService.getHistoryOfResourceUsage({ limit, page, resourceId, userId }) as TData, ...options });
-export const useResourceUsageServiceGetActiveSession = <TData = Common.ResourceUsageServiceGetActiveSessionDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourcesServiceResourceUsageGetHistoryKeyFn({ limit, page, resourceId, userId }, queryKey), queryFn: () => ResourcesService.resourceUsageGetHistory({ limit, page, resourceId, userId }) as TData, ...options });
+export const useResourcesServiceResourceUsageGetActiveSession = <TData = Common.ResourcesServiceResourceUsageGetActiveSessionDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
   resourceId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceUsageServiceGetActiveSessionKeyFn({ resourceId }, queryKey), queryFn: () => ResourceUsageService.getActiveSession({ resourceId }) as TData, ...options });
-export const useResourceIntroductionsServiceGetAllResourceIntroductions = <TData = Common.ResourceIntroductionsServiceGetAllResourceIntroductionsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ limit, page, resourceId }: {
-  limit: number;
-  page?: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourcesServiceResourceUsageGetActiveSessionKeyFn({ resourceId }, queryKey), queryFn: () => ResourcesService.resourceUsageGetActiveSession({ resourceId }) as TData, ...options });
+export const useResourcesServiceResourceUsageCanControl = <TData = Common.ResourcesServiceResourceUsageCanControlDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
   resourceId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceIntroductionsServiceGetAllResourceIntroductionsKeyFn({ limit, page, resourceId }, queryKey), queryFn: () => ResourceIntroductionsService.getAllResourceIntroductions({ limit, page, resourceId }) as TData, ...options });
-export const useResourceIntroductionsServiceCheckStatus = <TData = Common.ResourceIntroductionsServiceCheckStatusDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
-  resourceId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceIntroductionsServiceCheckStatusKeyFn({ resourceId }, queryKey), queryFn: () => ResourceIntroductionsService.checkStatus({ resourceId }) as TData, ...options });
-export const useResourceIntroductionsServiceGetHistoryOfIntroduction = <TData = Common.ResourceIntroductionsServiceGetHistoryOfIntroductionDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ introductionId, resourceId }: {
-  introductionId: number;
-  resourceId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceIntroductionsServiceGetHistoryOfIntroductionKeyFn({ introductionId, resourceId }, queryKey), queryFn: () => ResourceIntroductionsService.getHistoryOfIntroduction({ introductionId, resourceId }) as TData, ...options });
-export const useResourceIntroductionsServiceCheckIsRevokedStatus = <TData = Common.ResourceIntroductionsServiceCheckIsRevokedStatusDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ introductionId, resourceId }: {
-  introductionId: number;
-  resourceId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceIntroductionsServiceCheckIsRevokedStatusKeyFn({ introductionId, resourceId }, queryKey), queryFn: () => ResourceIntroductionsService.checkIsRevokedStatus({ introductionId, resourceId }) as TData, ...options });
-export const useResourceIntroductionsServiceGetOneResourceIntroduction = <TData = Common.ResourceIntroductionsServiceGetOneResourceIntroductionDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ introductionId, resourceId }: {
-  introductionId: number;
-  resourceId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceIntroductionsServiceGetOneResourceIntroductionKeyFn({ introductionId, resourceId }, queryKey), queryFn: () => ResourceIntroductionsService.getOneResourceIntroduction({ introductionId, resourceId }) as TData, ...options });
-export const useResourceIntroductionsServiceCheckCanManagePermission = <TData = Common.ResourceIntroductionsServiceCheckCanManagePermissionDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
-  resourceId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceIntroductionsServiceCheckCanManagePermissionKeyFn({ resourceId }, queryKey), queryFn: () => ResourceIntroductionsService.checkCanManagePermission({ resourceId }) as TData, ...options });
-export const useResourceIntroducersServiceGetAllResourceIntroducers = <TData = Common.ResourceIntroducersServiceGetAllResourceIntroducersDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
-  resourceId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceIntroducersServiceGetAllResourceIntroducersKeyFn({ resourceId }, queryKey), queryFn: () => ResourceIntroducersService.getAllResourceIntroducers({ resourceId }) as TData, ...options });
-export const useResourceIntroducersServiceCheckCanManagePermission = <TData = Common.ResourceIntroducersServiceCheckCanManagePermissionDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
-  resourceId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourceIntroducersServiceCheckCanManagePermissionKeyFn({ resourceId }, queryKey), queryFn: () => ResourceIntroducersService.checkCanManagePermission({ resourceId }) as TData, ...options });
-export const useMqttServersServiceGetAllMqttServers = <TData = Common.MqttServersServiceGetAllMqttServersDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMqttServersServiceGetAllMqttServersKeyFn(queryKey), queryFn: () => MqttServersService.getAllMqttServers() as TData, ...options });
-export const useMqttServersServiceGetOneMqttServerById = <TData = Common.MqttServersServiceGetOneMqttServerByIdDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ id }: {
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseResourcesServiceResourceUsageCanControlKeyFn({ resourceId }, queryKey), queryFn: () => ResourcesService.resourceUsageCanControl({ resourceId }) as TData, ...options });
+export const useMqttServiceMqttServersGetAll = <TData = Common.MqttServiceMqttServersGetAllDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMqttServiceMqttServersGetAllKeyFn(queryKey), queryFn: () => MqttService.mqttServersGetAll() as TData, ...options });
+export const useMqttServiceMqttServersGetOneById = <TData = Common.MqttServiceMqttServersGetOneByIdDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ id }: {
   id: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMqttServersServiceGetOneMqttServerByIdKeyFn({ id }, queryKey), queryFn: () => MqttServersService.getOneMqttServerById({ id }) as TData, ...options });
-export const useMqttServersServiceGetStatusOfOne = <TData = Common.MqttServersServiceGetStatusOfOneDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ id }: {
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMqttServiceMqttServersGetOneByIdKeyFn({ id }, queryKey), queryFn: () => MqttService.mqttServersGetOneById({ id }) as TData, ...options });
+export const useMqttServiceMqttServersGetStatusOfOne = <TData = Common.MqttServiceMqttServersGetStatusOfOneDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ id }: {
   id: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMqttServersServiceGetStatusOfOneKeyFn({ id }, queryKey), queryFn: () => MqttServersService.getStatusOfOne({ id }) as TData, ...options });
-export const useMqttServersServiceGetStatusOfAll = <TData = Common.MqttServersServiceGetStatusOfAllDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMqttServersServiceGetStatusOfAllKeyFn(queryKey), queryFn: () => MqttServersService.getStatusOfAll() as TData, ...options });
-export const useSseServiceSseControllerStreamEvents = <TData = Common.SseServiceSseControllerStreamEventsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMqttServiceMqttServersGetStatusOfOneKeyFn({ id }, queryKey), queryFn: () => MqttService.mqttServersGetStatusOfOne({ id }) as TData, ...options });
+export const useMqttServiceMqttServersGetStatusOfAll = <TData = Common.MqttServiceMqttServersGetStatusOfAllDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMqttServiceMqttServersGetStatusOfAllKeyFn(queryKey), queryFn: () => MqttService.mqttServersGetStatusOfAll() as TData, ...options });
+export const useMqttServiceMqttResourceConfigGetAll = <TData = Common.MqttServiceMqttResourceConfigGetAllDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
   resourceId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseSseServiceSseControllerStreamEventsKeyFn({ resourceId }, queryKey), queryFn: () => SseService.sseControllerStreamEvents({ resourceId }) as TData, ...options });
-export const useWebhooksServiceGetAllWebhookConfigurations = <TData = Common.WebhooksServiceGetAllWebhookConfigurationsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
-  resourceId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseWebhooksServiceGetAllWebhookConfigurationsKeyFn({ resourceId }, queryKey), queryFn: () => WebhooksService.getAllWebhookConfigurations({ resourceId }) as TData, ...options });
-export const useWebhooksServiceGetOneWebhookConfigurationById = <TData = Common.WebhooksServiceGetOneWebhookConfigurationByIdDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ id, resourceId }: {
-  id: number;
-  resourceId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseWebhooksServiceGetOneWebhookConfigurationByIdKeyFn({ id, resourceId }, queryKey), queryFn: () => WebhooksService.getOneWebhookConfigurationById({ id, resourceId }) as TData, ...options });
-export const useMqttResourceConfigurationServiceGetAllMqttConfigurations = <TData = Common.MqttResourceConfigurationServiceGetAllMqttConfigurationsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
-  resourceId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMqttResourceConfigurationServiceGetAllMqttConfigurationsKeyFn({ resourceId }, queryKey), queryFn: () => MqttResourceConfigurationService.getAllMqttConfigurations({ resourceId }) as TData, ...options });
-export const useMqttResourceConfigurationServiceGetOneMqttConfiguration = <TData = Common.MqttResourceConfigurationServiceGetOneMqttConfigurationDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ configId, resourceId }: {
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMqttServiceMqttResourceConfigGetAllKeyFn({ resourceId }, queryKey), queryFn: () => MqttService.mqttResourceConfigGetAll({ resourceId }) as TData, ...options });
+export const useMqttServiceMqttResourceConfigGetOne = <TData = Common.MqttServiceMqttResourceConfigGetOneDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ configId, resourceId }: {
   configId: number;
   resourceId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMqttResourceConfigurationServiceGetOneMqttConfigurationKeyFn({ configId, resourceId }, queryKey), queryFn: () => MqttResourceConfigurationService.getOneMqttConfiguration({ configId, resourceId }) as TData, ...options });
-export const usePluginServiceGetPlugins = <TData = Common.PluginServiceGetPluginsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UsePluginServiceGetPluginsKeyFn(queryKey), queryFn: () => PluginService.getPlugins() as TData, ...options });
-export const usePluginServiceGetFrontendPluginFile = <TData = Common.PluginServiceGetFrontendPluginFileDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ filePath, pluginName }: {
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseMqttServiceMqttResourceConfigGetOneKeyFn({ configId, resourceId }, queryKey), queryFn: () => MqttService.mqttResourceConfigGetOne({ configId, resourceId }) as TData, ...options });
+export const useWebhooksServiceWebhookConfigGetAll = <TData = Common.WebhooksServiceWebhookConfigGetAllDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
+  resourceId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseWebhooksServiceWebhookConfigGetAllKeyFn({ resourceId }, queryKey), queryFn: () => WebhooksService.webhookConfigGetAll({ resourceId }) as TData, ...options });
+export const useWebhooksServiceWebhookConfigGetOneById = <TData = Common.WebhooksServiceWebhookConfigGetOneByIdDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ id, resourceId }: {
+  id: number;
+  resourceId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseWebhooksServiceWebhookConfigGetOneByIdKeyFn({ id, resourceId }, queryKey), queryFn: () => WebhooksService.webhookConfigGetOneById({ id, resourceId }) as TData, ...options });
+export const useAccessControlServiceResourceGroupIntroductionsGetMany = <TData = Common.AccessControlServiceResourceGroupIntroductionsGetManyDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId }: {
+  groupId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseAccessControlServiceResourceGroupIntroductionsGetManyKeyFn({ groupId }, queryKey), queryFn: () => AccessControlService.resourceGroupIntroductionsGetMany({ groupId }) as TData, ...options });
+export const useAccessControlServiceResourceGroupIntroductionsGetHistory = <TData = Common.AccessControlServiceResourceGroupIntroductionsGetHistoryDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId, userId }: {
+  groupId: number;
+  userId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseAccessControlServiceResourceGroupIntroductionsGetHistoryKeyFn({ groupId, userId }, queryKey), queryFn: () => AccessControlService.resourceGroupIntroductionsGetHistory({ groupId, userId }) as TData, ...options });
+export const useAccessControlServiceResourceGroupIntroducersGetMany = <TData = Common.AccessControlServiceResourceGroupIntroducersGetManyDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId }: {
+  groupId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseAccessControlServiceResourceGroupIntroducersGetManyKeyFn({ groupId }, queryKey), queryFn: () => AccessControlService.resourceGroupIntroducersGetMany({ groupId }) as TData, ...options });
+export const useAccessControlServiceResourceGroupIntroducersIsIntroducer = <TData = Common.AccessControlServiceResourceGroupIntroducersIsIntroducerDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ groupId, userId }: {
+  groupId: number;
+  userId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseAccessControlServiceResourceGroupIntroducersIsIntroducerKeyFn({ groupId, userId }, queryKey), queryFn: () => AccessControlService.resourceGroupIntroducersIsIntroducer({ groupId, userId }) as TData, ...options });
+export const useAccessControlServiceResourceIntroducersIsIntroducer = <TData = Common.AccessControlServiceResourceIntroducersIsIntroducerDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId, userId }: {
+  resourceId: number;
+  userId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseAccessControlServiceResourceIntroducersIsIntroducerKeyFn({ resourceId, userId }, queryKey), queryFn: () => AccessControlService.resourceIntroducersIsIntroducer({ resourceId, userId }) as TData, ...options });
+export const useAccessControlServiceResourceIntroducersGetMany = <TData = Common.AccessControlServiceResourceIntroducersGetManyDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
+  resourceId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseAccessControlServiceResourceIntroducersGetManyKeyFn({ resourceId }, queryKey), queryFn: () => AccessControlService.resourceIntroducersGetMany({ resourceId }) as TData, ...options });
+export const useAccessControlServiceResourceIntroductionsGetMany = <TData = Common.AccessControlServiceResourceIntroductionsGetManyDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId }: {
+  resourceId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseAccessControlServiceResourceIntroductionsGetManyKeyFn({ resourceId }, queryKey), queryFn: () => AccessControlService.resourceIntroductionsGetMany({ resourceId }) as TData, ...options });
+export const useAccessControlServiceResourceIntroductionsGetHistory = <TData = Common.AccessControlServiceResourceIntroductionsGetHistoryDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ resourceId, userId }: {
+  resourceId: number;
+  userId: number;
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseAccessControlServiceResourceIntroductionsGetHistoryKeyFn({ resourceId, userId }, queryKey), queryFn: () => AccessControlService.resourceIntroductionsGetHistory({ resourceId, userId }) as TData, ...options });
+export const usePluginsServiceGetPlugins = <TData = Common.PluginsServiceGetPluginsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UsePluginsServiceGetPluginsKeyFn(queryKey), queryFn: () => PluginsService.getPlugins() as TData, ...options });
+export const usePluginsServiceGetFrontendPluginFile = <TData = Common.PluginsServiceGetFrontendPluginFileDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ filePath, pluginName }: {
   filePath: string;
   pluginName: string;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UsePluginServiceGetFrontendPluginFileKeyFn({ filePath, pluginName }, queryKey), queryFn: () => PluginService.getFrontendPluginFile({ filePath, pluginName }) as TData, ...options });
-export const useFabReaderReadersServiceGetReaderById = <TData = Common.FabReaderReadersServiceGetReaderByIdDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ readerId }: {
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UsePluginsServiceGetFrontendPluginFileKeyFn({ filePath, pluginName }, queryKey), queryFn: () => PluginsService.getFrontendPluginFile({ filePath, pluginName }) as TData, ...options });
+export const useFabReaderServiceGetReaderById = <TData = Common.FabReaderServiceGetReaderByIdDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ readerId }: {
   readerId: number;
-}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseFabReaderReadersServiceGetReaderByIdKeyFn({ readerId }, queryKey), queryFn: () => FabReaderReadersService.getReaderById({ readerId }) as TData, ...options });
-export const useFabReaderReadersServiceGetReaders = <TData = Common.FabReaderReadersServiceGetReadersDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseFabReaderReadersServiceGetReadersKeyFn(queryKey), queryFn: () => FabReaderReadersService.getReaders() as TData, ...options });
-export const useFabReaderNfcCardsServiceGetAllCards = <TData = Common.FabReaderNfcCardsServiceGetAllCardsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseFabReaderNfcCardsServiceGetAllCardsKeyFn(queryKey), queryFn: () => FabReaderNfcCardsService.getAllCards() as TData, ...options });
+}, queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseFabReaderServiceGetReaderByIdKeyFn({ readerId }, queryKey), queryFn: () => FabReaderService.getReaderById({ readerId }) as TData, ...options });
+export const useFabReaderServiceGetReaders = <TData = Common.FabReaderServiceGetReadersDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseFabReaderServiceGetReadersKeyFn(queryKey), queryFn: () => FabReaderService.getReaders() as TData, ...options });
+export const useFabReaderServiceGetAllCards = <TData = Common.FabReaderServiceGetAllCardsDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>(queryKey?: TQueryKey, options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">) => useQuery<TData, TError>({ queryKey: Common.UseFabReaderServiceGetAllCardsKeyFn(queryKey), queryFn: () => FabReaderService.getAllCards() as TData, ...options });
 export const useAnalyticsServiceAnalyticsControllerGetResourceUsageHoursInDateRange = <TData = Common.AnalyticsServiceAnalyticsControllerGetResourceUsageHoursInDateRangeDefaultResponse, TError = unknown, TQueryKey extends Array<unknown> = unknown[]>({ end, start }: {
   end: string;
   start: string;
@@ -169,144 +168,160 @@ export const useAuthenticationServiceCreateSession = <TData = Common.Authenticat
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   requestBody: { username?: string; password?: string; };
 }, TContext>({ mutationFn: ({ requestBody }) => AuthenticationService.createSession({ requestBody }) as unknown as Promise<TData>, ...options });
-export const useSsoServiceCreateOneSsoProvider = <TData = Common.SsoServiceCreateOneSsoProviderMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+export const useAuthenticationServiceCreateOneSsoProvider = <TData = Common.AuthenticationServiceCreateOneSsoProviderMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   requestBody: CreateSSOProviderDto;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   requestBody: CreateSSOProviderDto;
-}, TContext>({ mutationFn: ({ requestBody }) => SsoService.createOneSsoProvider({ requestBody }) as unknown as Promise<TData>, ...options });
+}, TContext>({ mutationFn: ({ requestBody }) => AuthenticationService.createOneSsoProvider({ requestBody }) as unknown as Promise<TData>, ...options });
 export const useEmailTemplatesServiceEmailTemplateControllerPreviewMjml = <TData = Common.EmailTemplatesServiceEmailTemplateControllerPreviewMjmlMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   requestBody: PreviewMjmlDto;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   requestBody: PreviewMjmlDto;
 }, TContext>({ mutationFn: ({ requestBody }) => EmailTemplatesService.emailTemplateControllerPreviewMjml({ requestBody }) as unknown as Promise<TData>, ...options });
-export const useResourceGroupsServiceCreateOneResourceGroup = <TData = Common.ResourceGroupsServiceCreateOneResourceGroupMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  requestBody: CreateResourceGroupDto;
-}, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  requestBody: CreateResourceGroupDto;
-}, TContext>({ mutationFn: ({ requestBody }) => ResourceGroupsService.createOneResourceGroup({ requestBody }) as unknown as Promise<TData>, ...options });
 export const useResourcesServiceCreateOneResource = <TData = Common.ResourcesServiceCreateOneResourceMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   formData: CreateResourceDto;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   formData: CreateResourceDto;
 }, TContext>({ mutationFn: ({ formData }) => ResourcesService.createOneResource({ formData }) as unknown as Promise<TData>, ...options });
-export const useResourcesServiceAddResourceToGroup = <TData = Common.ResourcesServiceAddResourceToGroupMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+export const useResourcesServiceResourceGroupsCreateOne = <TData = Common.ResourcesServiceResourceGroupsCreateOneMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  requestBody: CreateResourceGroupDto;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  requestBody: CreateResourceGroupDto;
+}, TContext>({ mutationFn: ({ requestBody }) => ResourcesService.resourceGroupsCreateOne({ requestBody }) as unknown as Promise<TData>, ...options });
+export const useResourcesServiceResourceGroupsAddResource = <TData = Common.ResourcesServiceResourceGroupsAddResourceMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   groupId: number;
-  id: number;
+  resourceId: number;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   groupId: number;
-  id: number;
-}, TContext>({ mutationFn: ({ groupId, id }) => ResourcesService.addResourceToGroup({ groupId, id }) as unknown as Promise<TData>, ...options });
-export const useResourceUsageServiceStartSession = <TData = Common.ResourceUsageServiceStartSessionMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  resourceId: number;
+}, TContext>({ mutationFn: ({ groupId, resourceId }) => ResourcesService.resourceGroupsAddResource({ groupId, resourceId }) as unknown as Promise<TData>, ...options });
+export const useResourcesServiceResourceUsageStartSession = <TData = Common.ResourcesServiceResourceUsageStartSessionMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   requestBody: StartUsageSessionDto;
   resourceId: number;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   requestBody: StartUsageSessionDto;
   resourceId: number;
-}, TContext>({ mutationFn: ({ requestBody, resourceId }) => ResourceUsageService.startSession({ requestBody, resourceId }) as unknown as Promise<TData>, ...options });
-export const useResourceIntroductionsServiceMarkCompleted = <TData = Common.ResourceIntroductionsServiceMarkCompletedMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  requestBody: CompleteIntroductionDto;
-  resourceId: number;
-}, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  requestBody: CompleteIntroductionDto;
-  resourceId: number;
-}, TContext>({ mutationFn: ({ requestBody, resourceId }) => ResourceIntroductionsService.markCompleted({ requestBody, resourceId }) as unknown as Promise<TData>, ...options });
-export const useResourceIntroductionsServiceMarkRevoked = <TData = Common.ResourceIntroductionsServiceMarkRevokedMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  introductionId: number;
-  requestBody: RevokeIntroductionDto;
-  resourceId: number;
-}, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  introductionId: number;
-  requestBody: RevokeIntroductionDto;
-  resourceId: number;
-}, TContext>({ mutationFn: ({ introductionId, requestBody, resourceId }) => ResourceIntroductionsService.markRevoked({ introductionId, requestBody, resourceId }) as unknown as Promise<TData>, ...options });
-export const useResourceIntroductionsServiceMarkUnrevoked = <TData = Common.ResourceIntroductionsServiceMarkUnrevokedMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  introductionId: number;
-  requestBody: UnrevokeIntroductionDto;
-  resourceId: number;
-}, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  introductionId: number;
-  requestBody: UnrevokeIntroductionDto;
-  resourceId: number;
-}, TContext>({ mutationFn: ({ introductionId, requestBody, resourceId }) => ResourceIntroductionsService.markUnrevoked({ introductionId, requestBody, resourceId }) as unknown as Promise<TData>, ...options });
-export const useResourceIntroducersServiceAddOne = <TData = Common.ResourceIntroducersServiceAddOneMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  resourceId: number;
-  userId: number;
-}, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  resourceId: number;
-  userId: number;
-}, TContext>({ mutationFn: ({ resourceId, userId }) => ResourceIntroducersService.addOne({ resourceId, userId }) as unknown as Promise<TData>, ...options });
-export const useMqttServersServiceCreateOneMqttServer = <TData = Common.MqttServersServiceCreateOneMqttServerMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+}, TContext>({ mutationFn: ({ requestBody, resourceId }) => ResourcesService.resourceUsageStartSession({ requestBody, resourceId }) as unknown as Promise<TData>, ...options });
+export const useMqttServiceMqttServersCreateOne = <TData = Common.MqttServiceMqttServersCreateOneMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   requestBody: CreateMqttServerDto;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   requestBody: CreateMqttServerDto;
-}, TContext>({ mutationFn: ({ requestBody }) => MqttServersService.createOneMqttServer({ requestBody }) as unknown as Promise<TData>, ...options });
-export const useMqttServersServiceTestConnection = <TData = Common.MqttServersServiceTestConnectionMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+}, TContext>({ mutationFn: ({ requestBody }) => MqttService.mqttServersCreateOne({ requestBody }) as unknown as Promise<TData>, ...options });
+export const useMqttServiceMqttServersTestConnection = <TData = Common.MqttServiceMqttServersTestConnectionMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   id: number;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   id: number;
-}, TContext>({ mutationFn: ({ id }) => MqttServersService.testConnection({ id }) as unknown as Promise<TData>, ...options });
-export const useWebhooksServiceCreateOneWebhookConfiguration = <TData = Common.WebhooksServiceCreateOneWebhookConfigurationMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  requestBody: CreateWebhookConfigDto;
-  resourceId: number;
-}, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  requestBody: CreateWebhookConfigDto;
-  resourceId: number;
-}, TContext>({ mutationFn: ({ requestBody, resourceId }) => WebhooksService.createOneWebhookConfiguration({ requestBody, resourceId }) as unknown as Promise<TData>, ...options });
-export const useWebhooksServiceTest = <TData = Common.WebhooksServiceTestMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  id: number;
-  resourceId: number;
-}, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  id: number;
-  resourceId: number;
-}, TContext>({ mutationFn: ({ id, resourceId }) => WebhooksService.test({ id, resourceId }) as unknown as Promise<TData>, ...options });
-export const useWebhooksServiceRegenerateSecret = <TData = Common.WebhooksServiceRegenerateSecretMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  id: number;
-  resourceId: number;
-}, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  id: number;
-  resourceId: number;
-}, TContext>({ mutationFn: ({ id, resourceId }) => WebhooksService.regenerateSecret({ id, resourceId }) as unknown as Promise<TData>, ...options });
-export const useMqttResourceConfigurationServiceCreateMqttConfiguration = <TData = Common.MqttResourceConfigurationServiceCreateMqttConfigurationMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+}, TContext>({ mutationFn: ({ id }) => MqttService.mqttServersTestConnection({ id }) as unknown as Promise<TData>, ...options });
+export const useMqttServiceMqttResourceConfigCreate = <TData = Common.MqttServiceMqttResourceConfigCreateMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   requestBody: CreateMqttResourceConfigDto;
   resourceId: number;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   requestBody: CreateMqttResourceConfigDto;
   resourceId: number;
-}, TContext>({ mutationFn: ({ requestBody, resourceId }) => MqttResourceConfigurationService.createMqttConfiguration({ requestBody, resourceId }) as unknown as Promise<TData>, ...options });
-export const useMqttResourceConfigurationServiceTestOne = <TData = Common.MqttResourceConfigurationServiceTestOneMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+}, TContext>({ mutationFn: ({ requestBody, resourceId }) => MqttService.mqttResourceConfigCreate({ requestBody, resourceId }) as unknown as Promise<TData>, ...options });
+export const useMqttServiceMqttResourceConfigTestOne = <TData = Common.MqttServiceMqttResourceConfigTestOneMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   configId: number;
   resourceId: number;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   configId: number;
   resourceId: number;
-}, TContext>({ mutationFn: ({ configId, resourceId }) => MqttResourceConfigurationService.testOne({ configId, resourceId }) as unknown as Promise<TData>, ...options });
-export const usePluginServiceUploadPlugin = <TData = Common.PluginServiceUploadPluginMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+}, TContext>({ mutationFn: ({ configId, resourceId }) => MqttService.mqttResourceConfigTestOne({ configId, resourceId }) as unknown as Promise<TData>, ...options });
+export const useWebhooksServiceWebhookConfigCreateOne = <TData = Common.WebhooksServiceWebhookConfigCreateOneMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  requestBody: CreateWebhookConfigDto;
+  resourceId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  requestBody: CreateWebhookConfigDto;
+  resourceId: number;
+}, TContext>({ mutationFn: ({ requestBody, resourceId }) => WebhooksService.webhookConfigCreateOne({ requestBody, resourceId }) as unknown as Promise<TData>, ...options });
+export const useWebhooksServiceWebhookConfigTest = <TData = Common.WebhooksServiceWebhookConfigTestMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  id: number;
+  resourceId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  id: number;
+  resourceId: number;
+}, TContext>({ mutationFn: ({ id, resourceId }) => WebhooksService.webhookConfigTest({ id, resourceId }) as unknown as Promise<TData>, ...options });
+export const useWebhooksServiceWebhookConfigRegenerateSecret = <TData = Common.WebhooksServiceWebhookConfigRegenerateSecretMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  id: number;
+  resourceId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  id: number;
+  resourceId: number;
+}, TContext>({ mutationFn: ({ id, resourceId }) => WebhooksService.webhookConfigRegenerateSecret({ id, resourceId }) as unknown as Promise<TData>, ...options });
+export const useAccessControlServiceResourceGroupIntroductionsGrant = <TData = Common.AccessControlServiceResourceGroupIntroductionsGrantMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  groupId: number;
+  requestBody: UpdateResourceGroupIntroductionDto;
+  userId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  groupId: number;
+  requestBody: UpdateResourceGroupIntroductionDto;
+  userId: number;
+}, TContext>({ mutationFn: ({ groupId, requestBody, userId }) => AccessControlService.resourceGroupIntroductionsGrant({ groupId, requestBody, userId }) as unknown as Promise<TData>, ...options });
+export const useAccessControlServiceResourceGroupIntroductionsRevoke = <TData = Common.AccessControlServiceResourceGroupIntroductionsRevokeMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  groupId: number;
+  requestBody: UpdateResourceGroupIntroductionDto;
+  userId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  groupId: number;
+  requestBody: UpdateResourceGroupIntroductionDto;
+  userId: number;
+}, TContext>({ mutationFn: ({ groupId, requestBody, userId }) => AccessControlService.resourceGroupIntroductionsRevoke({ groupId, requestBody, userId }) as unknown as Promise<TData>, ...options });
+export const useAccessControlServiceResourceGroupIntroducersGrant = <TData = Common.AccessControlServiceResourceGroupIntroducersGrantMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  groupId: number;
+  userId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  groupId: number;
+  userId: number;
+}, TContext>({ mutationFn: ({ groupId, userId }) => AccessControlService.resourceGroupIntroducersGrant({ groupId, userId }) as unknown as Promise<TData>, ...options });
+export const useAccessControlServiceResourceGroupIntroducersRevoke = <TData = Common.AccessControlServiceResourceGroupIntroducersRevokeMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  groupId: number;
+  userId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  groupId: number;
+  userId: number;
+}, TContext>({ mutationFn: ({ groupId, userId }) => AccessControlService.resourceGroupIntroducersRevoke({ groupId, userId }) as unknown as Promise<TData>, ...options });
+export const useAccessControlServiceResourceIntroducersGrant = <TData = Common.AccessControlServiceResourceIntroducersGrantMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  resourceId: number;
+  userId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  resourceId: number;
+  userId: number;
+}, TContext>({ mutationFn: ({ resourceId, userId }) => AccessControlService.resourceIntroducersGrant({ resourceId, userId }) as unknown as Promise<TData>, ...options });
+export const useAccessControlServiceResourceIntroductionsGrant = <TData = Common.AccessControlServiceResourceIntroductionsGrantMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  requestBody: UpdateResourceIntroductionDto;
+  resourceId: number;
+  userId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  requestBody: UpdateResourceIntroductionDto;
+  resourceId: number;
+  userId: number;
+}, TContext>({ mutationFn: ({ requestBody, resourceId, userId }) => AccessControlService.resourceIntroductionsGrant({ requestBody, resourceId, userId }) as unknown as Promise<TData>, ...options });
+export const usePluginsServiceUploadPlugin = <TData = Common.PluginsServiceUploadPluginMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   formData: UploadPluginDto;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   formData: UploadPluginDto;
-}, TContext>({ mutationFn: ({ formData }) => PluginService.uploadPlugin({ formData }) as unknown as Promise<TData>, ...options });
-export const useFabReaderReadersServiceEnrollNfcCard = <TData = Common.FabReaderReadersServiceEnrollNfcCardMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+}, TContext>({ mutationFn: ({ formData }) => PluginsService.uploadPlugin({ formData }) as unknown as Promise<TData>, ...options });
+export const useFabReaderServiceEnrollNfcCard = <TData = Common.FabReaderServiceEnrollNfcCardMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   requestBody: EnrollNfcCardDto;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   requestBody: EnrollNfcCardDto;
-}, TContext>({ mutationFn: ({ requestBody }) => FabReaderReadersService.enrollNfcCard({ requestBody }) as unknown as Promise<TData>, ...options });
-export const useFabReaderReadersServiceResetNfcCard = <TData = Common.FabReaderReadersServiceResetNfcCardMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+}, TContext>({ mutationFn: ({ requestBody }) => FabReaderService.enrollNfcCard({ requestBody }) as unknown as Promise<TData>, ...options });
+export const useFabReaderServiceResetNfcCard = <TData = Common.FabReaderServiceResetNfcCardMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   requestBody: ResetNfcCardDto;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   requestBody: ResetNfcCardDto;
-}, TContext>({ mutationFn: ({ requestBody }) => FabReaderReadersService.resetNfcCard({ requestBody }) as unknown as Promise<TData>, ...options });
-export const useFabReaderNfcCardsServiceGetAppKeyByUid = <TData = Common.FabReaderNfcCardsServiceGetAppKeyByUidMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+}, TContext>({ mutationFn: ({ requestBody }) => FabReaderService.resetNfcCard({ requestBody }) as unknown as Promise<TData>, ...options });
+export const useFabReaderServiceGetAppKeyByUid = <TData = Common.FabReaderServiceGetAppKeyByUidMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   requestBody: AppKeyRequestDto;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   requestBody: AppKeyRequestDto;
-}, TContext>({ mutationFn: ({ requestBody }) => FabReaderNfcCardsService.getAppKeyByUid({ requestBody }) as unknown as Promise<TData>, ...options });
-export const useSsoServiceUpdateOneSsoProvider = <TData = Common.SsoServiceUpdateOneSsoProviderMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+}, TContext>({ mutationFn: ({ requestBody }) => FabReaderService.getAppKeyByUid({ requestBody }) as unknown as Promise<TData>, ...options });
+export const useAuthenticationServiceUpdateOneSsoProvider = <TData = Common.AuthenticationServiceUpdateOneSsoProviderMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   id: number;
   requestBody: UpdateSSOProviderDto;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   id: number;
   requestBody: UpdateSSOProviderDto;
-}, TContext>({ mutationFn: ({ id, requestBody }) => SsoService.updateOneSsoProvider({ id, requestBody }) as unknown as Promise<TData>, ...options });
+}, TContext>({ mutationFn: ({ id, requestBody }) => AuthenticationService.updateOneSsoProvider({ id, requestBody }) as unknown as Promise<TData>, ...options });
 export const useResourcesServiceUpdateOneResource = <TData = Common.ResourcesServiceUpdateOneResourceMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   formData: UpdateResourceDto;
   id: number;
@@ -314,39 +329,28 @@ export const useResourcesServiceUpdateOneResource = <TData = Common.ResourcesSer
   formData: UpdateResourceDto;
   id: number;
 }, TContext>({ mutationFn: ({ formData, id }) => ResourcesService.updateOneResource({ formData, id }) as unknown as Promise<TData>, ...options });
-export const useResourceUsageServiceEndSession = <TData = Common.ResourceUsageServiceEndSessionMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+export const useResourcesServiceResourceGroupsUpdateOne = <TData = Common.ResourcesServiceResourceGroupsUpdateOneMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  id: number;
+  requestBody: UpdateResourceGroupDto;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  id: number;
+  requestBody: UpdateResourceGroupDto;
+}, TContext>({ mutationFn: ({ id, requestBody }) => ResourcesService.resourceGroupsUpdateOne({ id, requestBody }) as unknown as Promise<TData>, ...options });
+export const useResourcesServiceResourceUsageEndSession = <TData = Common.ResourcesServiceResourceUsageEndSessionMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   requestBody: EndUsageSessionDto;
   resourceId: number;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   requestBody: EndUsageSessionDto;
   resourceId: number;
-}, TContext>({ mutationFn: ({ requestBody, resourceId }) => ResourceUsageService.endSession({ requestBody, resourceId }) as unknown as Promise<TData>, ...options });
-export const useMqttServersServiceUpdateOneMqttServer = <TData = Common.MqttServersServiceUpdateOneMqttServerMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+}, TContext>({ mutationFn: ({ requestBody, resourceId }) => ResourcesService.resourceUsageEndSession({ requestBody, resourceId }) as unknown as Promise<TData>, ...options });
+export const useMqttServiceMqttServersUpdateOne = <TData = Common.MqttServiceMqttServersUpdateOneMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   id: number;
   requestBody: UpdateMqttServerDto;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   id: number;
   requestBody: UpdateMqttServerDto;
-}, TContext>({ mutationFn: ({ id, requestBody }) => MqttServersService.updateOneMqttServer({ id, requestBody }) as unknown as Promise<TData>, ...options });
-export const useWebhooksServiceUpdateOneWebhookConfiguration = <TData = Common.WebhooksServiceUpdateOneWebhookConfigurationMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  id: number;
-  requestBody: UpdateWebhookConfigDto;
-  resourceId: number;
-}, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  id: number;
-  requestBody: UpdateWebhookConfigDto;
-  resourceId: number;
-}, TContext>({ mutationFn: ({ id, requestBody, resourceId }) => WebhooksService.updateOneWebhookConfiguration({ id, requestBody, resourceId }) as unknown as Promise<TData>, ...options });
-export const useWebhooksServiceUpdateStatus = <TData = Common.WebhooksServiceUpdateStatusMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  id: number;
-  requestBody: WebhookStatusDto;
-  resourceId: number;
-}, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  id: number;
-  requestBody: WebhookStatusDto;
-  resourceId: number;
-}, TContext>({ mutationFn: ({ id, requestBody, resourceId }) => WebhooksService.updateStatus({ id, requestBody, resourceId }) as unknown as Promise<TData>, ...options });
-export const useMqttResourceConfigurationServiceUpdateMqttConfiguration = <TData = Common.MqttResourceConfigurationServiceUpdateMqttConfigurationMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+}, TContext>({ mutationFn: ({ id, requestBody }) => MqttService.mqttServersUpdateOne({ id, requestBody }) as unknown as Promise<TData>, ...options });
+export const useMqttServiceMqttResourceConfigUpdate = <TData = Common.MqttServiceMqttResourceConfigUpdateMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   configId: number;
   requestBody: UpdateMqttResourceConfigDto;
   resourceId: number;
@@ -354,7 +358,25 @@ export const useMqttResourceConfigurationServiceUpdateMqttConfiguration = <TData
   configId: number;
   requestBody: UpdateMqttResourceConfigDto;
   resourceId: number;
-}, TContext>({ mutationFn: ({ configId, requestBody, resourceId }) => MqttResourceConfigurationService.updateMqttConfiguration({ configId, requestBody, resourceId }) as unknown as Promise<TData>, ...options });
+}, TContext>({ mutationFn: ({ configId, requestBody, resourceId }) => MqttService.mqttResourceConfigUpdate({ configId, requestBody, resourceId }) as unknown as Promise<TData>, ...options });
+export const useWebhooksServiceWebhookConfigUpdateOne = <TData = Common.WebhooksServiceWebhookConfigUpdateOneMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  id: number;
+  requestBody: UpdateWebhookConfigDto;
+  resourceId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  id: number;
+  requestBody: UpdateWebhookConfigDto;
+  resourceId: number;
+}, TContext>({ mutationFn: ({ id, requestBody, resourceId }) => WebhooksService.webhookConfigUpdateOne({ id, requestBody, resourceId }) as unknown as Promise<TData>, ...options });
+export const useWebhooksServiceWebhookConfigUpdateStatus = <TData = Common.WebhooksServiceWebhookConfigUpdateStatusMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  id: number;
+  requestBody: WebhookStatusDto;
+  resourceId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  id: number;
+  requestBody: WebhookStatusDto;
+  resourceId: number;
+}, TContext>({ mutationFn: ({ id, requestBody, resourceId }) => WebhooksService.webhookConfigUpdateStatus({ id, requestBody, resourceId }) as unknown as Promise<TData>, ...options });
 export const useUsersServiceUpdatePermissions = <TData = Common.UsersServiceUpdatePermissionsMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   id: number;
   requestBody: UpdateUserPermissionsDto;
@@ -369,71 +391,73 @@ export const useEmailTemplatesServiceEmailTemplateControllerUpdate = <TData = Co
   requestBody: UpdateEmailTemplateDto;
   type: "verify-email" | "reset-password";
 }, TContext>({ mutationFn: ({ requestBody, type }) => EmailTemplatesService.emailTemplateControllerUpdate({ requestBody, type }) as unknown as Promise<TData>, ...options });
-export const useResourceGroupsServiceUpdateOneResourceGroup = <TData = Common.ResourceGroupsServiceUpdateOneResourceGroupMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  id: number;
-  requestBody: UpdateResourceGroupDto;
-}, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  id: number;
-  requestBody: UpdateResourceGroupDto;
-}, TContext>({ mutationFn: ({ id, requestBody }) => ResourceGroupsService.updateOneResourceGroup({ id, requestBody }) as unknown as Promise<TData>, ...options });
-export const useFabReaderReadersServiceUpdateReader = <TData = Common.FabReaderReadersServiceUpdateReaderMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+export const useFabReaderServiceUpdateReader = <TData = Common.FabReaderServiceUpdateReaderMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   readerId: number;
   requestBody: UpdateReaderDto;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   readerId: number;
   requestBody: UpdateReaderDto;
-}, TContext>({ mutationFn: ({ readerId, requestBody }) => FabReaderReadersService.updateReader({ readerId, requestBody }) as unknown as Promise<TData>, ...options });
+}, TContext>({ mutationFn: ({ readerId, requestBody }) => FabReaderService.updateReader({ readerId, requestBody }) as unknown as Promise<TData>, ...options });
 export const useAuthenticationServiceEndSession = <TData = Common.AuthenticationServiceEndSessionMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, void, TContext>, "mutationFn">) => useMutation<TData, TError, void, TContext>({ mutationFn: () => AuthenticationService.endSession() as unknown as Promise<TData>, ...options });
-export const useSsoServiceDeleteOneSsoProvider = <TData = Common.SsoServiceDeleteOneSsoProviderMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+export const useAuthenticationServiceDeleteOneSsoProvider = <TData = Common.AuthenticationServiceDeleteOneSsoProviderMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   id: number;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   id: number;
-}, TContext>({ mutationFn: ({ id }) => SsoService.deleteOneSsoProvider({ id }) as unknown as Promise<TData>, ...options });
-export const useResourceGroupsServiceDeleteOneResourceGroup = <TData = Common.ResourceGroupsServiceDeleteOneResourceGroupMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  id: number;
-}, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  id: number;
-}, TContext>({ mutationFn: ({ id }) => ResourceGroupsService.deleteOneResourceGroup({ id }) as unknown as Promise<TData>, ...options });
+}, TContext>({ mutationFn: ({ id }) => AuthenticationService.deleteOneSsoProvider({ id }) as unknown as Promise<TData>, ...options });
 export const useResourcesServiceDeleteOneResource = <TData = Common.ResourcesServiceDeleteOneResourceMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   id: number;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   id: number;
 }, TContext>({ mutationFn: ({ id }) => ResourcesService.deleteOneResource({ id }) as unknown as Promise<TData>, ...options });
-export const useResourcesServiceRemoveResourceFromGroup = <TData = Common.ResourcesServiceRemoveResourceFromGroupMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+export const useResourcesServiceResourceGroupsRemoveResource = <TData = Common.ResourcesServiceResourceGroupsRemoveResourceMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   groupId: number;
-  id: number;
+  resourceId: number;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   groupId: number;
-  id: number;
-}, TContext>({ mutationFn: ({ groupId, id }) => ResourcesService.removeResourceFromGroup({ groupId, id }) as unknown as Promise<TData>, ...options });
-export const useResourceIntroducersServiceRemoveOne = <TData = Common.ResourceIntroducersServiceRemoveOneMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   resourceId: number;
-  userId: number;
+}, TContext>({ mutationFn: ({ groupId, resourceId }) => ResourcesService.resourceGroupsRemoveResource({ groupId, resourceId }) as unknown as Promise<TData>, ...options });
+export const useResourcesServiceResourceGroupsDeleteOne = <TData = Common.ResourcesServiceResourceGroupsDeleteOneMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  groupId: number;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  resourceId: number;
-  userId: number;
-}, TContext>({ mutationFn: ({ resourceId, userId }) => ResourceIntroducersService.removeOne({ resourceId, userId }) as unknown as Promise<TData>, ...options });
-export const useMqttServersServiceDeleteOneMqttServer = <TData = Common.MqttServersServiceDeleteOneMqttServerMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  groupId: number;
+}, TContext>({ mutationFn: ({ groupId }) => ResourcesService.resourceGroupsDeleteOne({ groupId }) as unknown as Promise<TData>, ...options });
+export const useMqttServiceMqttServersDeleteOne = <TData = Common.MqttServiceMqttServersDeleteOneMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   id: number;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   id: number;
-}, TContext>({ mutationFn: ({ id }) => MqttServersService.deleteOneMqttServer({ id }) as unknown as Promise<TData>, ...options });
-export const useWebhooksServiceDeleteOneWebhookConfiguration = <TData = Common.WebhooksServiceDeleteOneWebhookConfigurationMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
-  id: number;
-  resourceId: number;
-}, TContext>, "mutationFn">) => useMutation<TData, TError, {
-  id: number;
-  resourceId: number;
-}, TContext>({ mutationFn: ({ id, resourceId }) => WebhooksService.deleteOneWebhookConfiguration({ id, resourceId }) as unknown as Promise<TData>, ...options });
-export const useMqttResourceConfigurationServiceDeleteOneMqttConfiguration = <TData = Common.MqttResourceConfigurationServiceDeleteOneMqttConfigurationMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+}, TContext>({ mutationFn: ({ id }) => MqttService.mqttServersDeleteOne({ id }) as unknown as Promise<TData>, ...options });
+export const useMqttServiceMqttResourceConfigDeleteOne = <TData = Common.MqttServiceMqttResourceConfigDeleteOneMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   configId: number;
   resourceId: number;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   configId: number;
   resourceId: number;
-}, TContext>({ mutationFn: ({ configId, resourceId }) => MqttResourceConfigurationService.deleteOneMqttConfiguration({ configId, resourceId }) as unknown as Promise<TData>, ...options });
-export const usePluginServiceDeletePlugin = <TData = Common.PluginServiceDeletePluginMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+}, TContext>({ mutationFn: ({ configId, resourceId }) => MqttService.mqttResourceConfigDeleteOne({ configId, resourceId }) as unknown as Promise<TData>, ...options });
+export const useWebhooksServiceWebhookConfigDeleteOne = <TData = Common.WebhooksServiceWebhookConfigDeleteOneMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  id: number;
+  resourceId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  id: number;
+  resourceId: number;
+}, TContext>({ mutationFn: ({ id, resourceId }) => WebhooksService.webhookConfigDeleteOne({ id, resourceId }) as unknown as Promise<TData>, ...options });
+export const useAccessControlServiceResourceIntroducersRevoke = <TData = Common.AccessControlServiceResourceIntroducersRevokeMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  resourceId: number;
+  userId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  resourceId: number;
+  userId: number;
+}, TContext>({ mutationFn: ({ resourceId, userId }) => AccessControlService.resourceIntroducersRevoke({ resourceId, userId }) as unknown as Promise<TData>, ...options });
+export const useAccessControlServiceResourceIntroductionsRevoke = <TData = Common.AccessControlServiceResourceIntroductionsRevokeMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
+  requestBody: UpdateResourceIntroductionDto;
+  resourceId: number;
+  userId: number;
+}, TContext>, "mutationFn">) => useMutation<TData, TError, {
+  requestBody: UpdateResourceIntroductionDto;
+  resourceId: number;
+  userId: number;
+}, TContext>({ mutationFn: ({ requestBody, resourceId, userId }) => AccessControlService.resourceIntroductionsRevoke({ requestBody, resourceId, userId }) as unknown as Promise<TData>, ...options });
+export const usePluginsServiceDeletePlugin = <TData = Common.PluginsServiceDeletePluginMutationResult, TError = unknown, TContext = unknown>(options?: Omit<UseMutationOptions<TData, TError, {
   pluginId: string;
 }, TContext>, "mutationFn">) => useMutation<TData, TError, {
   pluginId: string;
-}, TContext>({ mutationFn: ({ pluginId }) => PluginService.deletePlugin({ pluginId }) as unknown as Promise<TData>, ...options });
+}, TContext>({ mutationFn: ({ pluginId }) => PluginsService.deletePlugin({ pluginId }) as unknown as Promise<TData>, ...options });

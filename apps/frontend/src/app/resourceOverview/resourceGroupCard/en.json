@@ -1,0 +1,9 @@
+{
+  "ungrouped": "Ungrouped",
+  "ungroupedDescription": "Resources that are not assigned to a group",
+  "columns": {
+    "image": "Image",
+    "name": "Name",
+    "status": "Status"
+  }
+}

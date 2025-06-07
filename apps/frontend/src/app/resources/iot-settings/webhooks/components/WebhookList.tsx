@@ -4,7 +4,7 @@ import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import * as en from '../translations/en';
 import * as de from '../translations/de';
 import WebhookForm from './WebhookForm';
-import { useWebhooksServiceGetAllWebhookConfigurations } from '@attraccess/react-query-client';
+import { useWebhooksServiceWebhookConfigGetAll } from '@attraccess/react-query-client';
 
 // Types
 interface WebhookListProps {
@@ -18,7 +18,7 @@ interface WebhookListProps {
 const WebhookList: React.FC<WebhookListProps> = ({ resourceId }) => {
   // Hooks
   const { t } = useTranslations('webhooksList', { en, de });
-  const { data: webhooks = [], isLoading: isLoadingWebhooks } = useWebhooksServiceGetAllWebhookConfigurations({
+  const { data: webhooks = [], isLoading: isLoadingWebhooks } = useWebhooksServiceWebhookConfigGetAll({
     resourceId,
   });
 

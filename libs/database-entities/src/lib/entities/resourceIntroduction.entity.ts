@@ -14,12 +14,13 @@ export class ResourceIntroduction {
   })
   id!: number;
 
-  @Column({ type: 'integer' })
+  @Column({ type: 'integer', nullable: true })
   @ApiProperty({
-    description: 'The ID of the resource',
+    description: 'The ID of the resource (if this is a resource-specific introduction)',
     example: 1,
+    required: false,
   })
-  resourceId!: number;
+  resourceId!: number | null;
 
   @Column({ type: 'integer' })
   @ApiProperty({
@@ -34,6 +35,14 @@ export class ResourceIntroduction {
     example: 2,
   })
   tutorUserId!: number;
+
+  @Column({ type: 'integer', nullable: true })
+  @ApiProperty({
+    description: 'The ID of the resource group (if this is a group-level introduction)',
+    example: 1,
+    required: false,
+  })
+  resourceGroupId!: number | null;
 
   @Column({ type: 'datetime', default: () => "datetime('now')" })
   @ApiProperty({

@@ -17,13 +17,14 @@ import en from './documentationModal.en.json';
 import de from './documentationModal.de.json';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { useAuth } from '../../../hooks/useAuth';
 
 interface DocumentationModalProps {
   resourceId: number;
   children: (onOpen: () => void) => React.ReactNode;
 }
 
-function DocumentationModalComponent({ resourceId, children }: DocumentationModalProps) {
+function DocumentationModalComponent({ resourceId, children }: Readonly<DocumentationModalProps>) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [isFullscreen, setIsFullscreen] = useState(false);
   const navigate = useNavigate();
@@ -65,6 +66,10 @@ function DocumentationModalComponent({ resourceId, children }: DocumentationModa
     }
   }, [resource, resourceId]);
 
+  const { hasPermission } = useAuth();
+
+  const canManageResources = hasPermission('canManageResources');
+
   const renderDocumentationContent = useCallback(() => {
     if (isLoading || isFetching) {
       return (
@@ -78,7 +83,13 @@ function DocumentationModalComponent({ resourceId, children }: DocumentationModa
       return (
         <div className="flex flex-col items-center gap-4 p-4">
           <p className="text-danger">{error instanceof Error ? error.message : t('error.unknown')}</p>
-          <Button color="primary" variant="flat" onPress={() => refetch()} startContent={<RefreshCw size={16} />} data-cy="documentation-modal-error-retry-button">
+          <Button
+            color="primary"
+            variant="flat"
+            onPress={() => refetch()}
+            startContent={<RefreshCw size={16} />}
+            data-cy="documentation-modal-error-retry-button"
+          >
             {t('actions.retry')}
           </Button>
         </div>
@@ -133,23 +144,31 @@ function DocumentationModalComponent({ resourceId, children }: DocumentationModa
     <>
       {children(onOpen)}
 
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size={modalSize} scrollBehavior="inside" data-cy="documentation-modal">
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        size={modalSize}
+        scrollBehavior="inside"
+        data-cy="documentation-modal"
+      >
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex justify-between items-center">
                 <div>{t('title')}</div>
                 <div className="flex gap-1">
-                  <Button
-                    isIconOnly
-                    size="sm"
-                    variant="flat"
-                    onPress={handleEditDocumentation}
-                    aria-label={t('actions.edit')}
-                    data-cy="documentation-modal-edit-button"
-                  >
-                    <Edit size={16} />
-                  </Button>
+                  {canManageResources && (
+                    <Button
+                      isIconOnly
+                      size="sm"
+                      variant="flat"
+                      onPress={handleEditDocumentation}
+                      aria-label={t('actions.edit')}
+                      data-cy="documentation-modal-edit-button"
+                    >
+                      <Edit size={16} />
+                    </Button>
+                  )}
                   <Button
                     isIconOnly
                     size="sm"

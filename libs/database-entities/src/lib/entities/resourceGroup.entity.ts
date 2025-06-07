@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { ResourceIntroduction } from './resourceIntroduction.entity';
-import { ResourceIntroductionUser } from './resourceIntroductionUser.entity';
+import { ResourceIntroducer } from './resourceIntroducer.entity';
 import { Resource } from './resource.entity';
 
 @Entity()
@@ -51,8 +51,8 @@ export class ResourceGroup {
   @OneToMany(() => ResourceIntroduction, (introduction) => introduction.resourceGroup)
   introductions!: ResourceIntroduction[];
 
-  @OneToMany(() => ResourceIntroductionUser, (introducer) => introducer.resourceGroup)
-  introducers!: ResourceIntroductionUser[];
+  @OneToMany(() => ResourceIntroducer, (introducer) => introducer.resourceGroup)
+  introducers!: ResourceIntroducer[];
 
   @ManyToMany(() => Resource, (resource) => resource.groups, { onDelete: 'CASCADE' })
   resources!: Resource[];

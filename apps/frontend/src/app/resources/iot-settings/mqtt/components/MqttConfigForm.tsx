@@ -15,12 +15,12 @@ import {
   Textarea,
 } from '@heroui/react';
 import {
-  useMqttResourceConfigurationServiceCreateMqttConfiguration,
-  useMqttResourceConfigurationServiceUpdateMqttConfiguration,
-  useMqttResourceConfigurationServiceGetOneMqttConfiguration,
-  useMqttServersServiceGetAllMqttServers,
-  UseMqttResourceConfigurationServiceGetAllMqttConfigurationsKeyFn,
-  UseMqttResourceConfigurationServiceGetOneMqttConfigurationKeyFn,
+  useMqttServiceMqttResourceConfigCreate,
+  useMqttServiceMqttResourceConfigUpdate,
+  useMqttServiceMqttResourceConfigGetOne,
+  useMqttServiceMqttServersGetAll,
+  UseMqttServiceMqttResourceConfigGetAllKeyFn,
+  UseMqttServiceMqttResourceConfigGetOneKeyFn,
 } from '@attraccess/react-query-client';
 import { useNavigate } from 'react-router-dom';
 import { useToastMessage } from '../../../../../components/toastProvider';
@@ -113,7 +113,7 @@ function TemplateVariablesHelp() {
   );
 }
 
-export function MqttConfigForm({ resourceId, configId, isEdit = false }: MqttConfigFormProps) {
+export function MqttConfigForm({ resourceId, configId, isEdit = false }: Readonly<MqttConfigFormProps>) {
   const { t } = useTranslations('mqttConfigForm', { en, de });
   const navigate = useNavigate();
   const { success, error: showError } = useToastMessage();
@@ -121,17 +121,16 @@ export function MqttConfigForm({ resourceId, configId, isEdit = false }: MqttCon
   const [formValues, setFormValues] = useState<MqttConfigFormValues>(initialFormValues);
 
   // Fetch MQTT servers for the dropdown
-  const { data: mqttServers = [] } = useMqttServersServiceGetAllMqttServers();
+  const { data: mqttServers = [] } = useMqttServiceMqttServersGetAll();
 
   // Fetch existing config if in edit mode
-  const { isLoading: isLoadingConfig, data: existingConfig } =
-    useMqttResourceConfigurationServiceGetOneMqttConfiguration(
-      {
-        resourceId,
-        configId: configId || 0,
-      },
-      undefined
-    );
+  const { isLoading: isLoadingConfig, data: existingConfig } = useMqttServiceMqttResourceConfigGetOne(
+    {
+      resourceId,
+      configId: configId || 0,
+    },
+    undefined
+  );
 
   useEffect(() => {
     if (existingConfig) {
@@ -149,14 +148,14 @@ export function MqttConfigForm({ resourceId, configId, isEdit = false }: MqttCon
   const queryClient = useQueryClient();
 
   // Mutations for creating and updating
-  const createConfig = useMqttResourceConfigurationServiceCreateMqttConfiguration({
+  const createConfig = useMqttServiceMqttResourceConfigCreate({
     onSuccess: (config) => {
       queryClient.invalidateQueries({
-        queryKey: UseMqttResourceConfigurationServiceGetAllMqttConfigurationsKeyFn({ resourceId }),
+        queryKey: UseMqttServiceMqttResourceConfigGetAllKeyFn({ resourceId }),
       });
 
       queryClient.invalidateQueries({
-        queryKey: UseMqttResourceConfigurationServiceGetOneMqttConfigurationKeyFn({ resourceId, configId: config.id }),
+        queryKey: UseMqttServiceMqttResourceConfigGetOneKeyFn({ resourceId, configId: config.id }),
       });
 
       success({
@@ -174,14 +173,14 @@ export function MqttConfigForm({ resourceId, configId, isEdit = false }: MqttCon
       console.error('Failed to save MQTT configuration:', err);
     },
   });
-  const updateConfig = useMqttResourceConfigurationServiceUpdateMqttConfiguration({
+  const updateConfig = useMqttServiceMqttResourceConfigUpdate({
     onSuccess: (config) => {
       queryClient.invalidateQueries({
-        queryKey: UseMqttResourceConfigurationServiceGetAllMqttConfigurationsKeyFn({ resourceId }),
+        queryKey: UseMqttServiceMqttResourceConfigGetAllKeyFn({ resourceId }),
       });
 
       queryClient.invalidateQueries({
-        queryKey: UseMqttResourceConfigurationServiceGetOneMqttConfigurationKeyFn({ resourceId, configId: config.id }),
+        queryKey: UseMqttServiceMqttResourceConfigGetOneKeyFn({ resourceId, configId: config.id }),
       });
 
       success({
@@ -258,7 +257,11 @@ export function MqttConfigForm({ resourceId, configId, isEdit = false }: MqttCon
         <h2 className="text-xl font-semibold">{isEdit ? t('editTitle') : t('createTitle')}</h2>
       </div>
 
-      <Modal isOpen={showCreateServerModal} onClose={() => setShowCreateServerModal(false)} data-cy="mqtt-config-form-create-server-modal">
+      <Modal
+        isOpen={showCreateServerModal}
+        onClose={() => setShowCreateServerModal(false)}
+        data-cy="mqtt-config-form-create-server-modal"
+      >
         <ModalContent>
           <ModalHeader>{t('createServer')}</ModalHeader>
           <ModalBody>
@@ -387,7 +390,7 @@ export function MqttConfigForm({ resourceId, configId, isEdit = false }: MqttCon
           <Button
             type="submit"
             color="primary"
-            isDisabled={createConfig.isPending || updateConfig.isPending || formValues.serverId === 0}
+            isDisabled={createConfig.isPending ?? updateConfig.isPending ?? formValues.serverId === 0}
             data-cy="mqtt-config-form-submit-button"
           >
             {isEdit ? t('updateButton') : t('createButton')}

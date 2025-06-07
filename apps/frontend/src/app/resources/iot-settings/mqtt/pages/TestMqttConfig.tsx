@@ -3,8 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { Button, Card, Alert, Spinner } from '@heroui/react';
 import {
-  useMqttResourceConfigurationServiceGetOneMqttConfiguration,
-  useMqttResourceConfigurationServiceTestOne,
+  useMqttServiceMqttResourceConfigGetOne,
+  useMqttServiceMqttResourceConfigTestOne,
 } from '@attraccess/react-query-client';
 import en from '../translations/configTest.en.json';
 import de from '../translations/configTest.de.json';
@@ -21,7 +21,7 @@ export function TestMqttConfig() {
   const isValidParams = !!resourceId && !!configId;
 
   // Fetch the configuration details
-  const { data: configData, isLoading: isLoadingConfig } = useMqttResourceConfigurationServiceGetOneMqttConfiguration(
+  const { data: configData, isLoading: isLoadingConfig } = useMqttServiceMqttResourceConfigGetOne(
     {
       resourceId: parsedResourceId,
       configId: parsedConfigId,
@@ -33,7 +33,7 @@ export function TestMqttConfig() {
   );
 
   // Test mutation
-  const testConfig = useMqttResourceConfigurationServiceTestOne();
+  const testConfig = useMqttServiceMqttResourceConfigTestOne();
 
   const handleTest = async () => {
     if (!isValidParams) return;
@@ -120,7 +120,12 @@ export function TestMqttConfig() {
               <Button color="secondary" onPress={handleBack} data-cy="mqtt-test-config-back-button">
                 {t('backButton')}
               </Button>
-              <Button color="primary" onPress={handleTest} disabled={testStatus === 'loading' || isLoadingConfig} data-cy="mqtt-test-config-test-button">
+              <Button
+                color="primary"
+                onPress={handleTest}
+                disabled={testStatus === 'loading' || isLoadingConfig}
+                data-cy="mqtt-test-config-test-button"
+              >
                 {t('testButton')}
               </Button>
             </div>

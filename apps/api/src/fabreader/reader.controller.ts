@@ -25,7 +25,7 @@ import { EnrollNfcCardResponseDto } from './dtos/enroll-nfc-card-response.dto';
 import { ResetNfcCardResponseDto } from './dtos/reset-nfc-card-response.dto';
 import { UpdateReaderDto } from './dtos/update-reader.dto';
 
-@ApiTags('FabReader Readers')
+@ApiTags('FabReader')
 @Controller('fabreader/readers')
 @UseInterceptors(ClassSerializerInterceptor)
 export class FabReaderController {

@@ -1,10 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, ILike } from 'typeorm';
-import { ResourceGroup, Resource } from '@attraccess/database-entities';
-import { CreateResourceGroupDto } from './dto/create-resource-group.dto';
-import { UpdateResourceGroupDto } from './dto/update-resource-group.dto';
-import { PaginatedResponse, makePaginatedResponse } from '../../types/response';
+import { Injectable } from '@nestjs/common';
+import { Resource, ResourceGroup } from '@attraccess/database-entities';
+import { Repository } from 'typeorm';
+import { CreateResourceGroupDto } from './dto/createGroup.dto';
+import { UpdateResourceGroupDto } from './dto/updateGroup.dto';
+import { ResourceGroupNotFoundException } from './errors/groupNotFound.error';
+
+interface GetOneSearchOptions {
+  id: number;
+}
 
 @Injectable()
 export class ResourceGroupsService {
@@ -15,94 +19,89 @@ export class ResourceGroupsService {
     private readonly resourceRepository: Repository<Resource>
   ) {}
 
-  async createResourceGroup(createResourceGroupDto: CreateResourceGroupDto): Promise<ResourceGroup> {
-    const resourceGroup = this.resourceGroupRepository.create(createResourceGroupDto);
-    return this.resourceGroupRepository.save(resourceGroup);
-  }
-
-  async listResourceGroups(page = 1, limit = 10, search?: string): Promise<PaginatedResponse<ResourceGroup>> {
-    const where = search ? [{ name: ILike(`%${search}%`) }, { description: ILike(`%${search}%`) }] : {};
-
-    const [data, total] = await this.resourceGroupRepository.findAndCount({
-      where,
-      skip: (page - 1) * limit,
-      take: limit,
-      order: {
-        name: 'ASC', // or createdAt: 'DESC' depending on desired default sort
-      },
+  public async createOne(dto: CreateResourceGroupDto): Promise<ResourceGroup> {
+    const resourceGroup = this.resourceGroupRepository.create({
+      name: dto.name,
+      description: dto.description,
     });
-
-    return makePaginatedResponse({ page, limit }, data, total);
+    return await this.resourceGroupRepository.save(resourceGroup);
   }
 
-  async getResourceGroupById(id: number): Promise<ResourceGroup> {
-    const resourceGroup = await this.resourceGroupRepository.findOne({ where: { id } });
-    if (!resourceGroup) {
-      // Consider creating a specific ResourceGroupNotFoundException
-      throw new NotFoundException(`ResourceGroup with ID ${id} not found`);
-    }
-    return resourceGroup;
+  public async getMany(): Promise<ResourceGroup[]> {
+    return await this.resourceGroupRepository.find();
   }
 
-  async updateResourceGroup(id: number, updateResourceGroupDto: UpdateResourceGroupDto): Promise<ResourceGroup> {
-    // getResourceGroupById will throw NotFoundException if not found
-    const resourceGroup = await this.getResourceGroupById(id);
-
-    // Update the entity
-    this.resourceGroupRepository.merge(resourceGroup, updateResourceGroupDto);
-    return this.resourceGroupRepository.save(resourceGroup);
-  }
-
-  async deleteResourceGroup(id: number): Promise<void> {
-    // Check if exists first (getResourceGroupById handles not found)
-    await this.getResourceGroupById(id);
-
-    const result = await this.resourceGroupRepository.delete(id);
-    // This check is technically redundant due to getResourceGroupById, but provides safety
-    if (result.affected === 0) {
-      throw new NotFoundException(`ResourceGroup with ID ${id} not found`);
-    }
-  }
-
-  async addResourceToGroup(resourceId: number, groupId: number): Promise<void> {
+  public async getOne(searchOptions: GetOneSearchOptions, relations?: string[]): Promise<ResourceGroup> {
     const group = await this.resourceGroupRepository.findOne({
-      where: { id: groupId },
-      relations: ['resources'],
+      where: {
+        id: searchOptions.id,
+      },
+
+      relations,
     });
+
     if (!group) {
-      throw new NotFoundException(`ResourceGroup with ID ${groupId} not found`);
+      throw new ResourceGroupNotFoundException({ id: searchOptions.id });
     }
 
-    const resource = await this.resourceRepository.findOne({ where: { id: resourceId } });
-    if (!resource) {
-      throw new NotFoundException(`Resource with ID ${resourceId} not found`);
-    }
+    return group;
+  }
 
-    const resourceExists = group.resources.some((r) => r.id === resourceId);
-    if (resourceExists) {
+  public async updateOneById(id: number, updateDto: UpdateResourceGroupDto): Promise<ResourceGroup> {
+    const resourceGroup = await this.getOne({ id });
+
+    return await this.resourceGroupRepository.save({
+      ...resourceGroup,
+      name: updateDto.name,
+      description: updateDto.description,
+    });
+  }
+
+  public async addResource(groupId: number, resourceId: number): Promise<void> {
+    const resourceGroup = await this.getOne({ id: groupId }, ['resources']);
+
+    const existingResource = resourceGroup.resources.find((resource) => resource.id === resourceId);
+
+    if (existingResource) {
       return;
     }
 
-    group.resources.push(resource);
-    await this.resourceGroupRepository.save(group);
+    const resource = await this.resourceRepository.findOne({
+      where: {
+        id: resourceId,
+      },
+    });
+
+    resourceGroup.resources.push(resource);
+    await this.resourceGroupRepository.save(resourceGroup);
   }
 
-  async removeResourceFromGroup(resourceId: number, groupId: number): Promise<void> {
-    const group = await this.resourceGroupRepository.findOne({
-      where: { id: groupId },
-      relations: ['resources'],
+  public async removeResource(groupId: number, resourceId: number): Promise<void> {
+    const resourceGroup = await this.getOne({ id: groupId }, ['resources']);
+    const resource = resourceGroup.resources.find((resource) => resource.id === resourceId);
+
+    if (!resource) {
+      return;
+    }
+
+    resourceGroup.resources = resourceGroup.resources.filter((resource) => resource.id !== resourceId);
+    await this.resourceGroupRepository.save(resourceGroup);
+  }
+
+  public async deleteOne(groupId: number): Promise<void> {
+    const result = await this.resourceGroupRepository.delete(groupId);
+    if (result.affected === 0) {
+      throw new ResourceGroupNotFoundException({ id: groupId });
+    }
+  }
+
+  public async getGroupsOfResource(resourceId: number): Promise<ResourceGroup[]> {
+    return await this.resourceGroupRepository.find({
+      where: {
+        resources: {
+          id: resourceId,
+        },
+      },
     });
-    if (!group) {
-      throw new NotFoundException(`ResourceGroup with ID ${groupId} not found`);
-    }
-
-    const initialLength = group.resources.length;
-    group.resources = group.resources.filter((r) => r.id !== resourceId);
-
-    if (group.resources.length === initialLength) {
-      throw new NotFoundException(`Resource ${resourceId} not found in group ${groupId}`);
-    }
-
-    await this.resourceGroupRepository.save(group);
   }
 }

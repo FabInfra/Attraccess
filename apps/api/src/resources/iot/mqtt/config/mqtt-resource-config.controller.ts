@@ -9,10 +9,10 @@ import {
 } from './dtos/mqtt-resource-config.dto';
 import { MqttClientService } from '../../../../mqtt/mqtt-client.service';
 import * as Handlebars from 'handlebars';
-import { CanManageResources } from '../../../../resources/guards/can-manage-resources.decorator';
+import { Auth } from '@attraccess/plugins-backend-sdk';
 
-@ApiTags('MQTT Resource Configuration')
-@CanManageResources()
+@ApiTags('MQTT')
+@Auth('canManageResources')
 @Controller('resources/:resourceId/mqtt/config')
 export class MqttResourceConfigController {
   constructor(
@@ -21,7 +21,7 @@ export class MqttResourceConfigController {
   ) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get all MQTT configurations for a resource', operationId: 'getAllMQTTConfigurations' })
+  @ApiOperation({ summary: 'Get all MQTT configurations for a resource', operationId: 'mqttResourceConfigGetAll' })
   @ApiResponse({
     status: 200,
     description: 'Returns all MQTT configurations for the resource',
@@ -33,7 +33,10 @@ export class MqttResourceConfigController {
   }
 
   @Get(':configId')
-  @ApiOperation({ summary: 'Get a specific MQTT configuration for a resource', operationId: 'getOneMQTTConfiguration' })
+  @ApiOperation({
+    summary: 'Get a specific MQTT configuration for a resource',
+    operationId: 'mqttResourceConfigGetOne',
+  })
   @ApiResponse({
     status: 200,
     description: 'Returns the specific MQTT configuration',
@@ -50,7 +53,7 @@ export class MqttResourceConfigController {
   @Post()
   @ApiOperation({
     summary: 'Create a new MQTT configuration for a resource',
-    operationId: 'createMQTTConfiguration',
+    operationId: 'mqttResourceConfigCreate',
   })
   @ApiResponse({
     status: 201,
@@ -68,7 +71,7 @@ export class MqttResourceConfigController {
   @Put(':configId')
   @ApiOperation({
     summary: 'Update a specific MQTT configuration',
-    operationId: 'updateMQTTConfiguration',
+    operationId: 'mqttResourceConfigUpdate',
   })
   @ApiResponse({
     status: 200,
@@ -85,7 +88,7 @@ export class MqttResourceConfigController {
   }
 
   @Delete(':configId')
-  @ApiOperation({ summary: 'Delete a specific MQTT configuration', operationId: 'deleteOneMQTTConfiguration' })
+  @ApiOperation({ summary: 'Delete a specific MQTT configuration', operationId: 'mqttResourceConfigDeleteOne' })
   @ApiResponse({
     status: 200,
     description: 'MQTT configuration deleted successfully',
@@ -102,7 +105,7 @@ export class MqttResourceConfigController {
   }
 
   @Post(':configId/test')
-  @ApiOperation({ summary: 'Test a specific MQTT configuration', operationId: 'testOne' })
+  @ApiOperation({ summary: 'Test a specific MQTT configuration', operationId: 'mqttResourceConfigTestOne' })
   @ApiResponse({
     status: 200,
     description: 'Test result',

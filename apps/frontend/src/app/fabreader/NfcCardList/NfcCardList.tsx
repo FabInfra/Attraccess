@@ -14,16 +14,16 @@ import {
   ModalFooter,
   ModalContent,
   Alert,
+  Card,
 } from '@heroui/react';
-import { Card } from '@heroui/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AttraccessUser, useTranslations } from '@attraccess/plugins-frontend-ui';
 import {
+  useFabReaderServiceGetAllCards,
+  useFabReaderServiceResetNfcCard,
   NFCCard,
-  useFabReaderNfcCardsServiceGetAllCards,
-  useFabReaderReadersServiceResetNfcCard,
+  useFabReaderServiceEnrollNfcCard,
   useUsersServiceGetOneUserById,
-  useFabReaderReadersServiceEnrollNfcCard,
 } from '@attraccess/react-query-client';
 import de from './NfcCardList.de.json';
 import en from './NfcCardList.en.json';
@@ -45,7 +45,7 @@ const NfcCardDeleteModal = (props: DeleteModalProps) => {
 
   const [readerId, setReaderId] = useState<number | null>(null);
 
-  const { mutate: resetNfcCard } = useFabReaderReadersServiceResetNfcCard();
+  const { mutate: resetNfcCard } = useFabReaderServiceResetNfcCard();
 
   const deleteCard = useCallback(() => {
     if (!props.cardId || !readerId) {
@@ -72,7 +72,9 @@ const NfcCardDeleteModal = (props: DeleteModalProps) => {
           />
         </ModalBody>
         <ModalFooter>
-          <Button onPress={() => props.close()} data-cy="nfc-card-delete-modal-cancel-button">{t('nfcCardsTable.deleteModal.cancel')}</Button>
+          <Button onPress={() => props.close()} data-cy="nfc-card-delete-modal-cancel-button">
+            {t('nfcCardsTable.deleteModal.cancel')}
+          </Button>
           <Button isDisabled={!readerId} onPress={deleteCard} data-cy="nfc-card-delete-modal-delete-button">
             {t('nfcCardsTable.deleteModal.delete')} ID: {!readerId ? 'null' : readerId}
           </Button>
@@ -105,12 +107,26 @@ const NfcCardTableCell = (props: NfcCardTableCellProps) => {
   if (props.header === 'actions') {
     return (
       <div>
-        <Button onPress={() => props.onDeleteClick()} data-cy={`nfc-card-table-cell-delete-button-${props.card.id}`}>{t('nfcCardsTable.actions.delete')}</Button>
+        <Button onPress={() => props.onDeleteClick()} data-cy={`nfc-card-table-cell-delete-button-${props.card.id}`}>
+          {t('nfcCardsTable.actions.delete')}
+        </Button>
       </div>
     );
   }
 
-  return props.card[props.header as keyof NFCCard];
+  if (props.header === 'uid') {
+    return props.card.uid;
+  }
+
+  if (props.header === 'id') {
+    return props.card.id;
+  }
+
+  if (props.header === 'createdAt') {
+    return new Date(props.card.createdAt).toLocaleDateString();
+  }
+
+  return props.card[props.header as keyof NFCCard] as React.ReactNode;
 };
 
 const EnrollNfcCardButton = () => {
@@ -122,7 +138,7 @@ const EnrollNfcCardButton = () => {
   const [show, setShow] = useState(false);
   const [readerId, setReaderId] = useState<number | null>(null);
 
-  const { mutate: enrollNfcCardMutation } = useFabReaderReadersServiceEnrollNfcCard();
+  const { mutate: enrollNfcCardMutation } = useFabReaderServiceEnrollNfcCard();
 
   const enrollNfcCard = useCallback(() => {
     if (!readerId) {
@@ -153,7 +169,9 @@ const EnrollNfcCardButton = () => {
             />
           </ModalBody>
           <ModalFooter>
-            <Button onPress={() => setShow(false)} data-cy="enroll-nfc-card-modal-cancel-button">{t('enrollModal.cancel')}</Button>
+            <Button onPress={() => setShow(false)} data-cy="enroll-nfc-card-modal-cancel-button">
+              {t('enrollModal.cancel')}
+            </Button>
             <Button isDisabled={!readerId} onPress={enrollNfcCard} data-cy="enroll-nfc-card-modal-enroll-button">
               {t('enrollModal.enroll')}
             </Button>
@@ -170,7 +188,7 @@ export function NfcCardList() {
     en,
   });
 
-  const { data: cards, error: cardsError } = useFabReaderNfcCardsServiceGetAllCards(undefined, {
+  const { data: cards, error: cardsError } = useFabReaderServiceGetAllCards(undefined, {
     refetchInterval: 5000,
   });
 

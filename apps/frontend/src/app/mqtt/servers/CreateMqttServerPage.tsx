@@ -7,9 +7,9 @@ import en from './translations/create/en.json';
 import de from './translations/create/de.json';
 import { useCallback, useState } from 'react';
 import {
-  useMqttServersServiceCreateOneMqttServer,
+  useMqttServiceMqttServersCreateOne,
   CreateMqttServerDto,
-  UseMqttServersServiceGetAllMqttServersKeyFn,
+  UseMqttServiceMqttServersGetAllKeyFn,
   MqttServer,
 } from '@attraccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
@@ -19,7 +19,7 @@ interface CreateMqttServerPageProps {
   onCancel?: () => void;
 }
 
-export function CreateMqttServerForm(props?: CreateMqttServerPageProps) {
+export function CreateMqttServerForm(props?: Readonly<CreateMqttServerPageProps>) {
   const { onSuccess } = props || {};
   const { t } = useTranslations('mqttServerCreate', { en, de });
   const navigate = useNavigate();
@@ -36,14 +36,14 @@ export function CreateMqttServerForm(props?: CreateMqttServerPageProps) {
     useTls: false,
   });
 
-  const createMqttServer = useMqttServersServiceCreateOneMqttServer({
+  const createMqttServer = useMqttServiceMqttServersCreateOne({
     onSuccess: (server) => {
       success({
         title: t('serverCreated'),
         description: t('serverCreatedDesc'),
       });
       queryClient.invalidateQueries({
-        queryKey: [UseMqttServersServiceGetAllMqttServersKeyFn()[0]],
+        queryKey: [UseMqttServiceMqttServersGetAllKeyFn()[0]],
       });
       if (onSuccess) {
         onSuccess(server);
@@ -69,7 +69,8 @@ export function CreateMqttServerForm(props?: CreateMqttServerPageProps) {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    const newValue = type === 'checkbox' ? checked : type === 'number' ? parseInt(value, 10) : value;
+    const valueAsNumber = type === 'number' ? parseInt(value, 10) : value;
+    const newValue = type === 'checkbox' ? checked : valueAsNumber;
 
     setFormValues((prev) => ({
       ...prev,
@@ -114,7 +115,7 @@ export function CreateMqttServerForm(props?: CreateMqttServerPageProps) {
         name="port"
         type="number"
         placeholder={t('portPlaceholder')}
-        value={String(formValues.port || 1883)}
+        value={String(formValues.port ?? 1883)}
         onChange={handleInputChange}
         required
         fullWidth
@@ -169,7 +170,12 @@ export function CreateMqttServerForm(props?: CreateMqttServerPageProps) {
         <Button color="default" variant="flat" onPress={handleCancel} data-cy="create-mqtt-server-form-cancel-button">
           {t('cancel')}
         </Button>
-        <Button color="primary" type="submit" isLoading={createMqttServer.isPending} data-cy="create-mqtt-server-form-create-button">
+        <Button
+          color="primary"
+          type="submit"
+          isLoading={createMqttServer.isPending}
+          data-cy="create-mqtt-server-form-create-button"
+        >
           {t('create')}
         </Button>
       </div>
@@ -177,7 +183,7 @@ export function CreateMqttServerForm(props?: CreateMqttServerPageProps) {
   );
 }
 
-export function CreateMqttServerPage(props?: CreateMqttServerPageProps) {
+export function CreateMqttServerPage(props?: Readonly<CreateMqttServerPageProps>) {
   const navigate = useNavigate();
 
   const { t } = useTranslations('mqttServerCreatePage', { en, de });
@@ -195,7 +201,13 @@ export function CreateMqttServerPage(props?: CreateMqttServerPageProps) {
       <CardHeader>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Button isIconOnly variant="light" onPress={handleCancel} aria-label={t('back')} data-cy="create-mqtt-server-page-back-button">
+            <Button
+              isIconOnly
+              variant="light"
+              onPress={handleCancel}
+              aria-label={t('back')}
+              data-cy="create-mqtt-server-page-back-button"
+            >
               <ArrowLeft size={20} />
             </Button>
             <h2>{t('addNewMqttServer')}</h2>

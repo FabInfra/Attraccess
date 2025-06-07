@@ -34,7 +34,7 @@ export function EmailTemplatesPage() {
               <TableCell>
                 <Button
                   as={Link}
-                  to={`/email-templates/${item.type}/edit`}
+                  to={`/email-templates/${item.type}`}
                   variant="light"
                   color="primary"
                   isIconOnly

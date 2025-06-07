@@ -7,7 +7,7 @@ import '@attraccess/plugins-frontend-ui';
 import { queryClient } from './api/queryClient';
 import setupApiParameters from './api';
 import { PluginProvider } from './app/plugins/plugin-provider';
-import { PWAInstall } from './components/pwa-install';
+import { PWAInstall } from './components/pwaInstall';
 
 setupApiParameters();
 

@@ -6,8 +6,6 @@ import { join, resolve } from 'path';
 import { entities } from '@attraccess/database-entities';
 import * as migrations from './migrations';
 
-
-
 const envType = loadEnv((z) => ({
   DB_TYPE: z.enum(['postgres', 'sqlite']).default('sqlite'),
 }));

@@ -24,7 +24,7 @@ import { CreateSSOProviderDto } from './dto/create-sso-provider.dto';
 import { UpdateSSOProviderDto } from './dto/update-sso-provider.dto';
 import { Response } from 'express';
 
-@ApiTags('SSO')
+@ApiTags('Authentication')
 @Controller('auth/sso')
 export class SSOController {
   constructor(private readonly authService: AuthService, private readonly ssoService: SSOService) {}

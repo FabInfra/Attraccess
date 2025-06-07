@@ -1,8 +1,8 @@
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { Accordion, AccordionItem, Alert, Button, Skeleton } from '@heroui/react';
 import {
-  useMqttResourceConfigurationServiceGetAllMqttConfigurations,
-  useMqttResourceConfigurationServiceDeleteOneMqttConfiguration,
+  useMqttServiceMqttResourceConfigGetAll,
+  useMqttServiceMqttResourceConfigDeleteOne,
   useResourcesServiceGetOneResourceById,
 } from '@attraccess/react-query-client';
 import { useNavigate } from 'react-router-dom';
@@ -29,11 +29,11 @@ export function MqttConfigList({ resourceId }: MqttConfigListProps) {
     data: mqttConfigs = [],
     isLoading,
     refetch,
-  } = useMqttResourceConfigurationServiceGetAllMqttConfigurations({
+  } = useMqttServiceMqttResourceConfigGetAll({
     resourceId,
   });
 
-  const deleteConfig = useMqttResourceConfigurationServiceDeleteOneMqttConfiguration({
+  const deleteConfig = useMqttServiceMqttResourceConfigDeleteOne({
     onSuccess: () => {
       success({
         title: t('deleteSuccess'),
@@ -51,7 +51,7 @@ export function MqttConfigList({ resourceId }: MqttConfigListProps) {
   });
 
   const handleEdit = (configId: number) => {
-    navigate(`/resources/${resourceId}/iot/mqtt/edit/${configId}`);
+    navigate(`/resources/${resourceId}/iot/mqtt/${configId}`);
   };
 
   const handleDelete = async (configId: number) => {
@@ -160,10 +160,20 @@ export function MqttConfigList({ resourceId }: MqttConfigListProps) {
             </div>
 
             <div className="flex justify-end gap-3 mt-4">
-              <Button color="secondary" size="sm" onPress={() => handleTest(config.id)} data-cy={`mqtt-config-item-test-button-${config.id}`}>
+              <Button
+                color="secondary"
+                size="sm"
+                onPress={() => handleTest(config.id)}
+                data-cy={`mqtt-config-item-test-button-${config.id}`}
+              >
                 {t('testButton')}
               </Button>
-              <Button color="primary" size="sm" onPress={() => handleEdit(config.id)} data-cy={`mqtt-config-item-edit-button-${config.id}`}>
+              <Button
+                color="primary"
+                size="sm"
+                onPress={() => handleEdit(config.id)}
+                data-cy={`mqtt-config-item-edit-button-${config.id}`}
+              >
                 {t('editButton')}
               </Button>
               <Button

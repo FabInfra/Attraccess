@@ -56,10 +56,20 @@ function DocumentationViewComponent() {
           <p className="text-danger">{resourceError instanceof Error ? resourceError.message : t('error.unknown')}</p>
         </CardBody>
         <CardFooter className="flex justify-center gap-4">
-          <Button onPress={() => refetchResource()} color="primary" startContent={<RefreshCw size={16} />} data-cy="documentation-view-error-retry-button">
+          <Button
+            onPress={() => refetchResource()}
+            color="primary"
+            startContent={<RefreshCw size={16} />}
+            data-cy="documentation-view-error-retry-button"
+          >
             {t('actions.retry')}
           </Button>
-          <Button onPress={() => navigate('/resources')} variant="flat" startContent={<ArrowLeft size={16} />} data-cy="documentation-view-error-back-to-resources-button">
+          <Button
+            onPress={() => navigate('/resources')}
+            variant="flat"
+            startContent={<ArrowLeft size={16} />}
+            data-cy="documentation-view-error-back-to-resources-button"
+          >
             {t('actions.backToResources')}
           </Button>
         </CardFooter>
@@ -78,7 +88,12 @@ function DocumentationViewComponent() {
           <p>{t('notFound.message')}</p>
         </CardBody>
         <CardFooter className="justify-center">
-          <Button onPress={() => navigate('/resources')} variant="flat" startContent={<ArrowLeft size={16} />} data-cy="documentation-view-not-found-back-to-resources-button">
+          <Button
+            onPress={() => navigate('/resources')}
+            variant="flat"
+            startContent={<ArrowLeft size={16} />}
+            data-cy="documentation-view-not-found-back-to-resources-button"
+          >
             {t('actions.backToResources')}
           </Button>
         </CardFooter>

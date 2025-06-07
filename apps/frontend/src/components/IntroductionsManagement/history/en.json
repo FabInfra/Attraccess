@@ -1,0 +1,13 @@
+{
+  "modal": {
+    "title": "History",
+    "closeButton": "Close"
+  },
+  "table": {
+    "columns": {
+      "date": "Date",
+      "action": "Action",
+      "comment": "Comment"
+    }
+  }
+}

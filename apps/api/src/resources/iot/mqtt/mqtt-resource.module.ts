@@ -5,11 +5,10 @@ import { MqttResourceConfigController } from './config/mqtt-resource-config.cont
 import { MqttResourceConfigService } from './config/mqtt-resource-config.service';
 import { MqttPublisherService } from './publisher/mqtt-publisher.service';
 import { MqttModule } from '../../../mqtt/mqtt.module';
-import { ResourcesCoreModule } from '../../resources-core.module';
 import { IotService } from '../iot.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([MqttResourceConfig, Resource]), MqttModule, ResourcesCoreModule],
+  imports: [TypeOrmModule.forFeature([MqttResourceConfig, Resource]), MqttModule],
   controllers: [MqttResourceConfigController],
   providers: [MqttResourceConfigService, MqttPublisherService, IotService],
   exports: [MqttResourceConfigService],

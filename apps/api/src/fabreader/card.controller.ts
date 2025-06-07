@@ -6,7 +6,7 @@ import { FabreaderService } from './fabreader.service';
 import { AppKeyRequestDto } from './dtos/app-key-request.dto';
 import { AppKeyResponseDto } from './dtos/app-key-response.dto';
 
-@ApiTags('FabReader NFC Cards')
+@ApiTags('FabReader')
 @Controller('fabreader/cards')
 export class FabReaderNfcCardsController {
   public constructor(

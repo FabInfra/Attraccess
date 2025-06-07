@@ -8,14 +8,22 @@ import { BadRequestException } from '@nestjs/common';
 import { StartUsageSessionDto } from './dtos/startUsageSession.dto';
 import { EndUsageSessionDto } from './dtos/endUsageSession.dto';
 import { ResourcesService } from '../resources.service';
-import { ResourceIntroductionService } from '../introduction/resourceIntroduction.service';
+import { ResourceIntroductionsService } from '../introductions/resouceIntroductions.service';
+import { ResourceIntroducersService } from '../introducers/resourceIntroducers.service';
+import { ResourceGroupsIntroductionsService } from '../groups/introductions/resourceGroups.introductions.service';
+import { ResourceGroupsIntroducersService } from '../groups/introducers/resourceGroups.introducers.service';
+import { ResourceGroupsService } from '../groups/resourceGroups.service';
 import { ResourceNotFoundException } from '../../exceptions/resource.notFound.exception';
 
 describe('ResourceUsageService', () => {
   let service: ResourceUsageService;
   let resourceUsageRepository: jest.Mocked<Repository<ResourceUsage>>;
-  let resourcesService: jest.Mocked<ResourcesService>;
-  let resourceIntroductionService: jest.Mocked<ResourceIntroductionService>;
+  let resourceRepository: jest.Mocked<Repository<Resource>>;
+  let resourceIntroductionService: jest.Mocked<ResourceIntroductionsService>;
+  let resourceIntroducersService: jest.Mocked<ResourceIntroducersService>;
+  let resourceGroupsIntroductionsService: jest.Mocked<ResourceGroupsIntroductionsService>;
+  let resourceGroupsIntroducersService: jest.Mocked<ResourceGroupsIntroducersService>;
+  let resourceGroupsService: jest.Mocked<ResourceGroupsService>;
   let eventEmitter: jest.Mocked<EventEmitter2>;
 
   const mockRepository = () => ({
@@ -44,8 +52,24 @@ describe('ResourceUsageService', () => {
   };
 
   const mockResourceIntroductionService = {
-    hasCompletedIntroduction: jest.fn(),
+    hasValidIntroduction: jest.fn(),
     canGiveIntroductions: jest.fn(),
+  };
+
+  const mockResourceIntroducersService = {
+    isIntroducer: jest.fn(),
+  };
+
+  const mockResourceGroupsIntroductionsService = {
+    hasValidIntroduction: jest.fn(),
+  };
+
+  const mockResourceGroupsIntroducersService = {
+    isIntroducer: jest.fn(),
+  };
+
+  const mockResourceGroupsService = {
+    getGroupsOfResource: jest.fn(),
   };
 
   type MockQueryBuilder = {
@@ -77,6 +101,10 @@ describe('ResourceUsageService', () => {
       providers: [
         ResourceUsageService,
         {
+          provide: getRepositoryToken(Resource),
+          useFactory: mockRepository,
+        },
+        {
           provide: getRepositoryToken(ResourceUsage),
           useFactory: mockRepository,
         },
@@ -85,8 +113,24 @@ describe('ResourceUsageService', () => {
           useValue: mockResourcesService,
         },
         {
-          provide: ResourceIntroductionService,
+          provide: ResourceIntroductionsService,
           useValue: mockResourceIntroductionService,
+        },
+        {
+          provide: ResourceIntroducersService,
+          useValue: mockResourceIntroducersService,
+        },
+        {
+          provide: ResourceGroupsIntroductionsService,
+          useValue: mockResourceGroupsIntroductionsService,
+        },
+        {
+          provide: ResourceGroupsIntroducersService,
+          useValue: mockResourceGroupsIntroducersService,
+        },
+        {
+          provide: ResourceGroupsService,
+          useValue: mockResourceGroupsService,
         },
         {
           provide: EventEmitter2,
@@ -96,9 +140,13 @@ describe('ResourceUsageService', () => {
     }).compile();
 
     service = module.get<ResourceUsageService>(ResourceUsageService);
+    resourceRepository = module.get(getRepositoryToken(Resource));
     resourceUsageRepository = module.get(getRepositoryToken(ResourceUsage));
-    resourcesService = module.get(ResourcesService);
-    resourceIntroductionService = module.get(ResourceIntroductionService);
+    resourceIntroductionService = module.get(ResourceIntroductionsService);
+    resourceIntroducersService = module.get(ResourceIntroducersService);
+    resourceGroupsIntroductionsService = module.get(ResourceGroupsIntroductionsService);
+    resourceGroupsIntroducersService = module.get(ResourceGroupsIntroducersService);
+    resourceGroupsService = module.get(ResourceGroupsService);
     eventEmitter = module.get(EventEmitter2);
   });
 
@@ -122,8 +170,13 @@ describe('ResourceUsageService', () => {
     it('should start a session successfully when no active session exists', async () => {
       const dto: StartUsageSessionDto = { notes: 'Test session' };
 
-      resourcesService.getResourceById.mockResolvedValue(mockResource);
-      resourceIntroductionService.hasCompletedIntroduction.mockResolvedValue(true);
+      // Mock resourceRepository.findOne to return the resource
+      resourceRepository.findOne.mockResolvedValue(mockResource);
+      resourceIntroductionService.hasValidIntroduction.mockResolvedValue(true);
+      resourceGroupsIntroductionsService.hasValidIntroduction.mockResolvedValue(false);
+      resourceIntroducersService.isIntroducer.mockResolvedValue(false);
+      resourceGroupsIntroducersService.isIntroducer.mockResolvedValue(false);
+      resourceGroupsService.getGroupsOfResource.mockResolvedValue([]);
 
       // Mock getActiveSession to return null (no active session)
       resourceUsageRepository.findOne
@@ -155,7 +208,8 @@ describe('ResourceUsageService', () => {
     it('should throw error when resource does not exist', async () => {
       const dto: StartUsageSessionDto = { notes: 'Test session' };
 
-      resourcesService.getResourceById.mockResolvedValue(null);
+      // Mock resourceRepository.findOne to return null (resource not found)
+      resourceRepository.findOne.mockResolvedValue(null);
 
       await expect(service.startSession(1, mockUser, dto)).rejects.toThrow(ResourceNotFoundException);
     });
@@ -163,20 +217,30 @@ describe('ResourceUsageService', () => {
     it('should throw error when user has not completed introduction', async () => {
       const dto: StartUsageSessionDto = { notes: 'Test session' };
 
-      resourcesService.getResourceById.mockResolvedValue(mockResource);
-      resourceIntroductionService.hasCompletedIntroduction.mockResolvedValue(false);
+      // Mock resourceRepository.findOne to return the resource
+      resourceRepository.findOne.mockResolvedValue(mockResource);
+      resourceIntroductionService.hasValidIntroduction.mockResolvedValue(false);
+      resourceGroupsIntroductionsService.hasValidIntroduction.mockResolvedValue(false);
+      resourceIntroducersService.isIntroducer.mockResolvedValue(false);
+      resourceGroupsIntroducersService.isIntroducer.mockResolvedValue(false);
+      resourceGroupsService.getGroupsOfResource.mockResolvedValue([]);
 
       await expect(service.startSession(1, mockUser, dto)).rejects.toThrow(BadRequestException);
-      expect(resourceIntroductionService.hasCompletedIntroduction).toHaveBeenCalledWith(1, 1);
+      expect(resourceIntroductionService.hasValidIntroduction).toHaveBeenCalledWith(1, 1);
     });
 
     it('should throw error when active session exists and no takeover requested', async () => {
       const dto: StartUsageSessionDto = { notes: 'Test session' };
 
-      resourcesService.getResourceById.mockResolvedValue(mockResource);
-      resourceIntroductionService.hasCompletedIntroduction.mockResolvedValue(true);
+      // Mock resourceRepository.findOne to return the resource
+      resourceRepository.findOne.mockResolvedValue(mockResource);
+      resourceIntroductionService.hasValidIntroduction.mockResolvedValue(true);
+      resourceGroupsIntroductionsService.hasValidIntroduction.mockResolvedValue(false);
+      resourceIntroducersService.isIntroducer.mockResolvedValue(false);
+      resourceGroupsIntroducersService.isIntroducer.mockResolvedValue(false);
+      resourceGroupsService.getGroupsOfResource.mockResolvedValue([]);
 
-      const mockActiveSession = { id: 1, userId: 2 } as ResourceUsage;
+      const mockActiveSession = { id: 1, userId: 2, user: { id: 2 } as User } as ResourceUsage;
       // Mock getActiveSession to return an active session
       resourceUsageRepository.findOne.mockResolvedValue(mockActiveSession);
 
@@ -188,10 +252,15 @@ describe('ResourceUsageService', () => {
     it('should throw error when takeover requested but resource does not allow it', async () => {
       const dto: StartUsageSessionDto = { notes: 'Test session', forceTakeOver: true };
 
-      resourcesService.getResourceById.mockResolvedValue(mockResource); // allowTakeOver: false
-      resourceIntroductionService.hasCompletedIntroduction.mockResolvedValue(true);
+      // Mock resourceRepository.findOne to return the resource (allowTakeOver: false)
+      resourceRepository.findOne.mockResolvedValue(mockResource);
+      resourceIntroductionService.hasValidIntroduction.mockResolvedValue(true);
+      resourceGroupsIntroductionsService.hasValidIntroduction.mockResolvedValue(false);
+      resourceIntroducersService.isIntroducer.mockResolvedValue(false);
+      resourceGroupsIntroducersService.isIntroducer.mockResolvedValue(false);
+      resourceGroupsService.getGroupsOfResource.mockResolvedValue([]);
 
-      const mockActiveSession = { id: 1, userId: 2 } as ResourceUsage;
+      const mockActiveSession = { id: 1, userId: 2, user: { id: 2 } as User } as ResourceUsage;
       // Mock getActiveSession to return an active session
       resourceUsageRepository.findOne.mockResolvedValue(mockActiveSession);
 
@@ -203,10 +272,15 @@ describe('ResourceUsageService', () => {
     it('should successfully takeover when resource allows it', async () => {
       const dto: StartUsageSessionDto = { notes: 'Test session', forceTakeOver: true };
 
-      resourcesService.getResourceById.mockResolvedValue(mockResourceWithTakeOver); // allowTakeOver: true
-      resourceIntroductionService.hasCompletedIntroduction.mockResolvedValue(true);
+      // Mock resourceRepository.findOne to return the resource (allowTakeOver: true)
+      resourceRepository.findOne.mockResolvedValue(mockResourceWithTakeOver);
+      resourceIntroductionService.hasValidIntroduction.mockResolvedValue(true);
+      resourceGroupsIntroductionsService.hasValidIntroduction.mockResolvedValue(false);
+      resourceIntroducersService.isIntroducer.mockResolvedValue(false);
+      resourceGroupsIntroducersService.isIntroducer.mockResolvedValue(false);
+      resourceGroupsService.getGroupsOfResource.mockResolvedValue([]);
 
-      const mockActiveSession = { id: 1, userId: 2, startTime: new Date() } as ResourceUsage;
+      const mockActiveSession = { id: 1, userId: 2, startTime: new Date(), user: { id: 2 } as User } as ResourceUsage;
       const mockNewUsage = { id: 2, resourceId: 1, userId: 1 } as ResourceUsage;
 
       // Mock getActiveSession to return an active session, then mock findOne for new session
@@ -238,7 +312,7 @@ describe('ResourceUsageService', () => {
 
   describe('getActiveSession', () => {
     it('should return active session when it exists', async () => {
-      const mockActiveSession = { id: 1, resourceId: 1, userId: 1 } as ResourceUsage;
+      const mockActiveSession = { id: 1, resourceId: 1, userId: 1, user: { id: 1 } as User } as ResourceUsage;
       resourceUsageRepository.findOne.mockResolvedValue(mockActiveSession);
 
       const result = await service.getActiveSession(1);

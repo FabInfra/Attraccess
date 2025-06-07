@@ -2,18 +2,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ResourcesService } from './resources.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Resource, DocumentationType } from '@attraccess/database-entities';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { CreateResourceDto } from './dtos/createResource.dto';
 import { UpdateResourceDto } from './dtos/updateResource.dto';
 import { ResourceNotFoundException } from '../exceptions/resource.notFound.exception';
-import { ResourceImageService } from '../common/services/resource-image.service';
-import { ResourceGroupsService } from './groups/resourceGroups.service';
+import { ResourceImageService } from './resourceImage.service';
 
 describe('ResourcesService', () => {
   let service: ResourcesService;
   let resourceRepository: jest.Mocked<Repository<Resource>>;
   // ResourceImageService is injected but not directly used in these tests
-  let resourceGroupsService: jest.Mocked<ResourceGroupsService>;
 
   const mockResourceRepository = () => ({
     find: jest.fn(),
@@ -24,7 +22,13 @@ describe('ResourcesService', () => {
     delete: jest.fn(),
     createQueryBuilder: jest.fn(() => ({
       leftJoinAndSelect: jest.fn().mockReturnThis(),
+      orderBy: jest.fn().mockReturnThis(),
+      andWhere: jest.fn().mockReturnThis(),
       where: jest.fn().mockReturnThis(),
+      skip: jest.fn().mockReturnThis(),
+      take: jest.fn().mockReturnThis(),
+      getSql: jest.fn().mockReturnValue('SELECT * FROM resource'),
+      getManyAndCount: jest.fn().mockResolvedValue([[], 0]),
       getOne: jest.fn(),
     })),
   });
@@ -33,11 +37,6 @@ describe('ResourcesService', () => {
     saveImage: jest.fn(),
     deleteImage: jest.fn(),
     getPublicPath: jest.fn(),
-  };
-
-  const mockResourceGroupsService = {
-    addResourceToGroup: jest.fn(),
-    removeResourceFromGroup: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -52,17 +51,12 @@ describe('ResourcesService', () => {
           provide: ResourceImageService,
           useValue: mockResourceImageService,
         },
-        {
-          provide: ResourceGroupsService,
-          useValue: mockResourceGroupsService,
-        },
       ],
     }).compile();
 
     service = module.get<ResourcesService>(ResourcesService);
     resourceRepository = module.get(getRepositoryToken(Resource)) as jest.Mocked<Repository<Resource>>;
     // ResourceImageService is available but not directly used in tests
-    resourceGroupsService = module.get(ResourceGroupsService) as jest.Mocked<ResourceGroupsService>;
   });
 
   it('should be defined', () => {
@@ -110,7 +104,20 @@ describe('ResourcesService', () => {
         },
       ];
 
-      resourceRepository.findAndCount.mockResolvedValue([mockResources, 2]);
+      // Mock the query builder chain to return the expected results
+      const mockQueryBuilder = {
+        leftJoinAndSelect: jest.fn().mockReturnThis(),
+        orderBy: jest.fn().mockReturnThis(),
+        andWhere: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        skip: jest.fn().mockReturnThis(),
+        take: jest.fn().mockReturnThis(),
+        getSql: jest.fn().mockReturnValue('SELECT * FROM resource'),
+        getManyAndCount: jest.fn().mockResolvedValue([mockResources, 2]),
+        getOne: jest.fn(),
+      } as unknown as SelectQueryBuilder<Resource>;
+
+      resourceRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
 
       const result = await service.listResources({ page: 1, limit: 10 });
 
@@ -118,7 +125,12 @@ describe('ResourcesService', () => {
       expect(result.total).toEqual(2);
       expect(result.page).toEqual(1);
       expect(result.limit).toEqual(10);
-      expect(resourceRepository.findAndCount).toHaveBeenCalled();
+      expect(resourceRepository.createQueryBuilder).toHaveBeenCalledWith('resource');
+      expect(mockQueryBuilder.leftJoinAndSelect).toHaveBeenCalledWith('resource.groups', 'groups');
+      expect(mockQueryBuilder.orderBy).toHaveBeenCalledWith('resource.createdAt', 'DESC');
+      expect(mockQueryBuilder.skip).toHaveBeenCalledWith(0);
+      expect(mockQueryBuilder.take).toHaveBeenCalledWith(10);
+      expect(mockQueryBuilder.getManyAndCount).toHaveBeenCalled();
     });
   });
 
@@ -271,14 +283,13 @@ describe('ResourcesService', () => {
 
   describe('deleteResource', () => {
     it('should delete a resource', async () => {
-      const resourceId = 1;
       const mockResource = {
-        id: resourceId,
-        name: 'Resource to delete',
-        description: 'Description',
+        id: 1,
+        name: 'Resource 1',
+        description: 'Description 1',
         imageFilename: null,
         documentationType: DocumentationType.MARKDOWN,
-        documentationMarkdown: '# Documentation',
+        documentationMarkdown: '# Documentation 1',
         documentationUrl: null,
         allowTakeOver: false,
         createdAt: new Date(),
@@ -291,87 +302,18 @@ describe('ResourcesService', () => {
         groups: [],
       };
 
-      jest.spyOn(service, 'getResourceById').mockResolvedValue(mockResource);
+      resourceRepository.find.mockResolvedValue([mockResource]);
       resourceRepository.delete.mockResolvedValue({ affected: 1, raw: {} });
 
-      await service.deleteResource(resourceId);
+      await service.deleteResource(1);
 
-      expect(service.getResourceById).toHaveBeenCalledWith(resourceId);
-      expect(resourceRepository.delete).toHaveBeenCalledWith(resourceId);
+      expect(resourceRepository.delete).toHaveBeenCalledWith(1);
     });
 
     it('should throw ResourceNotFoundException if resource not found', async () => {
-      const resourceId = 999;
+      resourceRepository.find.mockResolvedValue([]);
 
-      jest.spyOn(service, 'getResourceById').mockRejectedValue(new ResourceNotFoundException(resourceId));
-
-      await expect(service.deleteResource(resourceId)).rejects.toThrow(ResourceNotFoundException);
-    });
-  });
-
-  describe('addResourceToGroup', () => {
-    it('should add a resource to a group', async () => {
-      const resourceId = 1;
-      const groupId = 2;
-      const mockResource = {
-        id: resourceId,
-        name: 'Resource',
-        description: 'Description',
-        imageFilename: null,
-        documentationType: DocumentationType.MARKDOWN,
-        documentationMarkdown: '# Documentation',
-        documentationUrl: null,
-        allowTakeOver: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        introductions: [],
-        usages: [],
-        introducers: [],
-        mqttConfigs: [],
-        webhookConfigs: [],
-        groups: [],
-      };
-
-      jest.spyOn(service, 'getResourceById').mockResolvedValue(mockResource);
-      resourceGroupsService.addResourceToGroup.mockResolvedValue(undefined);
-
-      await service.addResourceToGroup(resourceId, groupId);
-
-      expect(service.getResourceById).toHaveBeenCalledWith(resourceId);
-      expect(resourceGroupsService.addResourceToGroup).toHaveBeenCalledWith(resourceId, groupId);
-    });
-  });
-
-  describe('removeResourceFromGroup', () => {
-    it('should remove a resource from a group', async () => {
-      const resourceId = 1;
-      const groupId = 2;
-      const mockResource = {
-        id: resourceId,
-        name: 'Resource',
-        description: 'Description',
-        imageFilename: null,
-        documentationType: DocumentationType.MARKDOWN,
-        documentationMarkdown: '# Documentation',
-        documentationUrl: null,
-        allowTakeOver: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        introductions: [],
-        usages: [],
-        introducers: [],
-        mqttConfigs: [],
-        webhookConfigs: [],
-        groups: [],
-      };
-
-      jest.spyOn(service, 'getResourceById').mockResolvedValue(mockResource);
-      resourceGroupsService.removeResourceFromGroup.mockResolvedValue(undefined);
-
-      await service.removeResourceFromGroup(resourceId, groupId);
-
-      expect(service.getResourceById).toHaveBeenCalledWith(resourceId);
-      expect(resourceGroupsService.removeResourceFromGroup).toHaveBeenCalledWith(resourceId, groupId);
+      await expect(service.deleteResource(999)).rejects.toThrow(ResourceNotFoundException);
     });
   });
 });

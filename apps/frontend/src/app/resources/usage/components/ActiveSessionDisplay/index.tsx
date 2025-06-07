@@ -6,9 +6,9 @@ import { useToastMessage } from '../../../../../components/toastProvider';
 import { SessionTimer } from '../SessionTimer';
 import { SessionNotesModal, SessionModalMode } from '../SessionNotesModal';
 import {
-  useResourceUsageServiceEndSession,
-  UseResourceUsageServiceGetActiveSessionKeyFn,
-  UseResourceUsageServiceGetHistoryOfResourceUsageKeyFn,
+  useResourcesServiceResourceUsageEndSession,
+  UseResourcesServiceResourceUsageGetActiveSessionKeyFn,
+  UseResourcesServiceResourceUsageGetHistoryKeyFn,
 } from '@attraccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 import * as en from './translations/en.json';
@@ -25,14 +25,14 @@ export function ActiveSessionDisplay({ resourceId, startTime }: ActiveSessionDis
   const queryClient = useQueryClient();
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
 
-  const endSession = useResourceUsageServiceEndSession({
+  const endSession = useResourcesServiceResourceUsageEndSession({
     onSuccess: () => {
       setIsNotesModalOpen(false);
 
       // Invalidate all history queries for this resource (regardless of pagination/user filters)
       queryClient.invalidateQueries({
         predicate: (query) => {
-          const baseHistoryKey = UseResourceUsageServiceGetHistoryOfResourceUsageKeyFn({ resourceId });
+          const baseHistoryKey = UseResourcesServiceResourceUsageGetHistoryKeyFn({ resourceId });
           return (
             query.queryKey[0] === baseHistoryKey[0] &&
             query.queryKey.length > 1 &&
@@ -42,7 +42,7 @@ export function ActiveSessionDisplay({ resourceId, startTime }: ActiveSessionDis
       });
       // Reset active session query instead of just invalidating
       queryClient.resetQueries({
-        queryKey: UseResourceUsageServiceGetActiveSessionKeyFn({ resourceId }),
+        queryKey: UseResourcesServiceResourceUsageGetActiveSessionKeyFn({ resourceId }),
       });
       success({
         title: t('sessionEnded'),

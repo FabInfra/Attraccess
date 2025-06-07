@@ -5,7 +5,7 @@ import { User } from './user.entity';
 
 export enum IntroductionHistoryAction {
   REVOKE = 'revoke',
-  UNREVOKE = 'unrevoke',
+  GRANT = 'grant',
 }
 
 @Entity()
@@ -29,7 +29,7 @@ export class ResourceIntroductionHistoryItem {
     enum: IntroductionHistoryAction,
   })
   @ApiProperty({
-    description: 'The action performed (revoke or unrevoke)',
+    description: 'The action performed (revoke or grant)',
     enum: IntroductionHistoryAction,
     example: IntroductionHistoryAction.REVOKE,
   })

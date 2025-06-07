@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { PluginService } from './plugin.service';
 import { createReadStream, existsSync } from 'fs';
-import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LoadedPluginManifest } from './plugin.manifest';
 import { join } from 'path';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -21,6 +21,7 @@ import { FileUpload } from '../common/types/file-upload.types';
 import { Auth } from '@attraccess/plugins-backend-sdk';
 import { UploadPluginDto } from './dto/uploadPlugin.dto';
 
+@ApiTags('Plugins')
 @Controller('plugins')
 export class PluginController {
   private readonly logger = new Logger(PluginController.name);
