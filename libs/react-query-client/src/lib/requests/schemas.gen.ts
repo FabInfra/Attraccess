@@ -617,6 +617,15 @@ This is a markdown documentation for the resource.`
             description: 'Whether this resource allows overtaking by the next user without the prior user ending their session',
             example: false,
             default: false
+        },
+        customFields: {
+            type: 'object',
+            description: 'Custom fields for the resource as key-value pairs',
+            example: {
+                externalID: 'MRP-001',
+                category: 'printer',
+                location: 'room-a'
+            }
         }
     },
     required: ['name']
@@ -700,6 +709,15 @@ This is a markdown documentation for the resource.`
             description: 'Whether this resource allows overtaking by the next user without the prior user ending their session',
             example: false,
             default: false
+        },
+        customFields: {
+            type: 'object',
+            description: 'Custom fields for the resource as key-value pairs',
+            example: {
+                externalID: 'MRP-001',
+                category: 'printer',
+                location: 'room-a'
+            }
         },
         createdAt: {
             format: 'date-time',
@@ -797,6 +815,15 @@ This is a markdown documentation for the resource.`
             type: 'boolean',
             description: 'Whether this resource allows overtaking by the next user without the prior user ending their session',
             example: false
+        },
+        customFields: {
+            type: 'object',
+            description: 'Custom fields for the resource as key-value pairs',
+            example: {
+                externalID: 'MRP-001',
+                category: 'printer',
+                location: 'room-a'
+            }
         }
     }
 } as const;

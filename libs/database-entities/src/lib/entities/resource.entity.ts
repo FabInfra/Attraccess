@@ -86,6 +86,15 @@ export class Resource {
   })
   allowTakeOver!: boolean;
 
+  @Column({ type: 'json', nullable: true })
+  @ApiProperty({
+    description: 'Custom fields for the resource as key-value pairs',
+    example: { externalID: 'MRP-001', category: 'printer', location: 'room-a' },
+    required: false,
+    type: Object
+  })
+  customFields?: Record<string, string> | null;
+
   @CreateDateColumn()
   @ApiProperty({
     description: 'When the resource was created',
