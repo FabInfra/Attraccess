@@ -147,6 +147,7 @@ describe('ResourcesService', () => {
         allowTakeOver: false,
         createdAt: new Date(),
         updatedAt: new Date(),
+        customFields: null,
         introductions: [],
         usages: [],
         introducers: [],
@@ -195,6 +196,7 @@ describe('ResourcesService', () => {
         allowTakeOver: false,
         createdAt: new Date(),
         updatedAt: new Date(),
+        customFields: null,
         introductions: [],
         usages: [],
         introducers: [],
@@ -216,6 +218,7 @@ describe('ResourcesService', () => {
         documentationMarkdown: createDto.documentationMarkdown || null,
         documentationUrl: createDto.documentationUrl || null,
         allowTakeOver: createDto.allowTakeOver || false,
+        customFields: null,
       });
       expect(resourceRepository.save).toHaveBeenCalled();
     });
@@ -242,6 +245,7 @@ describe('ResourcesService', () => {
         allowTakeOver: false,
         createdAt: new Date(),
         updatedAt: new Date(),
+        customFields: null,
         introductions: [],
         usages: [],
         introducers: [],
@@ -294,6 +298,7 @@ describe('ResourcesService', () => {
         allowTakeOver: false,
         createdAt: new Date(),
         updatedAt: new Date(),
+        customFields: null,
         introductions: [],
         usages: [],
         introducers: [],

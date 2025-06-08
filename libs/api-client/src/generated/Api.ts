@@ -463,6 +463,11 @@ export interface CreateResourceDto {
    * @example false
    */
   allowTakeOver?: boolean;
+  /**
+   * Custom fields for the resource as key-value pairs
+   * @example {"externalID":"MRP-001","category":"printer","location":"room-a"}
+   */
+  customFields?: object;
 }
 
 export interface ResourceGroup {
@@ -538,6 +543,11 @@ export interface Resource {
    */
   allowTakeOver: boolean;
   /**
+   * Custom fields for the resource as key-value pairs
+   * @example {"externalID":"MRP-001","category":"printer","location":"room-a"}
+   */
+  customFields?: object;
+  /**
    * When the resource was created
    * @format date-time
    */
@@ -604,6 +614,11 @@ export interface UpdateResourceDto {
    * @example false
    */
   allowTakeOver?: boolean;
+  /**
+   * Custom fields for the resource as key-value pairs
+   * @example {"externalID":"MRP-001","category":"printer","location":"room-a"}
+   */
+  customFields?: object;
 }
 
 export interface MqttServer {
