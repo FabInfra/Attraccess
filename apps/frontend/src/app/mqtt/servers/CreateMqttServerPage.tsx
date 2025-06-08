@@ -1,6 +1,7 @@
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { Button, Card, CardHeader, Input, Checkbox, Form } from '@heroui/react';
 import { ArrowLeft } from 'lucide-react';
+import { PasswordInput } from '../../../components/PasswordInput';
 import { useNavigate } from 'react-router-dom';
 import { useToastMessage } from '../../../components/toastProvider';
 import en from './translations/create/en.json';
@@ -144,11 +145,10 @@ export function CreateMqttServerForm(props?: Readonly<CreateMqttServerPageProps>
         data-cy="create-mqtt-server-form-username-input"
       />
 
-      <Input
+      <PasswordInput
         label={t('passwordLabel')}
         id="password"
         name="password"
-        type="password"
         placeholder={t('passwordPlaceholder')}
         value={formValues.password}
         onChange={handleInputChange}

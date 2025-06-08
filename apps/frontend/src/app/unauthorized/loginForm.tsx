@@ -5,6 +5,7 @@ import { Checkbox } from '@heroui/checkbox';
 import { Button } from '@heroui/button';
 import { Alert } from '@heroui/alert';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { PasswordInput } from '../../components/PasswordInput';
 import { useAuth } from '../../hooks/useAuth';
 import * as en from './loginForm.en.json';
 import * as de from './loginForm.de.json';
@@ -77,10 +78,9 @@ export function LoginForm({ onNeedsAccount, onForgotPassword }: LoginFormProps) 
           isDisabled={login.isPending}
           data-cy="login-form-username-input"
         />
-        <Input
+        <PasswordInput
           id="password"
           name="password"
-          type="password"
           label={t('password')}
           variant="underlined"
           required

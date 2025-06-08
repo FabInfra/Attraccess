@@ -56,29 +56,7 @@ export class CreateMqttResourceConfigDto {
   notInUseMessage!: string;
 
   @ApiProperty({
-    description: 'Whether to send an MQTT message when a resource usage starts',
-    example: true,
-    required: false,
-    default: true,
-  })
-  @IsBoolean()
-  @IsOptional()
-  @ToBoolean()
-  sendOnStart?: boolean = true;
-
-  @ApiProperty({
-    description: 'Whether to send an MQTT message when a resource usage stops',
-    example: true,
-    required: false,
-    default: true,
-  })
-  @IsBoolean()
-  @IsOptional()
-  @ToBoolean()
-  sendOnStop?: boolean = true;
-
-  @ApiProperty({
-    description: 'Whether to send an MQTT message when a resource usage is taken over',
+    description: 'Whether to send a start message when a resource is taken over',
     example: false,
     required: false,
     default: false,
@@ -86,7 +64,29 @@ export class CreateMqttResourceConfigDto {
   @IsBoolean()
   @IsOptional()
   @ToBoolean()
-  sendOnTakeover?: boolean = false;
+  onTakeoverSendStart?: boolean = false;
+
+  @ApiProperty({
+    description: 'Whether to send a stop message when a resource is taken over',
+    example: false,
+    required: false,
+    default: false,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @ToBoolean()
+  onTakeoverSendStop?: boolean = false;
+
+  @ApiProperty({
+    description: 'Whether to send an MQTT message when a resource usage is taken over',
+    example: true,
+    required: false,
+    default: true,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @ToBoolean()
+  onTakeoverSendTakeover?: boolean = true;
 
   @ApiProperty({
     description: 'Topic template for when resource usage is taken over',
@@ -99,7 +99,8 @@ export class CreateMqttResourceConfigDto {
 
   @ApiProperty({
     description: 'Message template for when resource usage is taken over',
-    example: '{"status": "taken_over", "resourceId": "{{id}}", "newUser": "{{user.name}}", "previousUser": "{{previousUser.name}}", "timestamp": "{{timestamp}}"}',
+    example:
+      '{"status": "taken_over", "resourceId": "{{id}}", "newUser": "{{user.name}}", "previousUser": "{{previousUser.name}}", "timestamp": "{{timestamp}}"}',
     required: false,
   })
   @IsString()

@@ -1035,17 +1035,17 @@ export type MqttResourceConfig = {
      */
     notInUseMessage: string;
     /**
-     * Whether to send an MQTT message when a resource usage starts
+     * Whether to send a start message when a resource is taken over
      */
-    sendOnStart: boolean;
+    onTakeoverSendStart: boolean;
     /**
-     * Whether to send an MQTT message when a resource usage stops
+     * Whether to send a stop message when a resource is taken over
      */
-    sendOnStop: boolean;
+    onTakeoverSendStop: boolean;
     /**
      * Whether to send an MQTT message when a resource usage is taken over
      */
-    sendOnTakeover: boolean;
+    onTakeoverSendTakeover: boolean;
     /**
      * Topic template using Handlebars for takeover status
      */
@@ -1090,17 +1090,17 @@ export type CreateMqttResourceConfigDto = {
      */
     notInUseMessage: string;
     /**
-     * Whether to send an MQTT message when a resource usage starts
+     * Whether to send a start message when a resource is taken over
      */
-    sendOnStart?: boolean;
+    onTakeoverSendStart?: boolean;
     /**
-     * Whether to send an MQTT message when a resource usage stops
+     * Whether to send a stop message when a resource is taken over
      */
-    sendOnStop?: boolean;
+    onTakeoverSendStop?: boolean;
     /**
      * Whether to send an MQTT message when a resource usage is taken over
      */
-    sendOnTakeover?: boolean;
+    onTakeoverSendTakeover?: boolean;
     /**
      * Topic template for when resource usage is taken over
      */
@@ -1137,17 +1137,17 @@ export type UpdateMqttResourceConfigDto = {
      */
     notInUseMessage?: string;
     /**
-     * Whether to send an MQTT message when a resource usage starts
+     * Whether to send a start message when a resource is taken over
      */
-    sendOnStart?: boolean;
+    onTakeoverSendStart?: boolean;
     /**
-     * Whether to send an MQTT message when a resource usage stops
+     * Whether to send a stop message when a resource is taken over
      */
-    sendOnStop?: boolean;
+    onTakeoverSendStop?: boolean;
     /**
      * Whether to send an MQTT message when a resource usage is taken over
      */
-    sendOnTakeover?: boolean;
+    onTakeoverSendTakeover?: boolean;
     /**
      * Topic template for when resource usage is taken over
      */

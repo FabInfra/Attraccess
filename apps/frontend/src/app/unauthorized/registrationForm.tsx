@@ -5,6 +5,7 @@ import { Button } from '@heroui/button';
 import { Alert } from '@heroui/alert';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from '@heroui/modal';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { PasswordInput } from '../../components/PasswordInput';
 import * as en from './registrationForm.en.json';
 import * as de from './registrationForm.de.json';
 import { useUsersServiceCreateOneUser, UseUsersServiceFindManyKeyFn, ApiError } from '@attraccess/react-query-client';
@@ -129,10 +130,9 @@ export function RegistrationForm({ onHasAccount }: RegisterFormProps) {
           data-cy="registration-form-email-input"
         />
 
-        <Input
+        <PasswordInput
           id="password"
           name="password"
-          type="password"
           label={t('password')}
           required
           variant="underlined"
@@ -140,10 +140,9 @@ export function RegistrationForm({ onHasAccount }: RegisterFormProps) {
           data-cy="registration-form-password-input"
         />
 
-        <Input
+        <PasswordInput
           id="password_confirmation"
           name="password_confirmation"
-          type="password"
           label={t('passwordConfirmation')}
           required
           variant="underlined"

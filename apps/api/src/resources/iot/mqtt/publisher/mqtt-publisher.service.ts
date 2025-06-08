@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Resource, MqttResourceConfig } from '@attraccess/database-entities';
+import { Resource, MqttResourceConfig, User } from '@attraccess/database-entities';
 import { ConfigService } from '@nestjs/config';
 import { MqttClientService } from '../../../../mqtt/mqtt-client.service';
 import {
@@ -133,11 +133,9 @@ export class MqttPublisherService {
 
   private async publishWithRetry(serverId: number, resourceId: number, topic: string, message: string): Promise<void> {
     try {
-      // Try to publish immediately first
       await this.mqttClientService.publish(serverId, topic, message);
       this.logger.debug(`Successfully published message to ${topic}`);
     } catch (error) {
-      // If publishing fails, queue for retry
       this.logger.warn(
         `Failed to publish message for resource ${resourceId}. Error: ${error.message}. Queuing for retry.`
       );
@@ -160,151 +158,190 @@ export class MqttPublisherService {
     }
   }
 
-  @OnEvent('resource.usage.started')
-  async handleResourceUsageStarted(event: ResourceUsageStartedEvent) {
+  private async sendStartMessage(data: {
+    event: 'start' | 'take_over' | 'end';
+    resourceId: number;
+    time: Date;
+    user: User;
+  }) {
     const configs = await this.mqttResourceConfigRepository.find({
-      where: { resourceId: event.resourceId },
+      where: { resourceId: data.resourceId },
       relations: ['server'],
     });
 
+    const resource = await this.resourceRepository.findOne({
+      where: { id: data.resourceId },
+    });
+
+    if (!resource) {
+      this.logger.warn(`Resource with ID ${data.resourceId} not found`);
+      return;
+    }
+
+    // Create template context
+    const context: TemplateContext = {
+      id: resource.id,
+      name: resource.name,
+      timestamp: data.time.toISOString(),
+      user: {
+        id: data.user.id,
+        username: data.user.username,
+      },
+    };
+
     await Promise.all(
       configs.map(async (config) => {
-        if (!config.sendOnStart) {
+        if (data.event === 'take_over' && !config.onTakeoverSendStart) {
           return;
         }
-        try {
-          const resource = await this.resourceRepository.findOne({
-            where: { id: event.resourceId },
-          });
 
-          if (!resource) {
-            this.logger.warn(`Resource with ID ${event.resourceId} not found`);
-            return;
-          }
+        const topic = this.iotService.processTemplate(config.inUseTopic, context);
+        const message = this.iotService.processTemplate(config.inUseMessage, context);
 
-          // Create template context
-          const context: TemplateContext = {
-            id: resource.id,
-            name: resource.name,
-            timestamp: new Date().toISOString(),
-            user: {
-              id: event.user.id,
-              username: event.user.username,
-            },
-          };
+        this.logger.debug(`Publishing resource in-use event to ${topic}`);
 
-          // Process templates
-          const topic = this.iotService.processTemplate(config.inUseTopic, context);
-          const message = this.iotService.processTemplate(config.inUseMessage, context);
-
-          this.logger.debug(`Publishing resource in-use event to ${topic}`);
-
-          // Publish to MQTT with retry capability
-          await this.publishWithRetry(config.serverId, resource.id, topic, message);
-        } catch (error) {
-          // Log error but don't fail the operation
-          this.logger.error('Failed to publish resource usage started event to MQTT', config, error);
-        }
+        await this.publishWithRetry(config.serverId, resource.id, topic, message);
       })
     );
+  }
+
+  private async sendTakeoverMessage(data: {
+    event: 'start' | 'take_over' | 'end';
+    resourceId: number;
+    time: Date;
+    nextUser: User;
+    previousUser: User;
+  }) {
+    const configs = await this.mqttResourceConfigRepository.find({
+      where: { resourceId: data.resourceId },
+      relations: ['server'],
+    });
+
+    const resource = await this.resourceRepository.findOne({
+      where: { id: data.resourceId },
+    });
+
+    if (!resource) {
+      this.logger.warn(`Resource with ID ${data.resourceId} not found`);
+      return;
+    }
+
+    const context: TemplateContext = {
+      id: resource.id,
+      name: resource.name,
+      timestamp: data.time.toISOString(),
+      user: {
+        id: data.nextUser.id,
+        username: data.nextUser.username,
+      },
+      previousUser: data.previousUser
+        ? {
+            id: data.previousUser.id,
+            username: data.previousUser.username,
+          }
+        : null,
+    };
+
+    await Promise.all(
+      configs.map(async (config) => {
+        if (!config.onTakeoverSendTakeover || !config.takeoverTopic || !config.takeoverMessage) {
+          return;
+        }
+
+        const topic = this.iotService.processTemplate(config.takeoverTopic, context);
+        const message = this.iotService.processTemplate(config.takeoverMessage, context);
+
+        this.logger.debug(`Publishing resource takeover event to ${topic}`);
+        await this.publishWithRetry(config.serverId, resource.id, topic, message);
+      })
+    );
+  }
+
+  private async sendStopMessage(data: {
+    event: 'start' | 'take_over' | 'end';
+    resourceId: number;
+    time: Date;
+    user: User;
+  }) {
+    const configs = await this.mqttResourceConfigRepository.find({
+      where: { resourceId: data.resourceId },
+      relations: ['server'],
+    });
+    const resource = await this.resourceRepository.findOne({
+      where: { id: data.resourceId },
+    });
+
+    if (!resource) {
+      this.logger.warn(`Resource with ID ${data.resourceId} not found`);
+      return;
+    }
+
+    // Create template context
+    const context = {
+      id: resource.id,
+      name: resource.name,
+      timestamp: data.time.toISOString(),
+      user: data.user,
+    };
+
+    await Promise.all(
+      configs.map(async (config) => {
+        if (data.event === 'take_over' && !config.onTakeoverSendStop) {
+          return;
+        }
+
+        const topic = this.iotService.processTemplate(config.notInUseTopic, context);
+        const message = this.iotService.processTemplate(config.notInUseMessage, context);
+
+        this.logger.debug(`Publishing resource not-in-use event to ${topic}`);
+
+        await this.publishWithRetry(config.serverId, resource.id, topic, message);
+      })
+    );
+  }
+
+  @OnEvent('resource.usage.started')
+  async handleResourceUsageStarted(event: ResourceUsageStartedEvent) {
+    await this.sendStartMessage({
+      event: 'start',
+      resourceId: event.resourceId,
+      time: event.startTime,
+      user: event.user,
+    });
+  }
+
+  @OnEvent('resource.usage.taken_over')
+  async handleResourceUsageTakenOver(event: ResourceUsageTakenOverEvent) {
+    await this.sendStopMessage({
+      event: 'take_over',
+      resourceId: event.resourceId,
+      time: event.takeoverTime,
+      user: event.previousUser,
+    });
+
+    await this.sendTakeoverMessage({
+      event: 'take_over',
+      resourceId: event.resourceId,
+      time: event.takeoverTime,
+      nextUser: event.newUser,
+      previousUser: event.previousUser,
+    });
+
+    await this.sendStartMessage({
+      event: 'take_over',
+      resourceId: event.resourceId,
+      time: event.takeoverTime,
+      user: event.newUser,
+    });
   }
 
   @OnEvent('resource.usage.ended')
   async handleResourceUsageEnded(event: ResourceUsageEndedEvent) {
-    const configs = await this.mqttResourceConfigRepository.find({
-      where: { resourceId: event.resourceId },
-      relations: ['server'],
+    await this.sendStopMessage({
+      event: 'end',
+      resourceId: event.resourceId,
+      time: event.endTime,
+      user: event.user,
     });
-
-    await Promise.all(
-      configs.map(async (config) => {
-        if (!config.sendOnStop) {
-          return;
-        }
-        try {
-          const resource = await this.resourceRepository.findOne({
-            where: { id: event.resourceId },
-          });
-
-          if (!resource) {
-            this.logger.warn(`Resource with ID ${event.resourceId} not found`);
-            return;
-          }
-
-          // Create template context
-          const context = {
-            id: resource.id,
-            name: resource.name,
-            timestamp: new Date().toISOString(),
-            user: event.user,
-          };
-
-          // Process templates
-          const topic = this.iotService.processTemplate(config.notInUseTopic, context);
-          const message = this.iotService.processTemplate(config.notInUseMessage, context);
-
-          this.logger.debug(`Publishing resource not-in-use event to ${topic}`);
-
-          // Publish to MQTT with retry capability
-          await this.publishWithRetry(config.serverId, resource.id, topic, message);
-        } catch (error) {
-          // Log error but don't fail the operation
-          this.logger.error('Failed to publish resource usage ended event to MQTT', config, error);
-        }
-      })
-    );
   }
-
-
-  @OnEvent('resource.usage.taken_over')
-  async handleResourceUsageTakenOver(event: ResourceUsageTakenOverEvent) {
-    const configs = await this.mqttResourceConfigRepository.find({
-      where: { resourceId: event.resourceId },
-      relations: ['server'],
-    });
-
-    await Promise.all(
-      configs.map(async (config) => {
-        if (!config.sendOnTakeover || !config.takeoverTopic || !config.takeoverMessage) {
-          return;
-        }
-
-        try {
-          const resource = await this.resourceRepository.findOne({
-            where: { id: event.resourceId },
-          });
-
-          if (!resource) {
-            this.logger.warn(`Resource with ID ${event.resourceId} not found`);
-            return;
-          }
-
-          const context: TemplateContext = {
-            id: resource.id,
-            name: resource.name,
-            timestamp: event.takeoverTime.toISOString(),
-            user: {
-              id: event.newUser.id,
-              username: event.newUser.username,
-            },
-            previousUser: event.previousUser
-              ? {
-                  id: event.previousUser.id,
-                  username: event.previousUser.username,
-                }
-              : null,
-          };
-
-          const topic = this.iotService.processTemplate(config.takeoverTopic, context);
-          const message = this.iotService.processTemplate(config.takeoverMessage, context);
-
-          this.logger.debug(`Publishing resource takeover event to ${topic}`);
-          await this.publishWithRetry(config.serverId, resource.id, topic, message);
-        } catch (error) {
-          this.logger.error('Failed to publish resource usage takeover event to MQTT', config, error);
-        }
-      })
-    );
-  }
-
 }

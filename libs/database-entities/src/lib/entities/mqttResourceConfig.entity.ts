@@ -69,26 +69,26 @@ export class MqttResourceConfig {
   })
   notInUseMessage!: string;
 
-  @Column({ default: true, type: 'boolean' })
+  @Column({ default: false, type: 'boolean' })
   @ApiProperty({
-    description: 'Whether to send an MQTT message when a resource usage starts',
+    description: 'Whether to send a start message when a resource is taken over',
     example: true,
   })
-  sendOnStart!: boolean;
-
-  @Column({ default: true, type: 'boolean' })
-  @ApiProperty({
-    description: 'Whether to send an MQTT message when a resource usage stops',
-    example: true,
-  })
-  sendOnStop!: boolean;
+  onTakeoverSendStart!: boolean;
 
   @Column({ default: false, type: 'boolean' })
+  @ApiProperty({
+    description: 'Whether to send a stop message when a resource is taken over',
+    example: true,
+  })
+  onTakeoverSendStop!: boolean;
+
+  @Column({ default: true, type: 'boolean' })
   @ApiProperty({
     description: 'Whether to send an MQTT message when a resource usage is taken over',
     example: false,
   })
-  sendOnTakeover!: boolean;
+  onTakeoverSendTakeover!: boolean;
 
   @Column({ type: 'text', nullable: true })
   @ApiProperty({
@@ -101,7 +101,8 @@ export class MqttResourceConfig {
   @Column({ type: 'text', nullable: true })
   @ApiProperty({
     description: 'Message template using Handlebars for takeover status',
-    example: '{"status": "taken_over", "resourceId": "{{id}}", "newUser": "{{user.name}}", "previousUser": "{{previousUser.name}}", "timestamp": "{{timestamp}}"}',
+    example:
+      '{"status": "taken_over", "resourceId": "{{id}}", "newUser": "{{user.name}}", "previousUser": "{{previousUser.name}}", "timestamp": "{{timestamp}}"}',
     required: false,
   })
   takeoverMessage!: string | null;

@@ -305,8 +305,7 @@ describe('ResourceUsageService', () => {
       });
       expect(mockUpdateQueryBuilder.where).toHaveBeenCalledWith('id = :id', { id: 1 });
       expect(mockInsertQueryBuilder.insert).toHaveBeenCalled();
-      expect(eventEmitter.emit).toHaveBeenCalledWith('resource.usage.ended', expect.any(Object));
-      expect(eventEmitter.emit).toHaveBeenCalledWith('resource.usage.started', expect.any(Object));
+      expect(eventEmitter.emit).toHaveBeenCalledWith('resource.usage.taken_over', expect.any(Object));
     });
   });
 
