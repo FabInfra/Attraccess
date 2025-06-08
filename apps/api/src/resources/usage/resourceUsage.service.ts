@@ -108,26 +108,6 @@ export class ResourceUsageService {
           })
           .where('id = :id', { id: existingActiveSession.id })
           .execute();
-
-        const takeoverTime = new Date();
-        this.logger.debug(`Ended existing session ${existingActiveSession.id} due to takeover`);
-
-        // Emit event for the ended session
-        this.eventEmitter.emit(
-          'resource.usage.ended',
-          new ResourceUsageEndedEvent(
-            resourceId,
-            existingActiveSession.startTime,
-            takeoverTime,
-            existingActiveSession.user
-          )
-        );
-
-        // Emit event for the takeover
-        this.eventEmitter.emit(
-          'resource.usage.taken_over',
-          new ResourceUsageTakenOverEvent(resourceId, takeoverTime, user, existingActiveSession.user)
-        );
       } else if (dto.forceTakeOver && !resource.allowTakeOver) {
         this.logger.warn(`Takeover attempted for resource ${resourceId} but not allowed`);
         throw new BadRequestException('This resource does not allow overtaking');
@@ -169,11 +149,20 @@ export class ResourceUsageService {
 
     this.logger.debug(`Successfully created session ${newSession.id} for resource ${resourceId} by user ${user.id}`);
 
-    // Emit event after successful save
-    this.eventEmitter.emit(
-      'resource.usage.started',
-      new ResourceUsageStartedEvent(resourceId, usageData.startTime, user)
-    );
+    if (existingActiveSession) {
+      const now = new Date();
+      // Emit event for the takeover
+      this.eventEmitter.emit(
+        'resource.usage.taken_over',
+        new ResourceUsageTakenOverEvent(resourceId, now, user, existingActiveSession.user)
+      );
+    } else {
+      // Emit event after successful save
+      this.eventEmitter.emit(
+        'resource.usage.started',
+        new ResourceUsageStartedEvent(resourceId, usageData.startTime, user)
+      );
+    }
 
     return newSession;
   }

@@ -6,7 +6,11 @@ import { Repository } from 'typeorm';
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MqttClientService } from '../../../../mqtt/mqtt-client.service';
-import { ResourceUsageStartedEvent, ResourceUsageEndedEvent } from '../../../usage/events/resource-usage.events';
+import {
+  ResourceUsageStartedEvent,
+  ResourceUsageEndedEvent,
+  ResourceUsageTakenOverEvent,
+} from '../../../usage/events/resource-usage.events';
 import { IotService } from '../../iot.service';
 
 describe('MqttPublisherService', () => {
@@ -16,6 +20,53 @@ describe('MqttPublisherService', () => {
   let mockResourceRepository: Partial<Repository<Resource>>;
   let mockConfigService: Partial<ConfigService>;
   let mockIotService: Partial<IotService>;
+
+  // Test data
+  const mockUser: User = {
+    id: 1,
+    username: 'testuser',
+    email: 'test@example.com',
+    isEmailVerified: true,
+    emailVerificationToken: null,
+    emailVerificationTokenExpiresAt: null,
+    passwordResetToken: null,
+    passwordResetTokenExpiresAt: null,
+    systemPermissions: {
+      canManageResources: false,
+      canManageSystemConfiguration: false,
+      canManageUsers: false,
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    resourceIntroductions: [],
+    resourceUsages: [],
+    revokedTokens: [],
+    authenticationDetails: [],
+    resourceIntroducerPermissions: [],
+  };
+
+  const mockPreviousUser: User = {
+    id: 2,
+    username: 'previoususer',
+    email: 'previous@example.com',
+    isEmailVerified: true,
+    emailVerificationToken: null,
+    emailVerificationTokenExpiresAt: null,
+    passwordResetToken: null,
+    passwordResetTokenExpiresAt: null,
+    systemPermissions: {
+      canManageResources: false,
+      canManageSystemConfiguration: false,
+      canManageUsers: false,
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    resourceIntroductions: [],
+    resourceUsages: [],
+    revokedTokens: [],
+    authenticationDetails: [],
+    resourceIntroducerPermissions: [],
+  };
 
   const mockConfig = {
     resourceId: 1,
@@ -27,9 +78,11 @@ describe('MqttPublisherService', () => {
     server: { id: 2, name: 'Test Server' },
     sendOnStart: true,
     sendOnStop: true,
-    sendOnTakeover: false,
+    onTakeoverSendStart: false,
+    onTakeoverSendStop: false,
+    onTakeoverSendTakeover: true,
     takeoverTopic: 'resources/{{id}}/takeover',
-    takeoverMessage: '{"status":"takeover"}',
+    takeoverMessage: '{"status":"takeover","newUser":"{{user.username}}","previousUser":"{{previousUser.username}}"}',
   };
 
   const mockConfig2 = {
@@ -42,7 +95,9 @@ describe('MqttPublisherService', () => {
     server: { id: 3, name: 'Second Test Server' },
     sendOnStart: true,
     sendOnStop: true,
-    sendOnTakeover: false,
+    onTakeoverSendStart: true,
+    onTakeoverSendStop: true,
+    onTakeoverSendTakeover: false,
     takeoverTopic: 'devices/{{id}}/takeover',
     takeoverMessage: '{"status":"takeover"}',
   };
@@ -78,8 +133,12 @@ describe('MqttPublisherService', () => {
 
     mockIotService = {
       processTemplate: jest.fn().mockImplementation((template, context) => {
-        // Simple template processing for tests - replace {{id}} and {{name}}
-        return template.replace(/\{\{id\}\}/g, context.id.toString()).replace(/\{\{name\}\}/g, context.name);
+        // Simple template processing for tests - replace {{id}}, {{name}}, {{user.username}}, {{previousUser.username}}
+        return template
+          .replace(/\{\{id\}\}/g, context.id?.toString() || '')
+          .replace(/\{\{name\}\}/g, context.name || '')
+          .replace(/\{\{user\.username\}\}/g, context.user?.username || '')
+          .replace(/\{\{previousUser\.username\}\}/g, context.previousUser?.username || '');
       }),
     };
 
@@ -137,7 +196,7 @@ describe('MqttPublisherService', () => {
 
   describe('handleResourceUsageStarted', () => {
     it('should publish messages to all configured servers when resource usage starts', async () => {
-      const event = new ResourceUsageStartedEvent(1, new Date(), { id: 123, username: 'testuser' } as User);
+      const event = new ResourceUsageStartedEvent(1, new Date(), mockUser);
 
       await service.handleResourceUsageStarted(event);
 
@@ -171,7 +230,7 @@ describe('MqttPublisherService', () => {
     it('should not publish any messages if no configs are found', async () => {
       mockMqttResourceConfigRepository.find = jest.fn().mockResolvedValue([]);
 
-      const event = new ResourceUsageStartedEvent(999, new Date(), { id: 123, username: 'testuser' } as User);
+      const event = new ResourceUsageStartedEvent(999, new Date(), mockUser);
 
       await service.handleResourceUsageStarted(event);
 
@@ -181,7 +240,7 @@ describe('MqttPublisherService', () => {
     it('should not publish messages if resource is not found', async () => {
       mockResourceRepository.findOne = jest.fn().mockResolvedValue(null);
 
-      const event = new ResourceUsageStartedEvent(1, new Date(), { id: 123, username: 'testuser' } as User);
+      const event = new ResourceUsageStartedEvent(1, new Date(), mockUser);
 
       await service.handleResourceUsageStarted(event);
 
@@ -195,7 +254,7 @@ describe('MqttPublisherService', () => {
         .mockImplementationOnce(() => Promise.reject(new Error('Publish error')))
         .mockImplementationOnce(() => Promise.resolve());
 
-      const event = new ResourceUsageStartedEvent(1, new Date(), { id: 123, username: 'testuser' } as User);
+      const event = new ResourceUsageStartedEvent(1, new Date(), mockUser);
 
       // The method should not throw an exception even if one publish fails
       await expect(service.handleResourceUsageStarted(event)).resolves.not.toThrow();
@@ -208,7 +267,7 @@ describe('MqttPublisherService', () => {
       const customResource = { id: 42, name: 'Custom Resource Name' };
       mockResourceRepository.findOne = jest.fn().mockResolvedValue(customResource);
 
-      const event = new ResourceUsageStartedEvent(42, new Date(), { id: 123, username: 'testuser' } as User);
+      const event = new ResourceUsageStartedEvent(42, new Date(), mockUser);
 
       await service.handleResourceUsageStarted(event);
 
@@ -232,7 +291,7 @@ describe('MqttPublisherService', () => {
       mockMqttClientService.getStatusOfOne = jest.fn().mockResolvedValue({ connected: false });
       mockMqttClientService.publish = jest.fn().mockRejectedValue(new Error('Server disconnected'));
 
-      const event = new ResourceUsageStartedEvent(1, new Date(), { id: 123, username: 'testuser' } as User);
+      const event = new ResourceUsageStartedEvent(1, new Date(), mockUser);
 
       await service.handleResourceUsageStarted(event);
 
@@ -248,7 +307,7 @@ describe('MqttPublisherService', () => {
     it('should publish messages to all configured servers when resource usage ends', async () => {
       const startTime = new Date();
       const endTime = new Date(startTime.getTime() + 3600000); // 1 hour later
-      const event = new ResourceUsageEndedEvent(1, startTime, endTime, { id: 123, username: 'testuser' } as User);
+      const event = new ResourceUsageEndedEvent(1, startTime, endTime, mockUser);
 
       await service.handleResourceUsageEnded(event);
 
@@ -284,7 +343,7 @@ describe('MqttPublisherService', () => {
 
       const startTime = new Date();
       const endTime = new Date(startTime.getTime() + 3600000);
-      const event = new ResourceUsageEndedEvent(999, startTime, endTime, { id: 123, username: 'testuser' } as User);
+      const event = new ResourceUsageEndedEvent(999, startTime, endTime, mockUser);
 
       await service.handleResourceUsageEnded(event);
 
@@ -297,7 +356,7 @@ describe('MqttPublisherService', () => {
 
       const startTime = new Date();
       const endTime = new Date(startTime.getTime() + 3600000);
-      const event = new ResourceUsageEndedEvent(42, startTime, endTime, { id: 123, username: 'testuser' } as User);
+      const event = new ResourceUsageEndedEvent(42, startTime, endTime, mockUser);
 
       await service.handleResourceUsageEnded(event);
 
@@ -317,6 +376,276 @@ describe('MqttPublisherService', () => {
     });
   });
 
+  describe('handleResourceUsageTakenOver', () => {
+    it('should send all three messages when all takeover options are enabled', async () => {
+      const configWithAllOptions = {
+        ...mockConfig,
+        onTakeoverSendStart: true,
+        onTakeoverSendStop: true,
+        onTakeoverSendTakeover: true,
+      };
+      mockMqttResourceConfigRepository.find = jest.fn().mockResolvedValue([configWithAllOptions]);
+
+      const event = new ResourceUsageTakenOverEvent(1, new Date(), mockUser, mockPreviousUser);
+
+      await service.handleResourceUsageTakenOver(event);
+
+      expect(mockMqttResourceConfigRepository.find).toHaveBeenCalledWith({
+        where: { resourceId: 1 },
+        relations: ['server'],
+      });
+
+      expect(mockResourceRepository.findOne).toHaveBeenCalledWith({
+        where: { id: 1 },
+      });
+
+      // Should publish 3 times: stop, takeover, start
+      expect(mockMqttClientService.publish).toHaveBeenCalledTimes(3);
+
+      // Verify stop message (for previous user)
+      expect(mockMqttClientService.publish).toHaveBeenCalledWith(
+        2,
+        'resources/1/status',
+        expect.stringContaining('"status":"not_in_use"')
+      );
+
+      // Verify takeover message
+      expect(mockMqttClientService.publish).toHaveBeenCalledWith(
+        2,
+        'resources/1/takeover',
+        expect.stringContaining('"newUser":"testuser"')
+      );
+
+      // Verify start message (for new user)
+      expect(mockMqttClientService.publish).toHaveBeenCalledWith(
+        2,
+        'resources/1/status',
+        expect.stringContaining('"status":"in_use"')
+      );
+    });
+
+    it('should only send takeover message when only onTakeoverSendTakeover is enabled', async () => {
+      const configTakeoverOnly = {
+        ...mockConfig,
+        onTakeoverSendStart: false,
+        onTakeoverSendStop: false,
+        onTakeoverSendTakeover: true,
+      };
+      mockMqttResourceConfigRepository.find = jest.fn().mockResolvedValue([configTakeoverOnly]);
+
+      const event = new ResourceUsageTakenOverEvent(1, new Date(), mockUser, mockPreviousUser);
+
+      await service.handleResourceUsageTakenOver(event);
+
+      // Should only publish once for takeover message
+      expect(mockMqttClientService.publish).toHaveBeenCalledTimes(1);
+      expect(mockMqttClientService.publish).toHaveBeenCalledWith(
+        2,
+        'resources/1/takeover',
+        expect.stringContaining('"newUser":"testuser"')
+      );
+    });
+
+    it('should only send stop message when only onTakeoverSendStop is enabled', async () => {
+      const configStopOnly = {
+        ...mockConfig,
+        onTakeoverSendStart: false,
+        onTakeoverSendStop: true,
+        onTakeoverSendTakeover: false,
+      };
+      mockMqttResourceConfigRepository.find = jest.fn().mockResolvedValue([configStopOnly]);
+
+      const event = new ResourceUsageTakenOverEvent(1, new Date(), mockUser, mockPreviousUser);
+
+      await service.handleResourceUsageTakenOver(event);
+
+      // Should only publish once for stop message
+      expect(mockMqttClientService.publish).toHaveBeenCalledTimes(1);
+      expect(mockMqttClientService.publish).toHaveBeenCalledWith(
+        2,
+        'resources/1/status',
+        expect.stringContaining('"status":"not_in_use"')
+      );
+    });
+
+    it('should only send start message when only onTakeoverSendStart is enabled', async () => {
+      const configStartOnly = {
+        ...mockConfig,
+        onTakeoverSendStart: true,
+        onTakeoverSendStop: false,
+        onTakeoverSendTakeover: false,
+      };
+      mockMqttResourceConfigRepository.find = jest.fn().mockResolvedValue([configStartOnly]);
+
+      const event = new ResourceUsageTakenOverEvent(1, new Date(), mockUser, mockPreviousUser);
+
+      await service.handleResourceUsageTakenOver(event);
+
+      // Should only publish once for start message
+      expect(mockMqttClientService.publish).toHaveBeenCalledTimes(1);
+      expect(mockMqttClientService.publish).toHaveBeenCalledWith(
+        2,
+        'resources/1/status',
+        expect.stringContaining('"status":"in_use"')
+      );
+    });
+
+    it('should not send any messages when all takeover options are disabled', async () => {
+      const configAllDisabled = {
+        ...mockConfig,
+        onTakeoverSendStart: false,
+        onTakeoverSendStop: false,
+        onTakeoverSendTakeover: false,
+      };
+      mockMqttResourceConfigRepository.find = jest.fn().mockResolvedValue([configAllDisabled]);
+
+      const event = new ResourceUsageTakenOverEvent(1, new Date(), mockUser, mockPreviousUser);
+
+      await service.handleResourceUsageTakenOver(event);
+
+      expect(mockMqttClientService.publish).not.toHaveBeenCalled();
+    });
+
+    it('should skip takeover message when takeoverMessage is null', async () => {
+      const configNoTakeoverMessage = {
+        ...mockConfig,
+        onTakeoverSendStart: false,
+        onTakeoverSendStop: false,
+        onTakeoverSendTakeover: true,
+        takeoverMessage: null,
+      };
+      mockMqttResourceConfigRepository.find = jest.fn().mockResolvedValue([configNoTakeoverMessage]);
+
+      const event = new ResourceUsageTakenOverEvent(1, new Date(), mockUser, mockPreviousUser);
+
+      await service.handleResourceUsageTakenOver(event);
+
+      expect(mockMqttClientService.publish).not.toHaveBeenCalled();
+    });
+
+    it('should handle mixed takeover configurations for multiple configs', async () => {
+      const config1 = {
+        ...mockConfig,
+        serverId: 2,
+        onTakeoverSendStart: true,
+        onTakeoverSendStop: false,
+        onTakeoverSendTakeover: false,
+      };
+      const config2 = {
+        ...mockConfig2,
+        serverId: 3,
+        onTakeoverSendStart: false,
+        onTakeoverSendStop: true,
+        onTakeoverSendTakeover: true,
+      };
+      mockMqttResourceConfigRepository.find = jest.fn().mockResolvedValue([config1, config2]);
+
+      const event = new ResourceUsageTakenOverEvent(1, new Date(), mockUser, mockPreviousUser);
+
+      await service.handleResourceUsageTakenOver(event);
+
+      // config1 should send 1 message (start), config2 should send 2 messages (stop + takeover)
+      expect(mockMqttClientService.publish).toHaveBeenCalledTimes(3);
+
+      // Verify config1 sent start message
+      expect(mockMqttClientService.publish).toHaveBeenCalledWith(
+        2,
+        'resources/1/status',
+        expect.stringContaining('"status":"in_use"')
+      );
+
+      // Verify config2 sent stop message
+      expect(mockMqttClientService.publish).toHaveBeenCalledWith(
+        3,
+        'devices/1/status',
+        expect.stringContaining('"state":"inactive"')
+      );
+
+      // Verify config2 sent takeover message (but not config1)
+      expect(mockMqttClientService.publish).toHaveBeenCalledWith(
+        3,
+        'devices/1/takeover',
+        expect.stringContaining('"status":"takeover"')
+      );
+    });
+
+    it('should process takeover templates correctly with user context', async () => {
+      const configWithTakeover = {
+        ...mockConfig,
+        onTakeoverSendTakeover: true,
+        takeoverMessage:
+          '{"status":"takeover","resource":"{{name}}","newUser":"{{user.username}}","previousUser":"{{previousUser.username}}"}',
+      };
+      mockMqttResourceConfigRepository.find = jest.fn().mockResolvedValue([configWithTakeover]);
+
+      const event = new ResourceUsageTakenOverEvent(1, new Date(), mockUser, mockPreviousUser);
+
+      await service.handleResourceUsageTakenOver(event);
+
+      // Verify template processing was called with correct context
+      expect(mockIotService.processTemplate).toHaveBeenCalledWith(
+        configWithTakeover.takeoverMessage,
+        expect.objectContaining({
+          id: 1,
+          name: 'Test Resource',
+          user: { id: 1, username: 'testuser' },
+          previousUser: { id: 2, username: 'previoususer' },
+        })
+      );
+
+      // Verify the processed message was published
+      expect(mockMqttClientService.publish).toHaveBeenCalledWith(
+        2,
+        'resources/1/takeover',
+        expect.stringContaining('"newUser":"testuser"') && expect.stringContaining('"previousUser":"previoususer"')
+      );
+    });
+
+    it('should handle errors gracefully during takeover', async () => {
+      const configWithAllOptions = {
+        ...mockConfig,
+        onTakeoverSendStart: true,
+        onTakeoverSendStop: true,
+        onTakeoverSendTakeover: true,
+      };
+      mockMqttResourceConfigRepository.find = jest.fn().mockResolvedValue([configWithAllOptions]);
+
+      // Mock publish to fail for some calls
+      mockMqttClientService.publish = jest
+        .fn()
+        .mockResolvedValueOnce(undefined) // stop message succeeds
+        .mockRejectedValueOnce(new Error('Takeover publish failed')) // takeover message fails
+        .mockResolvedValueOnce(undefined); // start message succeeds
+
+      const event = new ResourceUsageTakenOverEvent(1, new Date(), mockUser, mockPreviousUser);
+
+      // Should not throw even if some publishes fail
+      await expect(service.handleResourceUsageTakenOver(event)).resolves.not.toThrow();
+
+      expect(mockMqttClientService.publish).toHaveBeenCalledTimes(3);
+    });
+
+    it('should not publish messages if resource is not found during takeover', async () => {
+      mockResourceRepository.findOne = jest.fn().mockResolvedValue(null);
+
+      const event = new ResourceUsageTakenOverEvent(1, new Date(), mockUser, mockPreviousUser);
+
+      await service.handleResourceUsageTakenOver(event);
+
+      expect(mockMqttClientService.publish).not.toHaveBeenCalled();
+    });
+
+    it('should not publish messages if no configs are found during takeover', async () => {
+      mockMqttResourceConfigRepository.find = jest.fn().mockResolvedValue([]);
+
+      const event = new ResourceUsageTakenOverEvent(1, new Date(), mockUser, mockPreviousUser);
+
+      await service.handleResourceUsageTakenOver(event);
+
+      expect(mockMqttClientService.publish).not.toHaveBeenCalled();
+    });
+  });
+
   describe('retry mechanism', () => {
     it('should handle server reconnection scenarios', async () => {
       // First attempt: server disconnected
@@ -327,7 +656,7 @@ describe('MqttPublisherService', () => {
         // Second attempt: server connected
         .mockResolvedValueOnce(undefined);
 
-      const event = new ResourceUsageStartedEvent(1, new Date(), { id: 123, username: 'testuser' } as User);
+      const event = new ResourceUsageStartedEvent(1, new Date(), mockUser);
 
       await service.handleResourceUsageStarted(event);
 

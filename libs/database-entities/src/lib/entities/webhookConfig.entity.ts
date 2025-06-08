@@ -113,31 +113,32 @@ export class WebhookConfig {
   })
   signatureHeader!: string;
 
-  @Column({ default: true, type: 'boolean' })
+  @Column({ default: false, type: 'boolean' })
   @ApiProperty({
-    description: 'Whether to send a webhook when a resource usage starts',
+    description: 'Whether to send a start message when a resource is taken over',
     example: true,
   })
-  sendOnStart!: boolean;
-
-  @Column({ default: true, type: 'boolean' })
-  @ApiProperty({
-    description: 'Whether to send a webhook when a resource usage stops',
-    example: true,
-  })
-  sendOnStop!: boolean;
+  onTakeoverSendStart!: boolean;
 
   @Column({ default: false, type: 'boolean' })
+  @ApiProperty({
+    description: 'Whether to send a stop message when a resource usage is taken over',
+    example: true,
+  })
+  onTakeoverSendStop!: boolean;
+
+  @Column({ default: true, type: 'boolean' })
   @ApiProperty({
     description: 'Whether to send a webhook when a resource usage is taken over',
     example: false,
   })
-  sendOnTakeover!: boolean;
+  onTakeoverSendTakeover!: boolean;
 
   @Column({ type: 'text', nullable: true })
   @ApiProperty({
     description: 'Template for payload when resource usage is taken over',
-    example: '{"status": "taken_over", "resource": "{{name}}", "newUser": "{{user.name}}", "previousUser": "{{previousUser.name}}", "timestamp": "{{timestamp}}"}',
+    example:
+      '{"status": "taken_over", "resource": "{{name}}", "newUser": "{{user.name}}", "previousUser": "{{previousUser.name}}", "timestamp": "{{timestamp}}"}',
     required: false,
   })
   takeoverTemplate!: string | null;

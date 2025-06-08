@@ -1464,17 +1464,17 @@ export const $MqttResourceConfig = {
             description: 'Message template using Handlebars for not-in-use status',
             example: '{"status": "not_in_use", "resourceId": "{{id}}", "timestamp": "{{timestamp}}"}'
         },
-        sendOnStart: {
+        onTakeoverSendStart: {
             type: 'boolean',
-            description: 'Whether to send an MQTT message when a resource usage starts',
+            description: 'Whether to send a start message when a resource is taken over',
             example: true
         },
-        sendOnStop: {
+        onTakeoverSendStop: {
             type: 'boolean',
-            description: 'Whether to send an MQTT message when a resource usage stops',
+            description: 'Whether to send a stop message when a resource is taken over',
             example: true
         },
-        sendOnTakeover: {
+        onTakeoverSendTakeover: {
             type: 'boolean',
             description: 'Whether to send an MQTT message when a resource usage is taken over',
             example: false
@@ -1500,7 +1500,7 @@ export const $MqttResourceConfig = {
             description: 'When the MQTT resource configuration was last updated'
         }
     },
-    required: ['id', 'resourceId', 'name', 'serverId', 'inUseTopic', 'inUseMessage', 'notInUseTopic', 'notInUseMessage', 'sendOnStart', 'sendOnStop', 'sendOnTakeover', 'createdAt', 'updatedAt']
+    required: ['id', 'resourceId', 'name', 'serverId', 'inUseTopic', 'inUseMessage', 'notInUseTopic', 'notInUseMessage', 'onTakeoverSendStart', 'onTakeoverSendStop', 'onTakeoverSendTakeover', 'createdAt', 'updatedAt']
 } as const;
 
 export const $CreateMqttResourceConfigDto = {
@@ -1536,23 +1536,23 @@ export const $CreateMqttResourceConfigDto = {
             description: 'Message template for when resource is not in use',
             example: '{"status":"not_in_use","resourceId":{{id}},"resourceName":"{{name}}"}'
         },
-        sendOnStart: {
+        onTakeoverSendStart: {
             type: 'boolean',
-            description: 'Whether to send an MQTT message when a resource usage starts',
-            example: true,
-            default: true
-        },
-        sendOnStop: {
-            type: 'boolean',
-            description: 'Whether to send an MQTT message when a resource usage stops',
-            example: true,
-            default: true
-        },
-        sendOnTakeover: {
-            type: 'boolean',
-            description: 'Whether to send an MQTT message when a resource usage is taken over',
+            description: 'Whether to send a start message when a resource is taken over',
             example: false,
             default: false
+        },
+        onTakeoverSendStop: {
+            type: 'boolean',
+            description: 'Whether to send a stop message when a resource is taken over',
+            example: false,
+            default: false
+        },
+        onTakeoverSendTakeover: {
+            type: 'boolean',
+            description: 'Whether to send an MQTT message when a resource usage is taken over',
+            example: true,
+            default: true
         },
         takeoverTopic: {
             type: 'string',
@@ -1601,23 +1601,23 @@ export const $UpdateMqttResourceConfigDto = {
             description: 'Message template for when resource is not in use',
             example: '{"status":"not_in_use","resourceId":{{id}},"resourceName":"{{name}}"}'
         },
-        sendOnStart: {
+        onTakeoverSendStart: {
             type: 'boolean',
-            description: 'Whether to send an MQTT message when a resource usage starts',
-            example: true,
-            default: true
-        },
-        sendOnStop: {
-            type: 'boolean',
-            description: 'Whether to send an MQTT message when a resource usage stops',
-            example: true,
-            default: true
-        },
-        sendOnTakeover: {
-            type: 'boolean',
-            description: 'Whether to send an MQTT message when a resource usage is taken over',
+            description: 'Whether to send a start message when a resource is taken over',
             example: false,
             default: false
+        },
+        onTakeoverSendStop: {
+            type: 'boolean',
+            description: 'Whether to send a stop message when a resource is taken over',
+            example: false,
+            default: false
+        },
+        onTakeoverSendTakeover: {
+            type: 'boolean',
+            description: 'Whether to send an MQTT message when a resource usage is taken over',
+            example: true,
+            default: true
         },
         takeoverTopic: {
             type: 'string',

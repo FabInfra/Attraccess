@@ -22,6 +22,7 @@ import {
   useMqttServiceMqttServersGetAll,
   UseMqttServiceMqttResourceConfigGetAllKeyFn,
   UseMqttServiceMqttResourceConfigGetOneKeyFn,
+  MqttResourceConfig,
 } from '@attraccess/react-query-client';
 import { useNavigate } from 'react-router-dom';
 import { useToastMessage } from '../../../../../components/toastProvider';
@@ -44,33 +45,21 @@ const defaultTemplates = {
       '{"status": "available", "resourceId": {{id}}, "resourceName": "{{name}}", "timestamp": "{{timestamp}}", "user": "{{user.username}}"}',
   },
 };
-
-interface MqttConfigFormValues {
-  name: string;
-  serverId: number;
-  sendOnStart: boolean; // Added
-  sendOnStop: boolean; // Added
-  sendOnTakeover: boolean; // Added
-  inUseTopic: string;
-  inUseMessage: string;
-  notInUseTopic: string;
-  notInUseMessage: string;
-  takeoverTopic: string; // Added
-  takeoverMessage: string; // Added
-}
+type MqttConfigFormValues = Omit<MqttResourceConfig, 'id' | 'createdAt' | 'updatedAt' | 'resourceId'>;
 
 const initialFormValues: MqttConfigFormValues = {
   name: '',
   serverId: 0,
-  sendOnStart: true,
-  sendOnStop: true,
-  sendOnTakeover: false,
+  onTakeoverSendStart: false,
+  onTakeoverSendStop: false,
+  onTakeoverSendTakeover: true,
   inUseTopic: defaultTemplates.inUse.topic,
   inUseMessage: defaultTemplates.inUse.message,
   notInUseTopic: defaultTemplates.notInUse.topic,
   notInUseMessage: defaultTemplates.notInUse.message,
   takeoverTopic: 'resources/{{id}}/status',
-  takeoverMessage: '{"status": "taken_over", "resourceId": {{id}}, "resourceName": "{{name}}", "timestamp": "{{timestamp}}", "newUser": "{{user.username}}", "previousUser": "{{previousUser.username}}"}',
+  takeoverMessage:
+    '{"status": "taken_over", "resourceId": {{id}}, "resourceName": "{{name}}", "timestamp": "{{timestamp}}", "newUser": "{{user.username}}", "previousUser": "{{previousUser.username}}"}',
 };
 
 interface MqttConfigFormProps {
@@ -114,10 +103,12 @@ function TemplateVariablesHelp() {
           <h4 className="font-medium text-sm mb-1">{t('previousUserVariables')}</h4>
           <ul className="list-disc list-inside text-sm space-y-1">
             <li>
-              <code className="bg-gray-200 dark:bg-gray-700 px-1 rounded">{'{{previousUser.username}}'}</code> - {t('previousUserUsernameDesc')}
+              <code className="bg-gray-200 dark:bg-gray-700 px-1 rounded">{'{{previousUser.username}}'}</code> -{' '}
+              {t('previousUserUsernameDesc')}
             </li>
             <li>
-              <code className="bg-gray-200 dark:bg-gray-700 px-1 rounded">{'{{previousUser.id}}'}</code> - {t('previousUserIdDesc')}
+              <code className="bg-gray-200 dark:bg-gray-700 px-1 rounded">{'{{previousUser.id}}'}</code> -{' '}
+              {t('previousUserIdDesc')}
             </li>
           </ul>
         </div>
@@ -159,9 +150,11 @@ export function MqttConfigForm({ resourceId, configId, isEdit = false }: Readonl
       setFormValues({
         name: existingConfig.name,
         serverId: existingConfig.serverId,
-        sendOnStart: existingConfig.sendOnStart === undefined ? true : existingConfig.sendOnStart,
-        sendOnStop: existingConfig.sendOnStop === undefined ? true : existingConfig.sendOnStop,
-        sendOnTakeover: existingConfig.sendOnTakeover === undefined ? false : existingConfig.sendOnTakeover,
+        onTakeoverSendStart:
+          existingConfig.onTakeoverSendStart === undefined ? false : existingConfig.onTakeoverSendStart,
+        onTakeoverSendStop: existingConfig.onTakeoverSendStop === undefined ? false : existingConfig.onTakeoverSendStop,
+        onTakeoverSendTakeover:
+          existingConfig.onTakeoverSendTakeover === undefined ? true : existingConfig.onTakeoverSendTakeover,
         inUseTopic: existingConfig.inUseTopic,
         inUseMessage: existingConfig.inUseMessage,
         notInUseTopic: existingConfig.notInUseTopic,
@@ -358,28 +351,30 @@ export function MqttConfigForm({ resourceId, configId, isEdit = false }: Readonl
 
             {/* Event Triggers */}
             <div className="mt-4 space-y-2 pt-2">
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('eventTriggersLabel')}</p>
-              <Switch
-                name="sendOnStart"
-                isSelected={formValues.sendOnStart}
-                onValueChange={(isSelected) => handleSwitchChange('sendOnStart', isSelected)}
-              >
-                {t('sendOnStartLabel')}
-              </Switch>
-              <Switch
-                name="sendOnStop"
-                isSelected={formValues.sendOnStop}
-                onValueChange={(isSelected) => handleSwitchChange('sendOnStop', isSelected)}
-              >
-                {t('sendOnStopLabel')}
-              </Switch>
-              <Switch
-                name="sendOnTakeover"
-                isSelected={formValues.sendOnTakeover}
-                onValueChange={(isSelected) => handleSwitchChange('sendOnTakeover', isSelected)}
-              >
-                {t('sendOnTakeoverLabel')}
-              </Switch>
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('takeoverEventMessagesLabel')}</p>
+              <div className="flex flex-col space-y-2">
+                <Switch
+                  name="onTakeoverSendStart"
+                  isSelected={formValues.onTakeoverSendStart}
+                  onValueChange={(isSelected) => handleSwitchChange('onTakeoverSendStart', isSelected)}
+                >
+                  {t('onTakeoverSendStartLabel')}
+                </Switch>
+                <Switch
+                  name="onTakeoverSendStop"
+                  isSelected={formValues.onTakeoverSendStop}
+                  onValueChange={(isSelected) => handleSwitchChange('onTakeoverSendStop', isSelected)}
+                >
+                  {t('onTakeoverSendStopLabel')}
+                </Switch>
+                <Switch
+                  name="onTakeoverSendTakeover"
+                  isSelected={formValues.onTakeoverSendTakeover}
+                  onValueChange={(isSelected) => handleSwitchChange('onTakeoverSendTakeover', isSelected)}
+                >
+                  {t('onTakeoverSendTakeoverLabel')}
+                </Switch>
+              </div>
             </div>
           </CardBody>
         </Card>

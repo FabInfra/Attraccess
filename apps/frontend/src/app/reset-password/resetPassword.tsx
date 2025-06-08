@@ -2,8 +2,9 @@ import { useCallback, useMemo, useState } from 'react';
 import { useUrlQuery } from '@attraccess/plugins-frontend-ui';
 import { useNavigate } from 'react-router-dom';
 import { Loading } from '../loading';
-import { Button, Card, CardBody, CardFooter, CardHeader, Form, Input } from '@heroui/react';
+import { Button, Card, CardBody, CardFooter, CardHeader, Form } from '@heroui/react';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { PasswordInput } from '../../components/PasswordInput';
 import * as en from './en.json';
 import * as de from './de.json';
 import { useUsersServiceChangePasswordViaResetToken } from '@attraccess/react-query-client';
@@ -79,7 +80,7 @@ export function ResetPassword() {
       >
         <CardHeader>{t('title')}</CardHeader>
         <CardBody>
-          <Input
+          <PasswordInput
             label={t('inputs.password')}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -88,7 +89,7 @@ export function ResetPassword() {
             required
             data-cy="reset-password-password-input"
           />
-          <Input
+          <PasswordInput
             label={t('inputs.confirmPassword')}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}

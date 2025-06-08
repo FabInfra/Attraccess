@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { WebhookConfig, Resource } from '@attraccess/database-entities';
+import { WebhookConfig, Resource, User } from '@attraccess/database-entities';
 import {
   ResourceUsageStartedEvent,
   ResourceUsageEndedEvent,
@@ -100,8 +100,12 @@ export class WebhookPublisherService {
       const updatedItems: QueueItem[] = [];
 
       for (const item of items) {
-        // Skip if not enough time has passed since the last attempt
-        if (item.lastAttempt !== null && now.getTime() - item.lastAttempt.getTime() < item.retryDelay) {
+        // Skip if not enough time has passed since the last attempt (unless retryDelay is 0)
+        if (
+          item.lastAttempt !== null &&
+          item.retryDelay > 0 &&
+          now.getTime() - item.lastAttempt.getTime() < item.retryDelay
+        ) {
           updatedItems.push(item);
           continue;
         }
@@ -195,7 +199,7 @@ export class WebhookPublisherService {
     return createHmac('sha256', secret).update(payload).digest('hex');
   }
 
-  async queueWebhook(
+  private async queueWebhook(
     webhookId: number,
     resourceId: number,
     url: string,
@@ -230,179 +234,12 @@ export class WebhookPublisherService {
       signatureHeader,
       lastAttempt: null, // Use null instead of Date(0)
     });
+
+    await this.processMessageQueue();
   }
 
-  @OnEvent('resource.usage.started')
-  async handleResourceUsageStarted(event: ResourceUsageStartedEvent) {
-    try {
-      const { resourceId, startTime } = event;
-
-      // Fetch all webhook configurations for this resource
-      const webhooks = await this.webhookConfigRepository.find({
-        where: { resourceId, active: true },
-      });
-
-      if (webhooks.length === 0) {
-        return;
-      }
-
-      // Fetch resource details for context
-      const resource = await this.resourceRepository.findOne({
-        where: { id: resourceId },
-        relations: ['usages'],
-      });
-
-      if (!resource) {
-        this.logger.warn(`Cannot send webhooks for non-existent resource ${resourceId}`);
-        return;
-      }
-
-      // Prepare context for template
-      const context: TemplateContext = {
-        id: resource.id,
-        name: resource.name,
-        timestamp: startTime.toISOString(),
-        user: {
-          id: event.user.id,
-          username: event.user.username,
-        },
-      };
-
-      // Process webhooks
-      for (const webhook of webhooks) {
-        if (!webhook.sendOnStart) {
-          continue;
-        }
-        try {
-          // Process template
-          const payload = this.iotService.processTemplate(webhook.inUseTemplate, context);
-
-          // Process URL template
-          const processedUrl = this.processUrlTemplate(webhook.url, context);
-
-          // Parse headers if provided
-          let headers: Record<string, string> = {};
-          if (webhook.headers) {
-            try {
-              headers = JSON.parse(webhook.headers);
-
-              // Process header templates
-              headers = this.processHeaderTemplates(headers, context);
-            } catch (error) {
-              this.logger.warn(`Invalid headers JSON for webhook ${webhook.id}: ${error.message}`);
-            }
-          }
-
-          // Queue webhook
-          await this.queueWebhook(
-            webhook.id,
-            resourceId,
-            processedUrl,
-            webhook.method,
-            headers,
-            payload,
-            webhook.retryEnabled,
-            webhook.maxRetries,
-            webhook.retryDelay,
-            webhook.secret,
-            webhook.signatureHeader
-          );
-        } catch (error) {
-          this.logger.error(
-            `Error processing webhook ${webhook.id} for resource ${resourceId}: ${error.message}`,
-            error.stack
-          );
-        }
-      }
-    } catch (error) {
-      this.logger.error(`Error handling resource.usage.started event: ${error.message}`, error.stack);
-    }
-  }
-
-  @OnEvent('resource.usage.ended')
-  async handleResourceUsageEnded(event: ResourceUsageEndedEvent) {
-    try {
-      const { resourceId, endTime } = event;
-
-      // Fetch all webhook configurations for this resource
-      const webhooks = await this.webhookConfigRepository.find({
-        where: { resourceId, active: true },
-      });
-
-      if (webhooks.length === 0) {
-        return;
-      }
-
-      // Fetch resource details for context
-      const resource = await this.resourceRepository.findOne({
-        where: { id: resourceId },
-      });
-
-      if (!resource) {
-        this.logger.warn(`Cannot send webhooks for non-existent resource ${resourceId}`);
-        return;
-      }
-
-      // Prepare context for template
-      const context: TemplateContext = {
-        id: resource.id,
-        name: resource.name,
-        timestamp: endTime.toISOString(),
-        user: {
-          id: event.user.id,
-          username: event.user.username,
-        },
-      };
-
-      // Process webhooks
-      for (const webhook of webhooks) {
-        if (!webhook.sendOnStop) {
-          continue;
-        }
-        try {
-          // Process template
-          const payload = this.iotService.processTemplate(webhook.notInUseTemplate, context);
-
-          // Process URL template
-          const processedUrl = this.processUrlTemplate(webhook.url, context);
-
-          // Parse headers if provided
-          let headers: Record<string, string> = {};
-          if (webhook.headers) {
-            try {
-              headers = JSON.parse(webhook.headers);
-
-              // Process header templates
-              headers = this.processHeaderTemplates(headers, context);
-            } catch (error) {
-              this.logger.warn(`Invalid headers JSON for webhook ${webhook.id}: ${error.message}`);
-            }
-          }
-
-          // Queue webhook
-          await this.queueWebhook(
-            webhook.id,
-            resourceId,
-            processedUrl,
-            webhook.method,
-            headers,
-            payload,
-            webhook.retryEnabled,
-            webhook.maxRetries,
-            webhook.retryDelay,
-            webhook.secret,
-            webhook.signatureHeader
-          );
-        } catch (error) {
-          this.logger.error(
-            `Error processing webhook ${webhook.id} for resource ${resourceId}: ${error.message}`,
-            error.stack
-          );
-        }
-      }
-    } catch (error) {
-      this.logger.error(`Error handling resource.usage.ended event: ${error.message}`, error.stack);
-    }
+  async processQueueManually(): Promise<void> {
+    await this.processMessageQueue();
   }
 
   // Method to test a webhook without actually sending it
@@ -514,86 +351,298 @@ export class WebhookPublisherService {
     }
   }
 
-  @OnEvent('resource.usage.taken_over')
-  async handleResourceUsageTakenOver(event: ResourceUsageTakenOverEvent) {
-    try {
-      const { resourceId, takeoverTime, newUser, previousUser } = event;
+  private async sendTakeoverMessage(data: {
+    event: 'start' | 'take_over' | 'end';
+    resourceId: number;
+    oldUser?: User;
+    newUser: User;
+    time: Date;
+  }) {
+    const webhooks = await this.webhookConfigRepository.find({
+      where: { resourceId: data.resourceId, active: true },
+    });
 
-      const webhooks = await this.webhookConfigRepository.find({
-        where: { resourceId, active: true },
-      });
+    if (webhooks.length === 0) {
+      return;
+    }
 
-      if (webhooks.length === 0) {
-        return;
-      }
+    const resource = await this.resourceRepository.findOne({
+      where: { id: data.resourceId },
+    });
 
-      const resource = await this.resourceRepository.findOne({
-        where: { id: resourceId },
-      });
-
-      if (!resource) {
-        this.logger.warn(`Cannot send webhooks for non-existent resource ${resourceId}`);
-        return;
-      }
-
-      const context: TemplateContext = {
-        id: resource.id,
-        name: resource.name,
-        timestamp: takeoverTime.toISOString(),
-        user: {
-          id: newUser.id,
-          username: newUser.username,
-        },
-        previousUser: previousUser
-          ? {
-              id: previousUser.id,
-              username: previousUser.username,
-            }
-          : null,
-      };
-
-      for (const webhook of webhooks) {
-        if (!webhook.sendOnTakeover || !webhook.takeoverTemplate) {
-          continue;
-        }
-
-        try {
-          const payload = this.iotService.processTemplate(webhook.takeoverTemplate, context);
-          const processedUrl = this.processUrlTemplate(webhook.url, context);
-
-          let headers: Record<string, string> = {};
-          if (webhook.headers) {
-            try {
-              headers = JSON.parse(webhook.headers);
-              headers = this.processHeaderTemplates(headers, context);
-            } catch (error) {
-              this.logger.warn(`Invalid headers JSON for webhook ${webhook.id}: ${error.message}`);
-            }
+    const context: TemplateContext = {
+      id: data.resourceId,
+      name: resource.name,
+      timestamp: data.time.toISOString(),
+      user: {
+        id: data.newUser.id,
+        username: data.newUser.username,
+      },
+      previousUser: data.oldUser
+        ? {
+            id: data.oldUser.id,
+            username: data.oldUser.username,
           }
+        : null,
+    };
 
-          await this.queueWebhook(
-            webhook.id,
-            resourceId,
-            processedUrl,
-            webhook.method,
-            headers,
-            payload,
-            webhook.retryEnabled,
-            webhook.maxRetries,
-            webhook.retryDelay,
-            webhook.secret,
-            webhook.signatureHeader
-          );
-        } catch (error) {
-          this.logger.error(
-            `Error processing takeover webhook ${webhook.id} for resource ${resourceId}: ${error.message}`,
-            error.stack
-          );
-        }
+    for (const webhook of webhooks) {
+      if (!webhook.takeoverTemplate) {
+        continue;
       }
-    } catch (error) {
-      this.logger.error(`Error handling resource.usage.taken_over event: ${error.message}`, error.stack);
+
+      if (data.event === 'take_over' && !webhook.onTakeoverSendTakeover) {
+        continue;
+      }
+
+      try {
+        const payload = this.iotService.processTemplate(webhook.takeoverTemplate, context);
+        const processedUrl = this.processUrlTemplate(webhook.url, context);
+
+        let headers: Record<string, string> = {};
+        if (webhook.headers) {
+          try {
+            headers = JSON.parse(webhook.headers);
+            headers = this.processHeaderTemplates(headers, context);
+          } catch (error) {
+            this.logger.warn(`Invalid headers JSON for webhook ${webhook.id}: ${error.message}`);
+          }
+        }
+
+        await this.queueWebhook(
+          webhook.id,
+          data.resourceId,
+          processedUrl,
+          webhook.method,
+          headers,
+          payload,
+          webhook.retryEnabled,
+          webhook.maxRetries,
+          webhook.retryDelay,
+          webhook.secret,
+          webhook.signatureHeader
+        );
+      } catch (error) {
+        this.logger.error(
+          `Error processing webhook ${webhook.id} for resource ${data.resourceId}: ${error.message}`,
+          error.stack
+        );
+      }
     }
   }
 
+  private async sendStartMessage(data: {
+    event: 'start' | 'take_over' | 'end';
+    resourceId: number;
+    time: Date;
+    user: User;
+  }) {
+    const webhooks = await this.webhookConfigRepository.find({
+      where: { resourceId: data.resourceId, active: true },
+    });
+
+    if (webhooks.length === 0) {
+      return;
+    }
+
+    const resource = await this.resourceRepository.findOne({
+      where: { id: data.resourceId },
+      relations: ['usages'],
+    });
+
+    if (!resource) {
+      this.logger.warn(`Cannot send webhooks for non-existent resource ${data.resourceId}`);
+      return;
+    }
+
+    const context: TemplateContext = {
+      id: resource.id,
+      name: resource.name,
+      timestamp: data.time.toISOString(),
+      user: {
+        id: data.user.id,
+        username: data.user.username,
+      },
+    };
+
+    for (const webhook of webhooks) {
+      if (data.event === 'take_over' && !webhook.onTakeoverSendStart) {
+        continue;
+      }
+
+      try {
+        // Process template
+        const payload = this.iotService.processTemplate(webhook.inUseTemplate, context);
+
+        // Process URL template
+        const processedUrl = this.processUrlTemplate(webhook.url, context);
+
+        // Parse headers if provided
+        let headers: Record<string, string> = {};
+        if (webhook.headers) {
+          try {
+            headers = JSON.parse(webhook.headers);
+
+            // Process header templates
+            headers = this.processHeaderTemplates(headers, context);
+          } catch (error) {
+            this.logger.warn(`Invalid headers JSON for webhook ${webhook.id}: ${error.message}`);
+          }
+        }
+
+        // Queue webhook
+        await this.queueWebhook(
+          webhook.id,
+          data.resourceId,
+          processedUrl,
+          webhook.method,
+          headers,
+          payload,
+          webhook.retryEnabled,
+          webhook.maxRetries,
+          webhook.retryDelay,
+          webhook.secret,
+          webhook.signatureHeader
+        );
+      } catch (error) {
+        this.logger.error(
+          `Error processing webhook ${webhook.id} for resource ${data.resourceId}: ${error.message}`,
+          error.stack
+        );
+      }
+    }
+  }
+
+  private async sendStopMessage(data: {
+    event: 'start' | 'take_over' | 'end';
+    resourceId: number;
+    time: Date;
+    user: User;
+  }) {
+    const webhooks = await this.webhookConfigRepository.find({
+      where: { resourceId: data.resourceId, active: true },
+    });
+
+    if (webhooks.length === 0) {
+      return;
+    }
+
+    const resource = await this.resourceRepository.findOne({
+      where: { id: data.resourceId },
+    });
+
+    if (!resource) {
+      this.logger.warn(`Cannot send webhooks for non-existent resource ${data.resourceId}`);
+      return;
+    }
+
+    // Prepare context for template
+    const context: TemplateContext = {
+      id: resource.id,
+      name: resource.name,
+      timestamp: data.time.toISOString(),
+      user: {
+        id: data.user.id,
+        username: data.user.username,
+      },
+    };
+
+    // Process webhooks
+    for (const webhook of webhooks) {
+      if (data.event === 'take_over' && !webhook.onTakeoverSendStop) {
+        continue;
+      }
+      try {
+        // Process template
+        const payload = this.iotService.processTemplate(webhook.notInUseTemplate, context);
+
+        // Process URL template
+        const processedUrl = this.processUrlTemplate(webhook.url, context);
+
+        // Parse headers if provided
+        let headers: Record<string, string> = {};
+        if (webhook.headers) {
+          try {
+            headers = JSON.parse(webhook.headers);
+
+            // Process header templates
+            headers = this.processHeaderTemplates(headers, context);
+          } catch (error) {
+            this.logger.warn(`Invalid headers JSON for webhook ${webhook.id}: ${error.message}`);
+          }
+        }
+
+        // Queue webhook
+        await this.queueWebhook(
+          webhook.id,
+          data.resourceId,
+          processedUrl,
+          webhook.method,
+          headers,
+          payload,
+          webhook.retryEnabled,
+          webhook.maxRetries,
+          webhook.retryDelay,
+          webhook.secret,
+          webhook.signatureHeader
+        );
+      } catch (error) {
+        this.logger.error(
+          `Error processing webhook ${webhook.id} for resource ${data.resourceId}: ${error.message}`,
+          error.stack
+        );
+      }
+    }
+  }
+
+  @OnEvent('resource.usage.started')
+  async handleResourceUsageStarted(event: ResourceUsageStartedEvent) {
+    const { resourceId, startTime } = event;
+
+    await this.sendStartMessage({
+      event: 'start',
+      resourceId,
+      time: startTime,
+      user: event.user,
+    });
+  }
+
+  @OnEvent('resource.usage.taken_over')
+  async handleResourceUsageTakenOver(event: ResourceUsageTakenOverEvent) {
+    const { resourceId, takeoverTime, newUser, previousUser } = event;
+
+    await this.sendStopMessage({
+      event: 'take_over',
+      resourceId,
+      time: takeoverTime,
+      user: previousUser,
+    });
+
+    await this.sendTakeoverMessage({
+      event: 'take_over',
+      resourceId,
+      oldUser: previousUser,
+      newUser,
+      time: takeoverTime,
+    });
+
+    await this.sendStartMessage({
+      event: 'take_over',
+      resourceId,
+      time: takeoverTime,
+      user: newUser,
+    });
+  }
+
+  @OnEvent('resource.usage.ended')
+  async handleResourceUsageEnded(event: ResourceUsageEndedEvent) {
+    const { resourceId, endTime } = event;
+
+    await this.sendStopMessage({
+      event: 'end',
+      resourceId,
+      time: endTime,
+      user: event.user,
+    });
+  }
 }

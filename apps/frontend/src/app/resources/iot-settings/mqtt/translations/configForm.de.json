@@ -5,10 +5,10 @@
   "inUseSettings": "Einstellungen für In-Benutzung-Status",
   "notInUseSettings": "Einstellungen für Nicht-In-Benutzung-Status",
   "takeoverSettings": "Einstellungen für Übernahme",
-  "eventTriggersLabel": "Ereignis-Auslöser",
-  "sendOnStartLabel": "Senden bei Start der Ressourcennutzung",
-  "sendOnStopLabel": "Senden bei Ende der Ressourcennutzung",
-  "sendOnTakeoverLabel": "Senden bei Übernahme der Ressourcennutzung",
+  "takeoverEventMessagesLabel": "Nachrichten für Übernahme-Ereignisse",
+  "onTakeoverSendStartLabel": "Sende Start-Nachricht bei Übernahme",
+  "onTakeoverSendStopLabel": "Sende Stop-Nachricht bei Übernahme",
+  "onTakeoverSendTakeoverLabel": "Sende Übernahme-Nachricht bei Übernahme",
   "nameLabel": "Konfigurationsname",
   "namePlaceholder": "Geben Sie einen Namen für diese Konfiguration ein",
   "serverLabel": "MQTT-Server",
@@ -42,4 +42,4 @@
   "updateError": "Aktualisierung fehlgeschlagen",
   "updateErrorDetail": "Bei der Aktualisierung der MQTT-Konfiguration ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
   "createServer": "MQTT-Server erstellen"
-} 
+}

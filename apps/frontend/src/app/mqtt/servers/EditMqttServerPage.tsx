@@ -1,6 +1,7 @@
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { Button, Card, CardHeader, Input, Checkbox, Spinner } from '@heroui/react';
 import { ArrowLeft } from 'lucide-react';
+import { PasswordInput } from '../../../components/PasswordInput';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToastMessage } from '../../../components/toastProvider';
 import en from './translations/edit/en.json';
@@ -213,10 +214,9 @@ export function EditMqttServerPage() {
                 <label htmlFor="password" className="block text-sm font-medium mb-1">
                   {t('passwordLabel')}
                 </label>
-                <Input
+                <PasswordInput
                   id="password"
                   name="password"
-                  type="password"
                   placeholder={t('passwordPlaceholder')}
                   value={formValues.password}
                   onChange={handleInputChange}
