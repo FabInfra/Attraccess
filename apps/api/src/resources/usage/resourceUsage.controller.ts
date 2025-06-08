@@ -10,6 +10,7 @@ import { GetResourceHistoryQueryDto } from './dtos/getResourceHistoryQuery.dto';
 import { GetResourceHistoryResponseDto } from './dtos/GetResourceHistoryResponse.dto';
 import { GetActiveUsageSessionDto } from './dtos/getActiveUsageSession.dto';
 import { CanControlResponseDto } from './dtos/canControl.response.dto';
+import { ExtendSessionDto } from './dtos/extendSession.dto';
 
 @ApiTags('Resources')
 @Controller('resources/:resourceId/usage')
@@ -157,5 +158,37 @@ export class ResourceUsageController {
     return {
       canControl: await this.resourceUsageService.canControllResource(resourceId, req.user),
     } as CanControlResponseDto;
+  }
+
+  @Put('extend')
+  @Auth()
+  @ApiOperation({ summary: 'Extend the current session duration', operationId: 'resourceUsageExtendSession' })
+  @ApiResponse({
+    status: 200,
+    description: 'Session extended successfully.',
+    type: ResourceUsage,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request - Invalid input data or no active session',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - User is not authenticated',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - User cannot extend this session',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Resource or session not found',
+  })
+  async extendSession(
+    @Param('resourceId', ParseIntPipe) resourceId: number,
+    @Body() dto: ExtendSessionDto,
+    @Req() req: AuthenticatedRequest
+  ): Promise<ResourceUsage> {
+    return this.resourceUsageService.extendSession(resourceId, req.user, dto.additionalMinutes);
   }
 }

@@ -4,10 +4,12 @@ import { PlayIcon, ChevronDownIcon } from 'lucide-react';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { useToastMessage } from '../../../../../components/toastProvider';
 import { SessionNotesModal, SessionModalMode } from '../SessionNotesModal';
+import { DurationEstimationModal } from '../DurationEstimationModal';
 import {
   useResourcesServiceResourceUsageStartSession,
   UseResourcesServiceResourceUsageGetActiveSessionKeyFn,
   UseResourcesServiceResourceUsageGetHistoryKeyFn,
+  Resource,
 } from '@attraccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 import * as en from './translations/en.json';
@@ -15,18 +17,21 @@ import * as de from './translations/de.json';
 
 interface StartSessionControlsProps {
   resourceId: number;
+  resource: Resource;
 }
 
-export function StartSessionControls({ resourceId }: Readonly<StartSessionControlsProps>) {
+export function StartSessionControls({ resourceId, resource }: Readonly<StartSessionControlsProps>) {
   const { t } = useTranslations('startSessionControls', { en, de });
   const { success, error: showError } = useToastMessage();
   const queryClient = useQueryClient();
 
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
+  const [isDurationModalOpen, setIsDurationModalOpen] = useState(false);
 
   const startSession = useResourcesServiceResourceUsageStartSession({
     onSuccess: () => {
       setIsNotesModalOpen(false);
+      setIsDurationModalOpen(false);
 
       // Invalidate the active session query to refetch data
       queryClient.invalidateQueries({
@@ -64,12 +69,25 @@ export function StartSessionControls({ resourceId }: Readonly<StartSessionContro
     });
   };
 
+  const handleStartSessionWithDuration = async (notes: string, estimatedDurationMinutes: number) => {
+    startSession.mutate({
+      resourceId,
+      requestBody: { notes, estimatedDurationMinutes, forceTakeOver: false },
+    });
+  };
+
   const immediatelyStartSession = useCallback(() => {
+    // If resource requires duration estimation, show the duration modal
+    if (resource.requireSessionDurationEstimation) {
+      setIsDurationModalOpen(true);
+      return;
+    }
+
     startSession.mutate({
       resourceId,
       requestBody: {},
     });
-  }, [startSession, resourceId]);
+  }, [startSession, resourceId, resource.requireSessionDurationEstimation]);
 
   const handleOpenStartSessionModal = () => {
     setIsNotesModalOpen(true);
@@ -113,6 +131,14 @@ export function StartSessionControls({ resourceId }: Readonly<StartSessionContro
         onConfirm={handleStartSession}
         mode={SessionModalMode.START}
         isSubmitting={startSession.isPending}
+      />
+
+      <DurationEstimationModal
+        isOpen={isDurationModalOpen}
+        onClose={() => setIsDurationModalOpen(false)}
+        onConfirm={handleStartSessionWithDuration}
+        isSubmitting={startSession.isPending}
+        maxSessionTimeMinutes={resource.maxSessionTimeMinutes}
       />
     </>
   );

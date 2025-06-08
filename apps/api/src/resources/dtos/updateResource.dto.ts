@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsEnum, IsUrl, ValidateIf, IsBoolean } from 'class-validator';
+import { IsString, IsOptional, IsEnum, IsUrl, ValidateIf, IsBoolean, IsInt, Min } from 'class-validator';
 import { FileUpload } from '../../common/types/file-upload.types';
 import { DocumentationType } from '@attraccess/database-entities';
 import { ToBoolean } from '../../common/request-transformers';
+import { Type } from 'class-transformer';
 
 export class UpdateResourceDto {
   @ApiProperty({
@@ -82,4 +83,27 @@ export class UpdateResourceDto {
   @ToBoolean()
   @IsOptional()
   allowTakeOver?: boolean;
+
+  @ApiProperty({
+    description: 'Maximum session time in minutes. If set, sessions will be automatically ended after this duration.',
+    required: false,
+    example: 120,
+    type: Number,
+  })
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  @Type(() => Number)
+  maxSessionTimeMinutes?: number;
+
+  @ApiProperty({
+    description: 'Whether users must provide an estimated session duration when starting a session',
+    required: false,
+    example: false,
+    type: Boolean,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @ToBoolean()
+  requireSessionDurationEstimation?: boolean;
 }

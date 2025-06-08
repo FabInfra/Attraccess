@@ -1,0 +1,18 @@
+{
+  "title": "Sitzung verlängern",
+  "description": "Wählen Sie aus, wie viel zusätzliche Zeit Sie für diese Sitzung benötigen.",
+  "currentDuration": "Aktuelle geschätzte Dauer: {{duration}}",
+  "maxTimeWarning": "Die maximale Sitzungszeit für diese Ressource beträgt {{maxTime}}.",
+  "selectExtension": "Verlängerungszeit auswählen:",
+  "newTotalDuration": "Neue Gesamtdauer",
+  "noExtensionsAvailable": "Keine Verlängerungen verfügbar. Sie haben die maximale Sitzungszeit erreicht.",
+  "duration": {
+    "minutes": "{{minutes}}min",
+    "hours": "{{hours}}h",
+    "hoursAndMinutes": "{{hours}}h {{minutes}}min"
+  },
+  "buttons": {
+    "cancel": "Abbrechen",
+    "extendSession": "Sitzung verlängern"
+  }
+}

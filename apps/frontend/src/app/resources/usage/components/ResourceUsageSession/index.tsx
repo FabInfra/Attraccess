@@ -73,7 +73,7 @@ export function ResourceUsageSession({ resourceId, resource, ...rest }: Resource
       // Check if the active session belongs to the current user
       if (activeSession.userId === user?.id) {
         // Current user's active session: Show timer and End button
-        return <ActiveSessionDisplay resourceId={resourceId} startTime={activeSession.startTime} />;
+        return <ActiveSessionDisplay resourceId={resourceId} startTime={activeSession.startTime} resource={resource} activeSession={activeSession} />;
       } else {
         // Active session belongs to another user: Show info message
         return <OtherUserSessionDisplay resourceId={resourceId} />;
@@ -84,7 +84,7 @@ export function ResourceUsageSession({ resourceId, resource, ...rest }: Resource
       return <IntroductionRequiredDisplay resourceId={resourceId} />;
     }
 
-    return <StartSessionControls resourceId={resourceId} />;
+    return <StartSessionControls resourceId={resourceId} resource={resource} />;
   };
 
   return (

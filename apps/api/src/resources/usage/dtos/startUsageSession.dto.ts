@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, IsInt, Min } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class StartUsageSessionDto {
   @ApiProperty({
@@ -20,4 +21,16 @@ export class StartUsageSessionDto {
   @IsBoolean()
   @IsOptional()
   forceTakeOver?: boolean;
+
+  @ApiProperty({
+    description: 'Estimated session duration in minutes',
+    required: false,
+    example: 120,
+    type: Number,
+  })
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  @Type(() => Number)
+  estimatedDurationMinutes?: number;
 }

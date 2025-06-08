@@ -617,6 +617,17 @@ This is a markdown documentation for the resource.`
             description: 'Whether this resource allows overtaking by the next user without the prior user ending their session',
             example: false,
             default: false
+        },
+        maxSessionTimeMinutes: {
+            type: 'number',
+            description: 'Maximum session time in minutes. If set, sessions will be automatically ended after this duration.',
+            example: 120
+        },
+        requireSessionDurationEstimation: {
+            type: 'boolean',
+            description: 'Whether users must provide an estimated session duration when starting a session',
+            example: false,
+            default: false
         }
     },
     required: ['name']
@@ -701,6 +712,17 @@ This is a markdown documentation for the resource.`
             example: false,
             default: false
         },
+        maxSessionTimeMinutes: {
+            type: 'number',
+            description: 'Maximum session time in minutes. If set, sessions will be automatically ended after this duration.',
+            example: 120
+        },
+        requireSessionDurationEstimation: {
+            type: 'boolean',
+            description: 'Whether users must provide an estimated session duration when starting a session',
+            example: false,
+            default: false
+        },
         createdAt: {
             format: 'date-time',
             type: 'string',
@@ -719,7 +741,7 @@ This is a markdown documentation for the resource.`
             }
         }
     },
-    required: ['id', 'name', 'allowTakeOver', 'createdAt', 'updatedAt', 'groups']
+    required: ['id', 'name', 'allowTakeOver', 'requireSessionDurationEstimation', 'createdAt', 'updatedAt', 'groups']
 } as const;
 
 export const $PaginatedResourceResponseDto = {
@@ -796,6 +818,16 @@ This is a markdown documentation for the resource.`
         allowTakeOver: {
             type: 'boolean',
             description: 'Whether this resource allows overtaking by the next user without the prior user ending their session',
+            example: false
+        },
+        maxSessionTimeMinutes: {
+            type: 'number',
+            description: 'Maximum session time in minutes. If set, sessions will be automatically ended after this duration.',
+            example: 120
+        },
+        requireSessionDurationEstimation: {
+            type: 'boolean',
+            description: 'Whether users must provide an estimated session duration when starting a session',
             example: false
         }
     }
@@ -1845,6 +1877,11 @@ export const $StartUsageSessionDto = {
             description: 'Whether to force takeover of an existing session (only works if resource allows takeover)',
             example: false,
             default: false
+        },
+        estimatedDurationMinutes: {
+            type: 'number',
+            description: 'Estimated session duration in minutes',
+            example: 120
         }
     }
 } as const;
@@ -1876,6 +1913,11 @@ export const $ResourceUsage = {
             type: 'string',
             description: 'Notes provided when starting the session',
             example: 'Starting prototype development for client XYZ'
+        },
+        estimatedDurationMinutes: {
+            type: 'number',
+            description: 'Estimated session duration in minutes provided when starting the session',
+            example: 120
         },
         endTime: {
             format: 'date-time',
@@ -1983,6 +2025,19 @@ export const $CanControlResponseDto = {
         }
     },
     required: ['canControl']
+} as const;
+
+export const $ExtendSessionDto = {
+    type: 'object',
+    properties: {
+        additionalMinutes: {
+            type: 'number',
+            description: 'Additional minutes to extend the session',
+            example: 60,
+            enum: [60, 120, 240, 360, 720, 1440]
+        }
+    },
+    required: ['additionalMinutes']
 } as const;
 
 export const $IsResourceIntroducerResponseDto = {

@@ -14,6 +14,14 @@
       "label": "Übernahme erlauben",
       "description": "Wenn aktiviert, kann die Ressource von anderen Benutzern übernommen werden ohne dass der aktuelle Nutzer die Ressource freigeben muss."
     },
+    "maxSessionTimeMinutes": {
+      "label": "Max. Sitzungszeit (Minuten)",
+      "placeholder": "z.B. 120 für 2 Stunden"
+    },
+    "requireSessionDurationEstimation": {
+      "label": "Dauer-Schätzung erforderlich",
+      "description": "Wenn aktiviert, müssen Benutzer eine geschätzte Sitzungsdauer angeben, wenn sie eine Sitzung starten."
+    },
     "image": {
       "label": "Bild"
     }

@@ -4,6 +4,12 @@
   "sessionEndedDescription": "Your usage session has been successfully ended.",
   "sessionEndError": "Failed to End Session",
   "sessionEndErrorDescription": "An error occurred while ending the session. Please try again.",
+  "extendSession": "Extend",
+  "sessionExtended": "Session Extended",
+  "sessionExtendedDescription": "Your session has been successfully extended.",
+  "sessionExtendError": "Failed to Extend Session",
+  "sessionExtendErrorDescription": "An error occurred while extending the session. Please try again.",
+  "estimatedDuration": "Estimated duration",
   "alternativeEndSessionOptionsMenu": {
     "label": "Alternative Session End",
     "endWithNotes": {

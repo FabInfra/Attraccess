@@ -293,6 +293,7 @@ export type AuthenticationServiceUpdateOneSsoProviderMutationResult = Awaited<Re
 export type ResourcesServiceUpdateOneResourceMutationResult = Awaited<ReturnType<typeof ResourcesService.updateOneResource>>;
 export type ResourcesServiceResourceGroupsUpdateOneMutationResult = Awaited<ReturnType<typeof ResourcesService.resourceGroupsUpdateOne>>;
 export type ResourcesServiceResourceUsageEndSessionMutationResult = Awaited<ReturnType<typeof ResourcesService.resourceUsageEndSession>>;
+export type ResourcesServiceResourceUsageExtendSessionMutationResult = Awaited<ReturnType<typeof ResourcesService.resourceUsageExtendSession>>;
 export type MqttServiceMqttServersUpdateOneMutationResult = Awaited<ReturnType<typeof MqttService.mqttServersUpdateOne>>;
 export type MqttServiceMqttResourceConfigUpdateMutationResult = Awaited<ReturnType<typeof MqttService.mqttResourceConfigUpdate>>;
 export type WebhooksServiceWebhookConfigUpdateOneMutationResult = Awaited<ReturnType<typeof WebhooksService.webhookConfigUpdateOne>>;

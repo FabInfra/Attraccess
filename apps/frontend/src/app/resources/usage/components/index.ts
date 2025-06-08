@@ -5,3 +5,5 @@ export { IntroductionRequiredDisplay } from './IntroductionRequiredDisplay';
 export { StartSessionControls } from './StartSessionControls';
 export { SessionTimer } from './SessionTimer';
 export { SessionNotesModal, SessionModalMode } from './SessionNotesModal';
+export { DurationEstimationModal } from './DurationEstimationModal';
+export { SessionExtensionModal } from './SessionExtensionModal';

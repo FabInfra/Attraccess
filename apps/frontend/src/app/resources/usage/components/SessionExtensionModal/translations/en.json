@@ -1,0 +1,18 @@
+{
+  "title": "Extend Session",
+  "description": "Select how much additional time you need for this session.",
+  "currentDuration": "Current estimated duration: {{duration}}",
+  "maxTimeWarning": "Maximum session time for this resource is {{maxTime}}.",
+  "selectExtension": "Select extension time:",
+  "newTotalDuration": "New total duration",
+  "noExtensionsAvailable": "No extensions available. You have reached the maximum session time.",
+  "duration": {
+    "minutes": "{{minutes}}min",
+    "hours": "{{hours}}h",
+    "hoursAndMinutes": "{{hours}}h {{minutes}}min"
+  },
+  "buttons": {
+    "cancel": "Cancel",
+    "extendSession": "Extend Session"
+  }
+}

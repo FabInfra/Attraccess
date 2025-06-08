@@ -10,6 +10,8 @@ export function createMockResource(overrides?: Partial<Resource>): Resource {
     description: 'Test Description',
     imageFilename: 'test.jpg',
     allowTakeOver: false,
+    requireSessionDurationEstimation: false,
+    maxSessionTimeMinutes: undefined,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     groups: [],

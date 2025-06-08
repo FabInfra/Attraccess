@@ -1,0 +1,20 @@
+{
+  "title": "Session Duration Estimation",
+  "description": "Please estimate how long you will use this resource. This helps with resource planning and ensures fair access for all users.",
+  "maxTimeWarning": "Maximum session time for this resource is {{maxTime}} minutes.",
+  "inputs": {
+    "estimatedDuration": {
+      "label": "Estimated Duration (minutes)",
+      "placeholder": "e.g., 120 for 2 hours",
+      "error": "Duration cannot exceed the maximum session time"
+    },
+    "notes": {
+      "label": "Session Notes (optional)",
+      "placeholder": "What will you be working on?"
+    }
+  },
+  "buttons": {
+    "cancel": "Cancel",
+    "startSession": "Start Session"
+  }
+}

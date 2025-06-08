@@ -416,6 +416,14 @@ export type CreateResourceDto = {
      * Whether this resource allows overtaking by the next user without the prior user ending their session
      */
     allowTakeOver?: boolean;
+    /**
+     * Maximum session time in minutes. If set, sessions will be automatically ended after this duration.
+     */
+    maxSessionTimeMinutes?: number;
+    /**
+     * Whether users must provide an estimated session duration when starting a session
+     */
+    requireSessionDurationEstimation?: boolean;
 };
 
 /**
@@ -483,6 +491,14 @@ export type Resource = {
      */
     allowTakeOver: boolean;
     /**
+     * Maximum session time in minutes. If set, sessions will be automatically ended after this duration.
+     */
+    maxSessionTimeMinutes?: number;
+    /**
+     * Whether users must provide an estimated session duration when starting a session
+     */
+    requireSessionDurationEstimation: boolean;
+    /**
      * When the resource was created
      */
     createdAt: string;
@@ -541,6 +557,14 @@ export type UpdateResourceDto = {
      * Whether this resource allows overtaking by the next user without the prior user ending their session
      */
     allowTakeOver?: boolean;
+    /**
+     * Maximum session time in minutes. If set, sessions will be automatically ended after this duration.
+     */
+    maxSessionTimeMinutes?: number;
+    /**
+     * Whether users must provide an estimated session duration when starting a session
+     */
+    requireSessionDurationEstimation?: boolean;
 };
 
 export type MqttServer = {
@@ -1299,6 +1323,10 @@ export type StartUsageSessionDto = {
      * Whether to force takeover of an existing session (only works if resource allows takeover)
      */
     forceTakeOver?: boolean;
+    /**
+     * Estimated session duration in minutes
+     */
+    estimatedDurationMinutes?: number;
 };
 
 export type ResourceUsage = {
@@ -1322,6 +1350,10 @@ export type ResourceUsage = {
      * Notes provided when starting the session
      */
     startNotes?: string;
+    /**
+     * Estimated session duration in minutes provided when starting the session
+     */
+    estimatedDurationMinutes?: number;
     /**
      * When the usage session ended
      */
@@ -1380,6 +1412,25 @@ export type CanControlResponseDto = {
      */
     canControl: boolean;
 };
+
+export type ExtendSessionDto = {
+    /**
+     * Additional minutes to extend the session
+     */
+    additionalMinutes: 60 | 120 | 240 | 360 | 720 | 1440;
+};
+
+/**
+ * Additional minutes to extend the session
+ */
+export enum additionalMinutes {
+    '_60' = 60,
+    '_120' = 120,
+    '_240' = 240,
+    '_360' = 360,
+    '_720' = 720,
+    '_1440' = 1440
+}
 
 export type IsResourceIntroducerResponseDto = {
     /**
@@ -1958,6 +2009,13 @@ export type ResourceUsageCanControlData = {
 };
 
 export type ResourceUsageCanControlResponse = CanControlResponseDto;
+
+export type ResourceUsageExtendSessionData = {
+    requestBody: ExtendSessionDto;
+    resourceId: number;
+};
+
+export type ResourceUsageExtendSessionResponse = ResourceUsage;
 
 export type MqttServersGetAllResponse = Array<MqttServer>;
 
@@ -3095,6 +3153,33 @@ export type $OpenApiTs = {
                  * Unauthorized
                  */
                 401: unknown;
+            };
+        };
+    };
+    '/api/resources/{resourceId}/usage/extend': {
+        put: {
+            req: ResourceUsageExtendSessionData;
+            res: {
+                /**
+                 * Session extended successfully.
+                 */
+                200: ResourceUsage;
+                /**
+                 * Bad Request - Invalid input data or no active session
+                 */
+                400: unknown;
+                /**
+                 * Unauthorized
+                 */
+                401: unknown;
+                /**
+                 * Forbidden - User cannot extend this session
+                 */
+                403: unknown;
+                /**
+                 * Resource or session not found
+                 */
+                404: unknown;
             };
         };
     };

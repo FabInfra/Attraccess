@@ -86,6 +86,24 @@ export class ResourceUsageService {
       throw new BadRequestException('You must complete the resource introduction before using it');
     }
 
+    // Validate session duration estimation requirements
+    if (resource.requireSessionDurationEstimation && !dto.estimatedDurationMinutes) {
+      this.logger.warn(`Resource ${resourceId} requires session duration estimation but none provided`);
+      throw new BadRequestException('This resource requires an estimated session duration');
+    }
+
+    // Validate estimated duration doesn't exceed max session time
+    if (dto.estimatedDurationMinutes && resource.maxSessionTimeMinutes) {
+      if (dto.estimatedDurationMinutes > resource.maxSessionTimeMinutes) {
+        this.logger.warn(
+          `Estimated duration ${dto.estimatedDurationMinutes} exceeds max session time ${resource.maxSessionTimeMinutes} for resource ${resourceId}`
+        );
+        throw new BadRequestException(
+          `Estimated duration cannot exceed the maximum session time of ${resource.maxSessionTimeMinutes} minutes`
+        );
+      }
+    }
+
     const existingActiveSession = await this.getActiveSession(resourceId);
     if (existingActiveSession) {
       this.logger.debug(
@@ -142,6 +160,7 @@ export class ResourceUsageService {
       userId: user.id,
       startTime: new Date(),
       startNotes: dto.notes,
+      estimatedDurationMinutes: dto.estimatedDurationMinutes,
       endTime: null,
       endNotes: null,
     };
@@ -306,5 +325,63 @@ export class ResourceUsageService {
     this.logger.debug(`Found ${data.length} usage records out of ${total} total for user ${userId}`);
 
     return { data, total };
+  }
+
+  async extendSession(resourceId: number, user: User, additionalMinutes: number): Promise<ResourceUsage> {
+    this.logger.debug(`Extending session for resource ${resourceId} by ${additionalMinutes} minutes`);
+
+    // Find the resource to check max session time
+    const resource = await this.resourceRepository.findOne({ where: { id: resourceId } });
+    if (!resource) {
+      throw new ResourceNotFoundException(resourceId);
+    }
+
+    // Find active session
+    const activeSession = await this.getActiveSession(resourceId);
+    if (!activeSession) {
+      this.logger.warn(`No active session found for resource ${resourceId}`);
+      throw new BadRequestException('No active session found');
+    }
+
+    // Check if the user is authorized to extend the session
+    const canManageResources = user.systemPermissions?.canManageResources || false;
+    const isSessionOwner = activeSession.user.id === user.id;
+
+    if (!canManageResources && !isSessionOwner) {
+      this.logger.warn(`User ${user.id} cannot extend session ${activeSession.id} - not owner or admin`);
+      throw new ForbiddenException('You can only extend your own sessions');
+    }
+
+    // Calculate new estimated duration
+    const currentEstimatedDuration = activeSession.estimatedDurationMinutes || 0;
+    const newEstimatedDuration = currentEstimatedDuration + additionalMinutes;
+
+    // Validate against max session time if set
+    if (resource.maxSessionTimeMinutes && newEstimatedDuration > resource.maxSessionTimeMinutes) {
+      this.logger.warn(
+        `Extended duration ${newEstimatedDuration} would exceed max session time ${resource.maxSessionTimeMinutes} for resource ${resourceId}`
+      );
+      throw new BadRequestException(
+        `Extended duration cannot exceed the maximum session time of ${resource.maxSessionTimeMinutes} minutes`
+      );
+    }
+
+    // Update the estimated duration
+    await this.resourceUsageRepository
+      .createQueryBuilder()
+      .update(ResourceUsage)
+      .set({ estimatedDurationMinutes: newEstimatedDuration })
+      .where('id = :id', { id: activeSession.id })
+      .execute();
+
+    // Fetch the updated session
+    const updatedSession = await this.resourceUsageRepository.findOne({
+      where: { id: activeSession.id },
+      relations: ['resource', 'user'],
+    });
+
+    this.logger.debug(`Extended session ${activeSession.id} to ${newEstimatedDuration} minutes`);
+
+    return updatedSession;
   }
 }

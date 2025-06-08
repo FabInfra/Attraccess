@@ -11,6 +11,14 @@
       "label": "Allow Takeover",
       "description": "If enabled, the resource can be taken over by other users without the current user having to release the resource."
     },
+    "maxSessionTimeMinutes": {
+      "label": "Max Session Time (minutes)",
+      "placeholder": "e.g., 120 for 2 hours"
+    },
+    "requireSessionDurationEstimation": {
+      "label": "Require Duration Estimation",
+      "description": "If enabled, users must provide an estimated session duration when starting a session."
+    },
     "image": {
       "label": "Image"
     }

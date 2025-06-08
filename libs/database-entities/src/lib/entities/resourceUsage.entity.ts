@@ -43,6 +43,14 @@ export class ResourceUsage {
   })
   startNotes!: string | null;
 
+  @Column({ type: 'integer', nullable: true })
+  @ApiProperty({
+    description: 'Estimated session duration in minutes provided when starting the session',
+    example: 120,
+    required: false,
+  })
+  estimatedDurationMinutes!: number | null;
+
   @Column({ type: 'datetime', nullable: true })
   @ApiProperty({
     description: 'When the usage session ended',

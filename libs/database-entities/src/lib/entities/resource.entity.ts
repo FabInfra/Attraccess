@@ -86,6 +86,22 @@ export class Resource {
   })
   allowTakeOver!: boolean;
 
+  @Column({ type: 'integer', nullable: true })
+  @ApiProperty({
+    description: 'Maximum session time in minutes. If set, sessions will be automatically ended after this duration.',
+    example: 120,
+    required: false,
+  })
+  maxSessionTimeMinutes!: number | null;
+
+  @Column({ type: 'boolean', default: false })
+  @ApiProperty({
+    description: 'Whether users must provide an estimated session duration when starting a session',
+    example: false,
+    default: false,
+  })
+  requireSessionDurationEstimation!: boolean;
+
   @CreateDateColumn()
   @ApiProperty({
     description: 'When the resource was created',

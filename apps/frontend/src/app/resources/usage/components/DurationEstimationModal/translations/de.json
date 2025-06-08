@@ -1,0 +1,20 @@
+{
+  "title": "Sitzungsdauer-Schätzung",
+  "description": "Bitte schätzen Sie, wie lange Sie diese Ressource nutzen werden. Dies hilft bei der Ressourcenplanung und gewährleistet einen fairen Zugang für alle Benutzer.",
+  "maxTimeWarning": "Die maximale Sitzungszeit für diese Ressource beträgt {{maxTime}} Minuten.",
+  "inputs": {
+    "estimatedDuration": {
+      "label": "Geschätzte Dauer (Minuten)",
+      "placeholder": "z.B. 120 für 2 Stunden",
+      "error": "Die Dauer kann die maximale Sitzungszeit nicht überschreiten"
+    },
+    "notes": {
+      "label": "Sitzungsnotizen (optional)",
+      "placeholder": "Woran werden Sie arbeiten?"
+    }
+  },
+  "buttons": {
+    "cancel": "Abbrechen",
+    "startSession": "Sitzung starten"
+  }
+}

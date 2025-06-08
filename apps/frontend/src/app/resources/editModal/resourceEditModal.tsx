@@ -51,6 +51,8 @@ export function ResourceEditModal(props: ResourceEditModalProps) {
     name: '',
     description: '',
     allowTakeOver: false,
+    maxSessionTimeMinutes: undefined,
+    requireSessionDurationEstimation: false,
   });
 
   const setField = useCallback(
@@ -138,6 +140,8 @@ export function ResourceEditModal(props: ResourceEditModalProps) {
         name: resource.name,
         description: resource.description || '',
         allowTakeOver: resource.allowTakeOver || false,
+        maxSessionTimeMinutes: resource.maxSessionTimeMinutes || undefined,
+        requireSessionDurationEstimation: resource.requireSessionDurationEstimation || false,
       });
     } else {
       // Fallback if resource is somehow not available, though it's a required prop
@@ -145,6 +149,8 @@ export function ResourceEditModal(props: ResourceEditModalProps) {
         name: '',
         description: '',
         allowTakeOver: false,
+        maxSessionTimeMinutes: undefined,
+        requireSessionDurationEstimation: false,
       });
     }
     setSelectedImage(null);
@@ -170,6 +176,8 @@ export function ResourceEditModal(props: ResourceEditModalProps) {
           name: formData.name,
           description: formData.description,
           allowTakeOver: formData.allowTakeOver,
+          maxSessionTimeMinutes: formData.maxSessionTimeMinutes,
+          requireSessionDurationEstimation: formData.requireSessionDurationEstimation,
           image: selectedImage ?? undefined,
           deleteImage: selectedImage === null,
         },
@@ -182,6 +190,8 @@ export function ResourceEditModal(props: ResourceEditModalProps) {
         name: formData.name as string,
         description: formData.description as string,
         allowTakeOver: formData.allowTakeOver,
+        maxSessionTimeMinutes: formData.maxSessionTimeMinutes,
+        requireSessionDurationEstimation: formData.requireSessionDurationEstimation,
         image: selectedImage ?? undefined,
       },
     });
@@ -228,6 +238,30 @@ export function ResourceEditModal(props: ResourceEditModalProps) {
                     <div className="flex flex-col">
                       <span className="text-small">{t('inputs.allowTakeOver.label')}</span>
                       <span className="text-tiny text-default-400">{t('inputs.allowTakeOver.description')}</span>
+                    </div>
+                  </Switch>
+
+                  <Input
+                    type="number"
+                    label={t('inputs.maxSessionTimeMinutes.label')}
+                    placeholder={t('inputs.maxSessionTimeMinutes.placeholder')}
+                    value={formData.maxSessionTimeMinutes?.toString() || ''}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setField('maxSessionTimeMinutes', value ? parseInt(value, 10) : undefined);
+                    }}
+                    min={1}
+                    data-cy="resource-edit-modal-max-session-time-input"
+                  />
+
+                  <Switch
+                    isSelected={formData.requireSessionDurationEstimation}
+                    onValueChange={(value) => setField('requireSessionDurationEstimation', value)}
+                    data-cy="resource-edit-modal-require-duration-estimation-switch"
+                  >
+                    <div className="flex flex-col">
+                      <span className="text-small">{t('inputs.requireSessionDurationEstimation.label')}</span>
+                      <span className="text-tiny text-default-400">{t('inputs.requireSessionDurationEstimation.description')}</span>
                     </div>
                   </Switch>
 
