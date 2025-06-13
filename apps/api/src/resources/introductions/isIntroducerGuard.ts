@@ -8,7 +8,8 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ResourceIntroducer, User } from '@attraccess/database-entities';
+import { ResourceIntroducer } from '@attraccess/database-entities';
+import { AuthenticatedUser } from '@attraccess/plugins-backend-sdk';
 
 @Injectable()
 export class IsResourceIntroducerGuard implements CanActivate {
@@ -21,7 +22,7 @@ export class IsResourceIntroducerGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const user = request.user as User;
+    const user = request.user as AuthenticatedUser;
 
     // If no user is present, deny access
     if (!user) {

@@ -56,8 +56,15 @@ describe('AuthController', () => {
   });
 
   it('should delete a session and revoke JWT', async () => {
+    const mockUser = {
+      id: 1,
+      username: 'testuser',
+      jwtTokenId: 'test-jwt-token-id',
+    };
+
     const mockRequest = {
       ...Object.create(Request.prototype),
+      user: mockUser,
       authInfo: { tokenId: 'test-token-id' },
       logout: jest.fn().mockImplementation((cb) => cb()),
     } as AuthenticatedRequest;
@@ -65,6 +72,6 @@ describe('AuthController', () => {
     await authController.endSession(mockRequest);
 
     expect(mockRequest.logout).toHaveBeenCalled();
-    expect(authService.revokeJWT).toHaveBeenCalledWith('test-token-id');
+    expect(authService.revokeJWT).toHaveBeenCalledWith({ tokenId: 'test-jwt-token-id' });
   });
 });

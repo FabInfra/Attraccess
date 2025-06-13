@@ -1130,20 +1130,20 @@ export interface MqttResourceConfig {
    */
   notInUseMessage: string;
   /**
-   * Whether to send an MQTT message when a resource usage starts
+   * Whether to send a start message when a resource is taken over
    * @example true
    */
-  sendOnStart: boolean;
+  onTakeoverSendStart: boolean;
   /**
-   * Whether to send an MQTT message when a resource usage stops
+   * Whether to send a stop message when a resource is taken over
    * @example true
    */
-  sendOnStop: boolean;
+  onTakeoverSendStop: boolean;
   /**
    * Whether to send an MQTT message when a resource usage is taken over
    * @example false
    */
-  sendOnTakeover: boolean;
+  onTakeoverSendTakeover: boolean;
   /**
    * Topic template using Handlebars for takeover status
    * @example "resources/{{id}}/status"
@@ -1198,23 +1198,23 @@ export interface CreateMqttResourceConfigDto {
    */
   notInUseMessage: string;
   /**
-   * Whether to send an MQTT message when a resource usage starts
-   * @default true
-   * @example true
-   */
-  sendOnStart?: boolean;
-  /**
-   * Whether to send an MQTT message when a resource usage stops
-   * @default true
-   * @example true
-   */
-  sendOnStop?: boolean;
-  /**
-   * Whether to send an MQTT message when a resource usage is taken over
+   * Whether to send a start message when a resource is taken over
    * @default false
    * @example false
    */
-  sendOnTakeover?: boolean;
+  onTakeoverSendStart?: boolean;
+  /**
+   * Whether to send a stop message when a resource is taken over
+   * @default false
+   * @example false
+   */
+  onTakeoverSendStop?: boolean;
+  /**
+   * Whether to send an MQTT message when a resource usage is taken over
+   * @default true
+   * @example true
+   */
+  onTakeoverSendTakeover?: boolean;
   /**
    * Topic template for when resource usage is taken over
    * @example "resources/{{id}}/status"
@@ -1259,23 +1259,23 @@ export interface UpdateMqttResourceConfigDto {
    */
   notInUseMessage?: string;
   /**
-   * Whether to send an MQTT message when a resource usage starts
-   * @default true
-   * @example true
-   */
-  sendOnStart?: boolean;
-  /**
-   * Whether to send an MQTT message when a resource usage stops
-   * @default true
-   * @example true
-   */
-  sendOnStop?: boolean;
-  /**
-   * Whether to send an MQTT message when a resource usage is taken over
+   * Whether to send a start message when a resource is taken over
    * @default false
    * @example false
    */
-  sendOnTakeover?: boolean;
+  onTakeoverSendStart?: boolean;
+  /**
+   * Whether to send a stop message when a resource is taken over
+   * @default false
+   * @example false
+   */
+  onTakeoverSendStop?: boolean;
+  /**
+   * Whether to send an MQTT message when a resource usage is taken over
+   * @default true
+   * @example true
+   */
+  onTakeoverSendTakeover?: boolean;
   /**
    * Topic template for when resource usage is taken over
    * @example "resources/{{id}}/status"
@@ -1835,6 +1835,8 @@ export interface CreateSessionPayload {
 
 export type CreateSessionData = CreateSessionResponse;
 
+export type RefreshSessionData = CreateSessionResponse;
+
 export type EndSessionData = object;
 
 export type GetAllSsoProvidersData = SSOProvider[];
@@ -2304,6 +2306,22 @@ export namespace Authentication {
     export type RequestBody = CreateSessionPayload;
     export type RequestHeaders = {};
     export type ResponseBody = CreateSessionData;
+  }
+
+  /**
+   * No description
+   * @tags Authentication
+   * @name RefreshSession
+   * @summary Refresh the current session
+   * @request GET:/api/auth/session/refresh
+   * @secure
+   */
+  export namespace RefreshSession {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = RefreshSessionData;
   }
 
   /**
@@ -4349,6 +4367,24 @@ export class Api<
         method: "POST",
         body: data,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name RefreshSession
+     * @summary Refresh the current session
+     * @request GET:/api/auth/session/refresh
+     * @secure
+     */
+    refreshSession: (params: RequestParams = {}) =>
+      this.request<RefreshSessionData, void>({
+        path: `/api/auth/session/refresh`,
+        method: "GET",
+        secure: true,
         format: "json",
         ...params,
       }),

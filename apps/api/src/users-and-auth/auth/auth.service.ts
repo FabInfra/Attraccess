@@ -63,7 +63,7 @@ export class AuthService {
       .execute();
   }
 
-  async isJWTRevoked(tokenId: string): Promise<boolean> {
+  async isJWTRevoked({ tokenId }: { tokenId: string }): Promise<boolean> {
     const revokedToken = await this.revokedTokenRepository.findOne({
       where: { tokenId },
     });
@@ -71,13 +71,12 @@ export class AuthService {
     return isRevoked;
   }
 
-  async revokeJWT(tokenId: string): Promise<void> {
-    this.logger.debug(`Revoking JWT token ID: ${tokenId}`);
-    const token = new RevokedToken();
-    token.tokenId = tokenId;
-    token.expiresAt = addDays(new Date(), 7); // Keep revoked tokens for 7 days
-    await this.revokedTokenRepository.save(token);
-    this.logger.debug(`Successfully revoked token ID: ${tokenId}`);
+  async revokeJWT({ tokenId }: { tokenId: string }): Promise<void> {
+    this.logger.debug(`Revoking JWT token: ${tokenId}`);
+    const revokedToken = new RevokedToken();
+    revokedToken.tokenId = tokenId;
+    await this.revokedTokenRepository.save(revokedToken);
+    this.logger.debug(`Successfully revoked token: ${tokenId}`);
   }
 
   private async getAuthenticationDetail(

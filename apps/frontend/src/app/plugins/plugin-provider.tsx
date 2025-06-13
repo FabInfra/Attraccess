@@ -13,12 +13,6 @@ import { ToastType, useToastMessage } from '../../components/toastProvider';
 import { useAuth } from '../../hooks/useAuth';
 import { getBaseUrl } from '../../api';
 
-export class PluginLoadedEvent extends Event {
-  constructor(public readonly pluginManifest: LoadedPluginManifest) {
-    super('pluginLoaded');
-  }
-}
-
 const pluginStore = createPluginStore();
 export function PluginProvider(props: PropsWithChildren) {
   const { refetch: refetchPlugins } = usePluginsServiceGetPlugins();

@@ -40,7 +40,6 @@ describe('MqttPublisherService', () => {
     updatedAt: new Date(),
     resourceIntroductions: [],
     resourceUsages: [],
-    revokedTokens: [],
     authenticationDetails: [],
     resourceIntroducerPermissions: [],
   };
@@ -63,7 +62,6 @@ describe('MqttPublisherService', () => {
     updatedAt: new Date(),
     resourceIntroductions: [],
     resourceUsages: [],
-    revokedTokens: [],
     authenticationDetails: [],
     resourceIntroducerPermissions: [],
   };

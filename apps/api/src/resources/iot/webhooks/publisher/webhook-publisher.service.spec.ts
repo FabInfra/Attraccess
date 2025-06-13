@@ -41,7 +41,6 @@ describe('WebhookPublisherService', () => {
     updatedAt: new Date(),
     resourceIntroductions: [],
     resourceUsages: [],
-    revokedTokens: [],
     authenticationDetails: [],
     resourceIntroducerPermissions: [],
   };
@@ -64,7 +63,6 @@ describe('WebhookPublisherService', () => {
     updatedAt: new Date(),
     resourceIntroductions: [],
     resourceUsages: [],
-    revokedTokens: [],
     authenticationDetails: [],
     resourceIntroducerPermissions: [],
   };

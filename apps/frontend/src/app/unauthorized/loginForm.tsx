@@ -1,7 +1,6 @@
 import React, { useCallback, useState, useMemo } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Input } from '@heroui/input';
-import { Checkbox } from '@heroui/checkbox';
 import { Button } from '@heroui/button';
 import { Alert } from '@heroui/alert';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
@@ -22,7 +21,6 @@ export function LoginForm({ onNeedsAccount, onForgotPassword }: LoginFormProps) 
   });
 
   const { login } = useAuth();
-  const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit: React.FormEventHandler = useCallback(
@@ -40,14 +38,13 @@ export function LoginForm({ onNeedsAccount, onForgotPassword }: LoginFormProps) 
         await login.mutateAsync({
           username,
           password,
-          persist: rememberMe,
         });
       } catch (err) {
         const error = err as { error?: { message?: string }; message?: string };
         setError(error.error?.message || error.message || 'An unexpected error occurred');
       }
     },
-    [login, rememberMe]
+    [login]
   );
 
   const memoizedArrowRight = useMemo(
@@ -61,7 +58,13 @@ export function LoginForm({ onNeedsAccount, onForgotPassword }: LoginFormProps) 
         <h2 className="text-3xl font-bold">{t('title')}</h2>
         <p className="mt-2 text-gray-600 dark:text-gray-300">
           {t('noAccount')}{' '}
-          <Button onPress={onNeedsAccount} variant="light" color="secondary" isDisabled={login.isPending} data-cy="login-form-sign-up-button">
+          <Button
+            onPress={onNeedsAccount}
+            variant="light"
+            color="secondary"
+            isDisabled={login.isPending}
+            data-cy="login-form-sign-up-button"
+          >
             {t('signUpButton')}
           </Button>
         </p>
@@ -88,19 +91,13 @@ export function LoginForm({ onNeedsAccount, onForgotPassword }: LoginFormProps) 
           data-cy="login-form-password-input"
         />
         <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <Checkbox
-              name="remember-me"
-              isSelected={rememberMe}
-              onValueChange={setRememberMe}
-              isDisabled={login.isPending}
-              data-cy="login-form-remember-me-checkbox"
-            >
-              {t('rememberMe')}
-            </Checkbox>
-          </div>
-
-          <Button onPress={onForgotPassword} variant="light" color="secondary" isDisabled={login.isPending} data-cy="login-form-forgot-password-button">
+          <Button
+            onPress={onForgotPassword}
+            variant="light"
+            color="secondary"
+            isDisabled={login.isPending}
+            data-cy="login-form-forgot-password-button"
+          >
             {t('forgotPassword')}
           </Button>
         </div>
@@ -116,7 +113,9 @@ export function LoginForm({ onNeedsAccount, onForgotPassword }: LoginFormProps) 
           {login.isPending ? t('signingIn') : t('signInButton')}
         </Button>
 
-        {error && <Alert color="danger" title={t('error.title')} description={error} data-cy="login-form-error-alert" />}
+        {error && (
+          <Alert color="danger" title={t('error.title')} description={error} data-cy="login-form-error-alert" />
+        )}
       </form>
     </>
   );

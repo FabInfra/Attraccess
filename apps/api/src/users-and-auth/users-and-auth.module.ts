@@ -69,7 +69,7 @@ import { AppConfigType } from '../config/app.config';
 
         return {
           secret: jwtSecret,
-          signOptions: { expiresIn: '24h' }, // Standard sign options
+          signOptions: { expiresIn: '14d' },
         };
       },
       inject: [ConfigService],

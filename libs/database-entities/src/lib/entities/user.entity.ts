@@ -3,7 +3,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { ResourceIntroduction } from './resourceIntroduction.entity';
 import { ResourceUsage } from './resourceUsage.entity';
-import { RevokedToken } from './revokedToken.entity';
 import { AuthenticationDetail } from './authenticationDetail.entity';
 import { ResourceIntroducer } from './resourceIntroducer.entity';
 
@@ -110,11 +109,6 @@ export class User {
     onDelete: 'SET NULL',
   })
   resourceUsages!: ResourceUsage[];
-
-  @OneToMany(() => RevokedToken, (token) => token.user, {
-    onDelete: 'CASCADE',
-  })
-  revokedTokens!: RevokedToken[];
 
   @OneToMany(() => AuthenticationDetail, (detail) => detail.user, {
     onDelete: 'CASCADE',

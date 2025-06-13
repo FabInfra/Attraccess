@@ -12,7 +12,12 @@ import deRoutes from '../routes/translations/de.json';
 import enRoutes from '../routes/translations/en.json';
 
 function NavLink(
-  props: Omit<PropsOf<typeof Link>, 'children'> & { label: string; icon: React.ReactNode; isExternal?: boolean; 'data-cy'?: string }
+  props: Omit<PropsOf<typeof Link>, 'children'> & {
+    label: string;
+    icon: React.ReactNode;
+    isExternal?: boolean;
+    'data-cy'?: string;
+  }
 ) {
   return (
     <Link
@@ -119,10 +124,23 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
       >
         {/* Sidebar Header */}
         <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-gray-700">
-          <Link href="/" className="text-xl font-semibold" color="foreground" underline="none" data-cy="sidebar-home-link">
+          <Link
+            href="/"
+            className="text-xl font-semibold"
+            color="foreground"
+            underline="none"
+            data-cy="sidebar-home-link"
+          >
             Attraccess
           </Link>
-          <Button variant="light" aria-label="Close sidebar" isIconOnly className="md:hidden" onPress={toggleSidebar} data-cy="sidebar-close-button">
+          <Button
+            variant="light"
+            aria-label="Close sidebar"
+            isIconOnly
+            className="md:hidden"
+            onPress={toggleSidebar}
+            data-cy="sidebar-close-button"
+          >
             <X className="h-6 w-6" />
           </Button>
         </div>
@@ -145,7 +163,14 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
         {/* Helpful Links */}
         <div className="py-4">
           <nav className="px-2 space-y-1">
-            <NavLink href="/docs" target="_blank" icon={<Book />} label={t('docs')} isExternal data-cy="sidebar-link-docs" />
+            <NavLink
+              href="/docs"
+              target="_blank"
+              icon={<Book />}
+              label={t('docs')}
+              isExternal
+              data-cy="sidebar-link-docs"
+            />
             <NavLink
               href={newGithubIssueUrl({
                 user: 'FabInfra',
@@ -218,7 +243,12 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu data-cy="sidebar-settings-dropdown-menu">
-                  <DropdownItem key="logout" onPress={() => logout.mutateAsync()} startContent={<LogOut />} data-cy="sidebar-logout-button">
+                  <DropdownItem
+                    key="logout"
+                    onPress={() => logout()}
+                    startContent={<LogOut />}
+                    data-cy="sidebar-logout-button"
+                  >
                     {t('logout')}
                   </DropdownItem>
                 </DropdownMenu>

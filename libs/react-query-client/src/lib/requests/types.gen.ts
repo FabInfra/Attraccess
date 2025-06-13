@@ -1703,6 +1703,8 @@ export type CreateSessionData = {
 
 export type CreateSessionResponse2 = CreateSessionResponse;
 
+export type RefreshSessionResponse = CreateSessionResponse;
+
 export type EndSessionResponse = {
     [key: string]: unknown;
 };
@@ -2608,6 +2610,20 @@ export type $OpenApiTs = {
                 200: CreateSessionResponse;
                 /**
                  * Unauthorized - Invalid credentials
+                 */
+                401: unknown;
+            };
+        };
+    };
+    '/api/auth/session/refresh': {
+        get: {
+            res: {
+                /**
+                 * The session has been refreshed
+                 */
+                200: CreateSessionResponse;
+                /**
+                 * Unauthorized
                  */
                 401: unknown;
             };

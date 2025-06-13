@@ -7,6 +7,7 @@ import { existsSync, readFileSync } from 'fs';
 
 import { UsersService } from '../users/users.service';
 import { AuthService } from '../auth/auth.service';
+import { AuthenticatedUser } from '@attraccess/plugins-backend-sdk';
 
 interface JwtPayload {
   username: string;
@@ -54,11 +55,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return jwtSecret;
   }
 
-
   constructor(
     private configService: ConfigService,
     private usersService: UsersService,
-    private authService: AuthService,
+    private authService: AuthService
   ) {
     const appConfig = configService.get<AppConfigType>('app');
     // Use a temporary logger for secret resolution before super()
@@ -75,7 +75,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload) {
-    const isRevoked = await this.authService.isJWTRevoked(payload.tokenId);
+    const isRevoked = await this.authService.isJWTRevoked({ tokenId: payload.tokenId });
     if (isRevoked) {
       this.logger.warn(`JWT token ${payload.tokenId} is revoked`);
       throw new UnauthorizedException();
@@ -86,12 +86,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('Invalid JWT Token');
     }
 
-    const user = await this.usersService.findOne({ id: payload.sub });
+    const user = (await this.usersService.findOne({ id: payload.sub })) as AuthenticatedUser;
 
     if (!user) {
       this.logger.warn(`User with ID ${payload.sub} not found`);
       throw new UnauthorizedException();
     }
+
+    user.jwtTokenId = payload.tokenId;
 
     return user;
   }

@@ -22,6 +22,7 @@ export const prefetchUseUsersServiceGetAllWithPermission = (queryClient: QueryCl
   page?: number;
   permission?: "canManageResources" | "canManageSystemConfiguration" | "canManageUsers";
 } = {}) => queryClient.prefetchQuery({ queryKey: Common.UseUsersServiceGetAllWithPermissionKeyFn({ limit, page, permission }), queryFn: () => UsersService.getAllWithPermission({ limit, page, permission }) });
+export const prefetchUseAuthenticationServiceRefreshSession = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseAuthenticationServiceRefreshSessionKeyFn(), queryFn: () => AuthenticationService.refreshSession() });
 export const prefetchUseAuthenticationServiceGetAllSsoProviders = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseAuthenticationServiceGetAllSsoProvidersKeyFn(), queryFn: () => AuthenticationService.getAllSsoProviders() });
 export const prefetchUseAuthenticationServiceGetOneSsoProviderById = (queryClient: QueryClient, { id }: {
   id: number;

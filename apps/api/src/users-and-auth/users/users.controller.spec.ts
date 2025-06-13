@@ -62,19 +62,24 @@ describe('UsersController', () => {
         isEmailVerified: true,
         emailVerificationToken: null,
         emailVerificationTokenExpiresAt: null,
+        passwordResetToken: null,
+        passwordResetTokenExpiresAt: null,
         systemPermissions: {},
         createdAt: new Date(),
         updatedAt: new Date(),
         resourceIntroductions: [],
         resourceUsages: [],
-        revokedTokens: [],
         authenticationDetails: [],
+        resourceIntroducerPermissions: [],
       } as User;
 
       jest.spyOn(usersService, 'findOne').mockResolvedValue(user);
 
       const mockRequest: Partial<AuthenticatedRequest> = {
-        user,
+        user: {
+          ...user,
+          jwtTokenId: 'test-jwt-token-id',
+        },
         authInfo: { tokenId: 'test-token' },
         logout: jest.fn(),
       };
@@ -93,13 +98,15 @@ describe('UsersController', () => {
         isEmailVerified: false,
         emailVerificationToken: 'token',
         emailVerificationTokenExpiresAt: new Date(),
+        passwordResetToken: null,
+        passwordResetTokenExpiresAt: null,
         systemPermissions: {},
         createdAt: new Date(),
         updatedAt: new Date(),
         resourceIntroductions: [],
         resourceUsages: [],
-        revokedTokens: [],
         authenticationDetails: [],
+        resourceIntroducerPermissions: [],
       } as User;
 
       jest.spyOn(usersService, 'createOne').mockResolvedValue(user);

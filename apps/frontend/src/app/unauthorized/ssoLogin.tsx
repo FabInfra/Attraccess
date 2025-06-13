@@ -39,7 +39,7 @@ function SSOLoginButton(props: Readonly<SSOLoginButtonProps>) {
 export function SSOLogin() {
   const { isLoading, data: providers } = useAuthenticationServiceGetAllSsoProviders();
   const location = useLocation();
-  const { jwtTokenLogin } = useAuth();
+  const { jwtTokenLoginMutate } = useAuth();
 
   const [didExecuteSSOCallback, setDidExecuteSSOCallback] = useState(false);
 
@@ -61,8 +61,8 @@ export function SSOLogin() {
 
     const auth = JSON.parse(authString);
 
-    await jwtTokenLogin.mutateAsync(auth);
-  }, [didExecuteSSOCallback, jwtTokenLogin, query]);
+    jwtTokenLoginMutate(auth);
+  }, [didExecuteSSOCallback, jwtTokenLoginMutate, query]);
 
   useEffect(() => {
     callSSOCallback();

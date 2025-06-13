@@ -1,4 +1,4 @@
-name: Send Issue to OpenHands AI v2
+name: Send Issue to OpenHands AI
 
 on:
   issue_comment:

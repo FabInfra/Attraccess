@@ -26,7 +26,3 @@ export interface JwtPayload {
   username: string;
   tokenId: string;
 }
-
-export interface AuthenticatedUser extends User {
-  accessToken: string;
-}

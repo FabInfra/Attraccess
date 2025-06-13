@@ -1,4 +1,4 @@
-name: CI
+name: Base Checks
 
 on:
   push:
@@ -16,7 +16,7 @@ env:
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 jobs:
-  main:
+  run_checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

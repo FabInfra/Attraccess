@@ -1,12 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
-import {
-  AuthenticationDetail,
-  AuthenticationType,
-  User,
-  RevokedToken,
-} from '@attraccess/database-entities';
+import { AuthenticationDetail, AuthenticationType, User, RevokedToken } from '@attraccess/database-entities';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
@@ -69,12 +64,8 @@ describe('AuthService', () => {
 
     authService = module.get<AuthService>(AuthService);
     usersService = module.get<UsersService>(UsersService);
-    authenticationDetailRepository = module.get<
-      typeof authenticationDetailRepository
-    >(AuthenticationDetailRepository);
-    revokedTokenRepository = module.get<typeof revokedTokenRepository>(
-      RevokedTokenRepository
-    );
+    authenticationDetailRepository = module.get<typeof authenticationDetailRepository>(AuthenticationDetailRepository);
+    revokedTokenRepository = module.get<typeof revokedTokenRepository>(RevokedTokenRepository);
     jwtService = module.get<JwtService>(JwtService);
 
     // Reset all mocks before each test
@@ -93,13 +84,15 @@ describe('AuthService', () => {
       isEmailVerified: true,
       emailVerificationToken: null,
       emailVerificationTokenExpiresAt: null,
+      passwordResetToken: null,
+      passwordResetTokenExpiresAt: null,
       systemPermissions: {},
       createdAt: new Date(),
       updatedAt: new Date(),
       resourceIntroductions: [],
       resourceUsages: [],
-      revokedTokens: [],
       authenticationDetails: [],
+      resourceIntroducerPermissions: [],
     } as User;
     jest.spyOn(usersService, 'findOne').mockResolvedValue(user);
 
@@ -115,17 +108,13 @@ describe('AuthService', () => {
     // Mock bcrypt.compare to return true for correct password
     (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
-    const isAuthenticated =
-      await authService.getUserByUsernameAndAuthenticationDetails('testuser', {
-        type: AuthenticationType.LOCAL_PASSWORD,
-        details: { password: 'correct-password' },
-      });
+    const isAuthenticated = await authService.getUserByUsernameAndAuthenticationDetails('testuser', {
+      type: AuthenticationType.LOCAL_PASSWORD,
+      details: { password: 'correct-password' },
+    });
 
     expect(isAuthenticated).not.toBeNull();
-    expect(bcrypt.compare).toHaveBeenCalledWith(
-      'correct-password',
-      'hashed-password'
-    );
+    expect(bcrypt.compare).toHaveBeenCalledWith('correct-password', 'hashed-password');
   });
 
   it('should not authenticate user with incorrect credentials', async () => {
@@ -136,13 +125,15 @@ describe('AuthService', () => {
       isEmailVerified: true,
       emailVerificationToken: null,
       emailVerificationTokenExpiresAt: null,
+      passwordResetToken: null,
+      passwordResetTokenExpiresAt: null,
       systemPermissions: {},
       createdAt: new Date(),
       updatedAt: new Date(),
       resourceIntroductions: [],
       resourceUsages: [],
-      revokedTokens: [],
       authenticationDetails: [],
+      resourceIntroducerPermissions: [],
     } as User;
     jest.spyOn(usersService, 'findOne').mockResolvedValue(user);
 
@@ -156,17 +147,13 @@ describe('AuthService', () => {
     // Mock bcrypt.compare to return false for incorrect password
     (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-    const isAuthenticated =
-      await authService.getUserByUsernameAndAuthenticationDetails('testuser', {
-        type: AuthenticationType.LOCAL_PASSWORD,
-        details: { password: 'wrong-password' },
-      });
+    const isAuthenticated = await authService.getUserByUsernameAndAuthenticationDetails('testuser', {
+      type: AuthenticationType.LOCAL_PASSWORD,
+      details: { password: 'wrong-password' },
+    });
 
     expect(isAuthenticated).toBeNull();
-    expect(bcrypt.compare).toHaveBeenCalledWith(
-      'wrong-password',
-      'hashed-password'
-    );
+    expect(bcrypt.compare).toHaveBeenCalledWith('wrong-password', 'hashed-password');
   });
 
   it('should create a JWT for a valid user', async () => {
@@ -177,13 +164,15 @@ describe('AuthService', () => {
       isEmailVerified: true,
       emailVerificationToken: null,
       emailVerificationTokenExpiresAt: null,
+      passwordResetToken: null,
+      passwordResetTokenExpiresAt: null,
       systemPermissions: {},
       createdAt: new Date(),
       updatedAt: new Date(),
       resourceIntroductions: [],
       resourceUsages: [],
-      revokedTokens: [],
       authenticationDetails: [],
+      resourceIntroducerPermissions: [],
     } as User;
 
     jest.spyOn(jwtService, 'sign').mockReturnValue('test-token');
@@ -202,26 +191,20 @@ describe('AuthService', () => {
 
   it('should revoke a JWT and identify it as revoked', async () => {
     const tokenId = 'testTokenId';
-    jest
-      .spyOn(revokedTokenRepository, 'findOne')
-      .mockResolvedValue({ id: 1, tokenId } as RevokedToken);
-    await authService.revokeJWT(tokenId);
+    jest.spyOn(revokedTokenRepository, 'findOne').mockResolvedValue({ id: 1, tokenId } as RevokedToken);
+    await authService.revokeJWT({ tokenId });
 
-    const isRevoked = await authService.isJWTRevoked(tokenId);
+    const isRevoked = await authService.isJWTRevoked({ tokenId });
     expect(isRevoked).toBe(true);
   });
 
   it('should not authenticate a non-existent user', async () => {
     jest.spyOn(usersService, 'findOne').mockResolvedValue(null);
 
-    const isAuthenticated =
-      await authService.getUserByUsernameAndAuthenticationDetails(
-        'nonexistentuser',
-        {
-          type: AuthenticationType.LOCAL_PASSWORD,
-          details: { password: 'password' },
-        }
-      );
+    const isAuthenticated = await authService.getUserByUsernameAndAuthenticationDetails('nonexistentuser', {
+      type: AuthenticationType.LOCAL_PASSWORD,
+      details: { password: 'password' },
+    });
 
     expect(isAuthenticated).toBeNull();
   });
