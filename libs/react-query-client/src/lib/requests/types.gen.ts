@@ -319,6 +319,54 @@ export type UpdateSSOProviderDto = {
     oidcConfiguration?: UpdateOIDCConfigurationDto;
 };
 
+export type WebAuthnRegisterRequestDto = {
+    /**
+     * The ID of the registration challenge
+     */
+    registrationId: number;
+    /**
+     * The WebAuthn registration data
+     */
+    data: {
+        [key: string]: unknown;
+    };
+};
+
+export type WebAuthnRegisterResponseDto = {
+    /**
+     * The registered credential ID
+     */
+    credentialId: string;
+    /**
+     * The user this credential is registered to
+     */
+    user: User;
+};
+
+export type WebAuthnAuthenticateRequestDto = {
+    /**
+     * The ID of the authentication challenge
+     */
+    authenticationId: number;
+    /**
+     * The WebAuthn authentication data
+     */
+    data: {
+        [key: string]: unknown;
+    };
+};
+
+export type WebAuthnAuthenticateResponseDto = {
+    /**
+     * JWT token for authenticated user
+     */
+    token: string;
+    /**
+     * The authenticated user
+     */
+    user: User;
+};
+
 export type PreviewMjmlDto = {
     /**
      * The MJML content to preview
@@ -1770,6 +1818,27 @@ export type OidcLoginCallbackData = {
 
 export type OidcLoginCallbackResponse = CreateSessionResponse;
 
+export type GetRegistrationOptionsResponse = {
+    registrationId?: number;
+    data?: {
+        [key: string]: unknown;
+    };
+};
+
+export type RegisterData = {
+    requestBody: WebAuthnRegisterRequestDto;
+};
+
+export type RegisterResponse = WebAuthnRegisterResponseDto;
+
+export type GetAuthenticationOptionsResponse = unknown;
+
+export type AuthenticateData = {
+    requestBody: WebAuthnAuthenticateRequestDto;
+};
+
+export type AuthenticateResponse = WebAuthnAuthenticateResponseDto;
+
 export type EmailTemplateControllerPreviewMjmlData = {
     requestBody: PreviewMjmlDto;
 };
@@ -2740,6 +2809,69 @@ export type $OpenApiTs = {
                  * The user has been logged in
                  */
                 200: CreateSessionResponse;
+            };
+        };
+    };
+    '/api/auth/webauthn/registration-options': {
+        get: {
+            res: {
+                /**
+                 * The WebAuthn registration options
+                 */
+                200: {
+                    registrationId?: number;
+                    data?: {
+                        [key: string]: unknown;
+                    };
+                };
+                /**
+                 * Unauthorized
+                 */
+                401: unknown;
+            };
+        };
+    };
+    '/api/auth/webauthn/registration': {
+        post: {
+            req: RegisterData;
+            res: {
+                /**
+                 * The WebAuthn registration options
+                 */
+                200: WebAuthnRegisterResponseDto;
+                /**
+                 * Unauthorized
+                 */
+                401: unknown;
+            };
+        };
+    };
+    '/api/auth/webauthn/authentication-options': {
+        get: {
+            res: {
+                /**
+                 * The WebAuthn authentication options
+                 */
+                200: unknown;
+                /**
+                 * Unauthorized
+                 */
+                401: unknown;
+            };
+        };
+    };
+    '/api/auth/webauthn/authenticate': {
+        post: {
+            req: AuthenticateData;
+            res: {
+                /**
+                 * The WebAuthn authentication options
+                 */
+                200: WebAuthnAuthenticateResponseDto;
+                /**
+                 * Unauthorized
+                 */
+                401: unknown;
             };
         };
     };

@@ -478,6 +478,80 @@ export const $UpdateSSOProviderDto = {
     }
 } as const;
 
+export const $WebAuthnRegisterRequestDto = {
+    type: 'object',
+    properties: {
+        registrationId: {
+            type: 'number',
+            description: 'The ID of the registration challenge',
+            example: 123
+        },
+        data: {
+            type: 'object',
+            description: 'The WebAuthn registration data',
+            example: {}
+        }
+    },
+    required: ['registrationId', 'data']
+} as const;
+
+export const $WebAuthnRegisterResponseDto = {
+    type: 'object',
+    properties: {
+        credentialId: {
+            type: 'string',
+            description: 'The registered credential ID',
+            example: 'credential_id_example'
+        },
+        user: {
+            description: 'The user this credential is registered to',
+            allOf: [
+                {
+                    '$ref': '#/components/schemas/User'
+                }
+            ]
+        }
+    },
+    required: ['credentialId', 'user']
+} as const;
+
+export const $WebAuthnAuthenticateRequestDto = {
+    type: 'object',
+    properties: {
+        authenticationId: {
+            type: 'number',
+            description: 'The ID of the authentication challenge',
+            example: 123
+        },
+        data: {
+            type: 'object',
+            description: 'The WebAuthn authentication data',
+            example: {}
+        }
+    },
+    required: ['authenticationId', 'data']
+} as const;
+
+export const $WebAuthnAuthenticateResponseDto = {
+    type: 'object',
+    properties: {
+        token: {
+            type: 'string',
+            description: 'JWT token for authenticated user',
+            example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+        },
+        user: {
+            description: 'The authenticated user',
+            allOf: [
+                {
+                    '$ref': '#/components/schemas/User'
+                }
+            ]
+        }
+    },
+    required: ['token', 'user']
+} as const;
+
 export const $PreviewMjmlDto = {
     type: 'object',
     properties: {
