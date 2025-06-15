@@ -38,6 +38,8 @@ export const ensureUseAuthenticationServiceOidcLoginCallbackData = (queryClient:
   sessionState: unknown;
   state: unknown;
 }) => queryClient.ensureQueryData({ queryKey: Common.UseAuthenticationServiceOidcLoginCallbackKeyFn({ code, iss, providerId, redirectTo, sessionState, state }), queryFn: () => AuthenticationService.oidcLoginCallback({ code, iss, providerId, redirectTo, sessionState, state }) });
+export const ensureUseAuthenticationServiceGetRegistrationOptionsData = (queryClient: QueryClient) => queryClient.ensureQueryData({ queryKey: Common.UseAuthenticationServiceGetRegistrationOptionsKeyFn(), queryFn: () => AuthenticationService.getRegistrationOptions() });
+export const ensureUseAuthenticationServiceGetAuthenticationOptionsData = (queryClient: QueryClient) => queryClient.ensureQueryData({ queryKey: Common.UseAuthenticationServiceGetAuthenticationOptionsKeyFn(), queryFn: () => AuthenticationService.getAuthenticationOptions() });
 export const ensureUseEmailTemplatesServiceEmailTemplateControllerFindAllData = (queryClient: QueryClient) => queryClient.ensureQueryData({ queryKey: Common.UseEmailTemplatesServiceEmailTemplateControllerFindAllKeyFn(), queryFn: () => EmailTemplatesService.emailTemplateControllerFindAll() });
 export const ensureUseEmailTemplatesServiceEmailTemplateControllerFindOneData = (queryClient: QueryClient, { type }: {
   type: "verify-email" | "reset-password";

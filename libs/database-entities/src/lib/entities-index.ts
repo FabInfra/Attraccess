@@ -19,6 +19,9 @@ import { SSOProviderOIDCConfiguration } from './entities/ssoProvider.oidc';
 import { User, SystemPermissions, type SystemPermission } from './entities/user.entity';
 import { WebhookConfig } from './entities/webhookConfig.entity';
 import { FabReader } from './entities/fabReader.entity';
+import { PasskeyRegistrationOptions } from './entities/passkeyRegistrationOptions';
+import { Passkey } from './entities/passkey';
+import { PasskeyAuthenticationOptions } from './entities/passkeyAuthenticationOptions';
 
 // Export all entities individually
 export {
@@ -44,6 +47,9 @@ export {
   NFCCard,
   FabReader,
   EmailTemplate,
+  PasskeyRegistrationOptions,
+  Passkey,
+  PasskeyAuthenticationOptions,
 };
 
 // Export the entities object
@@ -66,4 +72,7 @@ export const entities = {
   NFCCard,
   FabReader,
   EmailTemplate,
+  PasskeyRegistrationOptions,
+  Passkey,
+  PasskeyAuthenticationOptions,
 };

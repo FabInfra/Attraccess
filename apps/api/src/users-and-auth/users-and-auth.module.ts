@@ -4,6 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config'; // For JwtModule
 import { existsSync, readFileSync } from 'fs'; // For JwtModule secret loading
+import { ScheduleModule } from '@nestjs/schedule';
 
 // Services and Controllers
 import { UsersService } from './users/users.service';
@@ -23,6 +24,9 @@ import {
   RevokedToken,
   SSOProviderOIDCConfiguration,
   SSOProvider,
+  PasskeyRegistrationOptions,
+  PasskeyAuthenticationOptions,
+  Passkey,
 } from '@attraccess/database-entities';
 import { EmailModule } from '../email/email.module';
 import { SSOService } from './auth/sso/sso.service';
@@ -31,11 +35,23 @@ import { ModuleRef } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { SSOController } from './auth/sso/sso.controller';
 import { AppConfigType } from '../config/app.config';
+import { WebAuthnController } from './auth/webauthn/webauthn.controller';
+import { WebAuthnService } from './auth/webauthn/webauthn.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, AuthenticationDetail, RevokedToken, SSOProvider, SSOProviderOIDCConfiguration]),
+    TypeOrmModule.forFeature([
+      User,
+      AuthenticationDetail,
+      RevokedToken,
+      SSOProvider,
+      SSOProviderOIDCConfiguration,
+      PasskeyRegistrationOptions,
+      PasskeyAuthenticationOptions,
+      Passkey,
+    ]),
     PassportModule,
+    ScheduleModule.forRoot(),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
@@ -82,6 +98,7 @@ import { AppConfigType } from '../config/app.config';
     LocalStrategy,
     JwtStrategy,
     SSOService,
+    WebAuthnService,
     {
       provide: SSOOIDCStrategy,
       useFactory: (moduleRef: ModuleRef, configService: ConfigService) => {
@@ -106,7 +123,7 @@ import { AppConfigType } from '../config/app.config';
       inject: [ModuleRef, ConfigService],
     },
   ],
-  controllers: [UsersController, AuthController, SSOController],
+  controllers: [UsersController, AuthController, SSOController, WebAuthnController],
   exports: [UsersService, AuthService],
 })
 export class UsersAndAuthModule {}

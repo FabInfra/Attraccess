@@ -67,6 +67,14 @@ export const UseAuthenticationServiceOidcLoginCallbackKeyFn = ({ code, iss, prov
   sessionState: unknown;
   state: unknown;
 }, queryKey?: Array<unknown>) => [useAuthenticationServiceOidcLoginCallbackKey, ...(queryKey ?? [{ code, iss, providerId, redirectTo, sessionState, state }])];
+export type AuthenticationServiceGetRegistrationOptionsDefaultResponse = Awaited<ReturnType<typeof AuthenticationService.getRegistrationOptions>>;
+export type AuthenticationServiceGetRegistrationOptionsQueryResult<TData = AuthenticationServiceGetRegistrationOptionsDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useAuthenticationServiceGetRegistrationOptionsKey = "AuthenticationServiceGetRegistrationOptions";
+export const UseAuthenticationServiceGetRegistrationOptionsKeyFn = (queryKey?: Array<unknown>) => [useAuthenticationServiceGetRegistrationOptionsKey, ...(queryKey ?? [])];
+export type AuthenticationServiceGetAuthenticationOptionsDefaultResponse = Awaited<ReturnType<typeof AuthenticationService.getAuthenticationOptions>>;
+export type AuthenticationServiceGetAuthenticationOptionsQueryResult<TData = AuthenticationServiceGetAuthenticationOptionsDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useAuthenticationServiceGetAuthenticationOptionsKey = "AuthenticationServiceGetAuthenticationOptions";
+export const UseAuthenticationServiceGetAuthenticationOptionsKeyFn = (queryKey?: Array<unknown>) => [useAuthenticationServiceGetAuthenticationOptionsKey, ...(queryKey ?? [])];
 export type EmailTemplatesServiceEmailTemplateControllerFindAllDefaultResponse = Awaited<ReturnType<typeof EmailTemplatesService.emailTemplateControllerFindAll>>;
 export type EmailTemplatesServiceEmailTemplateControllerFindAllQueryResult<TData = EmailTemplatesServiceEmailTemplateControllerFindAllDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useEmailTemplatesServiceEmailTemplateControllerFindAllKey = "EmailTemplatesServiceEmailTemplateControllerFindAll";
@@ -267,6 +275,8 @@ export type UsersServiceChangePasswordViaResetTokenMutationResult = Awaited<Retu
 export type UsersServiceBulkUpdatePermissionsMutationResult = Awaited<ReturnType<typeof UsersService.bulkUpdatePermissions>>;
 export type AuthenticationServiceCreateSessionMutationResult = Awaited<ReturnType<typeof AuthenticationService.createSession>>;
 export type AuthenticationServiceCreateOneSsoProviderMutationResult = Awaited<ReturnType<typeof AuthenticationService.createOneSsoProvider>>;
+export type AuthenticationServiceRegisterMutationResult = Awaited<ReturnType<typeof AuthenticationService.register>>;
+export type AuthenticationServiceAuthenticateMutationResult = Awaited<ReturnType<typeof AuthenticationService.authenticate>>;
 export type EmailTemplatesServiceEmailTemplateControllerPreviewMjmlMutationResult = Awaited<ReturnType<typeof EmailTemplatesService.emailTemplateControllerPreviewMjml>>;
 export type ResourcesServiceCreateOneResourceMutationResult = Awaited<ReturnType<typeof ResourcesService.createOneResource>>;
 export type ResourcesServiceResourceGroupsCreateOneMutationResult = Awaited<ReturnType<typeof ResourcesService.resourceGroupsCreateOne>>;

@@ -38,6 +38,8 @@ export const prefetchUseAuthenticationServiceOidcLoginCallback = (queryClient: Q
   sessionState: unknown;
   state: unknown;
 }) => queryClient.prefetchQuery({ queryKey: Common.UseAuthenticationServiceOidcLoginCallbackKeyFn({ code, iss, providerId, redirectTo, sessionState, state }), queryFn: () => AuthenticationService.oidcLoginCallback({ code, iss, providerId, redirectTo, sessionState, state }) });
+export const prefetchUseAuthenticationServiceGetRegistrationOptions = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseAuthenticationServiceGetRegistrationOptionsKeyFn(), queryFn: () => AuthenticationService.getRegistrationOptions() });
+export const prefetchUseAuthenticationServiceGetAuthenticationOptions = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseAuthenticationServiceGetAuthenticationOptionsKeyFn(), queryFn: () => AuthenticationService.getAuthenticationOptions() });
 export const prefetchUseEmailTemplatesServiceEmailTemplateControllerFindAll = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseEmailTemplatesServiceEmailTemplateControllerFindAllKeyFn(), queryFn: () => EmailTemplatesService.emailTemplateControllerFindAll() });
 export const prefetchUseEmailTemplatesServiceEmailTemplateControllerFindOne = (queryClient: QueryClient, { type }: {
   type: "verify-email" | "reset-password";

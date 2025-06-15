@@ -358,6 +358,52 @@ export interface UpdateSSOProviderDto {
   oidcConfiguration?: UpdateOIDCConfigurationDto;
 }
 
+export interface WebAuthnRegisterRequestDto {
+  /**
+   * The ID of the registration challenge
+   * @example 123
+   */
+  registrationId: number;
+  /**
+   * The WebAuthn registration data
+   * @example {}
+   */
+  data: object;
+}
+
+export interface WebAuthnRegisterResponseDto {
+  /**
+   * The registered credential ID
+   * @example "credential_id_example"
+   */
+  credentialId: string;
+  /** The user this credential is registered to */
+  user: User;
+}
+
+export interface WebAuthnAuthenticateRequestDto {
+  /**
+   * The ID of the authentication challenge
+   * @example 123
+   */
+  authenticationId: number;
+  /**
+   * The WebAuthn authentication data
+   * @example {}
+   */
+  data: object;
+}
+
+export interface WebAuthnAuthenticateResponseDto {
+  /**
+   * JWT token for authenticated user
+   * @example "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+   */
+  token: string;
+  /** The authenticated user */
+  user: User;
+}
+
 export interface PreviewMjmlDto {
   /**
    * The MJML content to preview
@@ -1130,20 +1176,20 @@ export interface MqttResourceConfig {
    */
   notInUseMessage: string;
   /**
-   * Whether to send an MQTT message when a resource usage starts
+   * Whether to send a start message when a resource is taken over
    * @example true
    */
-  sendOnStart: boolean;
+  onTakeoverSendStart: boolean;
   /**
-   * Whether to send an MQTT message when a resource usage stops
+   * Whether to send a stop message when a resource is taken over
    * @example true
    */
-  sendOnStop: boolean;
+  onTakeoverSendStop: boolean;
   /**
    * Whether to send an MQTT message when a resource usage is taken over
    * @example false
    */
-  sendOnTakeover: boolean;
+  onTakeoverSendTakeover: boolean;
   /**
    * Topic template using Handlebars for takeover status
    * @example "resources/{{id}}/status"
@@ -1198,23 +1244,23 @@ export interface CreateMqttResourceConfigDto {
    */
   notInUseMessage: string;
   /**
-   * Whether to send an MQTT message when a resource usage starts
-   * @default true
-   * @example true
-   */
-  sendOnStart?: boolean;
-  /**
-   * Whether to send an MQTT message when a resource usage stops
-   * @default true
-   * @example true
-   */
-  sendOnStop?: boolean;
-  /**
-   * Whether to send an MQTT message when a resource usage is taken over
+   * Whether to send a start message when a resource is taken over
    * @default false
    * @example false
    */
-  sendOnTakeover?: boolean;
+  onTakeoverSendStart?: boolean;
+  /**
+   * Whether to send a stop message when a resource is taken over
+   * @default false
+   * @example false
+   */
+  onTakeoverSendStop?: boolean;
+  /**
+   * Whether to send an MQTT message when a resource usage is taken over
+   * @default true
+   * @example true
+   */
+  onTakeoverSendTakeover?: boolean;
   /**
    * Topic template for when resource usage is taken over
    * @example "resources/{{id}}/status"
@@ -1259,23 +1305,23 @@ export interface UpdateMqttResourceConfigDto {
    */
   notInUseMessage?: string;
   /**
-   * Whether to send an MQTT message when a resource usage starts
-   * @default true
-   * @example true
-   */
-  sendOnStart?: boolean;
-  /**
-   * Whether to send an MQTT message when a resource usage stops
-   * @default true
-   * @example true
-   */
-  sendOnStop?: boolean;
-  /**
-   * Whether to send an MQTT message when a resource usage is taken over
+   * Whether to send a start message when a resource is taken over
    * @default false
    * @example false
    */
-  sendOnTakeover?: boolean;
+  onTakeoverSendStart?: boolean;
+  /**
+   * Whether to send a stop message when a resource is taken over
+   * @default false
+   * @example false
+   */
+  onTakeoverSendStop?: boolean;
+  /**
+   * Whether to send an MQTT message when a resource usage is taken over
+   * @default true
+   * @example true
+   */
+  onTakeoverSendTakeover?: boolean;
   /**
    * Topic template for when resource usage is taken over
    * @example "resources/{{id}}/status"
@@ -1868,6 +1914,17 @@ export interface OidcLoginCallbackParams {
 
 export type OidcLoginCallbackData = CreateSessionResponse;
 
+export interface GetRegistrationOptionsData {
+  registrationId?: number;
+  data?: Record<string, any>;
+}
+
+export type RegisterData = WebAuthnRegisterResponseDto;
+
+export type GetAuthenticationOptionsData = any;
+
+export type AuthenticateData = WebAuthnAuthenticateResponseDto;
+
 export type EmailTemplateControllerPreviewMjmlData = PreviewMjmlResponseDto;
 
 export type EmailTemplateControllerFindAllData = EmailTemplate[];
@@ -2453,6 +2510,70 @@ export namespace Authentication {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = OidcLoginCallbackData;
+  }
+
+  /**
+   * No description
+   * @tags Authentication
+   * @name GetRegistrationOptions
+   * @summary Get WebAuthn registration options
+   * @request GET:/api/auth/webauthn/registration-options
+   * @secure
+   */
+  export namespace GetRegistrationOptions {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = GetRegistrationOptionsData;
+  }
+
+  /**
+   * No description
+   * @tags Authentication
+   * @name Register
+   * @summary Register a new WebAuthn device
+   * @request POST:/api/auth/webauthn/registration
+   * @secure
+   */
+  export namespace Register {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = WebAuthnRegisterRequestDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = RegisterData;
+  }
+
+  /**
+   * No description
+   * @tags Authentication
+   * @name GetAuthenticationOptions
+   * @summary Get WebAuthn authentication options
+   * @request GET:/api/auth/webauthn/authentication-options
+   * @secure
+   */
+  export namespace GetAuthenticationOptions {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = GetAuthenticationOptionsData;
+  }
+
+  /**
+   * No description
+   * @tags Authentication
+   * @name Authenticate
+   * @summary Authenticate a WebAuthn device
+   * @request POST:/api/auth/webauthn/authenticate
+   * @secure
+   */
+  export namespace Authenticate {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = WebAuthnAuthenticateRequestDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = AuthenticateData;
   }
 }
 
@@ -4504,6 +4625,84 @@ export class Api<
         path: `/api/auth/sso/OIDC/${providerId}/callback`,
         method: "GET",
         query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name GetRegistrationOptions
+     * @summary Get WebAuthn registration options
+     * @request GET:/api/auth/webauthn/registration-options
+     * @secure
+     */
+    getRegistrationOptions: (params: RequestParams = {}) =>
+      this.request<GetRegistrationOptionsData, void>({
+        path: `/api/auth/webauthn/registration-options`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name Register
+     * @summary Register a new WebAuthn device
+     * @request POST:/api/auth/webauthn/registration
+     * @secure
+     */
+    register: (data: WebAuthnRegisterRequestDto, params: RequestParams = {}) =>
+      this.request<RegisterData, void>({
+        path: `/api/auth/webauthn/registration`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name GetAuthenticationOptions
+     * @summary Get WebAuthn authentication options
+     * @request GET:/api/auth/webauthn/authentication-options
+     * @secure
+     */
+    getAuthenticationOptions: (params: RequestParams = {}) =>
+      this.request<GetAuthenticationOptionsData, void>({
+        path: `/api/auth/webauthn/authentication-options`,
+        method: "GET",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
+     * @name Authenticate
+     * @summary Authenticate a WebAuthn device
+     * @request POST:/api/auth/webauthn/authenticate
+     * @secure
+     */
+    authenticate: (
+      data: WebAuthnAuthenticateRequestDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<AuthenticateData, void>({
+        path: `/api/auth/webauthn/authenticate`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
