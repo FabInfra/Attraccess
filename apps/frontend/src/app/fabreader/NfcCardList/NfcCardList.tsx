@@ -25,11 +25,14 @@ import {
   useFabReaderServiceEnrollNfcCard,
   useUsersServiceGetOneUserById,
 } from '@attraccess/react-query-client';
-import de from './NfcCardList.de.json';
-import en from './NfcCardList.en.json';
 import { FabreaderSelect } from '../FabreaderSelect/FabreaderSelect';
 import { useToastMessage } from '../../../components/toastProvider';
 import { useAuth } from '../../../hooks/useAuth';
+import { TableDataLoadingIndicator, TableEmptyState } from '../../../components/tableComponents';
+import { useReactQueryStatusToHeroUiTableLoadingState } from '../../../hooks/useReactQueryStatusToHeroUiTableLoadingState';
+
+import de from './NfcCardList.de.json';
+import en from './NfcCardList.en.json';
 
 interface DeleteModalProps {
   show: boolean;
@@ -188,9 +191,15 @@ export function NfcCardList() {
     en,
   });
 
-  const { data: cards, error: cardsError } = useFabReaderServiceGetAllCards(undefined, {
+  const {
+    data: cards,
+    error: cardsError,
+    status: fetchStatus,
+  } = useFabReaderServiceGetAllCards(undefined, {
     refetchInterval: 5000,
   });
+
+  const loadingState = useReactQueryStatusToHeroUiTableLoadingState(fetchStatus);
 
   const toast = useToastMessage();
 
@@ -224,7 +233,9 @@ export function NfcCardList() {
 
   return (
     <>
-      <Alert color="danger">{t('workInProgress')}</Alert>
+      <Alert color="danger" className="mb-4">
+        {t('workInProgress')}
+      </Alert>
       <Card data-cy="nfc-card-list-card">
         <CardHeader className="flex justify-between items-center">
           <h1>{t('nfcCards')}</h1>
@@ -243,8 +254,13 @@ export function NfcCardList() {
                 <TableColumn key={header}>{t('nfcCardsTable.headers.' + header)}</TableColumn>
               ))}
             </TableHeader>
-            <TableBody emptyContent={t('noNfcCardsFound')}>
-              {(cards ?? []).map((card) => (
+            <TableBody
+              items={cards ?? []}
+              loadingState={loadingState}
+              loadingContent={<TableDataLoadingIndicator />}
+              emptyContent={<TableEmptyState />}
+            >
+              {(card) => (
                 <TableRow key={card.id}>
                   {headers.map((header) => (
                     <TableCell key={header}>
@@ -252,7 +268,7 @@ export function NfcCardList() {
                     </TableCell>
                   ))}
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </CardBody>

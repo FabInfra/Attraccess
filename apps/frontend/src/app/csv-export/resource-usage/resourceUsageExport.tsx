@@ -24,10 +24,13 @@ import {
   useNumberFormatter,
   useTranslations,
 } from '@attraccess/plugins-frontend-ui';
-import de from './de.json';
-import en from './en.json';
 import { nanoid } from 'nanoid';
 import { RotateCwIcon } from 'lucide-react';
+import { useReactQueryStatusToHeroUiTableLoadingState } from '../../../hooks/useReactQueryStatusToHeroUiTableLoadingState';
+import { TableDataLoadingIndicator, TableEmptyState } from '../../../components/tableComponents';
+
+import de from './de.json';
+import en from './en.json';
 
 interface CsvColumn {
   getter: (item: ResourceUsage) => string;
@@ -46,8 +49,7 @@ export function ResourceUsageExport(props: ExportProps) {
 
   const {
     data: resourceUsageExport,
-    isLoading,
-    isRefetching,
+    status: fetchStatus,
     refetch,
   } = useAnalyticsServiceAnalyticsControllerGetResourceUsageHoursInDateRange({
     start: props.start.toISOString(),
@@ -220,6 +222,8 @@ export function ResourceUsageExport(props: ExportProps) {
     a.click();
   }, [selectedColumns, csvRows]);
 
+  const loadingState = useReactQueryStatusToHeroUiTableLoadingState(fetchStatus);
+
   return (
     <>
       <ModalBody>
@@ -251,13 +255,17 @@ export function ResourceUsageExport(props: ExportProps) {
           <Button
             variant="light"
             color="secondary"
-            endContent={<RotateCwIcon className={'w-4 h-4 ' + (isRefetching || isLoading ? 'animate-spin' : '')} />}
+            endContent={<RotateCwIcon className={'w-4 h-4 ' + (fetchStatus === 'pending' ? 'animate-spin' : '')} />}
             onPress={() => refetch()}
             data-cy="resource-usage-export-refresh-button"
           >
             {t('refreshData')}
           </Button>
-          <Checkbox isSelected={groupByUserAndResource} onValueChange={setGroupByUserAndResource} data-cy="resource-usage-export-grouping-checkbox">
+          <Checkbox
+            isSelected={groupByUserAndResource}
+            onValueChange={setGroupByUserAndResource}
+            data-cy="resource-usage-export-grouping-checkbox"
+          >
             {t('options.groupByUserAndResource')}
           </Checkbox>
         </div>
@@ -266,7 +274,12 @@ export function ResourceUsageExport(props: ExportProps) {
           <TableHeader columns={selectedColumns}>
             {(column) => <TableColumn key={column.csvHeader}>{column.csvHeader}</TableColumn>}
           </TableHeader>
-          <TableBody items={csvRowsWithId}>
+          <TableBody
+            items={csvRowsWithId}
+            loadingState={loadingState}
+            loadingContent={<TableDataLoadingIndicator />}
+            emptyContent={<TableEmptyState />}
+          >
             {(row) => (
               <TableRow key={row.id}>
                 {row.row.map((column) => (
@@ -280,7 +293,9 @@ export function ResourceUsageExport(props: ExportProps) {
         </Table>
       </ModalBody>
       <ModalFooter>
-        <Button onPress={() => downloadCsv()} data-cy="resource-usage-export-download-csv-button">{t('downloadCsv')}</Button>
+        <Button onPress={() => downloadCsv()} data-cy="resource-usage-export-download-csv-button">
+          {t('downloadCsv')}
+        </Button>
       </ModalFooter>
     </>
   );

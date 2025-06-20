@@ -1,10 +1,8 @@
-
-
 import { DateTimeDisplay, useTranslations } from '@attraccess/plugins-frontend-ui';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@heroui/modal';
 import { Button, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@heroui/react';
 import { useMemo, useState } from 'react';
-import { TableDataLoadingIndicator } from '../../../../components/TableDataLoadingIndicator';
+import { TableDataLoadingIndicator, TableEmptyState } from '../../../components/tableComponents';
 import { IntroductionStatusChip } from '../../IntroductionStatusChip';
 import { ResourceIntroductionHistoryItem } from '@attraccess/react-query-client';
 
@@ -61,10 +59,11 @@ export function IntroductionHistoryModal(props: Readonly<Props>) {
               <TableColumn>{t('table.columns.action')}</TableColumn>
               <TableColumn>{t('table.columns.comment')}</TableColumn>
             </TableHeader>
-            <TableBody 
+            <TableBody
               items={currentPage}
               loadingState={isLoading ? 'loading' : 'idle'}
               loadingContent={<TableDataLoadingIndicator />}
+              emptyContent={<TableEmptyState />}
             >
               {(item) => (
                 <TableRow key={item.id}>
@@ -89,4 +88,3 @@ export function IntroductionHistoryModal(props: Readonly<Props>) {
     </Modal>
   );
 }
-

@@ -1,15 +1,16 @@
-
 import { useCallback, useMemo, useState } from 'react';
 import { Table, TableHeader, TableBody, TableRow, Pagination } from '@heroui/react';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
-import { TableDataLoadingIndicator } from '../../../../../../components/TableDataLoadingIndicator';
-import * as en from './utils/translations/en';
-import * as de from './utils/translations/de';
 import { generateHeaderColumns } from './utils/tableHeaders';
 import { generateRowCells } from './utils/tableRows';
 import { useResourcesServiceResourceUsageGetHistory, ResourceUsage } from '@attraccess/react-query-client';
 import { useAuth } from '../../../../../hooks/useAuth';
 import { Select } from '../../../../../components/select';
+import { TableDataLoadingIndicator, TableEmptyState } from '../../../../../components/tableComponents';
+import { useReactQueryStatusToHeroUiTableLoadingState } from '../../../../../hooks/useReactQueryStatusToHeroUiTableLoadingState';
+
+import * as en from './utils/translations/en';
+import * as de from './utils/translations/de';
 
 interface HistoryTableProps {
   resourceId: number;
@@ -48,8 +49,8 @@ export const HistoryTable = ({
 
   const {
     data: usageHistory,
-    isLoading,
     error,
+    status: fetchStatus,
   } = useResourcesServiceResourceUsageGetHistory(
     {
       resourceId,
@@ -68,9 +69,7 @@ export const HistoryTable = ({
     [t, showAllUsers, canManageResources]
   );
 
-  const loadingState = useMemo(() => {
-    return isLoading ? 'loading' : 'idle';
-  }, [isLoading]);
+  const loadingState = useReactQueryStatusToHeroUiTableLoadingState(fetchStatus);
 
   if (error) {
     return <div className="text-center py-4 text-red-500">{t('errorLoadingHistory')}</div>;
@@ -101,8 +100,8 @@ export const HistoryTable = ({
       <TableHeader>{headerColumns}</TableHeader>
       <TableBody
         loadingState={loadingState}
-        emptyContent={t('noUsageHistory')}
         loadingContent={<TableDataLoadingIndicator />}
+        emptyContent={<TableEmptyState />}
       >
         {(usageHistory?.data ?? []).map((session: ResourceUsage) => (
           <TableRow

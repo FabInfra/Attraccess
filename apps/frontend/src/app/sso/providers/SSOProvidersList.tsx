@@ -1,7 +1,6 @@
 import React, { useState, forwardRef, useImperativeHandle } from 'react';
 import {
   Button,
-  Spinner,
   Table,
   TableHeader,
   TableColumn,
@@ -23,8 +22,6 @@ import {
 import { Pencil, Trash, Key, FileCode, Eye, EyeOff, Download } from 'lucide-react';
 import { useToastMessage } from '../../../components/toastProvider';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
-import * as en from './translations/en';
-import * as de from './translations/de';
 import {
   CreateSSOProviderDto,
   SSOProvider,
@@ -38,6 +35,11 @@ import {
   UseAuthenticationServiceGetAllSsoProvidersKeyFn,
 } from '@attraccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
+import { TableDataLoadingIndicator, TableEmptyState } from '../../../components/tableComponents';
+import { useReactQueryStatusToHeroUiTableLoadingState } from '../../../hooks/useReactQueryStatusToHeroUiTableLoadingState';
+
+import * as en from './translations/en';
+import * as de from './translations/de';
 
 // Interface for the OpenID Configuration response
 interface OpenIDConfiguration {
@@ -67,7 +69,7 @@ export interface SSOProvidersListRef {
 
 export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentPropsWithoutRef<'div'>>((props, ref) => {
   const { t } = useTranslations('ssoProvidersList', { en, de });
-  const { data: providers, isLoading, error } = useAuthenticationServiceGetAllSsoProviders();
+  const { data: providers, status: fetchStatus, error } = useAuthenticationServiceGetAllSsoProviders();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [editingProvider, setEditingProvider] = useState<SSOProvider | null>(null);
   const [formValues, setFormValues] = useState<CreateSSOProviderDto>(defaultProviderValues);
@@ -77,6 +79,8 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
   const [keycloakRealm, setKeycloakRealm] = useState('');
   const [isDiscoverDialogOpen, setIsDiscoverDialogOpen] = useState(false);
   const queryClient = useQueryClient();
+
+  const loadingState = useReactQueryStatusToHeroUiTableLoadingState(fetchStatus);
 
   const { success, error: showError } = useToastMessage();
   const createSSOProvider = useAuthenticationServiceCreateOneSsoProvider({
@@ -304,14 +308,6 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Spinner size="lg" color="primary" data-cy="sso-providers-list-loading-spinner" />
-      </div>
-    );
-  }
-
   if (error) {
     return <div className="text-red-500 p-4">{t('errorLoading')}</div>;
   }
@@ -325,8 +321,13 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
             <TableColumn>{t('type')}</TableColumn>
             <TableColumn>{t('actions')}</TableColumn>
           </TableHeader>
-          <TableBody>
-            {providers.map((provider) => (
+          <TableBody
+            items={providers}
+            loadingState={loadingState}
+            loadingContent={<TableDataLoadingIndicator />}
+            emptyContent={<TableEmptyState />}
+          >
+            {(provider) => (
               <TableRow key={provider.id}>
                 <TableCell>
                   <div className="flex items-center gap-2">
@@ -363,7 +364,7 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
                   </div>
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       ) : (

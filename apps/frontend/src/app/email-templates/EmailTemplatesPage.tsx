@@ -4,14 +4,17 @@ import { Edit3, Mail } from 'lucide-react'; // Mail for PageHeader icon
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { PageHeader } from '../../components/pageHeader'; // Assuming PageHeader exists
 import { Link } from 'react-router-dom'; // For edit button link
-import { TableDataLoadingIndicator } from '../../components/TableDataLoadingIndicator';
+import { TableDataLoadingIndicator, TableEmptyState } from '../../components/tableComponents';
+import { useReactQueryStatusToHeroUiTableLoadingState } from '../../hooks/useReactQueryStatusToHeroUiTableLoadingState';
 
 import * as en from './emailTemplates.en.json';
 import * as de from './emailTemplates.de.json';
 
 export function EmailTemplatesPage() {
   const { t } = useTranslations('emailTemplates', { en, de });
-  const { data: emailTemplates, isLoading } = useEmailTemplatesServiceEmailTemplateControllerFindAll();
+  const { data: emailTemplates, status: fetchStatus } = useEmailTemplatesServiceEmailTemplateControllerFindAll();
+
+  const loadingState = useReactQueryStatusToHeroUiTableLoadingState(fetchStatus);
 
   return (
     <>
@@ -23,10 +26,11 @@ export function EmailTemplatesPage() {
           <TableColumn>{t('columns.subject')}</TableColumn>
           <TableColumn>{t('columns.actions')}</TableColumn>
         </TableHeader>
-        <TableBody 
-          items={emailTemplates ?? []} 
-          loadingState={isLoading ? 'loading' : 'idle'}
+        <TableBody
+          items={emailTemplates ?? []}
+          loadingState={loadingState}
           loadingContent={<TableDataLoadingIndicator />}
+          emptyContent={<TableEmptyState />}
         >
           {(item) => (
             <TableRow key={item.type}>

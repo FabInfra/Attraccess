@@ -17,23 +17,28 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Spinner,
   Tooltip,
   Alert,
 } from '@heroui/react';
 import { Trash2, Upload } from 'lucide-react';
-import de from './PluginsList.de.json';
-import en from './PluginsList.en.json';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { UploadPluginModal } from './UploadPluginModal';
 import { useToastMessage } from '../../components/toastProvider';
+import { TableEmptyState } from '../../components/tableComponents';
+import { useReactQueryStatusToHeroUiTableLoadingState } from '../../hooks/useReactQueryStatusToHeroUiTableLoadingState';
+import { TableDataLoadingIndicator } from '../../components/tableComponents';
+
+import de from './PluginsList.de.json';
+import en from './PluginsList.en.json';
 
 export function PluginsList() {
-  const { data: plugins, isLoading } = usePluginsServiceGetPlugins();
+  const { data: plugins, status: fetchStatus } = usePluginsServiceGetPlugins();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [pluginToDelete, setPluginToDelete] = useState<string | null>(null);
   const toast = useToastMessage();
+
+  const loadingState = useReactQueryStatusToHeroUiTableLoadingState(fetchStatus);
 
   const { mutate: deletePlugin, isPending: isDeleting } = usePluginsServiceDeletePlugin({
     onSuccess: () => {
@@ -99,48 +104,45 @@ export function PluginsList() {
           </Button>
         </CardHeader>
         <CardBody>
-          {isLoading ? (
-            <div className="flex justify-center py-8">
-              <Spinner size="lg" data-cy="plugins-list-loading-spinner" />
-            </div>
-          ) : plugins && plugins.length > 0 ? (
-            <Table aria-label="Plugins table" data-cy="plugins-list-table">
-              <TableHeader>
-                <TableColumn>{t('columns.name')}</TableColumn>
-                <TableColumn>{t('columns.version')}</TableColumn>
-                <TableColumn>{t('columns.directory')}</TableColumn>
-                <TableColumn>{t('columns.actions')}</TableColumn>
-              </TableHeader>
-              <TableBody>
-                {plugins.map((plugin) => (
-                  <TableRow key={plugin.name}>
-                    <TableCell>{plugin.name}</TableCell>
-                    <TableCell>
-                      <Chip size="sm" variant="flat" color="primary">
-                        {plugin.version}
-                      </Chip>
-                    </TableCell>
-                    <TableCell>{plugin.pluginDirectory || '-'}</TableCell>
-                    <TableCell>
-                      <Tooltip content={t('deleteTooltip')}>
-                        <Button
-                          isIconOnly
-                          variant="light"
-                          color="danger"
-                          onPress={() => handleDeleteClick(plugin.id)}
-                          data-cy={`plugins-list-delete-plugin-button-${plugin.id}`}
-                        >
-                          <Trash2 size={18} />
-                        </Button>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <div className="text-center py-8 text-gray-500">{t('noPlugins')}</div>
-          )}
+          <Table aria-label="Plugins table" data-cy="plugins-list-table">
+            <TableHeader>
+              <TableColumn>{t('columns.name')}</TableColumn>
+              <TableColumn>{t('columns.version')}</TableColumn>
+              <TableColumn>{t('columns.directory')}</TableColumn>
+              <TableColumn>{t('columns.actions')}</TableColumn>
+            </TableHeader>
+            <TableBody
+              items={plugins}
+              loadingState={loadingState}
+              loadingContent={<TableDataLoadingIndicator />}
+              emptyContent={<TableEmptyState />}
+            >
+              {(plugin) => (
+                <TableRow key={plugin.name}>
+                  <TableCell>{plugin.name}</TableCell>
+                  <TableCell>
+                    <Chip size="sm" variant="flat" color="primary">
+                      {plugin.version}
+                    </Chip>
+                  </TableCell>
+                  <TableCell>{plugin.pluginDirectory || '-'}</TableCell>
+                  <TableCell>
+                    <Tooltip content={t('deleteTooltip')}>
+                      <Button
+                        isIconOnly
+                        variant="light"
+                        color="danger"
+                        onPress={() => handleDeleteClick(plugin.id)}
+                        data-cy={`plugins-list-delete-plugin-button-${plugin.id}`}
+                      >
+                        <Trash2 size={18} />
+                      </Button>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         </CardBody>
 
         <Modal

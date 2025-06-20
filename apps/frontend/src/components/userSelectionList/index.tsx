@@ -12,12 +12,12 @@ import {
   TableProps,
   TableRow,
 } from '@heroui/react';
+import { ReactNode, useCallback, useMemo, useState } from 'react';
+import { PlusIcon } from 'lucide-react';
+import { TableDataLoadingIndicator, TableEmptyState } from '../tableComponents';
 
 import de from './de.json';
 import en from './en.json';
-import { ReactNode, useCallback, useMemo, useState } from 'react';
-import { PlusIcon } from 'lucide-react';
-import { EmptyState } from '../EmptyState';
 
 export interface Action<TUser> extends Omit<ButtonProps, 'onClick' | 'children' | 'key'> {
   key: string;
@@ -137,7 +137,12 @@ export function UserSelectionList<TUser extends User = User>(props: Readonly<Pro
           }
           <TableColumn>{t('selectedUsers.columns.actions')}</TableColumn>
         </TableHeader>
-        <TableBody items={currentPage} isLoading={selectedUserIsLoading} emptyContent={<EmptyState />}>
+        <TableBody
+          items={currentPage}
+          loadingState={selectedUserIsLoading ? 'loading' : 'idle'}
+          loadingContent={<TableDataLoadingIndicator />}
+          emptyContent={<TableEmptyState />}
+        >
           {(user) => (
             <TableRow key={user.id} className={typeof rowClassName === 'function' ? rowClassName(user) : rowClassName}>
               <TableCell className="w-full">

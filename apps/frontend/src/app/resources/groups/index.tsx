@@ -22,11 +22,12 @@ import {
   TableHeader,
   TableRow,
 } from '@heroui/react';
-import { TableDataLoadingIndicator } from '../../../components/TableDataLoadingIndicator';
+import { TableDataLoadingIndicator, TableEmptyState } from '../../../components/tableComponents';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { GroupIcon, PlusIcon, Trash2Icon } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { PageHeader } from '../../../components/pageHeader';
+import { useReactQueryStatusToHeroUiTableLoadingState } from '../../../hooks/useReactQueryStatusToHeroUiTableLoadingState';
 
 import * as en from './en.json';
 import * as de from './de.json';
@@ -44,7 +45,9 @@ export function ManageResourceGroups({
 
   const { data: resource } = useResourcesServiceGetOneResourceById({ id: resourceId });
 
-  const { data: groups, isLoading: isLoadingGroups } = useResourcesServiceResourceGroupsGetMany();
+  const { data: groups, status: fetchStatus } = useResourcesServiceResourceGroupsGetMany();
+
+  const loadingState = useReactQueryStatusToHeroUiTableLoadingState(fetchStatus);
 
   const { mutateAsync: addResourceToGroup, isPending: isAdding } = useResourcesServiceResourceGroupsAddResource();
 
@@ -137,10 +140,11 @@ export function ManageResourceGroups({
             <TableColumn>{t('columns.group')}</TableColumn>
             <TableColumn>{t('columns.actions')}</TableColumn>
           </TableHeader>
-          <TableBody 
-            items={currentPage} 
-            loadingState={isLoadingGroups ? 'loading' : 'idle'}
+          <TableBody
+            items={currentPage}
+            loadingState={loadingState}
             loadingContent={<TableDataLoadingIndicator />}
+            emptyContent={<TableEmptyState />}
           >
             {(group) => (
               <TableRow
