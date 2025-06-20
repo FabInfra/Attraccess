@@ -22,6 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from '@heroui/react';
+import { TableDataLoadingIndicator } from '../../../components/TableDataLoadingIndicator';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { GroupIcon, PlusIcon, Trash2Icon } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -136,7 +137,11 @@ export function ManageResourceGroups({
             <TableColumn>{t('columns.group')}</TableColumn>
             <TableColumn>{t('columns.actions')}</TableColumn>
           </TableHeader>
-          <TableBody items={currentPage} isLoading={isLoadingGroups}>
+          <TableBody 
+            items={currentPage} 
+            loadingState={isLoadingGroups ? 'loading' : 'idle'}
+            loadingContent={<TableDataLoadingIndicator />}
+          >
             {(group) => (
               <TableRow
                 key={group.id}

@@ -4,6 +4,7 @@ import { Edit3, Mail } from 'lucide-react'; // Mail for PageHeader icon
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { PageHeader } from '../../components/pageHeader'; // Assuming PageHeader exists
 import { Link } from 'react-router-dom'; // For edit button link
+import { TableDataLoadingIndicator } from '../../components/TableDataLoadingIndicator';
 
 import * as en from './emailTemplates.en.json';
 import * as de from './emailTemplates.de.json';
@@ -22,7 +23,11 @@ export function EmailTemplatesPage() {
           <TableColumn>{t('columns.subject')}</TableColumn>
           <TableColumn>{t('columns.actions')}</TableColumn>
         </TableHeader>
-        <TableBody items={emailTemplates ?? []} isLoading={isLoading}>
+        <TableBody 
+          items={emailTemplates ?? []} 
+          loadingState={isLoading ? 'loading' : 'idle'}
+          loadingContent={<TableDataLoadingIndicator />}
+        >
           {(item) => (
             <TableRow key={item.type}>
               <TableCell>

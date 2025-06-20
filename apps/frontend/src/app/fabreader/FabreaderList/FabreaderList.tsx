@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Alert, Button, Chip, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@heroui/react';
 import { Cloud, CloudOff, CpuIcon } from 'lucide-react';
+import { TableDataLoadingIndicator } from '../../../components/TableDataLoadingIndicator';
 import { useDateTimeFormatter, useTranslations } from '@attraccess/plugins-frontend-ui';
 import { FabreaderEditor } from '../FabreaderEditor/FabreaderEditor';
 import de from './FabreaderList.de.json';
@@ -77,7 +78,12 @@ export const FabreaderList = () => {
           <TableColumn>{t('table.columns.connected')}</TableColumn>
           <TableColumn>{t('table.columns.actions')}</TableColumn>
         </TableHeader>
-        <TableBody items={readers ?? []} isLoading={isLoading} emptyContent={t('table.noData')}>
+        <TableBody 
+          items={readers ?? []} 
+          loadingState={isLoading ? 'loading' : 'idle'}
+          loadingContent={<TableDataLoadingIndicator />}
+          emptyContent={t('table.noData')}
+        >
           {(reader) => (
             <TableRow key={reader.id}>
               <TableCell>{reader.name}</TableCell>

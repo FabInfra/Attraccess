@@ -20,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from '@heroui/react';
+import { TableDataLoadingIndicator } from '../../../components/TableDataLoadingIndicator';
 import { PageHeader } from '../../../components/pageHeader';
 import { useMemo, useState } from 'react';
 import { filenameToUrl } from '../../../api';
@@ -137,7 +138,11 @@ export function ResourceGroupCard(props: Readonly<Props & Omit<CardProps, 'child
             </TableColumn>
             <TableColumn width="4">{''}</TableColumn>
           </TableHeader>
-          <TableBody items={resources?.data ?? []} isLoading={isLoading}>
+          <TableBody 
+            items={resources?.data ?? []} 
+            loadingState={isLoading ? 'loading' : 'idle'}
+            loadingContent={<TableDataLoadingIndicator />}
+          >
             {(resource) => (
               <TableRow
                 key={resource.id}
