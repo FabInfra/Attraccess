@@ -9,9 +9,9 @@ import {
   DropdownMenu,
   DropdownItem,
   Link,
-  PropsOf,
   Accordion,
   AccordionItem,
+  LinkProps,
 } from '@heroui/react';
 import { useAllRoutes } from '../routes';
 import { SystemPermissions } from '@attraccess/react-query-client';
@@ -21,7 +21,7 @@ import { Logo } from '../../components/logo';
 import { SidebarItem, SidebarItemGroup, sidebarItems, useSidebarEndItems } from './sidebarItems';
 
 function NavLink(
-  props: Omit<PropsOf<typeof Link>, 'children'> & {
+  props: Omit<LinkProps, 'children'> & {
     label: string;
     icon: React.ReactNode;
     isExternal?: boolean;
