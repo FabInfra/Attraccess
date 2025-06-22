@@ -1,5 +1,5 @@
 {
-  "workInProgressAlert": "Diese Funktionen sind noch in Arbeit und werden bald verfügbar sein.",
+  "workInProgressAlert": "Diese Funktion ist noch in der Entwicklung und wird bald verfügbar sein.",
   "title": "Installierte Plugins",
   "uploadButton": "Plugin hochladen",
   "noPlugins": "Keine Plugins installiert",
@@ -12,11 +12,18 @@
   "deleteTooltip": "Plugin entfernen",
   "deleteConfirmation": {
     "title": "Löschen bestätigen",
-    "message": "Sind Sie sicher, dass Sie das Plugin {{pluginName}} entfernen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "message": "Sind Sie sicher, dass Sie das Plugin <strong>{{pluginName}}</strong> entfernen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
     "cancel": "Abbrechen",
     "delete": "Löschen"
   },
   "error": {
+    "title": "Fehler beim Laden der Plugins",
+    "description": "Plugin-Daten konnten nicht geladen werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support, falls das Problem weiterhin besteht.",
+    "retry": "Wiederholen",
+    "fetch": {
+      "title": "Laden der Plugins fehlgeschlagen",
+      "description": "Beim Abrufen der Plugins vom Server ist ein Fehler aufgetreten."
+    },
     "delete": {
       "title": "Fehler",
       "description": "Fehler beim Löschen des Plugins"
@@ -24,8 +31,8 @@
   },
   "success": {
     "delete": {
-      "title": "Erfolg",
-      "description": "Plugin erfolgreich entfernt, App wird in 1 Sekunde neu gestartet"
+      "title": "Erfolgreich",
+      "description": "Plugin erfolgreich gelöscht, App wird in 1 Sekunde neu gestartet"
     }
   }
 }

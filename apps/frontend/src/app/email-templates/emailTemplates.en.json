@@ -9,5 +9,12 @@
   },
   "editButton": "Edit",
   "noTemplates": "No email templates found.",
-  "loading": "Loading email templates..."
+  "loading": "Loading email templates...",
+  "error": {
+    "title": "Error Loading Email Templates",
+    "description": "Unable to load email templates. Please try again or contact support if the problem persists.",
+    "fetchTitle": "Failed to Load Email Templates",
+    "fetchDescription": "An error occurred while fetching email templates from the server.",
+    "retry": "Retry"
+  }
 }

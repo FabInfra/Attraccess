@@ -1,5 +1,6 @@
 {
   "subtitle": "Ändern Sie Betreff und Inhalt (MJML) der Vorlage.",
+  "loading": "E-Mail-Vorlage wird geladen...",
   "templateType": {
     "verify-email": "E-Mail Verifizierung",
     "reset-password": "Passwort Zurücksetzen"
@@ -21,5 +22,22 @@
     "close": "Schließen",
     "cancel": "Abbrechen",
     "save": "Änderungen speichern"
+  },
+  "success": {
+    "updateTitle": "Vorlage aktualisiert",
+    "updateDescription": "E-Mail-Vorlage wurde erfolgreich aktualisiert."
+  },
+  "error": {
+    "title": "Fehler beim Laden der Vorlage",
+    "description": "E-Mail-Vorlage konnte nicht geladen werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support, falls das Problem weiterhin besteht.",
+    "fetchTitle": "Laden der Vorlage fehlgeschlagen",
+    "fetchDescription": "Beim Abrufen der E-Mail-Vorlage vom Server ist ein Fehler aufgetreten.",
+    "updateTitle": "Aktualisierung fehlgeschlagen",
+    "updateDescription": "Die E-Mail-Vorlage konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
+    "retry": "Wiederholen"
+  },
+  "notFound": {
+    "title": "Vorlage nicht gefunden",
+    "description": "Die angeforderte E-Mail-Vorlage konnte nicht gefunden werden."
   }
 }

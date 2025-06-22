@@ -6,6 +6,7 @@ import { GroupDetailsForm } from './GroupDetailsForm';
 import { ResoureGroupIntroducerManagement } from './IntroducerManagement';
 import { ResourceGroupIntroductionsManagement } from './IntroductionsManagement';
 import { Spinner } from '@heroui/react';
+import { ErrorDisplay } from '../../components/errorDisplay/ErrorDisplay';
 import * as en from './en.json';
 import * as de from './de.json';
 import { GroupIcon } from 'lucide-react';
@@ -25,13 +26,16 @@ export function ResourceGroupEditPage() {
     return <Spinner size="lg" />;
   }
 
-  if (error || !group) {
+  if (error) {
     return (
       <div style={{ textAlign: 'center', padding: '48px 0' }}>
-        <p style={{ color: 'red', fontWeight: '500', fontSize: '18px' }}>{t('loadError')}</p>
-        <p style={{ opacity: 0.7, marginTop: '8px' }}>{t('loadErrorDescription')}</p>
+        <ErrorDisplay error={error as Error} onRetry={() => window.location.reload()} />
       </div>
     );
+  }
+
+  if (!group) {
+    return null;
   }
 
   return (

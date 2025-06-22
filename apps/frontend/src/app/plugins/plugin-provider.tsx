@@ -15,7 +15,7 @@ import { getBaseUrl } from '../../api';
 
 const pluginStore = createPluginStore();
 export function PluginProvider(props: PropsWithChildren) {
-  const { refetch: refetchPlugins } = usePluginsServiceGetPlugins();
+  const { refetch: refetchPlugins, error: pluginsError } = usePluginsServiceGetPlugins();
   const { addPlugin, isInstalled, plugins } = usePluginState();
   const toast = useToastMessage();
   const { user } = useAuth();
@@ -112,6 +112,8 @@ export function PluginProvider(props: PropsWithChildren) {
         return fullPlugin;
       } catch (error) {
         console.error(`Attraccess Plugin System: Failed to load plugin: ${pluginManifest.name}`, error);
+        // Individual plugin load errors are logged but don't show toast to avoid spam
+        // The plugin system continues to work with other plugins
       }
     },
     [addPlugin, isInstalled]
@@ -131,12 +133,24 @@ export function PluginProvider(props: PropsWithChildren) {
     if (arePluginsLoaded.current) return;
     console.debug('Attraccess Plugin System: Loading all plugins');
 
-    const plugins = await refetchPlugins();
-    const pluginsArray = plugins.data ?? [];
-    await Promise.all(pluginsArray.map((manifest) => loadPlugin(manifest)));
+    try {
+      const plugins = await refetchPlugins();
+      const pluginsArray = plugins.data ?? [];
 
-    arePluginsLoaded.current = true;
-    console.debug('Attraccess Plugin System: All plugins loaded');
+      if (pluginsArray.length === 0) {
+        console.debug('Attraccess Plugin System: No plugins found to load');
+      } else {
+        await Promise.all(pluginsArray.map((manifest) => loadPlugin(manifest)));
+      }
+
+      arePluginsLoaded.current = true;
+      console.debug('Attraccess Plugin System: All plugins loaded');
+    } catch (error) {
+      console.error('Attraccess Plugin System: Failed to load plugins:', error);
+      // Mark as loaded even on error to prevent infinite retry
+      // The main application continues to work without plugins
+      arePluginsLoaded.current = true;
+    }
   }, [loadPlugin, refetchPlugins]);
 
   useEffect(() => {

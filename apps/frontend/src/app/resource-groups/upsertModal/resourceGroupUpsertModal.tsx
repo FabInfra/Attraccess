@@ -23,7 +23,7 @@ import {
 } from '@attraccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { useToastMessage } from '../../../components/toastProvider';
+import { ErrorDisplay } from '../../../components/errorDisplay/ErrorDisplay';
 import { useNavigate } from 'react-router-dom';
 
 interface ResourceGroupUpsertModalProps {
@@ -57,20 +57,12 @@ export function ResourceGroupUpsertModal(props: Readonly<ResourceGroupUpsertModa
     description: '',
   });
   const [apiErrors, setApiErrors] = useState<{ [key: string]: string[] | undefined }>({});
-
-  const { success, error: showErrorToast } = useToastMessage();
+  const [generalError, setGeneralError] = useState<Error | null>(null);
   const queryClient = useQueryClient();
   const isEditMode = !!props.resourceGroup;
   const navigate = useNavigate();
 
   const handleSuccess = (createdOrUpdatedGroup: ResourceGroup) => {
-    success({
-      title: isEditMode ? t('successTitleUpdate') : t('successTitleCreate'),
-      description: isEditMode
-        ? t('successDescriptionUpdate', { name: createdOrUpdatedGroup.name })
-        : t('successDescriptionCreate', { name: createdOrUpdatedGroup.name }),
-    });
-
     if (typeof props.onUpserted === 'function') {
       props.onUpserted(createdOrUpdatedGroup);
     }
@@ -83,6 +75,7 @@ export function ResourceGroupUpsertModal(props: Readonly<ResourceGroupUpsertModa
       setFormData({ name: '', description: '' });
     }
     setApiErrors({});
+    setGeneralError(null);
     closeDisclosure();
   };
 
@@ -93,17 +86,12 @@ export function ResourceGroupUpsertModal(props: Readonly<ResourceGroupUpsertModa
 
     if (fieldErrors && Object.keys(fieldErrors).length > 0) {
       setApiErrors(fieldErrors);
-      showErrorToast({
-        title: isEditMode ? t('errorTitleUpdate') : t('errorTitleCreate'),
-        // Consider adding a specific translation for validation errors
-        description: t('fieldValidationError') ?? 'Please check the form for errors.',
-      });
+      setGeneralError(new Error(t('fieldValidationError') ?? 'Please check the form for errors.'));
     } else {
       setApiErrors({});
-      showErrorToast({
-        title: isEditMode ? t('errorTitleUpdate') : t('errorTitleCreate'),
-        description: responseData?.message || (isEditMode ? t('errorDescriptionUpdate') : t('errorDescriptionCreate')),
-      });
+      const errorMessage =
+        responseData?.message || (isEditMode ? t('errorDescriptionUpdate') : t('errorDescriptionCreate'));
+      setGeneralError(new Error(errorMessage));
     }
   };
 
@@ -135,6 +123,7 @@ export function ResourceGroupUpsertModal(props: Readonly<ResourceGroupUpsertModa
         setFormData({ name: '', description: '' });
       }
       setApiErrors({}); // Clear errors when modal opens
+      setGeneralError(null); // Clear general errors when modal opens
     }
   }, [isEditMode, props.resourceGroup, isOpen]);
 
@@ -148,6 +137,7 @@ export function ResourceGroupUpsertModal(props: Readonly<ResourceGroupUpsertModa
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       setApiErrors({});
+      setGeneralError(null);
 
       // Prepare the data in the format expected by the mutation
       const requestBody = {
@@ -192,6 +182,7 @@ export function ResourceGroupUpsertModal(props: Readonly<ResourceGroupUpsertModa
               <ModalHeader>{isEditMode ? t('modalTitleUpdate') : t('modalTitleCreate')}</ModalHeader>
 
               <ModalBody className="w-full space-y-4">
+                {generalError && <ErrorDisplay error={generalError} onRetry={() => setGeneralError(null)} />}
                 <Input
                   ref={nameInputRef}
                   isRequired

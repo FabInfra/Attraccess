@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { ArrowRight, Mail } from 'lucide-react';
 import { Input } from '@heroui/input';
 import { Button } from '@heroui/button';
-import { Alert } from '@heroui/alert';
+import { ErrorDisplay } from '../../components/errorDisplay/ErrorDisplay';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from '@heroui/modal';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { PasswordInput } from '../../components/PasswordInput';
@@ -163,7 +163,11 @@ export function RegistrationForm({ onHasAccount }: RegisterFormProps) {
         </Button>
 
         {error && (
-          <Alert color="danger" title={t('error.title')} description={error} data-cy="registration-form-error-alert" />
+          <ErrorDisplay
+            error={new Error(error)}
+            onRetry={() => setError(null)}
+            data-cy="registration-form-error-alert"
+          />
         )}
       </form>
 

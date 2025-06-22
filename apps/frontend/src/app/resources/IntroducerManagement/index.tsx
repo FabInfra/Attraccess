@@ -8,7 +8,7 @@ import {
   User,
 } from '@attraccess/react-query-client';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
-import { useToastMessage } from '../../../components/toastProvider';
+import { ErrorDisplay } from '../../../components/errorDisplay/ErrorDisplay';
 import { useQueryClient } from '@tanstack/react-query';
 import * as en from './en.json';
 import * as de from './de.json';
@@ -24,26 +24,22 @@ export function ResoureIntroducerManagement(
   const { resourceId, ...rest } = props;
 
   const { t } = useTranslations('resourceIntroducerManagement', { en, de });
-  const { success, error: showError } = useToastMessage();
   const queryClient = useQueryClient();
 
   const { data: introducers, isLoading, error } = useAccessControlServiceResourceIntroducersGetMany({ resourceId });
 
-  const { mutate: grantIntroducerMutation, isPending: isGranting } = useAccessControlServiceResourceIntroducersGrant({
+  const {
+    mutate: grantIntroducerMutation,
+    isPending: isGranting,
+    error: grantError,
+  } = useAccessControlServiceResourceIntroducersGrant({
     onSuccess: () => {
-      success({
-        title: t('add.successTitle'),
-        description: t('add.successDescription'),
-      });
       queryClient.invalidateQueries({
         queryKey: UseAccessControlServiceResourceIntroducersGetManyKeyFn({ resourceId }),
       });
     },
     onError: (err: Error) => {
-      showError({
-        title: t('add.errorTitle'),
-        description: t('add.errorDescription', { error: err.message }),
-      });
+      console.error('Failed to grant introducer privileges:', err);
     },
   });
 
@@ -53,21 +49,18 @@ export function ResoureIntroducerManagement(
     }
   };
 
-  const { mutate: revokeIntroducerMutation, isPending: isRevoking } = useAccessControlServiceResourceIntroducersRevoke({
+  const {
+    mutate: revokeIntroducerMutation,
+    isPending: isRevoking,
+    error: revokeError,
+  } = useAccessControlServiceResourceIntroducersRevoke({
     onSuccess: () => {
-      success({
-        title: t('remove.successTitle'),
-        description: t('remove.successDescription'),
-      });
       queryClient.invalidateQueries({
         queryKey: UseAccessControlServiceResourceIntroducersGetManyKeyFn({ resourceId }),
       });
     },
     onError: (err: Error) => {
-      showError({
-        title: t('remove.errorTitle'),
-        description: t('remove.errorDescription', { error: err.message }),
-      });
+      console.error('Failed to revoke introducer privileges:', err);
     },
   });
 
@@ -81,27 +74,33 @@ export function ResoureIntroducerManagement(
     return (
       <Card {...rest}>
         <CardBody>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <AlertCircle size={20} color="red" />
-            <div>
-              <p style={{ color: 'red', fontWeight: '500' }}>{t('load.error')}</p>
-              <p style={{ fontSize: '14px', opacity: 0.7 }}>{t('load.errorDescription')}</p>
-            </div>
-          </div>
+          <ErrorDisplay error={error as Error} onRetry={() => window.location.reload()} />
         </CardBody>
       </Card>
     );
   }
 
   return (
-    <IntroducerManagement
-      isLoadingIntroducers={isLoading}
-      introducers={introducers ?? []}
-      onGrantIntroducer={grantIntroducer}
-      onRevokeIntroducer={revokeIntroducer}
-      isGranting={isGranting}
-      isRevoking={isRevoking}
-      {...rest}
-    />
+    <Card {...rest}>
+      <CardBody>
+        {(grantError || revokeError) && (
+          <ErrorDisplay
+            error={(grantError || revokeError) as Error}
+            onRetry={() => {
+              if (grantError) grantIntroducerMutation.reset?.();
+              if (revokeError) revokeIntroducerMutation.reset?.();
+            }}
+          />
+        )}
+        <IntroducerManagement
+          isLoadingIntroducers={isLoading}
+          introducers={introducers ?? []}
+          onGrantIntroducer={grantIntroducer}
+          onRevokeIntroducer={revokeIntroducer}
+          isGranting={isGranting}
+          isRevoking={isRevoking}
+        />
+      </CardBody>
+    </Card>
   );
 }

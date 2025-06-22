@@ -8,6 +8,7 @@ import { useAuth } from '../../../../../hooks/useAuth';
 import { Select } from '../../../../../components/select';
 import { TableDataLoadingIndicator, TableEmptyState } from '../../../../../components/tableComponents';
 import { useReactQueryStatusToHeroUiTableLoadingState } from '../../../../../hooks/useReactQueryStatusToHeroUiTableLoadingState';
+import { ErrorDisplay } from '../../../../../components/errorDisplay/ErrorDisplay';
 
 import * as en from './utils/translations/en';
 import * as de from './utils/translations/de';
@@ -72,7 +73,11 @@ export const HistoryTable = ({
   const loadingState = useReactQueryStatusToHeroUiTableLoadingState(fetchStatus);
 
   if (error) {
-    return <div className="text-center py-4 text-red-500">{t('errorLoadingHistory')}</div>;
+    return (
+      <div className="py-4">
+        <ErrorDisplay error={error as Error} onRetry={() => window.location.reload()} />
+      </div>
+    );
   }
 
   return (

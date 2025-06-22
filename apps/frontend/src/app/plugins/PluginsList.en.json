@@ -17,6 +17,13 @@
     "delete": "Delete"
   },
   "error": {
+    "title": "Error Loading Plugins",
+    "description": "Unable to load plugin data. Please try again or contact support if the problem persists.",
+    "retry": "Retry",
+    "fetch": {
+      "title": "Failed to Load Plugins",
+      "description": "An error occurred while fetching plugins from the server."
+    },
     "delete": {
       "title": "Error",
       "description": "Error deleting plugin"

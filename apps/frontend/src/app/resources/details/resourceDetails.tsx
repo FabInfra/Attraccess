@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
-import { useToastMessage } from '../../../components/toastProvider';
+import { ErrorDisplay } from '../../../components/errorDisplay/ErrorDisplay';
 import { ArrowLeft, BookOpen, PenSquareIcon, ShapesIcon, Trash, Wifi } from 'lucide-react';
 import { Button } from '@heroui/button';
 import { Spinner, Link } from '@heroui/react';
@@ -38,7 +38,6 @@ function ResourceDetailsComponent() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const { hasPermission, user } = useAuth();
-  const { success, error: showError } = useToastMessage();
   useQrCodeAction({ resourceId });
 
   const { t } = useTranslations('resourceDetails', {
@@ -73,19 +72,11 @@ function ResourceDetailsComponent() {
   const handleDelete = async () => {
     try {
       await deleteResource.mutateAsync({ id: resourceId });
-      success({
-        title: 'Resource deleted',
-        description: `${resource?.name} has been successfully deleted`,
-      });
       queryClient.invalidateQueries({
         queryKey: [UseResourcesServiceGetAllResourcesKeyFn()[0]],
       });
       navigate('/resources');
     } catch (err) {
-      showError({
-        title: 'Failed to delete resource',
-        description: 'An error occurred while deleting the resource. Please try again.',
-      });
       console.error('Failed to delete resource:', err);
       throw err;
     }
@@ -99,7 +90,24 @@ function ResourceDetailsComponent() {
     );
   }
 
-  if (resourceError || !resource) {
+  if (resourceError) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 flex flex-col items-center justify-center min-h-screen">
+        <ErrorDisplay error={resourceError as Error} onRetry={() => window.location.reload()} />
+        <Button
+          onPress={() => navigate('/resources')}
+          variant="light"
+          startContent={<ArrowLeft className="w-4 h-4" />}
+          data-cy="back-to-resources-button"
+          className="mt-4"
+        >
+          {t('error.resourceNotFound.backToResources')}
+        </Button>
+      </div>
+    );
+  }
+
+  if (!resource) {
     return (
       <div className="max-w-7xl mx-auto px-4 flex flex-col items-center justify-center min-h-screen">
         <h2 className="text-xl font-semibold mb-2">{t('error.resourceNotFound.title')}</h2>
@@ -179,6 +187,13 @@ function ResourceDetailsComponent() {
           </>
         }
       />
+
+      {/* Error display for delete operation */}
+      {deleteResource.error && (
+        <div className="mb-6">
+          <ErrorDisplay error={deleteResource.error as Error} onRetry={() => deleteResource.reset()} />
+        </div>
+      )}
 
       {/* Full width Usage section for all devices */}
       <div className="w-full space-y-6 mb-6">

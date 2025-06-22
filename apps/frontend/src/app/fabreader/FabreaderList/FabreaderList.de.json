@@ -1,13 +1,16 @@
 {
   "page": {
-    "title": "FABReader",
+    "title": "FABreader",
     "actions": {
-      "openFlasher": "Fabreader flasher"
+      "openFlasher": "FABreader-Flasher"
     }
   },
-  "workInProgress": "Dieses Feature ist noch in Arbeit, benutzung auf eigene Gefahr!",
+  "workInProgress": "Diese Funktion ist noch in der Entwicklung, verwenden Sie sie auf eigene Gefahr!",
   "error": {
-    "fetchReaders": "FABReader konnten nicht abgerufen werden"
+    "fetchReaders": "FABreader konnten nicht abgerufen werden",
+    "title": "Fehler beim Laden der Reader",
+    "description": "Reader-Daten konnten nicht geladen werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support, falls das Problem weiterhin besteht.",
+    "retry": "Wiederholen"
   },
   "table": {
     "columns": {
@@ -16,11 +19,11 @@
       "connected": "Status",
       "actions": "Aktionen"
     },
-    "noData": "Keine FABReader gefunden",
+    "noData": "Keine FABreader gefunden",
     "actions": {
       "editReader": "Bearbeiten"
     }
   },
   "connected": "Verbunden",
-  "disconnected": "Nicht verbunden"
+  "disconnected": "Getrennt"
 }

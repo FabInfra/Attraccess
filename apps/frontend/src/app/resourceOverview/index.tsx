@@ -7,6 +7,7 @@ import { ResourceGroupCard } from './resourceGroupCard';
 import { useCallback, useMemo, useState } from 'react';
 import { useDebounce } from '../../hooks/useDebounce';
 import { Alert } from '@heroui/react';
+import { ErrorDisplay } from '../../components/errorDisplay/ErrorDisplay';
 
 import de from './de.json';
 import en from './en.json';
@@ -27,7 +28,7 @@ function getValueFromLocalStorage(filter: 'onlyInUseByMe' | 'onlyWithPermissions
 export function ResourceOverview() {
   const { t } = useTranslations('resourceOverview', { de, en });
 
-  const { data: groups } = useResourcesServiceResourceGroupsGetMany();
+  const { data: groups, error: groupsError, refetch: refetchGroups } = useResourcesServiceResourceGroupsGetMany();
 
   const [searchValue, setSearchValue] = useState('');
   const [filterByOnlyInUseByMe, setFilterByOnlyInUseByMeState] = useState(
@@ -58,7 +59,12 @@ export function ResourceOverview() {
   }, [groups]);
 
   // Check if there are any resources matching the current filters across all groups
-  const { data: allResources, isLoading: isLoadingAllResources } = useResourcesServiceGetAllResources({
+  const {
+    data: allResources,
+    isLoading: isLoadingAllResources,
+    error: resourcesError,
+    refetch: refetchResources,
+  } = useResourcesServiceGetAllResources({
     search: debouncedSearchValue?.trim() || undefined,
     onlyInUseByMe: filterByOnlyInUseByMe,
     onlyWithPermissions: filterByOnlyWithPermissions,
@@ -78,7 +84,18 @@ export function ResourceOverview() {
       />
 
       <div className="flex flex-row flex-wrap gap-4">
-        {!isLoadingAllResources && allResources?.data.length === 0 && (
+        {(groupsError || resourcesError) && (
+          <ErrorDisplay
+            error={groupsError || resourcesError}
+            onRetry={() => {
+              if (groupsError) refetchGroups();
+              if (resourcesError) refetchResources();
+            }}
+            message="Failed to load resource data. Please try again."
+          />
+        )}
+
+        {!isLoadingAllResources && !resourcesError && allResources?.data.length === 0 && (
           <Alert color="warning" title={t('noResourcesFound.title')}>
             <p>{t('noResourcesFound.description')}</p>
           </Alert>

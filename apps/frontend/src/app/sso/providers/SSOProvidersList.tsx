@@ -20,7 +20,7 @@ import {
   Divider,
 } from '@heroui/react';
 import { Pencil, Trash, Key, FileCode, Eye, EyeOff, Download } from 'lucide-react';
-import { useToastMessage } from '../../../components/toastProvider';
+import { ErrorDisplay } from '../../../components/errorDisplay/ErrorDisplay';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import {
   CreateSSOProviderDto,
@@ -82,12 +82,17 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
 
   const loadingState = useReactQueryStatusToHeroUiTableLoadingState(fetchStatus);
 
-  const { success, error: showError } = useToastMessage();
   const createSSOProvider = useAuthenticationServiceCreateOneSsoProvider({
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [UseAuthenticationServiceGetAllSsoProvidersKeyFn()[0]],
       });
+      onClose();
+      setFormValues(defaultProviderValues);
+      setEditingProvider(null);
+    },
+    onError: (err) => {
+      console.error('Failed to create SSO provider:', err);
     },
   });
   const updateSSOProvider = useAuthenticationServiceUpdateOneSsoProvider({
@@ -95,6 +100,12 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
       queryClient.invalidateQueries({
         queryKey: [UseAuthenticationServiceGetAllSsoProvidersKeyFn()[0]],
       });
+      onClose();
+      setFormValues(defaultProviderValues);
+      setEditingProvider(null);
+    },
+    onError: (err) => {
+      console.error('Failed to update SSO provider:', err);
     },
   });
   const deleteSSOProvider = useAuthenticationServiceDeleteOneSsoProvider({
@@ -102,6 +113,9 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
       queryClient.invalidateQueries({
         queryKey: [UseAuthenticationServiceGetAllSsoProvidersKeyFn()[0]],
       });
+    },
+    onError: (err) => {
+      console.error('Failed to delete SSO provider:', err);
     },
   });
   const { data: providerDetails } = useAuthenticationServiceGetOneSsoProviderById(
@@ -115,10 +129,6 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
   // Function to discover OIDC configuration from Keycloak
   const discoverOIDCConfiguration = async () => {
     if (!keycloakHost || !keycloakRealm) {
-      showError({
-        title: t('errorGeneric'),
-        description: t('fillAllFields'),
-      });
       return;
     }
 
@@ -156,19 +166,10 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
         },
       }));
 
-      // Show success message
-      success({
-        title: t('discoverSuccess'),
-        description: config.issuer,
-      });
-
       // Close the discovery dialog
       setIsDiscoverDialogOpen(false);
     } catch (err) {
-      showError({
-        title: t('discoverError'),
-        description: err instanceof Error ? err.message : String(err),
-      });
+      console.error('Failed to discover OIDC configuration:', err);
     } finally {
       setIsDiscovering(false);
     }
@@ -309,11 +310,27 @@ export const SSOProvidersList = forwardRef<SSOProvidersListRef, React.ComponentP
   };
 
   if (error) {
-    return <div className="text-red-500 p-4">{t('errorLoading')}</div>;
+    return (
+      <div className="p-4">
+        <ErrorDisplay error={error as Error} onRetry={() => window.location.reload()} />
+      </div>
+    );
   }
 
   return (
     <>
+      {(createSSOProvider.error || updateSSOProvider.error || deleteSSOProvider.error) && (
+        <div className="mb-4">
+          <ErrorDisplay
+            error={(createSSOProvider.error || updateSSOProvider.error || deleteSSOProvider.error) as Error}
+            onRetry={() => {
+              createSSOProvider.reset();
+              updateSSOProvider.reset();
+              deleteSSOProvider.reset();
+            }}
+          />
+        </div>
+      )}
       {providers && providers.length > 0 ? (
         <Table aria-label="SSO Providers List" data-cy="sso-providers-table">
           <TableHeader>

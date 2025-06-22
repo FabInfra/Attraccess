@@ -3,6 +3,7 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button
 import { Edit3, Mail } from 'lucide-react'; // Mail for PageHeader icon
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { PageHeader } from '../../components/pageHeader'; // Assuming PageHeader exists
+import { ErrorDisplay } from '../../components/errorDisplay/ErrorDisplay';
 import { Link } from 'react-router-dom'; // For edit button link
 import { TableDataLoadingIndicator, TableEmptyState } from '../../components/tableComponents';
 import { useReactQueryStatusToHeroUiTableLoadingState } from '../../hooks/useReactQueryStatusToHeroUiTableLoadingState';
@@ -12,9 +13,24 @@ import * as de from './emailTemplates.de.json';
 
 export function EmailTemplatesPage() {
   const { t } = useTranslations('emailTemplates', { en, de });
-  const { data: emailTemplates, status: fetchStatus } = useEmailTemplatesServiceEmailTemplateControllerFindAll();
+  const {
+    data: emailTemplates,
+    status: fetchStatus,
+    error,
+    refetch,
+  } = useEmailTemplatesServiceEmailTemplateControllerFindAll();
 
   const loadingState = useReactQueryStatusToHeroUiTableLoadingState(fetchStatus);
+
+  // Handle error state with inline display
+  if (error) {
+    return (
+      <>
+        <PageHeader title={t('title')} subtitle={t('subtitle')} icon={<Mail className="w-6 h-6" />} />
+        <ErrorDisplay error={error} onRetry={() => refetch()} message={t('error.fetchDescription')} />
+      </>
+    );
+  }
 
   return (
     <>

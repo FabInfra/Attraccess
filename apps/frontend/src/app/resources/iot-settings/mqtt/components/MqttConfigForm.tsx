@@ -25,7 +25,7 @@ import {
   MqttResourceConfig,
 } from '@attraccess/react-query-client';
 import { useNavigate } from 'react-router-dom';
-import { useToastMessage } from '../../../../../components/toastProvider';
+import { ErrorDisplay } from '../../../../../components/errorDisplay/ErrorDisplay';
 import en from '../translations/configForm.en.json';
 import de from '../translations/configForm.de.json';
 import { Select } from '../../../../../components/select';
@@ -137,8 +137,6 @@ function TemplateVariablesHelp() {
 export function MqttConfigForm({ resourceId, configId, isEdit = false }: Readonly<MqttConfigFormProps>) {
   const { t } = useTranslations('mqttConfigForm', { en, de });
   const navigate = useNavigate();
-  const { success, error: showError } = useToastMessage();
-
   const [formValues, setFormValues] = useState<MqttConfigFormValues>(initialFormValues);
 
   // Fetch MQTT servers for the dropdown
@@ -186,18 +184,9 @@ export function MqttConfigForm({ resourceId, configId, isEdit = false }: Readonl
         queryKey: UseMqttServiceMqttResourceConfigGetOneKeyFn({ resourceId, configId: config.id }),
       });
 
-      success({
-        title: t('createSuccess'),
-        description: t('createSuccessDetail'),
-      });
-
       navigate(`/resources/${resourceId}/iot`);
     },
     onError: (err) => {
-      showError({
-        title: t('createError'),
-        description: t('createErrorDetail'),
-      });
       console.error('Failed to save MQTT configuration:', err);
     },
   });
@@ -211,18 +200,9 @@ export function MqttConfigForm({ resourceId, configId, isEdit = false }: Readonl
         queryKey: UseMqttServiceMqttResourceConfigGetOneKeyFn({ resourceId, configId: config.id }),
       });
 
-      success({
-        title: t('updateSuccess'),
-        description: t('updateSuccessDetail'),
-      });
-
       navigate(`/resources/${resourceId}/iot`);
     },
     onError: (err) => {
-      showError({
-        title: t('updateError'),
-        description: t('updateErrorDetail'),
-      });
       console.error('Failed to save MQTT configuration:', err);
     },
   });
@@ -315,6 +295,17 @@ export function MqttConfigForm({ resourceId, configId, isEdit = false }: Readonl
       </Modal>
 
       <Form onSubmit={handleSubmit}>
+        {(createConfig.error || updateConfig.error) && (
+          <div className="mb-4">
+            <ErrorDisplay
+              error={(createConfig.error || updateConfig.error) as Error}
+              onRetry={() => {
+                createConfig.reset();
+                updateConfig.reset();
+              }}
+            />
+          </div>
+        )}
         <Card fullWidth>
           <CardHeader>{t('basicSettings')}</CardHeader>
 

@@ -18,20 +18,24 @@ import {
   ModalBody,
   ModalFooter,
   Link,
+  Spinner,
 } from '@heroui/react';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { PageHeader } from '../../components/pageHeader';
+import { ErrorDisplay } from '../../components/errorDisplay/ErrorDisplay';
 import Editor from '@monaco-editor/react';
+import { useToastMessage } from '../../components/toastProvider';
+import { ExpandIcon } from 'lucide-react';
 
 import * as enTranslationsFile from './editEmailTemplate.en.json';
 import * as deTranslationsFile from './editEmailTemplate.de.json';
 import { useDebounce } from '../../hooks/useDebounce';
-import { ExpandIcon } from 'lucide-react';
 import { useTheme } from '@heroui/use-theme';
 
 export function EditEmailTemplatePage() {
   const navigate = useNavigate();
   const { t } = useTranslations('editEmailTemplate', { en: enTranslationsFile, de: deTranslationsFile });
+  const toast = useToastMessage();
 
   const { type: templateType } = useParams<{ type: string }>();
 
@@ -51,7 +55,23 @@ export function EditEmailTemplatePage() {
     }
   }, [template.data]);
 
-  const updateTemplate = useUpdateEmailTemplate();
+  const updateTemplate = useUpdateEmailTemplate({
+    onSuccess: () => {
+      toast.success({
+        title: t('success.updateTitle'),
+        description: t('success.updateDescription'),
+      });
+      navigate('/email-templates');
+    },
+    onError: (error) => {
+      toast.error({
+        title: t('error.updateTitle'),
+        description: t('error.updateDescription'),
+      });
+      console.error('Failed to update email template:', error);
+    },
+  });
+
   const {
     mutate: parseMjml,
     data: parsedBody,
@@ -121,6 +141,39 @@ export function EditEmailTemplatePage() {
     },
     [updateTemplate, subject, body, templateType]
   );
+
+  // Handle loading state
+  if (template.isLoading) {
+    return (
+      <div>
+        <PageHeader title={t('templateType.' + templateType)} subtitle={t('subtitle')} backTo="/email-templates" />
+        <div className="flex items-center justify-center p-8">
+          <Spinner size="lg" color="primary" />
+          <span className="ml-4">{t('loading')}</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle error state for template loading
+  if (template.error) {
+    return (
+      <div>
+        <PageHeader title={t('templateType.' + templateType)} subtitle={t('subtitle')} backTo="/email-templates" />
+        <ErrorDisplay error={template.error} onRetry={() => template.refetch()} message={t('error.fetchDescription')} />
+      </div>
+    );
+  }
+
+  // Handle case where template is not found
+  if (!template.data) {
+    return (
+      <div>
+        <PageHeader title={t('templateType.' + templateType)} subtitle={t('subtitle')} backTo="/email-templates" />
+        <ErrorDisplay error={new Error(t('notFound.description'))} message={t('notFound.title')} />
+      </div>
+    );
+  }
 
   return (
     <div>

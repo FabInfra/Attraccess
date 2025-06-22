@@ -1,6 +1,7 @@
 import { useFabReaderServiceGetReaders } from '@attraccess/react-query-client';
 import { Select, SelectItem } from '@heroui/react';
 import { useCallback, useEffect, useState } from 'react';
+import { ErrorDisplay } from '../../../components/errorDisplay/ErrorDisplay';
 
 interface Props {
   selection: number | null | undefined;
@@ -10,7 +11,7 @@ interface Props {
 }
 
 export function FabreaderSelect(props: Props) {
-  const { data: readers } = useFabReaderServiceGetReaders();
+  const { data: readers, error, isLoading, refetch } = useFabReaderServiceGetReaders();
 
   const selectionToSet = useCallback((selection: Props['selection']) => {
     return new Set(selection ? [selection] : []);
@@ -27,6 +28,13 @@ export function FabreaderSelect(props: Props) {
     // eslint-disable-next-line
   }, [value]);
 
+  // Handle error state
+  if (error) {
+    return (
+      <ErrorDisplay error={error} onRetry={() => refetch()} message="Unable to load reader data. Please try again." />
+    );
+  }
+
   return (
     <Select
       items={readers ?? []}
@@ -34,6 +42,7 @@ export function FabreaderSelect(props: Props) {
       placeholder={readers?.find((r) => r.id === props.selection)?.name ?? props.placeholder}
       selectedKeys={value}
       onSelectionChange={(keys) => setValue(keys as Set<number>)}
+      isLoading={isLoading}
       data-cy="fabreader-select"
     >
       {(reader) => (

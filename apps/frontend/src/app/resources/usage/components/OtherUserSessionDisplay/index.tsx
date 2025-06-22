@@ -14,7 +14,7 @@ import {
 } from '@attraccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../../../../../hooks/useAuth';
-import { useToastMessage } from '../../../../../components/toastProvider';
+import { ErrorDisplay } from '../../../../../components/errorDisplay/ErrorDisplay';
 import { SessionNotesModal, SessionModalMode } from '../SessionNotesModal';
 import * as en from './translations/en.json';
 import * as de from './translations/de.json';
@@ -26,7 +26,6 @@ interface OtherUserSessionDisplayProps {
 export function OtherUserSessionDisplay({ resourceId }: OtherUserSessionDisplayProps) {
   const { t } = useTranslations('otherUserSessionDisplay', { en, de });
   const { hasPermission, user } = useAuth();
-  const { success, error: showError } = useToastMessage();
   const queryClient = useQueryClient();
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
 
@@ -72,16 +71,8 @@ export function OtherUserSessionDisplay({ resourceId }: OtherUserSessionDisplayP
           );
         },
       });
-      success({
-        title: t('takeoverSuccessful'),
-        description: t('takeoverSuccessfulDescription'),
-      });
     },
     onError: (err) => {
-      showError({
-        title: t('takeoverError'),
-        description: t('takeoverErrorDescription'),
-      });
       console.error('Failed to takeover session:', err);
     },
   });
@@ -112,6 +103,9 @@ export function OtherUserSessionDisplay({ resourceId }: OtherUserSessionDisplayP
   return (
     <>
       <div className="space-y-4 text-center">
+        {startSession.error && (
+          <ErrorDisplay error={startSession.error as Error} onRetry={() => startSession.reset()} />
+        )}
         <p className="text-sm text-gray-500 dark:text-gray-400">{t('resourceInUseBy')}</p>
         {activeSession.user ? (
           <AttraccessUser user={activeSession.user} />

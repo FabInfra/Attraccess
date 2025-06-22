@@ -4,6 +4,7 @@ import { useTranslations, UserSearch } from '@attraccess/plugins-frontend-ui';
 import { useAuth } from '../../hooks/useAuth';
 import { Navigate } from 'react-router-dom';
 import { UserPermissionForm } from './components/UserPermissionForm';
+import { ErrorDisplay } from '../../components/errorDisplay/ErrorDisplay';
 import * as en from './userManagement.en.json';
 import * as de from './userManagement.de.json';
 import { Card } from '@heroui/react';
@@ -18,11 +19,12 @@ export const UserManagementPage: React.FC = () => {
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
   // Fetch user details directly by ID rather than searching
-  const { data: selectedUser, isLoading: isLoadingUser } = useUsersServiceGetOneUserById(
-    { id: selectedUserId as number },
-    undefined,
-    { enabled: !!selectedUserId }
-  );
+  const {
+    data: selectedUser,
+    isLoading: isLoadingUser,
+    error: userError,
+    refetch: refetchUser,
+  } = useUsersServiceGetOneUserById({ id: selectedUserId as number }, undefined, { enabled: !!selectedUserId });
 
   // Redirect if user doesn't have permissions
   if (!canManageUsers) {
@@ -70,6 +72,14 @@ export const UserManagementPage: React.FC = () => {
               <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
                 {t('loadingUserDetails') || 'Fetching user details...'}
               </p>
+            </Card>
+          ) : userError ? (
+            <Card className="p-4 sm:p-6 shadow-sm" data-cy="user-management-user-error-card">
+              <ErrorDisplay
+                error={userError}
+                onRetry={() => refetchUser()}
+                message="Failed to load user details. Please try again."
+              />
             </Card>
           ) : selectedUser ? (
             <UserPermissionForm user={selectedUser} />

@@ -1,4 +1,5 @@
 import { Alert, Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/react';
+import { ErrorDisplay } from '../../../components/errorDisplay/ErrorDisplay';
 import { PageHeader } from '../../../components/pageHeader';
 import { useTranslations, useUrlQuery } from '@attraccess/plugins-frontend-ui';
 import { PasswordInput } from '../../../components/PasswordInput';
@@ -49,9 +50,16 @@ export function SSOLinkingRequiredModal(props: Props) {
     cleanHref
   );
 
-  const { mutate: linkMutation, isPending: linkingIsLoading } = useAuthenticationServiceLinkUserToExternalAccount({
+  const {
+    mutate: linkMutation,
+    isPending: linkingIsLoading,
+    error: linkError,
+  } = useAuthenticationServiceLinkUserToExternalAccount({
     onSuccess: () => {
       window.location.href = callbackURL;
+    },
+    onError: (err) => {
+      console.error('Error linking user to external account:', err);
     },
   });
 
@@ -82,6 +90,8 @@ export function SSOLinkingRequiredModal(props: Props) {
 
         <ModalBody>
           <Alert color="warning">{t('description', { email })}</Alert>
+
+          {linkError && <ErrorDisplay error={linkError as Error} onRetry={() => linkUser()} />}
 
           <PasswordInput
             label={t('inputs.password.label')}

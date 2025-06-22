@@ -9,5 +9,12 @@
   },
   "editButton": "Bearbeiten",
   "noTemplates": "Keine E-Mail-Vorlagen gefunden.",
-  "loading": "E-Mail-Vorlagen werden geladen..."
+  "loading": "E-Mail-Vorlagen werden geladen...",
+  "error": {
+    "title": "Fehler beim Laden der E-Mail-Vorlagen",
+    "description": "E-Mail-Vorlagen konnten nicht geladen werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support, falls das Problem weiterhin besteht.",
+    "fetchTitle": "Laden der E-Mail-Vorlagen fehlgeschlagen",
+    "fetchDescription": "Beim Abrufen der E-Mail-Vorlagen vom Server ist ein Fehler aufgetreten.",
+    "retry": "Wiederholen"
+  }
 }

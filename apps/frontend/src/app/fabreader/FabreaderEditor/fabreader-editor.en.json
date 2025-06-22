@@ -1,5 +1,6 @@
 {
   "title": "Edit Reader",
+  "loading": "Loading reader data...",
   "readerName": "Reader Name",
   "enterReaderName": "Enter reader name",
   "connectedResources": "Connected Resources",
@@ -9,5 +10,12 @@
   "save": "Save Changes",
   "errorUpdatingReader": "Error updating reader",
   "readerUpdated": "Reader updated",
-  "readerUpdatedDescription": "Reader updated successfully"
+  "readerUpdatedDescription": "Reader updated successfully",
+  "error": {
+    "title": "Error Loading Reader",
+    "description": "Unable to load the reader data. Please try again or contact support if the problem persists.",
+    "fetchTitle": "Failed to Load Reader",
+    "fetchDescription": "An error occurred while fetching the reader data from the server.",
+    "retry": "Retry"
+  }
 }

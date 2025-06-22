@@ -3,7 +3,7 @@ import { Button, Card, CardHeader, Input, Checkbox, Form } from '@heroui/react';
 import { ArrowLeft } from 'lucide-react';
 import { PasswordInput } from '../../../components/PasswordInput';
 import { useNavigate } from 'react-router-dom';
-import { useToastMessage } from '../../../components/toastProvider';
+import { ErrorDisplay } from '../../../components/errorDisplay/ErrorDisplay';
 import en from './translations/create/en.json';
 import de from './translations/create/de.json';
 import { useCallback, useState } from 'react';
@@ -24,7 +24,6 @@ export function CreateMqttServerForm(props?: Readonly<CreateMqttServerPageProps>
   const { onSuccess } = props || {};
   const { t } = useTranslations('mqttServerCreate', { en, de });
   const navigate = useNavigate();
-  const { success, error: showError } = useToastMessage();
   const queryClient = useQueryClient();
 
   const [formValues, setFormValues] = useState<CreateMqttServerDto>({
@@ -39,10 +38,6 @@ export function CreateMqttServerForm(props?: Readonly<CreateMqttServerPageProps>
 
   const createMqttServer = useMqttServiceMqttServersCreateOne({
     onSuccess: (server) => {
-      success({
-        title: t('serverCreated'),
-        description: t('serverCreatedDesc'),
-      });
       queryClient.invalidateQueries({
         queryKey: [UseMqttServiceMqttServersGetAllKeyFn()[0]],
       });
@@ -53,10 +48,7 @@ export function CreateMqttServerForm(props?: Readonly<CreateMqttServerPageProps>
       }
     },
     onError: (err: Error) => {
-      showError({
-        title: t('errorGeneric'),
-        description: err.message || t('failedToCreate'),
-      });
+      console.error('Failed to create MQTT server:', err);
     },
   });
 
@@ -86,6 +78,9 @@ export function CreateMqttServerForm(props?: Readonly<CreateMqttServerPageProps>
 
   return (
     <Form onSubmit={handleSubmit} data-cy="create-mqtt-server-form">
+      {createMqttServer.error && (
+        <ErrorDisplay error={createMqttServer.error as Error} onRetry={() => createMqttServer.reset()} />
+      )}
       <Input
         id="name"
         name="name"

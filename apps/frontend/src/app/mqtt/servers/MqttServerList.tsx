@@ -2,7 +2,6 @@ import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import {
   Button,
   Spinner,
-  Alert,
   Modal,
   ModalContent,
   ModalHeader,
@@ -11,7 +10,7 @@ import {
   useDisclosure,
 } from '@heroui/react';
 import { useNavigate } from 'react-router-dom';
-import { useToastMessage } from '../../../components/toastProvider';
+import { ErrorDisplay } from '../../../components/errorDisplay/ErrorDisplay';
 import en from './translations/list/en.json';
 import de from './translations/list/de.json';
 import { useState } from 'react';
@@ -69,7 +68,6 @@ function ServerListItem({ id, name, host, port, onEdit, onDelete, t }: ServerLis
 export function MqttServerList() {
   const { t } = useTranslations('mqttServersList', { en, de });
   const navigate = useNavigate();
-  const { success, error: showError } = useToastMessage();
   const queryClient = useQueryClient();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [serverToDelete, setServerToDelete] = useState<number | null>(null);
@@ -80,20 +78,13 @@ export function MqttServerList() {
   // Delete server mutation
   const deleteServer = useMqttServiceMqttServersDeleteOne({
     onSuccess: () => {
-      success({
-        title: t('serverDeleted'),
-        description: t('serverDeletedDesc'),
-      });
       queryClient.invalidateQueries({
         queryKey: [UseMqttServiceMqttServersGetAllKeyFn()[0]],
       });
       onClose();
     },
-    onError: (err) => {
-      showError({
-        title: t('errorGeneric'),
-        description: err instanceof Error ? err.message : t('failedToDelete'),
-      });
+    onError: () => {
+      // Error handling is now done via ErrorDisplay component in the UI
     },
   });
 
@@ -122,17 +113,19 @@ export function MqttServerList() {
 
   if (error) {
     return (
-      <Alert color="danger" data-cy="mqtt-server-list-error-alert">
-        {t('errorLoading')}
-      </Alert>
+      <ErrorDisplay
+        error={error as Error}
+        onRetry={() => window.location.reload()}
+        data-cy="mqtt-server-list-error-alert"
+      />
     );
   }
 
   if (servers.length === 0) {
     return (
-      <Alert color="warning" data-cy="mqtt-server-list-no-servers-alert">
+      <div className="p-4 text-center text-gray-500" data-cy="mqtt-server-list-no-servers-alert">
         {t('noServersConfigured')}
-      </Alert>
+      </div>
     );
   }
 
@@ -157,6 +150,9 @@ export function MqttServerList() {
         <ModalContent>
           <ModalHeader>{t('deleteServer')}</ModalHeader>
           <ModalBody>
+            {deleteServer.error && (
+              <ErrorDisplay error={deleteServer.error as Error} onRetry={() => deleteServer.reset()} />
+            )}
             <p>{t('deleteConfirmation')}</p>
           </ModalBody>
           <ModalFooter>

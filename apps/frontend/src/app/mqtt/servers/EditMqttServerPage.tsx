@@ -3,7 +3,7 @@ import { Button, Card, CardHeader, Input, Checkbox, Spinner } from '@heroui/reac
 import { ArrowLeft } from 'lucide-react';
 import { PasswordInput } from '../../../components/PasswordInput';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useToastMessage } from '../../../components/toastProvider';
+import { ErrorDisplay } from '../../../components/errorDisplay/ErrorDisplay';
 import en from './translations/edit/en.json';
 import de from './translations/edit/de.json';
 import { useState, useEffect } from 'react';
@@ -19,7 +19,6 @@ export function EditMqttServerPage() {
   const { serverId } = useParams<{ serverId: string }>();
   const { t } = useTranslations('mqttServerEdit', { en, de });
   const navigate = useNavigate();
-  const { success, error: showError } = useToastMessage();
   const queryClient = useQueryClient();
 
   const [formValues, setFormValues] = useState<CreateMqttServerDto>({
@@ -36,7 +35,7 @@ export function EditMqttServerPage() {
   const {
     data: server,
     isLoading: isLoadingServer,
-    isError,
+    error: fetchError,
   } = useMqttServiceMqttServersGetOneById({ id: Number(serverId) });
 
   // Update form values when server data is loaded
@@ -56,20 +55,13 @@ export function EditMqttServerPage() {
 
   const updateMqttServer = useMqttServiceMqttServersUpdateOne({
     onSuccess: () => {
-      success({
-        title: t('serverUpdated'),
-        description: t('serverUpdatedDesc'),
-      });
       queryClient.invalidateQueries({
         queryKey: [UseMqttServiceMqttServersGetAllKeyFn()[0]],
       });
       navigate('/mqtt/servers');
     },
     onError: (err: Error) => {
-      showError({
-        title: t('errorGeneric'),
-        description: err.message || t('failedToUpdate'),
-      });
+      console.error('Failed to update MQTT server:', err);
     },
   });
 
@@ -105,8 +97,16 @@ export function EditMqttServerPage() {
     );
   }
 
-  if (isError || !server) {
-    return null; // Navigate happens in onError callback
+  if (fetchError) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <ErrorDisplay error={fetchError as Error} onRetry={() => window.location.reload()} />
+      </div>
+    );
+  }
+
+  if (!server) {
+    return null;
   }
 
   return (
@@ -130,6 +130,9 @@ export function EditMqttServerPage() {
         </CardHeader>
         <div style={{ padding: '1rem' }}>
           <form onSubmit={handleSubmit} className="space-y-6" data-cy="edit-mqtt-server-form">
+            {updateMqttServer.error && (
+              <ErrorDisplay error={updateMqttServer.error as Error} onRetry={() => updateMqttServer.reset()} />
+            )}
             <div className="space-y-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium mb-1">

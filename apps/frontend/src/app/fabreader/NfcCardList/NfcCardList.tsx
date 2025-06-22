@@ -30,6 +30,7 @@ import { useToastMessage } from '../../../components/toastProvider';
 import { useAuth } from '../../../hooks/useAuth';
 import { TableDataLoadingIndicator, TableEmptyState } from '../../../components/tableComponents';
 import { useReactQueryStatusToHeroUiTableLoadingState } from '../../../hooks/useReactQueryStatusToHeroUiTableLoadingState';
+import { ErrorDisplay } from '../../../components/errorDisplay/ErrorDisplay';
 
 import de from './NfcCardList.de.json';
 import en from './NfcCardList.en.json';
@@ -45,10 +46,26 @@ const NfcCardDeleteModal = (props: DeleteModalProps) => {
     de,
     en,
   });
+  const toast = useToastMessage();
 
   const [readerId, setReaderId] = useState<number | null>(null);
 
-  const { mutate: resetNfcCard } = useFabReaderServiceResetNfcCard();
+  const { mutate: resetNfcCard } = useFabReaderServiceResetNfcCard({
+    onSuccess: () => {
+      toast.success({
+        title: t('nfcCardsTable.deleteModal.success.title'),
+        description: t('nfcCardsTable.deleteModal.success.description'),
+      });
+      props.close();
+    },
+    onError: (error) => {
+      toast.error({
+        title: t('nfcCardsTable.deleteModal.error.title'),
+        description: t('nfcCardsTable.deleteModal.error.description'),
+      });
+      console.error('Failed to reset NFC card:', error);
+    },
+  });
 
   const deleteCard = useCallback(() => {
     if (!props.cardId || !readerId) {
@@ -99,11 +116,14 @@ const NfcCardTableCell = (props: NfcCardTableCellProps) => {
     en,
   });
 
-  const { data: user } = useUsersServiceGetOneUserById({ id: props.card.userId }, undefined, {
+  const { data: user, error: userError } = useUsersServiceGetOneUserById({ id: props.card.userId }, undefined, {
     enabled: props.header === 'userId',
   });
 
   if (props.header === 'userId') {
+    if (userError) {
+      return <span className="text-danger">{t('error.fetchUser.fallback')}</span>;
+    }
     return <AttraccessUser user={user} />;
   }
 
@@ -137,11 +157,27 @@ const EnrollNfcCardButton = () => {
     de,
     en,
   });
+  const toast = useToastMessage();
 
   const [show, setShow] = useState(false);
   const [readerId, setReaderId] = useState<number | null>(null);
 
-  const { mutate: enrollNfcCardMutation } = useFabReaderServiceEnrollNfcCard();
+  const { mutate: enrollNfcCardMutation } = useFabReaderServiceEnrollNfcCard({
+    onSuccess: () => {
+      toast.success({
+        title: t('enrollModal.success.title'),
+        description: t('enrollModal.success.description'),
+      });
+      setShow(false);
+    },
+    onError: (error) => {
+      toast.error({
+        title: t('enrollModal.error.title'),
+        description: t('enrollModal.error.description'),
+      });
+      console.error('Failed to enroll NFC card:', error);
+    },
+  });
 
   const enrollNfcCard = useCallback(() => {
     if (!readerId) {
@@ -195,24 +231,14 @@ export function NfcCardList() {
     data: cards,
     error: cardsError,
     status: fetchStatus,
+    refetch,
   } = useFabReaderServiceGetAllCards(undefined, {
     refetchInterval: 5000,
   });
 
   const loadingState = useReactQueryStatusToHeroUiTableLoadingState(fetchStatus);
 
-  const toast = useToastMessage();
-
   const { user } = useAuth();
-
-  useEffect(() => {
-    if (cardsError) {
-      toast.error({
-        title: t('errorFetchCards'),
-        description: (cardsError as Error).message,
-      });
-    }
-  }, [cardsError, toast, t]);
 
   const userCanManage = useMemo(() => {
     return !!user?.systemPermissions.canManageSystemConfiguration;
@@ -230,6 +256,18 @@ export function NfcCardList() {
   }, [userCanManage]);
 
   const [cardToDeleteId, setCardToDeleteId] = useState<number | null>(null);
+
+  // Handle error state with inline display
+  if (cardsError) {
+    return (
+      <>
+        <Alert color="danger" className="mb-4">
+          {t('workInProgress')}
+        </Alert>
+        <ErrorDisplay error={cardsError} onRetry={() => refetch()} message={t('error.description')} />
+      </>
+    );
+  }
 
   return (
     <>

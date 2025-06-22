@@ -1,5 +1,6 @@
 {
   "title": "Reader bearbeiten",
+  "loading": "Reader-Daten werden geladen...",
   "readerName": "Reader-Name",
   "enterReaderName": "Reader-Namen eingeben",
   "connectedResources": "Verbundene Ressourcen",
@@ -9,5 +10,12 @@
   "save": "Änderungen speichern",
   "errorUpdatingReader": "Fehler beim Aktualisieren des Readers",
   "readerUpdated": "Reader aktualisiert",
-  "readerUpdatedDescription": "Reader erfolgreich aktualisiert"
+  "readerUpdatedDescription": "Reader erfolgreich aktualisiert",
+  "error": {
+    "title": "Fehler beim Laden des Readers",
+    "description": "Reader-Daten konnten nicht geladen werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support, falls das Problem weiterhin besteht.",
+    "fetchTitle": "Laden des Readers fehlgeschlagen",
+    "fetchDescription": "Beim Abrufen der Reader-Daten vom Server ist ein Fehler aufgetreten.",
+    "retry": "Wiederholen"
+  }
 }

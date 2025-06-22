@@ -2,9 +2,9 @@ import React, { useCallback, useMemo } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Input } from '@heroui/input';
 import { Button } from '@heroui/button';
-import { Alert } from '@heroui/alert';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { PasswordInput } from '../../components/PasswordInput';
+import { ErrorDisplay } from '../../components/errorDisplay/ErrorDisplay';
 import { useLogin } from '../../hooks/useAuth';
 import * as en from './loginForm.en.json';
 import * as de from './loginForm.de.json';
@@ -107,11 +107,12 @@ export function LoginForm({ onNeedsAccount, onForgotPassword }: LoginFormProps) 
           {isPending ? t('signingIn') : t('signInButton')}
         </Button>
 
-        {(error as Error) && (
-          <Alert
-            color="danger"
-            title={t('error.title')}
-            description={(error as Error).message}
+        {error && (
+          <ErrorDisplay
+            error={error as Error}
+            onRetry={() => {
+              /* Login form doesn't need retry */
+            }}
             data-cy="login-form-error-alert"
           />
         )}

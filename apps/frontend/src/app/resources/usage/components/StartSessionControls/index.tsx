@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { Button, ButtonGroup, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@heroui/react';
 import { PlayIcon, ChevronDownIcon } from 'lucide-react';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
-import { useToastMessage } from '../../../../../components/toastProvider';
+import { ErrorDisplay } from '../../../../../components/errorDisplay/ErrorDisplay';
 import { SessionNotesModal, SessionModalMode } from '../SessionNotesModal';
 import {
   useResourcesServiceResourceUsageStartSession,
@@ -19,7 +19,6 @@ interface StartSessionControlsProps {
 
 export function StartSessionControls({ resourceId }: Readonly<StartSessionControlsProps>) {
   const { t } = useTranslations('startSessionControls', { en, de });
-  const { success, error: showError } = useToastMessage();
   const queryClient = useQueryClient();
 
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
@@ -43,16 +42,8 @@ export function StartSessionControls({ resourceId }: Readonly<StartSessionContro
           );
         },
       });
-      success({
-        title: t('sessionStarted'),
-        description: t('sessionStartedDescription'),
-      });
     },
     onError: (err) => {
-      showError({
-        title: t('sessionStartError'),
-        description: t('sessionStartErrorDescription'),
-      });
       console.error('Failed to start session:', err);
     },
   });
@@ -78,6 +69,9 @@ export function StartSessionControls({ resourceId }: Readonly<StartSessionContro
   return (
     <>
       <div className="space-y-4">
+        {startSession.error && (
+          <ErrorDisplay error={startSession.error as Error} onRetry={() => startSession.reset()} />
+        )}
         <p className="text-gray-500 dark:text-gray-400">{t('noActiveSession')}</p>
 
         <ButtonGroup fullWidth color="primary">

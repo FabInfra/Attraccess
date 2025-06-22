@@ -5,7 +5,7 @@ import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import * as en from './en.json';
 import * as de from './de.json';
 import { useUsersServiceRequestPasswordReset } from '@attraccess/react-query-client';
-import { useToastMessage } from '../../../components/toastProvider';
+import { ErrorDisplay } from '../../../components/errorDisplay/ErrorDisplay';
 import { Input } from '@heroui/input';
 
 interface PasswordResetFormProps {
@@ -20,20 +20,16 @@ export function PasswordResetForm({ onGoBack }: PasswordResetFormProps) {
 
   const [email, setEmail] = useState('');
 
-  const toast = useToastMessage();
-
-  const { mutate: requestPasswordReset, isPending } = useUsersServiceRequestPasswordReset({
+  const {
+    mutate: requestPasswordReset,
+    isPending,
+    error,
+  } = useUsersServiceRequestPasswordReset({
     onError: (error) => {
-      toast.error({
-        title: t('error.title'),
-        description: (error as Error).message,
-      });
+      console.error('Failed to request password reset:', error);
     },
     onSuccess: () => {
-      toast.success({
-        title: t('success.title'),
-        description: t('success.description'),
-      });
+      setEmail('');
     },
   });
 
@@ -47,13 +43,26 @@ export function PasswordResetForm({ onGoBack }: PasswordResetFormProps) {
       <div>
         <h2 className="text-3xl font-bold">{t('title')}</h2>
         <p className="mt-2 text-gray-600 dark:text-gray-300">
-          <Button onPress={onGoBack} variant="light" color="secondary" startContent={<ArrowLeft />} data-cy="password-reset-form-go-back-button">
+          <Button
+            onPress={onGoBack}
+            variant="light"
+            color="secondary"
+            startContent={<ArrowLeft />}
+            data-cy="password-reset-form-go-back-button"
+          >
             {t('goBackButton')}
           </Button>
         </p>
       </div>
 
-      <Input label={t('emailLabel')} value={email} onChange={(e) => setEmail(e.target.value)} data-cy="password-reset-form-email-input" />
+      {error && <ErrorDisplay error={error as Error} onRetry={() => requestPasswordReset.reset?.()} />}
+
+      <Input
+        label={t('emailLabel')}
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        data-cy="password-reset-form-email-input"
+      />
 
       <Button
         onPress={() => requestPasswordReset({ requestBody: { email } })}

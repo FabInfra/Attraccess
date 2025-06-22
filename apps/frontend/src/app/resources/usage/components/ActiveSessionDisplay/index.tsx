@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { Button, ButtonGroup, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@heroui/react';
 import { StopCircle, ChevronDownIcon } from 'lucide-react';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
-import { useToastMessage } from '../../../../../components/toastProvider';
+import { ErrorDisplay } from '../../../../../components/errorDisplay/ErrorDisplay';
 import { SessionTimer } from '../SessionTimer';
 import { SessionNotesModal, SessionModalMode } from '../SessionNotesModal';
 import {
@@ -21,7 +21,6 @@ interface ActiveSessionDisplayProps {
 
 export function ActiveSessionDisplay({ resourceId, startTime }: ActiveSessionDisplayProps) {
   const { t } = useTranslations('activeSessionDisplay', { en, de });
-  const { success, error: showError } = useToastMessage();
   const queryClient = useQueryClient();
   const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
 
@@ -44,17 +43,9 @@ export function ActiveSessionDisplay({ resourceId, startTime }: ActiveSessionDis
       queryClient.resetQueries({
         queryKey: UseResourcesServiceResourceUsageGetActiveSessionKeyFn({ resourceId }),
       });
-      success({
-        title: t('sessionEnded'),
-        description: t('sessionEndedDescription'),
-      });
     },
     onError: (err) => {
       console.error('Error ending session:', err);
-      showError({
-        title: t('sessionEndError'),
-        description: t('sessionEndErrorDescription'),
-      });
     },
   });
 
@@ -79,6 +70,7 @@ export function ActiveSessionDisplay({ resourceId, startTime }: ActiveSessionDis
   return (
     <>
       <div className="space-y-4">
+        {endSession.error && <ErrorDisplay error={endSession.error as Error} onRetry={() => endSession.reset()} />}
         <SessionTimer startTime={startTime} />
 
         <ButtonGroup fullWidth color="danger">

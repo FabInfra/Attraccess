@@ -7,7 +7,10 @@
   },
   "workInProgress": "This feature is still in development, use at your own risk!",
   "error": {
-    "fetchReaders": "Could not fetch FABreaders"
+    "fetchReaders": "Could not fetch FABreaders",
+    "title": "Error Loading Readers",
+    "description": "Unable to load reader data. Please try again or contact support if the problem persists.",
+    "retry": "Retry"
   },
   "table": {
     "columns": {

@@ -5,8 +5,8 @@ import { TableDataLoadingIndicator, TableEmptyState } from '../../../components/
 import { useDateTimeFormatter, useTranslations } from '@attraccess/plugins-frontend-ui';
 import { FabreaderEditor } from '../FabreaderEditor/FabreaderEditor';
 import { useFabReaderServiceGetReaders } from '@attraccess/react-query-client';
-import { useToastMessage } from '../../../components/toastProvider';
 import { PageHeader } from '../../../components/pageHeader';
+import { ErrorDisplay } from '../../../components/errorDisplay/ErrorDisplay';
 import { FabreaderFlasher } from '../FabreaderFlasher/FabreaderFlasher';
 import { useReactQueryStatusToHeroUiTableLoadingState } from '../../../hooks/useReactQueryStatusToHeroUiTableLoadingState';
 
@@ -23,26 +23,47 @@ export const FabreaderList = () => {
     data: readers,
     error: readersError,
     status: fetchStatus,
+    refetch,
   } = useFabReaderServiceGetReaders(undefined, {
     refetchInterval: 5000,
   });
 
   const loadingState = useReactQueryStatusToHeroUiTableLoadingState(fetchStatus);
 
-  const toast = useToastMessage();
-
   const [openedReaderEditor, setOpenedReaderEditor] = useState<number | null>(null);
 
-  useEffect(() => {
-    if (readersError) {
-      toast.error({
-        title: t('error.fetchReaders'),
-        description: (readersError as Error).message,
-      });
-    }
-  }, [readersError, t, toast]);
-
   const formatDateTime = useDateTimeFormatter();
+
+  // Handle error state with inline display
+  if (readersError) {
+    return (
+      <>
+        <PageHeader
+          title={t('page.title')}
+          actions={
+            <FabreaderFlasher>
+              {(onOpen) => (
+                <Button
+                  variant="light"
+                  startContent={<CpuIcon className="w-4 h-4" />}
+                  onPress={onOpen}
+                  data-cy="fabreader-list-open-flasher-button"
+                >
+                  {t('page.actions.openFlasher')}
+                </Button>
+              )}
+            </FabreaderFlasher>
+          }
+        />
+
+        <Alert color="danger" className="mb-4">
+          {t('workInProgress')}
+        </Alert>
+
+        <ErrorDisplay error={readersError} onRetry={() => refetch()} message={t('error.description')} />
+      </>
+    );
+  }
 
   return (
     <>

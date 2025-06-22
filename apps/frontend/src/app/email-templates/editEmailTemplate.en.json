@@ -1,5 +1,6 @@
 {
   "subtitle": "Modify the subject and body (MJML) content of the template.",
+  "loading": "Loading email template...",
   "templateType": {
     "verify-email": "Email Verification",
     "reset-password": "Password Reset"
@@ -21,5 +22,22 @@
     "close": "Close",
     "cancel": "Cancel",
     "save": "Save Changes"
+  },
+  "success": {
+    "updateTitle": "Template Updated",
+    "updateDescription": "Email template has been successfully updated."
+  },
+  "error": {
+    "title": "Error Loading Template",
+    "description": "Unable to load the email template. Please try again or contact support if the problem persists.",
+    "fetchTitle": "Failed to Load Template",
+    "fetchDescription": "An error occurred while fetching the email template from the server.",
+    "updateTitle": "Update Failed",
+    "updateDescription": "Failed to update the email template. Please try again.",
+    "retry": "Retry"
+  },
+  "notFound": {
+    "title": "Template Not Found",
+    "description": "The requested email template could not be found."
   }
 }
