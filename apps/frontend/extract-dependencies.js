@@ -2,10 +2,106 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { exec } = require('child_process');
+const { promisify } = require('util');
+
+const execAsync = promisify(exec);
 
 // Script to extract dependencies from package.json and create dependencies.json
 // This script reads the root package.json and creates a detailed list of all dependencies
+
+// Process a single dependency
+async function processDependency(name, version) {
+  try {
+    console.log('Processing:', name);
+
+    // Get package info from npm with timeout
+    const { stdout } = await execAsync(`npm view ${name} --json`, {
+      encoding: 'utf8',
+      timeout: 10000, // 10 second timeout
+    });
+
+    const npmInfo = JSON.parse(stdout);
+
+    // Extract required information
+    const depInfo = {
+      name: name,
+      version: version,
+      author: npmInfo.author
+        ? typeof npmInfo.author === 'string'
+          ? npmInfo.author
+          : npmInfo.author.name || 'Unknown'
+        : 'Unknown',
+      license: npmInfo.license || 'Unknown',
+      url: npmInfo.homepage || npmInfo.repository?.url || npmInfo.repository || `https://www.npmjs.com/package/${name}`,
+    };
+
+    // Clean up git URLs
+    if (depInfo.url && depInfo.url.startsWith('git+')) {
+      depInfo.url = depInfo.url.replace('git+', '').replace('.git', '');
+    }
+
+    return depInfo;
+  } catch (error) {
+    console.error(`Warning: Could not get info for ${name}:`, error.message);
+
+    // Fallback info
+    return {
+      name: name,
+      version: version,
+      author: 'Unknown',
+      license: 'Unknown',
+      url: `https://www.npmjs.com/package/${name}`,
+    };
+  }
+}
+
+// Process dependencies in batches with concurrency control
+async function processDependenciesInBatches(dependencies, batchSize = 10) {
+  const results = [];
+  const entries = Object.entries(dependencies);
+
+  console.log(`Processing ${entries.length} dependencies in batches of ${batchSize}...`);
+
+  for (let i = 0; i < entries.length; i += batchSize) {
+    const batch = entries.slice(i, i + batchSize);
+    console.log(
+      `Processing batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(entries.length / batchSize)} (${
+        batch.length
+      } items)...`
+    );
+
+    // Process current batch in parallel
+    const batchPromises = batch.map(([name, version]) => processDependency(name, version));
+
+    const batchResults = await Promise.allSettled(batchPromises);
+
+    // Extract successful results and handle failures
+    batchResults.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        results.push(result.value);
+      } else {
+        const [name, version] = batch[index];
+        console.error(`Failed to process ${name}:`, result.reason?.message || 'Unknown error');
+        // Add fallback info for failed dependencies
+        results.push({
+          name: name,
+          version: version,
+          author: 'Unknown',
+          license: 'Unknown',
+          url: `https://www.npmjs.com/package/${name}`,
+        });
+      }
+    });
+
+    // Small delay between batches to be respectful to npm registry
+    if (i + batchSize < entries.length) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+  }
+
+  return results;
+}
 
 async function extractDependencies() {
   try {
@@ -37,59 +133,12 @@ async function extractDependencies() {
       ...(packageJson.devDependencies || {}),
     };
 
-    const dependencies = [];
+    console.log('Found', Object.keys(allDeps).length, 'dependencies');
 
-    console.log('Processing', Object.keys(allDeps).length, 'dependencies...');
-
-    // Process each dependency
-    for (const [name, version] of Object.entries(allDeps)) {
-      try {
-        console.log('Processing:', name);
-
-        // Get package info from npm
-        const npmInfoJson = execSync(`npm view ${name} --json`, {
-          encoding: 'utf8',
-          stdio: ['pipe', 'pipe', 'ignore'],
-        });
-
-        const npmInfo = JSON.parse(npmInfoJson);
-
-        // Extract required information
-        const depInfo = {
-          name: name,
-          version: version,
-          author: npmInfo.author
-            ? typeof npmInfo.author === 'string'
-              ? npmInfo.author
-              : npmInfo.author.name || 'Unknown'
-            : 'Unknown',
-          license: npmInfo.license || 'Unknown',
-          url:
-            npmInfo.homepage ||
-            npmInfo.repository?.url ||
-            npmInfo.repository ||
-            `https://www.npmjs.com/package/${name}`,
-        };
-
-        // Clean up git URLs
-        if (depInfo.url && depInfo.url.startsWith('git+')) {
-          depInfo.url = depInfo.url.replace('git+', '').replace('.git', '');
-        }
-
-        dependencies.push(depInfo);
-      } catch (error) {
-        console.error(`Warning: Could not get info for ${name}:`, error.message);
-
-        // Fallback info
-        dependencies.push({
-          name: name,
-          version: version,
-          author: 'Unknown',
-          license: 'Unknown',
-          url: `https://www.npmjs.com/package/${name}`,
-        });
-      }
-    }
+    // Process dependencies in parallel batches
+    const startTime = Date.now();
+    const dependencies = await processDependenciesInBatches(allDeps);
+    const endTime = Date.now();
 
     // Sort dependencies by name
     dependencies.sort((a, b) => a.name.localeCompare(b.name));
@@ -99,6 +148,7 @@ async function extractDependencies() {
 
     console.log(`Dependencies list written to ${outputFile}`);
     console.log(`Total dependencies: ${dependencies.length}`);
+    console.log(`Processing time: ${((endTime - startTime) / 1000).toFixed(2)} seconds`);
     console.log('✅ Dependencies extraction complete!');
   } catch (error) {
     console.error('Error:', error.message);
