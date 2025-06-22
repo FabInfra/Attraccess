@@ -52,6 +52,7 @@ export const ensureUseResourcesServiceGetAllResourcesData = (queryClient: QueryC
   page?: number;
   search?: string;
 } = {}) => queryClient.ensureQueryData({ queryKey: Common.UseResourcesServiceGetAllResourcesKeyFn({ groupId, ids, limit, onlyInUseByMe, onlyWithPermissions, page, search }), queryFn: () => ResourcesService.getAllResources({ groupId, ids, limit, onlyInUseByMe, onlyWithPermissions, page, search }) });
+export const ensureUseResourcesServiceGetAllResourcesInUseData = (queryClient: QueryClient) => queryClient.ensureQueryData({ queryKey: Common.UseResourcesServiceGetAllResourcesInUseKeyFn(), queryFn: () => ResourcesService.getAllResourcesInUse() });
 export const ensureUseResourcesServiceGetOneResourceByIdData = (queryClient: QueryClient, { id }: {
   id: number;
 }) => queryClient.ensureQueryData({ queryKey: Common.UseResourcesServiceGetOneResourceByIdKeyFn({ id }), queryFn: () => ResourcesService.getOneResourceById({ id }) });

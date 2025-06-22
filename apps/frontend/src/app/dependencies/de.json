@@ -1,0 +1,8 @@
+{
+  "title": "Open Source Abhängigkeiten",
+  "subtitle": "Diese Seite listet alle in dieser Anwendung verwendeten Open-Source-Pakete und ihre jeweiligen Lizenzen auf, in Übereinstimmung mit ihren Lizenzanforderungen.",
+  "name": "Paketname",
+  "version": "Version",
+  "author": "Autor",
+  "license": "Lizenz"
+}

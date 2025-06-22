@@ -1,17 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import { ResourceDetails } from '../resources/details/resourceDetails';
 import { IoTSettings } from '../resources/iot-settings/iotSettings';
-import {
-  Database,
-  ServerIcon,
-  Key,
-  Users,
-  Package,
-  NfcIcon,
-  ComputerIcon,
-  FileChartColumnIncreasingIcon,
-  Mail,
-} from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { MqttServersPage, CreateMqttServerPage, EditMqttServerPage } from '../mqtt';
 import { SSOProvidersPage } from '../sso/SSOProvidersPage';
@@ -29,6 +18,7 @@ import { EmailTemplatesPage } from '../email-templates/EmailTemplatesPage'; // P
 import { EditEmailTemplatePage } from '../email-templates/EditEmailTemplatePage'; // Placeholder - to be created
 import { ResourceGroupEditPage } from '../resource-groups';
 import { ResourceOverview } from '../resourceOverview';
+import { Dependencies } from '../dependencies';
 
 const coreRoutes: RouteConfig[] = [
   {
@@ -37,13 +27,13 @@ const coreRoutes: RouteConfig[] = [
     authRequired: true,
   },
   {
+    path: '/dependencies',
+    element: <Dependencies />,
+    authRequired: false,
+  },
+  {
     path: '/resources',
     element: <ResourceOverview />,
-    sidebar: {
-      translationKey: 'resources',
-      icon: <Database className="h-5 w-5" />,
-      order: 1,
-    },
     authRequired: true,
   },
   {
@@ -89,11 +79,6 @@ const coreRoutes: RouteConfig[] = [
   {
     path: '/mqtt/servers',
     element: <MqttServersPage />,
-    sidebar: {
-      translationKey: 'mqttServers',
-      icon: <ServerIcon className="h-5 w-5" />,
-      order: 2,
-    },
     authRequired: 'canManageResources',
   },
   {
@@ -109,71 +94,36 @@ const coreRoutes: RouteConfig[] = [
   {
     path: '/sso/providers',
     element: <SSOProvidersPage />,
-    sidebar: {
-      translationKey: 'ssoProviders',
-      icon: <Key className="h-5 w-5" />,
-      order: 3,
-    },
     authRequired: 'canManageSystemConfiguration',
   },
   {
     path: '/users/management',
     element: <UserManagementPage />,
-    sidebar: {
-      translationKey: 'userManagement',
-      icon: <Users className="h-5 w-5" />,
-      order: 4,
-    },
     authRequired: 'canManageUsers',
   },
   {
     path: '/nfc-cards',
     element: <NfcCardList />,
     authRequired: true,
-    sidebar: {
-      translationKey: 'NFCCards',
-      icon: <NfcIcon className="h-5 w-5" />,
-      order: 5,
-    },
   },
   {
     path: '/fabreader',
     element: <FabreaderList />,
     authRequired: 'canManageSystemConfiguration',
-    sidebar: {
-      translationKey: 'FabReader',
-      icon: <ComputerIcon className="h-5 w-5" />,
-      order: 6,
-    },
   },
   {
     path: '/csv-export',
     element: <CsvExport />,
     authRequired: 'canManageResources',
-    sidebar: {
-      translationKey: 'csvExport',
-      icon: <FileChartColumnIncreasingIcon />,
-      order: 7,
-    },
   },
   {
     path: '/plugins',
     element: <PluginsList />,
     authRequired: 'canManageSystemConfiguration',
-    sidebar: {
-      translationKey: 'plugins',
-      icon: <Package className="h-5 w-5" />,
-      order: 8,
-    },
   },
   {
     path: '/email-templates',
     element: <EmailTemplatesPage />,
-    sidebar: {
-      translationKey: 'emailTemplates',
-      icon: <Mail className="h-5 w-5" />,
-      order: 9,
-    },
     authRequired: 'canManageSystemConfiguration',
   },
   {

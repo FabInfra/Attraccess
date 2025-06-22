@@ -1,0 +1,8 @@
+{
+  "title": "Open Source Dependencies",
+  "subtitle": "This page lists all open source packages used in this application and their respective licenses, in compliance with their license requirements.",
+  "name": "Package Name",
+  "version": "Version",
+  "author": "Author",
+  "license": "License"
+}

@@ -1868,6 +1868,8 @@ export type GetAllResourcesData = {
 
 export type GetAllResourcesResponse = PaginatedResourceResponseDto;
 
+export type GetAllResourcesInUseResponse = Array<Resource>;
+
 export type GetOneResourceByIdData = {
     id: number;
 };
@@ -2911,6 +2913,16 @@ export type $OpenApiTs = {
                  * Unauthorized
                  */
                 401: unknown;
+            };
+        };
+    };
+    '/api/resources/in-use': {
+        get: {
+            res: {
+                /**
+                 * List of resources in use.
+                 */
+                200: Array<Resource>;
             };
         };
     };

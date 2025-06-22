@@ -93,6 +93,11 @@ export interface User {
    * @format date-time
    */
   updatedAt: string;
+  /**
+   * The external (origin) identifier of the user, if the user is authenticated via SSO
+   * @example "1234567890"
+   */
+  externalIdentifier?: string | null;
 }
 
 export interface VerifyEmailDto {
@@ -265,6 +270,24 @@ export interface SSOProvider {
   updatedAt: string;
   /** The OIDC configuration of the provider */
   oidcConfiguration: SSOProviderOIDCConfiguration;
+}
+
+export interface LinkUserToExternalAccountRequestDto {
+  /**
+   * The email of the user
+   * @example "john.doe@example.com"
+   */
+  email: string;
+  /**
+   * The password of the user
+   * @example "password"
+   */
+  password: string;
+  /**
+   * The external identifier of the user
+   * @example "1234567890"
+   */
+  externalId: string;
 }
 
 export interface CreateOIDCConfigurationDto {
@@ -1843,6 +1866,11 @@ export type GetAllSsoProvidersData = SSOProvider[];
 
 export type CreateOneSsoProviderData = SSOProvider;
 
+export interface LinkUserToExternalAccountData {
+  /** Whether the account has been linked to the external identifier */
+  OK?: boolean;
+}
+
 export type GetOneSsoProviderByIdData = SSOProvider;
 
 export type UpdateOneSsoProviderData = SSOProvider;
@@ -1906,6 +1934,8 @@ export interface GetAllResourcesParams {
 }
 
 export type GetAllResourcesData = PaginatedResourceResponseDto;
+
+export type GetAllResourcesInUseData = Resource[];
 
 export type GetOneResourceByIdData = Resource;
 
@@ -2378,6 +2408,21 @@ export namespace Authentication {
   /**
    * No description
    * @tags Authentication
+   * @name LinkUserToExternalAccount
+   * @summary Link an account to an external identifier
+   * @request POST:/api/auth/sso/link-account
+   */
+  export namespace LinkUserToExternalAccount {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = LinkUserToExternalAccountRequestDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = LinkUserToExternalAccountData;
+  }
+
+  /**
+   * No description
+   * @tags Authentication
    * @name GetOneSsoProviderById
    * @summary Get SSO provider by ID with full configuration
    * @request GET:/api/auth/sso/providers/{id}
@@ -2604,6 +2649,21 @@ export namespace Resources {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = GetAllResourcesData;
+  }
+
+  /**
+   * No description
+   * @tags Resources
+   * @name GetAllResourcesInUse
+   * @summary Get all resources in use
+   * @request GET:/api/resources/in-use
+   */
+  export namespace GetAllResourcesInUse {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = GetAllResourcesInUseData;
   }
 
   /**
@@ -4458,6 +4518,27 @@ export class Api<
      * No description
      *
      * @tags Authentication
+     * @name LinkUserToExternalAccount
+     * @summary Link an account to an external identifier
+     * @request POST:/api/auth/sso/link-account
+     */
+    linkUserToExternalAccount: (
+      data: LinkUserToExternalAccountRequestDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<LinkUserToExternalAccountData, any>({
+        path: `/api/auth/sso/link-account`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authentication
      * @name GetOneSsoProviderById
      * @summary Get SSO provider by ID with full configuration
      * @request GET:/api/auth/sso/providers/{id}
@@ -4678,6 +4759,22 @@ export class Api<
         method: "GET",
         query: query,
         secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Resources
+     * @name GetAllResourcesInUse
+     * @summary Get all resources in use
+     * @request GET:/api/resources/in-use
+     */
+    getAllResourcesInUse: (params: RequestParams = {}) =>
+      this.request<GetAllResourcesInUseData, any>({
+        path: `/api/resources/in-use`,
+        method: "GET",
         format: "json",
         ...params,
       }),

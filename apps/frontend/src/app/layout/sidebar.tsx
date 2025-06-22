@@ -1,16 +1,24 @@
-import React, { useMemo } from 'react';
-import newGithubIssueUrl from 'new-github-issue-url';
-import { X, Settings, LogOut, User, Book, ExternalLink, Github } from 'lucide-react';
+import React, { useCallback, useMemo } from 'react';
+import { X, Settings, LogOut, User, ExternalLink } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
-import { Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Link, PropsOf } from '@heroui/react';
+import {
+  Button,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Link,
+  PropsOf,
+  Accordion,
+  AccordionItem,
+} from '@heroui/react';
 import { useAllRoutes } from '../routes';
 import { SystemPermissions } from '@attraccess/react-query-client';
 import de from './sidebar.de.json';
 import en from './sidebar.en.json';
-import deRoutes from '../routes/translations/de.json';
-import enRoutes from '../routes/translations/en.json';
 import { Logo } from '../../components/logo';
+import { SidebarItem, SidebarItemGroup, sidebarItems, useSidebarEndItems } from './sidebarItems';
 
 function NavLink(
   props: Omit<PropsOf<typeof Link>, 'children'> & {
@@ -47,63 +55,75 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
     de,
   });
 
-  const { t: tRoutes } = useTranslations('routes', {
-    en: enRoutes,
-    de: deRoutes,
-  });
-
   const routes = useAllRoutes();
 
+  const showNavItem = useCallback(
+    (item: SidebarItem) => {
+      const routeOfItem = routes.find((route) => route.path === item.path);
+
+      if (!routeOfItem?.authRequired) {
+        return true;
+      }
+
+      if (!user) {
+        return false;
+      }
+
+      if (routeOfItem?.authRequired === true) {
+        return true;
+      }
+
+      const requiredPermissions = (
+        Array.isArray(routeOfItem?.authRequired) ? routeOfItem?.authRequired : [routeOfItem?.authRequired]
+      ) as (keyof SystemPermissions)[];
+
+      const userHasAllRequiredPermissions = requiredPermissions.every(
+        (permission) => user.systemPermissions[permission] === true
+      );
+
+      return userHasAllRequiredPermissions;
+    },
+    [user, routes]
+  );
+
   // Get navigation items from routes that have sidebar config
-  const navigationItems = useMemo(() => {
-    return routes
-      .filter((route) => {
-        if (!route.sidebar) {
-          return false;
-        }
+  const navigationGroups: SidebarItemGroup[] = useMemo(() => {
+    const groups: SidebarItemGroup[] = [
+      {
+        translationKey: '__default__',
+        items: [],
+        icon: () => null,
+        isGroup: true,
+      },
+    ];
 
-        if (!route.authRequired) {
-          return true;
-        }
+    sidebarItems.forEach((item) => {
+      if ((item as SidebarItem).path) {
+        const defaultGroup = groups.find((group) => group.translationKey === '__default__') as SidebarItemGroup;
 
-        if (!user) {
-          return false;
-        }
+        defaultGroup.items.push(item as SidebarItem);
+        return;
+      }
 
-        if (route.authRequired === true) {
-          return true;
-        }
+      groups.push(item as SidebarItemGroup);
+    });
 
-        const requiredPermissions = (
-          Array.isArray(route.authRequired) ? route.authRequired : [route.authRequired]
-        ) as (keyof SystemPermissions)[];
+    groups.forEach((group) => {
+      group.items = (group.items ?? []).filter(showNavItem);
+    });
 
-        const userHasAllRequiredPermissions = requiredPermissions.every(
-          (permission) => user.systemPermissions[permission] === true
-        );
+    return groups.filter((group) => group.items.length > 0);
+  }, [showNavItem]);
 
-        return userHasAllRequiredPermissions;
-      })
-      .sort((a, b) => {
-        // Sort by order if available, otherwise alphabetically by translation key
-        const orderA = a.sidebar?.order;
-        const orderB = b.sidebar?.order;
+  const defaultGroupItems = useMemo(() => {
+    return navigationGroups.find((group) => group.translationKey === '__default__')?.items;
+  }, [navigationGroups]);
 
-        if (!orderA && !!orderB) {
-          return 1;
-        }
+  const otherGroups = useMemo(() => {
+    return navigationGroups.filter((group) => group.translationKey !== '__default__');
+  }, [navigationGroups]);
 
-        if (!!orderA && !orderB) {
-          return -1;
-        }
-
-        if (orderA === orderB) {
-          return (a.sidebar?.translationKey || '').localeCompare(b.sidebar?.translationKey || '');
-        }
-
-        return (orderA as number) - (orderB as number);
-      });
-  }, [user, routes]);
+  const sidebarEndItems = useSidebarEndItems();
 
   return (
     <>
@@ -142,83 +162,52 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
         {/* Sidebar Navigation */}
         <div className="flex-grow overflow-y-auto py-4">
           <nav className="px-2 space-y-1">
-            {navigationItems.map((route, index) => (
+            {(defaultGroupItems ?? []).map((item) => (
               <NavLink
-                key={index}
-                href={route.path as string}
-                icon={route.sidebar?.icon}
-                label={route.sidebar?.label ?? tRoutes(route.sidebar?.translationKey || '')}
-                data-cy={`sidebar-nav-${route.sidebar?.translationKey || route.path?.replace('/', '') || index}`}
+                key={item.path}
+                href={item.path}
+                icon={<item.icon size={16} />}
+                label={t('groups.__default__.items.' + item.translationKey)}
+                data-cy={`sidebar-nav-${item.path?.replace('/', '')}`}
               />
             ))}
+            <Accordion defaultSelectedKeys={['__default__']}>
+              {otherGroups.map((group) => (
+                <AccordionItem
+                  key={group.translationKey}
+                  title={t('groups.' + group.translationKey + '.label')}
+                  startContent={<group.icon size={16} />}
+                >
+                  {group.items.map((item) => (
+                    <NavLink
+                      key={item.path}
+                      href={item.path}
+                      icon={<item.icon size={16} />}
+                      label={t('groups.' + group.translationKey + '.items.' + item.translationKey)}
+                      data-cy={`sidebar-nav-${item.path?.replace('/', '')}`}
+                    />
+                  ))}
+                </AccordionItem>
+              ))}
+            </Accordion>
           </nav>
         </div>
 
         {/* Helpful Links */}
         <div className="py-4">
           <nav className="px-2 space-y-1">
-            <NavLink
-              href="/docs"
-              target="_blank"
-              icon={<Book />}
-              label={t('docs')}
-              isExternal
-              data-cy="sidebar-link-docs"
-            />
-            <NavLink
-              href={newGithubIssueUrl({
-                user: 'FabInfra',
-                repo: 'Attraccess',
-                title: '[Bug] ',
-                labels: ['bug'],
-                body: `
-### Environment / Umgebung
-
-- **Browser:** ${navigator.userAgent}
-- **Screen Size / Bildschirmgröße:** ${window.innerWidth}x${window.innerHeight}
-- **Time / Zeit:** ${new Date().toISOString()}
-- **User ID / Benutzer-ID:** ${user?.id || 'Not logged in / Nicht angemeldet'}
-- **URL:** ${window.location.href}
-
-### Description / Beschreibung
-
-<!-- Please describe the bug in detail. Include steps to reproduce. -->
-<!-- Bitte beschreibe den Fehler im Detail. Füge Schritte zur Reproduktion hinzu. -->
-                  `,
-              })}
-              target="_blank"
-              icon={<Github />} // Consider a more specific bug icon if available
-              label={t('reportBug')}
-              isExternal
-              data-cy="sidebar-link-report-bug"
-            />
-            <NavLink
-              href={newGithubIssueUrl({
-                user: 'FabInfra',
-                repo: 'Attraccess',
-                title: '[Feature Request] ',
-                labels: ['enhancement'],
-                body: `
-### Environment / Umgebung
-
-- **Browser:** ${navigator.userAgent}
-- **Screen Size / Bildschirmgröße:** ${window.innerWidth}x${window.innerHeight}
-- **Time / Zeit:** ${new Date().toISOString()}
-- **User ID / Benutzer-ID:** ${user?.id || 'Not logged in / Nicht angemeldet'}
-- **URL:** ${window.location.href}
-
-### Description / Beschreibung
-
-<!-- Please describe the feature request in detail. Explain the use case. -->
-<!-- Bitte beschreibe die Funktionsanfrage im Detail. Erkläre den Anwendungsfall. -->
-                  `,
-              })}
-              target="_blank"
-              icon={<Github />} // Consider a lightbulb or similar icon for features
-              label={t('requestFeature')}
-              isExternal
-              data-cy="sidebar-link-request-feature"
-            />
+            {sidebarEndItems.map((item) => (
+              <NavLink
+                key={item.path}
+                href={item.path}
+                icon={<item.icon size={16} />}
+                label={t('endItems.' + item.translationKey)}
+                data-cy={`sidebar-nav-${item.path?.replace('/', '')}`}
+                size="sm"
+                isExternal={item.isExternal}
+                showAnchorIcon={false}
+              />
+            ))}
           </nav>
         </div>
 

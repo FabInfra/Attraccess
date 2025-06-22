@@ -1,6 +1,42 @@
 {
-    "logout": "Abmelden",
-    "docs": "Dokumentation",
+  "logout": "Abmelden",
+  "docs": "Dokumentation",
+  "reportBug": "Fehler melden",
+  "requestFeature": "Funktion vorschlagen",
+  "groups": {
+    "__default__": {
+      "items": {
+        "resources": "Ressourcen"
+      }
+    },
+    "fabreader": {
+      "label": "FabReader",
+      "items": {
+        "FabReader": "FabReader",
+        "NFCCards": "NFC-Karten"
+      }
+    },
+    "auth": {
+      "label": "Authentifizierung",
+      "items": {
+        "ssoProviders": "SSO-Anbieter",
+        "userManagement": "Benutzerverwaltung"
+      }
+    },
+    "system": {
+      "label": "System",
+      "items": {
+        "plugins": "Plugins",
+        "emailTemplates": "E-Mail-Vorlagen",
+        "mqttServers": "MQTT-Server",
+        "csvExport": "CSV-Export"
+      }
+    }
+  },
+  "endItems": {
     "reportBug": "Fehler melden",
-    "requestFeature": "Funktion vorschlagen"
+    "requestFeature": "Funktion vorschlagen",
+    "docs": "Dokumentation",
+    "dependencies": "Abhängigkeiten"
+  }
 }

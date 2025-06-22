@@ -6,7 +6,7 @@
   "tags": [],
   "targets": {
     "build": {
-      "dependsOn": ["copy-fabreader-assets", "react-query-client:build"],
+      "dependsOn": ["copy-fabreader-assets", "react-query-client:build", "copy-dependency-list"],
       "cache": true,
       "inputs": [
         "production",
@@ -21,10 +21,19 @@
       "executor": "nx:run-commands",
       "cache": true,
       "dependsOn": ["fabreader-firmware:build"],
-      "inputs": ["{projectRoot}/**/*", "{workspaceRoot}/apps/fabreader-firmware/firmware_output/**/*"],
+      "inputs": ["{workspaceRoot}/apps/fabreader-firmware/firmware_output/**/*"],
       "outputs": ["{projectRoot}/public/_fabreader_assets"],
       "options": {
         "command": "rm -rf apps/frontend/public/_fabreader_assets && mkdir -p apps/frontend/public/_fabreader_assets && cp -r apps/fabreader-firmware/firmware_output/* apps/frontend/public/_fabreader_assets/"
+      }
+    },
+    "copy-dependency-list": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["{workspaceRoot}/package.json", "{projectRoot}/extract-dependencies.js"],
+      "outputs": ["{projectRoot}/public/dependencies.json"],
+      "options": {
+        "command": "node apps/frontend/extract-dependencies.js"
       }
     },
     "lint": {

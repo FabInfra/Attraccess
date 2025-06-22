@@ -1,6 +1,40 @@
 {
-    "logout": "Logout",
-    "docs": "Documentation",
+  "logout": "Logout",
+  "docs": "Documentation",
+  "reportBug": "Report a Bug",
+  "requestFeature": "Request a Feature",
+  "groups": {
+    "__default__": {
+      "resources": "Resources"
+    },
+    "fabreader": {
+      "label": "FabReader",
+      "items": {
+        "FabReader": "FabReader",
+        "NFCCards": "NFC-Cards"
+      }
+    },
+    "auth": {
+      "label": "Authentication",
+      "items": {
+        "ssoProviders": "SSO Providers",
+        "userManagement": "User Management"
+      }
+    },
+    "system": {
+      "label": "System",
+      "items": {
+        "plugins": "Plugins",
+        "emailTemplates": "Email Templates",
+        "mqttServers": "MQTT Servers",
+        "csvExport": "CSV Export"
+      }
+    }
+  },
+  "endItems": {
     "reportBug": "Report a Bug",
-    "requestFeature": "Request a Feature"
+    "requestFeature": "Request a Feature",
+    "docs": "Documentation",
+    "dependencies": "Dependencies"
+  }
 }

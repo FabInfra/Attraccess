@@ -52,6 +52,7 @@ export const prefetchUseResourcesServiceGetAllResources = (queryClient: QueryCli
   page?: number;
   search?: string;
 } = {}) => queryClient.prefetchQuery({ queryKey: Common.UseResourcesServiceGetAllResourcesKeyFn({ groupId, ids, limit, onlyInUseByMe, onlyWithPermissions, page, search }), queryFn: () => ResourcesService.getAllResources({ groupId, ids, limit, onlyInUseByMe, onlyWithPermissions, page, search }) });
+export const prefetchUseResourcesServiceGetAllResourcesInUse = (queryClient: QueryClient) => queryClient.prefetchQuery({ queryKey: Common.UseResourcesServiceGetAllResourcesInUseKeyFn(), queryFn: () => ResourcesService.getAllResourcesInUse() });
 export const prefetchUseResourcesServiceGetOneResourceById = (queryClient: QueryClient, { id }: {
   id: number;
 }) => queryClient.prefetchQuery({ queryKey: Common.UseResourcesServiceGetOneResourceByIdKeyFn({ id }), queryFn: () => ResourcesService.getOneResourceById({ id }) });

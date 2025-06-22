@@ -93,6 +93,10 @@ export const UseResourcesServiceGetAllResourcesKeyFn = ({ groupId, ids, limit, o
   page?: number;
   search?: string;
 } = {}, queryKey?: Array<unknown>) => [useResourcesServiceGetAllResourcesKey, ...(queryKey ?? [{ groupId, ids, limit, onlyInUseByMe, onlyWithPermissions, page, search }])];
+export type ResourcesServiceGetAllResourcesInUseDefaultResponse = Awaited<ReturnType<typeof ResourcesService.getAllResourcesInUse>>;
+export type ResourcesServiceGetAllResourcesInUseQueryResult<TData = ResourcesServiceGetAllResourcesInUseDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
+export const useResourcesServiceGetAllResourcesInUseKey = "ResourcesServiceGetAllResourcesInUse";
+export const UseResourcesServiceGetAllResourcesInUseKeyFn = (queryKey?: Array<unknown>) => [useResourcesServiceGetAllResourcesInUseKey, ...(queryKey ?? [])];
 export type ResourcesServiceGetOneResourceByIdDefaultResponse = Awaited<ReturnType<typeof ResourcesService.getOneResourceById>>;
 export type ResourcesServiceGetOneResourceByIdQueryResult<TData = ResourcesServiceGetOneResourceByIdDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useResourcesServiceGetOneResourceByIdKey = "ResourcesServiceGetOneResourceById";
