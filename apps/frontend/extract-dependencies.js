@@ -2,43 +2,68 @@
 
 const fs = require('fs');
 const path = require('path');
-const { exec } = require('child_process');
-const { promisify } = require('util');
-
-const execAsync = promisify(exec);
 
 // Script to extract dependencies from package.json and create dependencies.json
 // This script reads the root package.json and creates a detailed list of all dependencies
 
-// Process a single dependency
+// Process a single dependency using npm registry API
 async function processDependency(name, version) {
   try {
     console.log('Processing:', name);
 
-    // Get package info from npm with timeout
-    const { stdout } = await execAsync(`npm view ${name} --json`, {
-      encoding: 'utf8',
-      timeout: 10000, // 10 second timeout
+    // Get package info from npm registry API directly
+    const response = await fetch(`https://registry.npmjs.org/${encodeURIComponent(name)}`, {
+      headers: {
+        Accept: 'application/json',
+        'User-Agent': 'dependencies-extractor/1.0.0',
+      },
+      signal: AbortSignal.timeout(10000), // 10 second timeout
     });
 
-    const npmInfo = JSON.parse(stdout);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const npmInfo = await response.json();
+
+    // Get the latest version info if available
+    const latestInfo = npmInfo.versions?.[npmInfo['dist-tags']?.latest] || npmInfo;
 
     // Extract required information
     const depInfo = {
       name: name,
       version: version,
-      author: npmInfo.author
+      author: latestInfo.author
+        ? typeof latestInfo.author === 'string'
+          ? latestInfo.author
+          : latestInfo.author.name || 'Unknown'
+        : npmInfo.author
         ? typeof npmInfo.author === 'string'
           ? npmInfo.author
           : npmInfo.author.name || 'Unknown'
         : 'Unknown',
-      license: npmInfo.license || 'Unknown',
-      url: npmInfo.homepage || npmInfo.repository?.url || npmInfo.repository || `https://www.npmjs.com/package/${name}`,
+      license: latestInfo.license || npmInfo.license || 'Unknown',
+      url:
+        latestInfo.homepage ||
+        npmInfo.homepage ||
+        latestInfo.repository?.url ||
+        npmInfo.repository?.url ||
+        latestInfo.repository ||
+        npmInfo.repository ||
+        `https://www.npmjs.com/package/${name}`,
     };
 
     // Clean up git URLs
-    if (depInfo.url && depInfo.url.startsWith('git+')) {
+    if (depInfo.url && typeof depInfo.url === 'string' && depInfo.url.startsWith('git+')) {
       depInfo.url = depInfo.url.replace('git+', '').replace('.git', '');
+    }
+
+    // Handle repository objects
+    if (typeof depInfo.url === 'object' && depInfo.url?.url) {
+      depInfo.url = depInfo.url.url;
+      if (depInfo.url.startsWith('git+')) {
+        depInfo.url = depInfo.url.replace('git+', '').replace('.git', '');
+      }
     }
 
     return depInfo;
@@ -57,7 +82,7 @@ async function processDependency(name, version) {
 }
 
 // Process dependencies in batches with concurrency control
-async function processDependenciesInBatches(dependencies, batchSize = 10) {
+async function processDependenciesInBatches(dependencies, batchSize = 15) {
   const results = [];
   const entries = Object.entries(dependencies);
 
@@ -96,7 +121,7 @@ async function processDependenciesInBatches(dependencies, batchSize = 10) {
 
     // Small delay between batches to be respectful to npm registry
     if (i + batchSize < entries.length) {
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 50)); // Reduced delay since HTTP requests are faster
     }
   }
 
