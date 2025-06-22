@@ -88,19 +88,16 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
 
   // Get navigation items from routes that have sidebar config
   const navigationGroups: SidebarItemGroup[] = useMemo(() => {
-    const groups: SidebarItemGroup[] = [
-      {
-        translationKey: '__default__',
-        items: [],
-        icon: () => null,
-        isGroup: true,
-      },
-    ];
+    const defaultGroup: SidebarItemGroup = {
+      translationKey: '__default__',
+      items: [],
+      icon: () => null,
+      isGroup: true,
+    };
+    const groups: SidebarItemGroup[] = [defaultGroup];
 
     sidebarItems.forEach((item) => {
       if ((item as SidebarItem).path) {
-        const defaultGroup = groups.find((group) => group.translationKey === '__default__') as SidebarItemGroup;
-
         defaultGroup.items.push(item as SidebarItem);
         return;
       }
