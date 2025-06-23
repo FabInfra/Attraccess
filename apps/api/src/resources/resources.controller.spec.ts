@@ -71,6 +71,7 @@ describe('ResourcesController', () => {
           mqttConfigs: [],
           webhookConfigs: [],
           groups: [],
+          billingConfigurations: [],
         },
       ];
 
@@ -114,6 +115,7 @@ describe('ResourcesController', () => {
         mqttConfigs: [],
         webhookConfigs: [],
         groups: [],
+        billingConfigurations: [],
       };
 
       jest.spyOn(service, 'getResourceById').mockResolvedValue(resource);
@@ -161,6 +163,7 @@ describe('ResourcesController', () => {
         mqttConfigs: [],
         webhookConfigs: [],
         groups: [],
+        billingConfigurations: [],
       };
 
       jest.spyOn(service, 'createResource').mockResolvedValue(newResource);
@@ -199,6 +202,7 @@ describe('ResourcesController', () => {
         mqttConfigs: [],
         webhookConfigs: [],
         groups: [],
+        billingConfigurations: [],
       };
 
       jest.spyOn(service, 'updateResource').mockResolvedValue(updatedResource);

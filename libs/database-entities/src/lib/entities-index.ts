@@ -4,7 +4,7 @@ import { AuthenticationDetail } from './entities/authenticationDetail.entity';
 import { MqttResourceConfig } from './entities/mqttResourceConfig.entity';
 import { MqttServer } from './entities/mqttServer.entity';
 import { NFCCard } from './entities/nfcCard.entity';
-import { Resource, ResourceComputedView } from './entities/resource.entity';
+import { Resource } from './entities/resource.entity';
 import { ResourceGroup } from './entities/resourceGroup.entity';
 import { ResourceIntroduction } from './entities/resourceIntroduction.entity';
 import {
@@ -19,6 +19,8 @@ import { SSOProviderOIDCConfiguration } from './entities/ssoProvider.oidc';
 import { User, SystemPermissions, type SystemPermission } from './entities/user.entity';
 import { WebhookConfig } from './entities/webhookConfig.entity';
 import { FabReader } from './entities/fabReader.entity';
+import { ResourceBillingConfiguration } from './entities/resourceBillingConfiguration.entity';
+import { ResourceBillingConfigurationFixedFeeOptions } from './entities/resourceBillingConfigurationFixedFeeOptions.entity';
 
 // Export all entities individually
 export {
@@ -26,7 +28,6 @@ export {
   MqttResourceConfig,
   MqttServer,
   Resource,
-  ResourceComputedView,
   ResourceGroup,
   ResourceIntroduction,
   ResourceIntroductionHistoryItem,
@@ -44,6 +45,8 @@ export {
   NFCCard,
   FabReader,
   EmailTemplate,
+  ResourceBillingConfiguration,
+  ResourceBillingConfigurationFixedFeeOptions,
 };
 
 // Export the entities object
@@ -52,7 +55,6 @@ export const entities = {
   AuthenticationDetail,
   RevokedToken,
   Resource,
-  ResourceComputedView,
   ResourceGroup,
   ResourceUsage,
   ResourceIntroduction,
@@ -66,4 +68,6 @@ export const entities = {
   NFCCard,
   FabReader,
   EmailTemplate,
+  ResourceBillingConfiguration,
+  ResourceBillingConfigurationFixedFeeOptions,
 };

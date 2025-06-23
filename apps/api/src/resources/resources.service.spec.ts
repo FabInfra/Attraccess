@@ -84,6 +84,7 @@ describe('ResourcesService', () => {
       mqttConfigs: [],
       webhookConfigs: [],
       groups: [],
+      billingConfigurations: [],
     });
 
     beforeEach(() => {
@@ -441,6 +442,7 @@ describe('ResourcesService', () => {
         mqttConfigs: [],
         webhookConfigs: [],
         groups: [],
+        billingConfigurations: [],
       };
 
       resourceRepository.find.mockResolvedValue([mockResource]);
@@ -489,6 +491,7 @@ describe('ResourcesService', () => {
         mqttConfigs: [],
         webhookConfigs: [],
         groups: [],
+        billingConfigurations: [],
       };
 
       resourceRepository.create.mockReturnValue(newResource);
@@ -536,6 +539,7 @@ describe('ResourcesService', () => {
         mqttConfigs: [],
         webhookConfigs: [],
         groups: [],
+        billingConfigurations: [],
       };
 
       const updatedResource = {
@@ -588,6 +592,7 @@ describe('ResourcesService', () => {
         mqttConfigs: [],
         webhookConfigs: [],
         groups: [],
+        billingConfigurations: [],
       };
 
       resourceRepository.find.mockResolvedValue([mockResource]);

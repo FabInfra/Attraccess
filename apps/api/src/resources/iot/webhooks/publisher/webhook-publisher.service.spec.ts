@@ -86,6 +86,7 @@ describe('WebhookPublisherService', () => {
     mqttConfigs: [],
     webhookConfigs: [],
     groups: [],
+    billingConfigurations: [],
   };
 
   const createMockWebhookConfig = (overrides: Partial<WebhookConfig> = {}): WebhookConfig => ({

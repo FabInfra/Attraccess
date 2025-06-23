@@ -5,8 +5,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-  ViewEntity,
-  ViewColumn,
   ManyToMany,
   JoinTable,
 } from 'typeorm';
@@ -20,6 +18,7 @@ import { ResourceGroup } from './resourceGroup.entity';
 
 // Import the DocumentationType enum from the types directory
 import { DocumentationType } from '../types/documentationType.enum';
+import { ResourceBillingConfiguration } from './resourceBillingConfiguration.entity';
 
 @Entity()
 export class Resource {
@@ -121,23 +120,11 @@ export class Resource {
     isArray: true,
   })
   groups!: ResourceGroup[];
-}
 
-@ViewEntity({
-  materialized: false,
-  expression: (connection) =>
-    connection
-      .createQueryBuilder()
-      .select('resource.id', 'id')
-      .addSelect('COALESCE(SUM(usage.usageInMinutes), -1)', 'totalUsageMinutes')
-      .from(Resource, 'resource')
-      .leftJoin(ResourceUsage, 'usage', 'usage.resourceId = resource.id')
-      .groupBy('resource.id'),
-})
-export class ResourceComputedView {
-  @ViewColumn()
-  id!: number;
-
-  @ViewColumn()
-  totalUsageMinutes!: number;
+  @OneToMany(() => ResourceBillingConfiguration, (config) => config.resource)
+  @ApiProperty({
+    description: 'The billing configurations for the resource',
+    type: () => ResourceBillingConfiguration,
+  })
+  billingConfigurations!: ResourceBillingConfiguration[];
 }
