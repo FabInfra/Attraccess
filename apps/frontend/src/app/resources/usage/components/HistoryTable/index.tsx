@@ -6,7 +6,8 @@ import { generateRowCells } from './utils/tableRows';
 import { useResourcesServiceResourceUsageGetHistory, ResourceUsage } from '@attraccess/react-query-client';
 import { useAuth } from '../../../../../hooks/useAuth';
 import { Select } from '../../../../../components/select';
-import { TableDataLoadingIndicator, TableEmptyState } from '../../../../../components/tableComponents';
+import { TableDataLoadingIndicator } from '../../../../../components/tableComponents';
+import { EmptyState } from '../../../../../components/emptyState';
 import { useReactQueryStatusToHeroUiTableLoadingState } from '../../../../../hooks/useReactQueryStatusToHeroUiTableLoadingState';
 
 import * as en from './utils/translations/en';
@@ -101,7 +102,7 @@ export const HistoryTable = ({
       <TableBody
         loadingState={loadingState}
         loadingContent={<TableDataLoadingIndicator />}
-        emptyContent={<TableEmptyState />}
+        emptyContent={<EmptyState />}
       >
         {(usageHistory?.data ?? []).map((session: ResourceUsage) => (
           <TableRow

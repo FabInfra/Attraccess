@@ -20,7 +20,8 @@ import {
   TableHeader,
   TableRow,
 } from '@heroui/react';
-import { TableDataLoadingIndicator, TableEmptyState } from '../../../components/tableComponents';
+import { TableDataLoadingIndicator } from '../../../components/tableComponents';
+import { EmptyState } from '../../../components/emptyState';
 import { PageHeader } from '../../../components/pageHeader';
 import { useMemo, useState } from 'react';
 import { filenameToUrl } from '../../../api';
@@ -36,8 +37,8 @@ import en from './en.json';
 import de from './de.json';
 
 interface Props {
-  groupId: number | 'none';
-  filter: Pick<FilterProps, 'search' | 'onlyInUseByMe' | 'onlyWithPermissions'>;
+  groupId: number | 'none' | 'empty';
+  filter?: Pick<FilterProps, 'search' | 'onlyInUseByMe' | 'onlyWithPermissions'>;
 }
 
 export function ResourceGroupCard(props: Readonly<Props & Omit<CardProps, 'children'>>) {
@@ -46,7 +47,7 @@ export function ResourceGroupCard(props: Readonly<Props & Omit<CardProps, 'child
   const { t } = useTranslations('resourceGroupCard', { de, en });
   const { hasPermission, user } = useAuth();
 
-  const debouncedSearchValue = useDebounce(filter.search, 250);
+  const debouncedSearchValue = useDebounce(filter?.search, 250);
   const perPage = 10;
   const [page, setPage] = useState(1);
 
@@ -54,26 +55,26 @@ export function ResourceGroupCard(props: Readonly<Props & Omit<CardProps, 'child
     { id: groupId as number },
     undefined,
     {
-      enabled: !!groupId && groupId !== 'none',
+      enabled: !!groupId && typeof groupId === 'number',
     }
   );
 
   const { data: resources, status: fetchStatus } = useResourcesServiceGetAllResources(
     {
-      groupId: groupId === 'none' ? -1 : groupId,
+      groupId: typeof groupId === 'number' ? groupId : -1,
       search: debouncedSearchValue?.trim() || undefined,
-      onlyInUseByMe: filter.onlyInUseByMe,
-      onlyWithPermissions: filter.onlyWithPermissions,
+      onlyInUseByMe: filter?.onlyInUseByMe,
+      onlyWithPermissions: filter?.onlyWithPermissions,
       page,
       limit: perPage,
     },
     undefined,
     {
-      enabled: !!groupId,
+      enabled: !!groupId && typeof groupId === 'number',
     }
   );
 
-  const loadingState = useReactQueryStatusToHeroUiTableLoadingState(fetchStatus);
+  const loadingState = useReactQueryStatusToHeroUiTableLoadingState(groupId === 'empty' ? 'success' : fetchStatus);
 
   const totalPages = useMemo(() => {
     if (!resources?.total) {
@@ -116,7 +117,12 @@ export function ResourceGroupCard(props: Readonly<Props & Omit<CardProps, 'child
     return group?.description ?? '';
   }, [groupId, group, t]);
 
-  if (fetchStatus === 'success' && fetchStatusGroup === 'success' && resources?.data.length === 0) {
+  if (
+    fetchStatus === 'success' &&
+    (groupId === 'none' || fetchStatusGroup === 'success') &&
+    resources?.data.length === 0 &&
+    groupId !== 'empty'
+  ) {
     return null;
   }
 
@@ -143,7 +149,7 @@ export function ResourceGroupCard(props: Readonly<Props & Omit<CardProps, 'child
             items={resources?.data ?? []}
             loadingState={loadingState}
             loadingContent={<TableDataLoadingIndicator />}
-            emptyContent={<TableEmptyState />}
+            emptyContent={<EmptyState />}
           >
             {(resource) => (
               <TableRow
