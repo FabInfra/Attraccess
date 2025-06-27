@@ -13,6 +13,7 @@ import {
   Image,
   Link,
   Pagination,
+  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -55,13 +56,13 @@ export function ResourceGroupCard(props: Readonly<Props & Omit<CardProps, 'child
     { id: groupId as number },
     undefined,
     {
-      enabled: !!groupId && typeof groupId === 'number',
+      enabled: typeof groupId === 'number',
     }
   );
 
   const { data: resources, status: fetchStatus } = useResourcesServiceGetAllResources(
     {
-      groupId: typeof groupId === 'number' ? groupId : -1,
+      groupId: groupId === 'none' ? -1 : (groupId as number),
       search: debouncedSearchValue?.trim() || undefined,
       onlyInUseByMe: filter?.onlyInUseByMe,
       onlyWithPermissions: filter?.onlyWithPermissions,
@@ -70,7 +71,7 @@ export function ResourceGroupCard(props: Readonly<Props & Omit<CardProps, 'child
     },
     undefined,
     {
-      enabled: !!groupId && typeof groupId === 'number',
+      enabled: groupId !== 'empty',
     }
   );
 
@@ -106,6 +107,10 @@ export function ResourceGroupCard(props: Readonly<Props & Omit<CardProps, 'child
       return t('ungrouped');
     }
 
+    if (groupId === 'empty') {
+      return t('empty.title');
+    }
+
     return group?.name ?? '';
   }, [groupId, group, t]);
 
@@ -114,22 +119,30 @@ export function ResourceGroupCard(props: Readonly<Props & Omit<CardProps, 'child
       return t('ungroupedDescription');
     }
 
+    if (groupId === 'empty') {
+      return t('empty.description');
+    }
+
     return group?.description ?? '';
   }, [groupId, group, t]);
 
-  if (
-    fetchStatus === 'success' &&
-    (groupId === 'none' || fetchStatusGroup === 'success') &&
-    resources?.data.length === 0 &&
-    groupId !== 'empty'
-  ) {
+  const groupIsFetched = useMemo(() => {
+    return groupId === 'none' || fetchStatusGroup === 'success';
+  }, [groupId, fetchStatusGroup]);
+
+  if (groupId !== 'empty' && fetchStatus === 'success' && groupIsFetched && resources?.data.length === 0) {
     return null;
   }
 
   return (
     <Card aria-label={title ?? 'Resource Group Card'} {...cardProps}>
       <CardHeader className="flex flex-row justify-between">
-        <PageHeader title={title} subtitle={subtitle} noMargin />
+        {groupId === 'empty' || groupIsFetched ? (
+          <PageHeader title={title} subtitle={subtitle} noMargin />
+        ) : (
+          <Skeleton className="w-full h-10" />
+        )}
+
         {groupId !== 'none' && hasAccessToGroupSettings && (
           <Button as={Link} href={`/resource-groups/${groupId}`} isIconOnly startContent={<Settings2Icon />} />
         )}
