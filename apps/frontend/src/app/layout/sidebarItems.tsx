@@ -68,7 +68,7 @@ export const sidebarItems: (SidebarItem | SidebarItemGroup)[] = [
         icon: KeyIcon,
       },
       {
-        path: '/users/management',
+        path: '/users',
         translationKey: 'userManagement',
         icon: UsersIcon,
       },

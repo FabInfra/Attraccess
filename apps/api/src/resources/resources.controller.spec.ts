@@ -74,7 +74,12 @@ describe('ResourcesController', () => {
         },
       ];
 
-      const paginatedResponse = new PaginatedResponse(resources, 1, { page: 1, limit: 10 });
+      const paginatedResponse: PaginatedResponse<Resource> = {
+        data: resources,
+        total: 1,
+        page: 1,
+        limit: 10,
+      };
 
       jest.spyOn(service, 'listResources').mockResolvedValue(paginatedResponse);
 

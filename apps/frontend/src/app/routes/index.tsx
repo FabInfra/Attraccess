@@ -4,7 +4,7 @@ import { IoTSettings } from '../resources/iot-settings/iotSettings';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { MqttServersPage, CreateMqttServerPage, EditMqttServerPage } from '../mqtt';
 import { SSOProvidersPage } from '../sso/SSOProvidersPage';
-import { UserManagementPage } from '../users/UserManagementPage';
+import { UserManagementPage } from '../user-management';
 import { usePluginStore } from 'react-pluggable';
 import { RouteConfig } from '@attraccess/plugins-frontend-sdk';
 import { PluginsList } from '../plugins/PluginsList';
@@ -19,6 +19,7 @@ import { EditEmailTemplatePage } from '../email-templates/EditEmailTemplatePage'
 import { ResourceGroupEditPage } from '../resource-groups';
 import { ResourceOverview } from '../resourceOverview';
 import { Dependencies } from '../dependencies';
+import { UserManagementDetailsPage } from '../user-management/details';
 
 const coreRoutes: RouteConfig[] = [
   {
@@ -97,8 +98,13 @@ const coreRoutes: RouteConfig[] = [
     authRequired: 'canManageSystemConfiguration',
   },
   {
-    path: '/users/management',
+    path: '/users',
     element: <UserManagementPage />,
+    authRequired: 'canManageUsers',
+  },
+  {
+    path: '/users/:id',
+    element: <UserManagementDetailsPage />,
     authRequired: 'canManageUsers',
   },
   {

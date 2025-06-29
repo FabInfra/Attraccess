@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Checkbox, Button, Card } from '@heroui/react';
-import { useTranslations, AttraccessUser } from '@attraccess/plugins-frontend-ui';
-import { useToastMessage } from '../../../components/toastProvider';
+import { Checkbox, Button, Card, CardHeader, CardBody, CardFooter } from '@heroui/react';
+import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useToastMessage } from '../../../../../components/toastProvider';
 import {
   User,
   useUsersServiceGetPermissions,
@@ -9,9 +9,10 @@ import {
   UseUsersServiceFindManyKeyFn,
 } from '@attraccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
+import { PageHeader } from '../../../../../components/pageHeader';
 
-import * as en from '../userManagement.en.json';
-import * as de from '../userManagement.de.json';
+import * as en from './en.json';
+import * as de from './de.json';
 
 interface UserPermissionFormProps {
   user: User;
@@ -82,61 +83,50 @@ export const UserPermissionForm: React.FC<UserPermissionFormProps> = ({ user }) 
   }
 
   return (
-    <Card className="p-6 w-full" data-cy="user-permission-form-card">
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold mb-2">{t('managingUser')}</h3>
-        <AttraccessUser user={user} data-cy="user-permission-form-user-display" />
-      </div>
+    <Card data-cy="user-permission-form-card">
+      <CardHeader>
+        <PageHeader title={t('title')} noMargin />
+      </CardHeader>
 
-      <div className="border-t pt-4 my-4">
-        <h3 className="text-lg font-semibold mb-4">{t('permissions')}</h3>
+      <CardBody>
+        <Checkbox
+          isSelected={permissions.canManageResources}
+          onValueChange={handlePermissionChange('canManageResources')}
+          color="primary"
+          data-cy="user-permission-form-canManageResources-checkbox"
+        >
+          {t('permissions.canManageResources')}
+        </Checkbox>
 
-        <div className="space-y-4">
-          <div className="flex items-center">
-            <Checkbox
-              isSelected={permissions.canManageResources}
-              onValueChange={handlePermissionChange('canManageResources')}
-              color="primary"
-              className="mr-2"
-              data-cy="user-permission-form-canManageResources-checkbox"
-            />
-            <span>{t('canManageResources')}</span>
-          </div>
+        <Checkbox
+          isSelected={permissions.canManageSystemConfiguration}
+          onValueChange={handlePermissionChange('canManageSystemConfiguration')}
+          color="primary"
+          data-cy="user-permission-form-canManageSystemConfiguration-checkbox"
+        >
+          {t('permissions.canManageSystemConfiguration')}
+        </Checkbox>
 
-          <div className="flex items-center">
-            <Checkbox
-              isSelected={permissions.canManageSystemConfiguration}
-              onValueChange={handlePermissionChange('canManageSystemConfiguration')}
-              color="primary"
-              className="mr-2"
-              data-cy="user-permission-form-canManageSystemConfiguration-checkbox"
-            />
-            <span>{t('canManageSystemConfiguration')}</span>
-          </div>
+        <Checkbox
+          isSelected={permissions.canManageUsers}
+          onValueChange={handlePermissionChange('canManageUsers')}
+          color="primary"
+          data-cy="user-permission-form-canManageUsers-checkbox"
+        >
+          {t('permissions.canManageUsers')}
+        </Checkbox>
+      </CardBody>
 
-          <div className="flex items-center">
-            <Checkbox
-              isSelected={permissions.canManageUsers}
-              onValueChange={handlePermissionChange('canManageUsers')}
-              color="primary"
-              className="mr-2"
-              data-cy="user-permission-form-canManageUsers-checkbox"
-            />
-            <span>{t('canManageUsers')}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex justify-end mt-6">
+      <CardFooter className="flex justify-end">
         <Button
           color="primary"
           onPress={handleSave}
           isLoading={updatePermissions.isPending}
           data-cy="user-permission-form-save-button"
         >
-          {t('saveChanges')}
+          {t('actions.save')}
         </Button>
-      </div>
+      </CardFooter>
     </Card>
   );
 };
