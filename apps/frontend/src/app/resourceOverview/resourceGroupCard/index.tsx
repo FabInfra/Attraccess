@@ -178,6 +178,9 @@ export function ResourceGroupCard(props: Readonly<Props & Omit<CardProps, 'child
                     isBlurred
                     src={filenameToUrl(resource.imageFilename)}
                     alt={resource.name}
+                    classNames={{
+                      img: 'object-contain',
+                    }}
                   />
                 </TableCell>
                 <TableCell>{resource.name}</TableCell>

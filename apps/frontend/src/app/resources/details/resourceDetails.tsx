@@ -27,6 +27,7 @@ import { ResoureIntroducerManagement } from '../IntroducerManagement';
 import { ResourceIntroductionsManagement } from '../IntroductionsManagement';
 import { ResourceQrCode } from './qrcode';
 import { useQrCodeAction } from './useQrCodeAction';
+import { filenameToUrl } from '../../../api';
 
 function ResourceDetailsComponent() {
   const { id } = useParams<{ id: string }>();
@@ -120,7 +121,9 @@ function ResourceDetailsComponent() {
     <div>
       <PageHeader
         title={resource.name}
-        icon={<ShapesIcon className="w-6 h-6" />}
+        icon={!resource.imageFilename && <ShapesIcon className="w-6 h-6" />}
+        thumbnailSrc={resource.imageFilename ? filenameToUrl(resource.imageFilename) : undefined}
+        thumbnailAlt={resource.name}
         subtitle={resource.description ?? undefined}
         backTo="/resources"
         actions={
