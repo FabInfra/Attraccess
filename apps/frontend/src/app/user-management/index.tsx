@@ -22,6 +22,7 @@ import { useReactQueryStatusToHeroUiTableLoadingState } from '../../hooks/useRea
 
 import * as en from './en.json';
 import * as de from './de.json';
+import { useDebounce } from '../../hooks/useDebounce';
 
 export const UserManagementPage: React.FC = () => {
   const { t } = useTranslations('userManagementPage', { en, de });
@@ -30,7 +31,9 @@ export const UserManagementPage: React.FC = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
 
-  const { data: searchResult, status: fetchStatus } = useUsersServiceFindMany({ limit, page, search });
+  const debouncedSearch = useDebounce(search, 500);
+
+  const { data: searchResult, status: fetchStatus } = useUsersServiceFindMany({ limit, page, search: debouncedSearch });
 
   const fetchState = useReactQueryStatusToHeroUiTableLoadingState(fetchStatus);
 
