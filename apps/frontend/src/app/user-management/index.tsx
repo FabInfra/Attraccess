@@ -34,8 +34,6 @@ export const UserManagementPage: React.FC = () => {
 
   const fetchState = useReactQueryStatusToHeroUiTableLoadingState(fetchStatus);
 
-  console.log(searchResult);
-
   return (
     <div data-cy="user-management-page">
       <PageHeader
