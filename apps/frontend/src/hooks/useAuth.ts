@@ -43,7 +43,6 @@ export function usePersistedAuth() {
         auth = authFromAnySource;
       }
 
-      console.log('jwt from persisted auth', auth);
       jwtTokenLoginMutate(auth);
     } catch (e) {
       console.error('Error parsing persisted auth:', e);
@@ -58,7 +57,6 @@ export function usePersistedAuth() {
     }
 
     didLoadExistingAuth.current = true;
-    console.log('loading existing auth');
     loadExistingAuth();
   }, [loadExistingAuth]);
 }
@@ -84,7 +82,6 @@ export function useRefreshSession() {
     }
     lastRefreshedSessionToken.current = refreshedSession.authToken;
 
-    console.log('jwt from refreshed session', refreshedSession);
     jwtTokenLoginMutate(refreshedSession);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshedSession]);
@@ -135,10 +132,8 @@ export function useAuth() {
         throw new Error('Auth is null');
       }
 
-      console.log('[jwtTokenLoginMutate] setting auth', auth);
       localStorage.setItem('auth', JSON.stringify(auth));
 
-      console.log('[jwtTokenLoginMutate] setting token for api', auth.authToken);
       OpenAPI.TOKEN = auth.authToken;
 
       setIsInitialized(true);
@@ -147,7 +142,6 @@ export function useAuth() {
     },
     onSuccess: () => {
       setTimeout(() => {
-        console.log('[jwtTokenLoginMutate] invalidating queries');
         // Invalidate all queries except the refresh session query to prevent infinite loop
         queryClient.invalidateQueries({
           predicate: (query) => {
