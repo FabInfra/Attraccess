@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { Card, CardBody, CardHeader, Button, Alert } from '@heroui/react';
-import { CheckCircle, AlertCircle, Mail } from 'lucide-react';
+import { CheckCircle, AlertCircle } from 'lucide-react';
 import { useUsersServiceConfirmEmailChange } from '@attraccess/react-query-client';
 
 import * as en from './en.json';
@@ -80,7 +80,7 @@ export function ConfirmEmailChange() {
     );
   }
 
-  const error = confirmEmailChange.error?.message || t('error.genericError');
+  const error = (confirmEmailChange.error as any)?.message || t('error.genericError');
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">

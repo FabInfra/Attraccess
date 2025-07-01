@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { User, useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { User } from '@attraccess/react-query-client';
 import {
   Card,
   CardBody,
@@ -97,11 +98,12 @@ export const EmailForm: React.FC<EmailFormProps> = ({ user }) => {
           </div>
         </form>
 
-        {adminChangeEmail.error && (
+        {adminChangeEmail.error ? (
           <Alert color="danger">
-            {t('errorMessage')}
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            {String((adminChangeEmail.error as any)?.message || t('errorMessage'))}
           </Alert>
-        )}
+        ) : null}
 
         <div className="text-sm text-gray-600 dark:text-gray-400">
           <p>{t('note')}</p>

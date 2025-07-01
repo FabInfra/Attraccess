@@ -96,11 +96,12 @@ export const AccountSettingsPage: React.FC = () => {
             </div>
           </form>
 
-          {requestEmailChange.error && (
+          {requestEmailChange.error ? (
             <Alert color="danger">
-              {t('emailSection.errorMessage')}
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {String((requestEmailChange.error as any)?.message || t('emailSection.errorMessage'))}
             </Alert>
-          )}
+          ) : null}
 
           <div className="text-sm text-gray-600 dark:text-gray-400">
             <p>{t('emailSection.note')}</p>

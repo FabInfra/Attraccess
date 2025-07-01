@@ -188,6 +188,8 @@ export class UsersService {
           total: 0,
           page: paginationOptions.page,
           limit: paginationOptions.limit,
+          totalPages: 0,
+          nextPage: null,
         };
       }
 
@@ -210,11 +212,17 @@ export class UsersService {
     });
 
     this.logger.debug(`Found ${total} total users, returning page ${page} with ${users.length} results`);
+    
+    const totalPages = Math.ceil(total / limit);
+    const nextPage = page < totalPages ? page + 1 : null;
+    
     return {
       data: users,
       total,
       page: paginationOptions.page,
       limit: paginationOptions.limit,
+      totalPages,
+      nextPage,
     };
   }
 
@@ -254,11 +262,17 @@ export class UsersService {
     this.logger.debug(
       `Found ${total} total users with permission "${permission}", returning page ${page} with ${users.length} results`
     );
+    
+    const totalPages = Math.ceil(total / limit);
+    const nextPage = page < totalPages ? page + 1 : null;
+    
     return {
       data: users,
       total,
       page: paginationOptions.page,
       limit: paginationOptions.limit,
+      totalPages,
+      nextPage,
     };
   }
 }

@@ -52,6 +52,10 @@ export type User = {
      */
     username: string;
     /**
+     * The email address of the user
+     */
+    email: string;
+    /**
      * Whether the user has verified their email address
      */
     isEmailVerified: boolean;
@@ -107,6 +111,14 @@ export type PaginatedUsersResponseDto = {
     total: number;
     page: number;
     limit: number;
+    /**
+     * Next page number if there are more pages, null if this is the last page
+     */
+    nextPage: number | null;
+    /**
+     * Total number of pages
+     */
+    totalPages: number;
     data: Array<User>;
 };
 
@@ -540,6 +552,14 @@ export type PaginatedResourceResponseDto = {
     total: number;
     page: number;
     limit: number;
+    /**
+     * Next page number if there are more pages, null if this is the last page
+     */
+    nextPage: number | null;
+    /**
+     * Total number of pages
+     */
+    totalPages: number;
     data: Array<Resource>;
 };
 
@@ -1394,6 +1414,14 @@ export type GetResourceHistoryResponseDto = {
     total: number;
     page: number;
     limit: number;
+    /**
+     * Next page number if there are more pages, null if this is the last page
+     */
+    nextPage: number | null;
+    /**
+     * Total number of pages
+     */
+    totalPages: number;
     data: Array<ResourceUsage>;
 };
 

@@ -117,11 +117,16 @@ export class ResourceUsageController {
       query.userId
     );
 
+    const totalPages = Math.ceil(total / query.limit);
+    const nextPage = query.page < totalPages ? query.page + 1 : null;
+
     return {
       data,
       total,
       page: query.page,
       limit: query.limit,
+      totalPages,
+      nextPage,
     };
   }
 

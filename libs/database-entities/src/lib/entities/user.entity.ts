@@ -51,7 +51,10 @@ export class User {
   username!: string;
 
   @Column({ unique: true, type: 'text' })
-  @Exclude()
+  @ApiProperty({
+    description: 'The email address of the user',
+    example: 'john@example.com',
+  })
   email!: string;
 
   @Column({ default: false, type: 'boolean' })

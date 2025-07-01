@@ -63,6 +63,11 @@ export const $User = {
             description: 'The username of the user',
             example: 'johndoe'
         },
+        email: {
+            type: 'string',
+            description: 'The email address of the user',
+            example: 'john@example.com'
+        },
         isEmailVerified: {
             type: 'boolean',
             description: 'Whether the user has verified their email address',
@@ -98,7 +103,7 @@ export const $User = {
             nullable: true
         }
     },
-    required: ['id', 'username', 'isEmailVerified', 'systemPermissions', 'createdAt', 'updatedAt']
+    required: ['id', 'username', 'email', 'isEmailVerified', 'systemPermissions', 'createdAt', 'updatedAt']
 } as const;
 
 export const $VerifyEmailDto = {
@@ -157,6 +162,17 @@ export const $PaginatedUsersResponseDto = {
         limit: {
             type: 'number'
         },
+        nextPage: {
+            type: 'number',
+            description: 'Next page number if there are more pages, null if this is the last page',
+            example: 2,
+            nullable: true
+        },
+        totalPages: {
+            type: 'number',
+            description: 'Total number of pages',
+            example: 5
+        },
         data: {
             type: 'array',
             items: {
@@ -164,7 +180,7 @@ export const $PaginatedUsersResponseDto = {
             }
         }
     },
-    required: ['total', 'page', 'limit', 'data']
+    required: ['total', 'page', 'limit', 'nextPage', 'totalPages', 'data']
 } as const;
 
 export const $UpdateUserPermissionsDto = {
@@ -795,6 +811,17 @@ export const $PaginatedResourceResponseDto = {
         limit: {
             type: 'number'
         },
+        nextPage: {
+            type: 'number',
+            description: 'Next page number if there are more pages, null if this is the last page',
+            example: 2,
+            nullable: true
+        },
+        totalPages: {
+            type: 'number',
+            description: 'Total number of pages',
+            example: 5
+        },
         data: {
             type: 'array',
             items: {
@@ -802,7 +829,7 @@ export const $PaginatedResourceResponseDto = {
             }
         }
     },
-    required: ['total', 'page', 'limit', 'data']
+    required: ['total', 'page', 'limit', 'nextPage', 'totalPages', 'data']
 } as const;
 
 export const $UpdateResourceDto = {
@@ -1993,6 +2020,17 @@ export const $GetResourceHistoryResponseDto = {
         limit: {
             type: 'number'
         },
+        nextPage: {
+            type: 'number',
+            description: 'Next page number if there are more pages, null if this is the last page',
+            example: 2,
+            nullable: true
+        },
+        totalPages: {
+            type: 'number',
+            description: 'Total number of pages',
+            example: 5
+        },
         data: {
             type: 'array',
             items: {
@@ -2000,7 +2038,7 @@ export const $GetResourceHistoryResponseDto = {
             }
         }
     },
-    required: ['total', 'page', 'limit', 'data']
+    required: ['total', 'page', 'limit', 'nextPage', 'totalPages', 'data']
 } as const;
 
 export const $GetActiveUsageSessionDto = {

@@ -4,7 +4,20 @@ export class SeedEmailChangeTemplate1750328235899 implements MigrationInterface 
   name = 'SeedEmailChangeTemplate1750328235899';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    // Insert the email change template
+    // First, update the table schema to allow the new 'change-email' type
+    await queryRunner.query(`ALTER TABLE "email_templates" RENAME TO "temporary_email_templates"`);
+    
+    await queryRunner.query(
+      `CREATE TABLE "email_templates" ("type" varchar CHECK( "type" IN ('verify-email','reset-password','change-email') ) PRIMARY KEY NOT NULL, "subject" varchar(255) NOT NULL, "body" text NOT NULL, "createdAt" datetime NOT NULL DEFAULT (datetime('now')), "updatedAt" datetime NOT NULL DEFAULT (datetime('now')), "variables" text NOT NULL)`
+    );
+    
+    await queryRunner.query(
+      `INSERT INTO "email_templates"("type", "subject", "body", "createdAt", "updatedAt", "variables") SELECT "type", "subject", "body", "createdAt", "updatedAt", "variables" FROM "temporary_email_templates"`
+    );
+    
+    await queryRunner.query(`DROP TABLE "temporary_email_templates"`);
+
+    // Now insert the email change template
     await queryRunner.query(`
       INSERT INTO "email_templates" ("type", "subject", "body", "variables")
       VALUES (
@@ -67,6 +80,20 @@ export class SeedEmailChangeTemplate1750328235899 implements MigrationInterface 
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    // Delete the template first
     await queryRunner.query(`DELETE FROM "email_templates" WHERE "type" = 'change-email'`);
+    
+    // Then revert the schema to the original constraint
+    await queryRunner.query(`ALTER TABLE "email_templates" RENAME TO "temporary_email_templates"`);
+    
+    await queryRunner.query(
+      `CREATE TABLE "email_templates" ("type" varchar CHECK( "type" IN ('verify-email','reset-password') ) PRIMARY KEY NOT NULL, "subject" varchar(255) NOT NULL, "body" text NOT NULL, "createdAt" datetime NOT NULL DEFAULT (datetime('now')), "updatedAt" datetime NOT NULL DEFAULT (datetime('now')), "variables" text NOT NULL)`
+    );
+    
+    await queryRunner.query(
+      `INSERT INTO "email_templates"("type", "subject", "body", "createdAt", "updatedAt", "variables") SELECT "type", "subject", "body", "createdAt", "updatedAt", "variables" FROM "temporary_email_templates"`
+    );
+    
+    await queryRunner.query(`DROP TABLE "temporary_email_templates"`);
   }
 }

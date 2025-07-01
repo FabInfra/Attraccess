@@ -13,4 +13,17 @@ export class PaginatedResponse<T> {
 
   @ApiProperty()
   limit: number;
+
+  @ApiProperty({
+    description: 'Next page number if there are more pages, null if this is the last page',
+    example: 2,
+    nullable: true,
+  })
+  nextPage: number | null;
+
+  @ApiProperty({
+    description: 'Total number of pages',
+    example: 5,
+  })
+  totalPages: number;
 }
