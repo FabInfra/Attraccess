@@ -107,11 +107,6 @@ export type PaginatedUsersResponseDto = {
     total: number;
     page: number;
     limit: number;
-    /**
-     * The next page number, or null if it is the last page.
-     */
-    nextPage: number | null;
-    totalPages: number;
     data: Array<User>;
 };
 
@@ -146,6 +141,31 @@ export type BulkUpdateUserPermissionsDto = {
      * Array of user permission updates
      */
     updates: Array<UserPermissionsUpdateItem>;
+};
+
+export type RequestEmailChangeDto = {
+    /**
+     * The new email address
+     */
+    newEmail: string;
+};
+
+export type ConfirmEmailChangeDto = {
+    /**
+     * The new email address to confirm
+     */
+    newEmail: string;
+    /**
+     * The verification token
+     */
+    token: string;
+};
+
+export type AdminChangeEmailDto = {
+    /**
+     * The new email address
+     */
+    newEmail: string;
 };
 
 export type CreateSessionResponse = {
@@ -365,7 +385,8 @@ export type PreviewMjmlResponseDto = {
  */
 export enum EmailTemplateType {
     VERIFY_EMAIL = 'verify-email',
-    RESET_PASSWORD = 'reset-password'
+    RESET_PASSWORD = 'reset-password',
+    CHANGE_EMAIL = 'change-email'
 }
 
 export type EmailTemplate = {
@@ -519,11 +540,6 @@ export type PaginatedResourceResponseDto = {
     total: number;
     page: number;
     limit: number;
-    /**
-     * The next page number, or null if it is the last page.
-     */
-    nextPage: number | null;
-    totalPages: number;
     data: Array<Resource>;
 };
 
@@ -1378,11 +1394,6 @@ export type GetResourceHistoryResponseDto = {
     total: number;
     page: number;
     limit: number;
-    /**
-     * The next page number, or null if it is the last page.
-     */
-    nextPage: number | null;
-    totalPages: number;
     data: Array<ResourceUsage>;
 };
 
@@ -1713,6 +1724,29 @@ export type GetAllWithPermissionData = {
 
 export type GetAllWithPermissionResponse = PaginatedUsersResponseDto;
 
+export type RequestEmailChangeData = {
+    requestBody: RequestEmailChangeDto;
+};
+
+export type RequestEmailChangeResponse = {
+    message?: string;
+};
+
+export type ConfirmEmailChangeData = {
+    requestBody: ConfirmEmailChangeDto;
+};
+
+export type ConfirmEmailChangeResponse = {
+    message?: string;
+};
+
+export type AdminChangeEmailData = {
+    id: number;
+    requestBody: AdminChangeEmailDto;
+};
+
+export type AdminChangeEmailResponse = User;
+
 export type CreateSessionData = {
     requestBody: {
         username?: string;
@@ -1814,7 +1848,7 @@ export type EmailTemplateControllerFindOneData = {
     /**
      * Template type/type
      */
-    type: 'verify-email' | 'reset-password';
+    type: 'verify-email' | 'reset-password' | 'change-email';
 };
 
 export type EmailTemplateControllerFindOneResponse = EmailTemplate;
@@ -1824,7 +1858,7 @@ export type EmailTemplateControllerUpdateData = {
     /**
      * Template type/type
      */
-    type: 'verify-email' | 'reset-password';
+    type: 'verify-email' | 'reset-password' | 'change-email';
 };
 
 export type EmailTemplateControllerUpdateResponse = EmailTemplate;
@@ -2637,6 +2671,71 @@ export type $OpenApiTs = {
                  * Forbidden - User does not have permission to manage users.
                  */
                 403: unknown;
+            };
+        };
+    };
+    '/api/users/me/request-email-change': {
+        post: {
+            req: RequestEmailChangeData;
+            res: {
+                /**
+                 * Email change request sent successfully.
+                 */
+                200: {
+                    message?: string;
+                };
+                /**
+                 * Invalid input data.
+                 */
+                400: unknown;
+                /**
+                 * Unauthorized
+                 */
+                401: unknown;
+            };
+        };
+    };
+    '/api/users/confirm-email-change': {
+        post: {
+            req: ConfirmEmailChangeData;
+            res: {
+                /**
+                 * Email changed successfully.
+                 */
+                200: {
+                    message?: string;
+                };
+                /**
+                 * Invalid token or email.
+                 */
+                400: unknown;
+            };
+        };
+    };
+    '/api/users/{id}/email': {
+        patch: {
+            req: AdminChangeEmailData;
+            res: {
+                /**
+                 * User email has been successfully changed.
+                 */
+                200: User;
+                /**
+                 * Invalid input data.
+                 */
+                400: unknown;
+                /**
+                 * Unauthorized
+                 */
+                401: unknown;
+                /**
+                 * Forbidden - User does not have permission to manage users.
+                 */
+                403: unknown;
+                /**
+                 * User not found.
+                 */
+                404: unknown;
             };
         };
     };

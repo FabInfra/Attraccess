@@ -157,14 +157,6 @@ export const $PaginatedUsersResponseDto = {
         limit: {
             type: 'number'
         },
-        nextPage: {
-            type: 'integer',
-            nullable: true,
-            description: 'The next page number, or null if it is the last page.'
-        },
-        totalPages: {
-            type: 'number'
-        },
         data: {
             type: 'array',
             items: {
@@ -172,7 +164,7 @@ export const $PaginatedUsersResponseDto = {
             }
         }
     },
-    required: ['total', 'page', 'limit', 'nextPage', 'totalPages', 'data']
+    required: ['total', 'page', 'limit', 'data']
 } as const;
 
 export const $UpdateUserPermissionsDto = {
@@ -233,6 +225,47 @@ export const $BulkUpdateUserPermissionsDto = {
         }
     },
     required: ['updates']
+} as const;
+
+export const $RequestEmailChangeDto = {
+    type: 'object',
+    properties: {
+        newEmail: {
+            type: 'string',
+            description: 'The new email address',
+            example: 'newemail@example.com'
+        }
+    },
+    required: ['newEmail']
+} as const;
+
+export const $ConfirmEmailChangeDto = {
+    type: 'object',
+    properties: {
+        newEmail: {
+            type: 'string',
+            description: 'The new email address to confirm',
+            example: 'newemail@example.com'
+        },
+        token: {
+            type: 'string',
+            description: 'The verification token',
+            example: 'abc123def456'
+        }
+    },
+    required: ['newEmail', 'token']
+} as const;
+
+export const $AdminChangeEmailDto = {
+    type: 'object',
+    properties: {
+        newEmail: {
+            type: 'string',
+            description: 'The new email address',
+            example: 'newemail@example.com'
+        }
+    },
+    required: ['newEmail']
 } as const;
 
 export const $CreateSessionResponse = {
@@ -542,7 +575,7 @@ export const $PreviewMjmlResponseDto = {
 
 export const $EmailTemplateType = {
     type: 'string',
-    enum: ['verify-email', 'reset-password'],
+    enum: ['verify-email', 'reset-password', 'change-email'],
     description: 'Template type/key used by the system'
 } as const;
 
@@ -762,14 +795,6 @@ export const $PaginatedResourceResponseDto = {
         limit: {
             type: 'number'
         },
-        nextPage: {
-            type: 'integer',
-            nullable: true,
-            description: 'The next page number, or null if it is the last page.'
-        },
-        totalPages: {
-            type: 'number'
-        },
         data: {
             type: 'array',
             items: {
@@ -777,7 +802,7 @@ export const $PaginatedResourceResponseDto = {
             }
         }
     },
-    required: ['total', 'page', 'limit', 'nextPage', 'totalPages', 'data']
+    required: ['total', 'page', 'limit', 'data']
 } as const;
 
 export const $UpdateResourceDto = {
@@ -1968,14 +1993,6 @@ export const $GetResourceHistoryResponseDto = {
         limit: {
             type: 'number'
         },
-        nextPage: {
-            type: 'integer',
-            nullable: true,
-            description: 'The next page number, or null if it is the last page.'
-        },
-        totalPages: {
-            type: 'number'
-        },
         data: {
             type: 'array',
             items: {
@@ -1983,7 +2000,7 @@ export const $GetResourceHistoryResponseDto = {
             }
         }
     },
-    required: ['total', 'page', 'limit', 'nextPage', 'totalPages', 'data']
+    required: ['total', 'page', 'limit', 'data']
 } as const;
 
 export const $GetActiveUsageSessionDto = {
