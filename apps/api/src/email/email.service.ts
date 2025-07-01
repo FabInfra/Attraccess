@@ -98,4 +98,21 @@ export class EmailService {
 
     await this.sendEmail(user, EmailTemplateType.RESET_PASSWORD, context);
   }
+
+  async sendEmailChangeConfirmationEmail(user: User, newEmail: string, changeToken: string) {
+    const confirmUrl = `${this.frontendUrl}/confirm-email-change?newEmail=${encodeURIComponent(
+      newEmail
+    )}&token=${changeToken}`;
+
+    const context = {
+      ...this.getBaseContext(user),
+      'user.newEmail': newEmail,
+      url: confirmUrl,
+    };
+
+    // Create a temporary user object with the new email to send to the new address
+    const userWithNewEmail = { ...user, email: newEmail };
+
+    await this.sendEmail(userWithNewEmail, EmailTemplateType.CHANGE_EMAIL, context);
+  }
 }

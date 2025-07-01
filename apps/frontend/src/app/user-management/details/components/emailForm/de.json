@@ -1,0 +1,12 @@
+{
+  "title": "E-Mail-Verwaltung",
+  "currentEmail": "Aktuelle E-Mail",
+  "verified": "Verifiziert",
+  "notVerified": "Nicht verifiziert",
+  "newEmailLabel": "Neue E-Mail-Adresse",
+  "newEmailPlaceholder": "Neue E-Mail-Adresse eingeben",
+  "changeEmailButton": "E-Mail ändern",
+  "successMessage": "E-Mail-Adresse erfolgreich geändert! Der Benutzer kann diese E-Mail jetzt zum Anmelden verwenden.",
+  "errorMessage": "E-Mail-Adresse konnte nicht geändert werden. Bitte versuchen Sie es erneut.",
+  "note": "Das Ändern der E-Mail-Adresse eines Benutzers ermöglicht es ihm sofort, die neue E-Mail für die Anmeldung zu verwenden. Die neue E-Mail wird automatisch verifiziert."
+}

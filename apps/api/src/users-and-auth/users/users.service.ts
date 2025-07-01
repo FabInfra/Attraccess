@@ -13,6 +13,7 @@ const FindOneOptionsSchema = z
     username: z.string().min(1),
     email: z.string().email(),
     externalIdentifier: z.string().optional(),
+    emailChangeToken: z.string().optional(),
   })
   .partial()
   .refine((data) => Object.values(data).filter((val) => val !== undefined).length > 0, {
@@ -62,6 +63,10 @@ export class UsersService {
 
     if (validatedOptions.externalIdentifier !== undefined) {
       whereCondition.externalIdentifier = validatedOptions.externalIdentifier;
+    }
+
+    if (validatedOptions.emailChangeToken !== undefined) {
+      whereCondition.emailChangeToken = validatedOptions.emailChangeToken;
     }
 
     const user = await this.userRepository.findOne({

@@ -77,6 +77,18 @@ export class User {
   @Exclude()
   passwordResetTokenExpiresAt!: Date | null;
 
+  @Column({ type: 'text', nullable: true })
+  @Exclude()
+  newEmail!: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  @Exclude()
+  emailChangeToken!: string | null;
+
+  @Column({ type: 'datetime', nullable: true })
+  @Exclude()
+  emailChangeTokenExpiresAt!: Date | null;
+
   @Column(() => SystemPermissions, { prefix: '' })
   @ApiProperty({
     description: 'System-wide permissions for the user',
