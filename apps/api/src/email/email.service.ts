@@ -66,11 +66,15 @@ export class EmailService {
 
   private getBaseContext(user: User) {
     return {
-      'user.username': user.username,
-      'user.email': user.email,
-      'user.id': user.id,
-      'host.frontend': this.frontendUrl,
-      'host.backend': this.configService.get<string>('app.backendUrl'),
+      user: {
+        username: user.username,
+        email: user.email,
+        id: user.id,
+      },
+      host: {
+        frontend: this.frontendUrl,
+        backend: this.configService.get<string>('app.backendUrl'),
+      },
       url: this.frontendUrl,
     };
   }
@@ -104,9 +108,13 @@ export class EmailService {
       newEmail
     )}&token=${changeToken}`;
 
+    const baseContext = this.getBaseContext(user);
     const context = {
-      ...this.getBaseContext(user),
-      'user.newEmail': newEmail,
+      ...baseContext,
+      user: {
+        ...baseContext.user,
+        newEmail,
+      },
       url: confirmUrl,
     };
 

@@ -3,11 +3,12 @@
   "subtitle": "Bereit, dein nächstes Projekt umzusetzen? Melde dich an, um Maschinen zu buchen und loszulegen.",
   "noAccount": "Neu hier?",
   "signUpButton": "Hier geht's los",
-  "username": "Benutzername",
+  "usernameOrEmail": "E-Mail oder Benutzername",
   "password": "Passwort",
   "rememberMe": "Angemeldet bleiben",
   "forgotPassword": "Passwort vergessen?",
   "signInButton": "Los geht's",
+  "signingIn": "Anmeldung läuft...",
   "error": {
     "title": "Hoppla! Kleines Anmeldeproblem",
     "generic": "Bitte überprüfe deine Anmeldedaten und versuche es erneut"

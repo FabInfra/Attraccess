@@ -1,14 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
-import { User } from '@attraccess/react-query-client';
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Input,
-  Button,
-  Alert,
-} from '@heroui/react';
+import { User, ApiError } from '@attraccess/react-query-client';
+import { Card, CardBody, CardHeader, Input, Button, Alert } from '@heroui/react';
 import { Mail, Check } from 'lucide-react';
 import { useUsersServiceAdminChangeEmail } from '@attraccess/react-query-client';
 
@@ -32,11 +25,41 @@ export const EmailForm: React.FC<EmailFormProps> = ({ user }) => {
     },
   });
 
-  const handleEmailChange = async (e: React.FormEvent) => {
+  // Function to extract and translate error messages
+  const getErrorMessage = (error: unknown): string => {
+    if (error instanceof ApiError && error.body) {
+      const apiErrorBody = error.body as {
+        message?: string;
+        errorCode?: string;
+        error?: string;
+      };
+
+      // First, try to use the machine-readable errorCode
+      if (apiErrorBody.errorCode) {
+        const translationKey = `errors.${apiErrorBody.errorCode}`;
+        const translation = t(translationKey);
+
+        // If we have a translation for this error code, use it
+        if (translation !== translationKey) {
+          return translation;
+        }
+      }
+
+      // Fallback to using the human-readable message if available
+      if (apiErrorBody.message) {
+        return apiErrorBody.message;
+      }
+    }
+
+    // Fallback to generic error message
+    return t('errors.generic');
+  };
+
+  const handleEmailChange = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newEmail.trim()) return;
-    
-    await adminChangeEmail.mutateAsync({
+
+    adminChangeEmail.mutate({
       id: user.id,
       requestBody: { newEmail },
     });
@@ -52,9 +75,7 @@ export const EmailForm: React.FC<EmailFormProps> = ({ user }) => {
       </CardHeader>
       <CardBody className="space-y-4">
         <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            {t('currentEmail')}
-          </label>
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('currentEmail')}</label>
           <p className="text-gray-900 dark:text-gray-100">{user.email}</p>
           <div className="flex items-center gap-1 mt-1">
             {user.isEmailVerified ? (
@@ -98,12 +119,7 @@ export const EmailForm: React.FC<EmailFormProps> = ({ user }) => {
           </div>
         </form>
 
-        {adminChangeEmail.error ? (
-          <Alert color="danger">
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {String((adminChangeEmail.error as any)?.message || t('errorMessage'))}
-          </Alert>
-        ) : null}
+        {adminChangeEmail.error ? <Alert color="danger">{getErrorMessage(adminChangeEmail.error)}</Alert> : null}
 
         <div className="text-sm text-gray-600 dark:text-gray-400">
           <p>{t('note')}</p>

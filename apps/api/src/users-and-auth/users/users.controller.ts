@@ -32,6 +32,7 @@ import { ChangePasswordDto } from './dtos/changePassword.dto';
 import { RequestEmailChangeDto } from './dtos/requestEmailChange.dto';
 import { ConfirmEmailChangeDto } from './dtos/confirmEmailChange.dto';
 import { AdminChangeEmailDto } from './dtos/adminChangeEmail.dto';
+import { EmailAlreadyInUseError, UserNotFoundError } from './errors/user-email.errors';
 
 @ApiTags('Users')
 @Controller('users')
@@ -532,7 +533,7 @@ export class UsersController {
     const existingUser = await this.usersService.findOne({ email: body.newEmail });
     if (existingUser && existingUser.id !== request.user.id) {
       this.logger.debug(`New email ${body.newEmail} is already in use by user ID: ${existingUser.id}`);
-      throw new ForbiddenException('Email already in use');
+      throw new EmailAlreadyInUseError();
     }
 
     // Generate email change token
@@ -563,9 +564,9 @@ export class UsersController {
   })
   async confirmEmailChange(@Body() body: ConfirmEmailChangeDto) {
     this.logger.debug(`Confirming email change to: ${body.newEmail} with token: ${body.token.substring(0, 5)}...`);
-    
+
     await this.authService.confirmEmailChange(body.newEmail, body.token);
-    
+
     this.logger.debug(`Email change confirmed successfully for: ${body.newEmail}`);
     return { message: 'Email changed successfully' };
   }
@@ -601,14 +602,14 @@ export class UsersController {
     const user = await this.usersService.findOne({ id });
     if (!user) {
       this.logger.debug(`User not found with ID: ${id}`);
-      throw new UserNotFoundException(id);
+      throw new UserNotFoundError(id);
     }
 
     // Check if the new email is already in use by another user
     const existingUser = await this.usersService.findOne({ email: body.newEmail });
     if (existingUser && existingUser.id !== id) {
       this.logger.debug(`New email ${body.newEmail} is already in use by user ID: ${existingUser.id}`);
-      throw new ForbiddenException('Email already in use');
+      throw new EmailAlreadyInUseError();
     }
 
     // Update the user's email directly (no verification needed for admin changes)

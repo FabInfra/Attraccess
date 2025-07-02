@@ -1777,6 +1777,9 @@ export type AdminChangeEmailResponse = User;
 
 export type CreateSessionData = {
     requestBody: {
+        /**
+         * Username or email address
+         */
         username?: string;
         password?: string;
     };

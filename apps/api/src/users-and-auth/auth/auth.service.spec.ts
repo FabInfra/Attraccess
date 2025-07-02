@@ -108,7 +108,7 @@ describe('AuthService', () => {
     // Mock bcrypt.compare to return true for correct password
     (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
-    const isAuthenticated = await authService.getUserByUsernameAndAuthenticationDetails('testuser', {
+    const isAuthenticated = await authService.getUserByAuthenticationDetails('testuser', {
       type: AuthenticationType.LOCAL_PASSWORD,
       details: { password: 'correct-password' },
     });
@@ -147,13 +147,61 @@ describe('AuthService', () => {
     // Mock bcrypt.compare to return false for incorrect password
     (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-    const isAuthenticated = await authService.getUserByUsernameAndAuthenticationDetails('testuser', {
+    const isAuthenticated = await authService.getUserByAuthenticationDetails('testuser', {
       type: AuthenticationType.LOCAL_PASSWORD,
       details: { password: 'wrong-password' },
     });
 
     expect(isAuthenticated).toBeNull();
     expect(bcrypt.compare).toHaveBeenCalledWith('wrong-password', 'hashed-password');
+  });
+
+  it('should authenticate user with email instead of username', async () => {
+    const user = {
+      id: 1,
+      username: 'testuser',
+      email: 'test@example.com',
+      isEmailVerified: true,
+      emailVerificationToken: null,
+      emailVerificationTokenExpiresAt: null,
+      passwordResetToken: null,
+      passwordResetTokenExpiresAt: null,
+      systemPermissions: {},
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      resourceIntroductions: [],
+      resourceUsages: [],
+      authenticationDetails: [],
+      resourceIntroducerPermissions: [],
+    } as User;
+
+    // Mock findOne to return null for username search (first call) and user for email search (second call)
+    jest
+      .spyOn(usersService, 'findOne')
+      .mockResolvedValueOnce(null) // First call with username returns null
+      .mockResolvedValueOnce(user); // Second call with email returns user
+
+    const authenticationDetail: Partial<AuthenticationDetail> = {
+      userId: 1,
+      type: AuthenticationType.LOCAL_PASSWORD,
+      password: 'hashed-password',
+    };
+    jest
+      .spyOn(authenticationDetailRepository, 'findOne')
+      .mockResolvedValue(authenticationDetail as AuthenticationDetail);
+
+    // Mock bcrypt.compare to return true for correct password
+    (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+
+    const isAuthenticated = await authService.getUserByAuthenticationDetails('test@example.com', {
+      type: AuthenticationType.LOCAL_PASSWORD,
+      details: { password: 'correct-password' },
+    });
+
+    expect(isAuthenticated).not.toBeNull();
+    expect(usersService.findOne).toHaveBeenNthCalledWith(1, { username: 'test@example.com' });
+    expect(usersService.findOne).toHaveBeenNthCalledWith(2, { email: 'test@example.com' });
+    expect(bcrypt.compare).toHaveBeenCalledWith('correct-password', 'hashed-password');
   });
 
   it('should create a JWT for a valid user', async () => {
@@ -201,7 +249,7 @@ describe('AuthService', () => {
   it('should not authenticate a non-existent user', async () => {
     jest.spyOn(usersService, 'findOne').mockResolvedValue(null);
 
-    const isAuthenticated = await authService.getUserByUsernameAndAuthenticationDetails('nonexistentuser', {
+    const isAuthenticated = await authService.getUserByAuthenticationDetails('nonexistentuser', {
       type: AuthenticationType.LOCAL_PASSWORD,
       details: { password: 'password' },
     });

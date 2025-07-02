@@ -19,7 +19,68 @@ def extract_define_value(flags, define_name):
         return value
     return None
 
+def check_esptool_installed():
+    """Check if esptool is installed and accessible"""
+    try:
+        subprocess.run([sys.executable, '-m', 'esptool', 'version'], 
+                      capture_output=True, check=True)
+        return True
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return False
+
+def install_esptool():
+    """Install esptool using pip with fallback strategies for externally-managed environments"""
+    print("Installing esptool...")
+    
+    # Strategy 1: Try installing to user directory (--user)
+    try:
+        print("Trying to install esptool to user directory...")
+        subprocess.run([sys.executable, '-m', 'pip', 'install', '--user', 'esptool'], check=True)
+        print("esptool installed successfully to user directory")
+        return True
+    except subprocess.CalledProcessError:
+        print("User installation failed, trying alternative methods...")
+    
+    # Strategy 2: Try with --break-system-packages (for PEP 668 environments)
+    try:
+        print("Trying to install esptool with --break-system-packages...")
+        subprocess.run([sys.executable, '-m', 'pip', 'install', '--break-system-packages', 'esptool'], check=True)
+        print("esptool installed successfully with --break-system-packages")
+        return True
+    except subprocess.CalledProcessError:
+        print("System packages installation failed...")
+    
+    # Strategy 3: Suggest manual installation
+    print("\nAutomatic installation failed. Please install esptool manually using one of these methods:")
+    print("1. Using pipx (recommended):")
+    print("   brew install pipx  # if not already installed")
+    print("   pipx install esptool")
+    print()
+    print("2. Using virtual environment:")
+    print("   python3 -m venv firmware_env")
+    print("   source firmware_env/bin/activate")
+    print("   pip install esptool")
+    print("   # Then run this script from within the virtual environment")
+    print()
+    print("3. Using brew (if available):")
+    print("   brew install esptool")
+    print()
+    return False
+
+def ensure_esptool():
+    """Ensure esptool is installed, install it if not"""
+    if not check_esptool_installed():
+        print("esptool not found, installing...")
+        if not install_esptool():
+            print("Error: Failed to install esptool")
+            sys.exit(1)
+    else:
+        print("esptool is available")
+
 def main():
+    # Ensure esptool is installed
+    ensure_esptool()
+    
     # Load configuration
     config = configparser.ConfigParser()
     config.read('platformio.ini')
@@ -165,7 +226,7 @@ def main():
         # Get partition information to find the filesystem offset
         try:
             print(f"Getting partition information for {env}...")
-            partinfo = subprocess.check_output(['python', '-m', 'esptool', 'partition_table', partitions_path]).decode('utf-8')
+            partinfo = subprocess.check_output([sys.executable, '-m', 'esptool', 'partition_table', partitions_path]).decode('utf-8')
             print(partinfo)
             
             # Find the spiffs/littlefs partition
@@ -197,7 +258,7 @@ def main():
             # For ESP32-C3, we need to adapt the command
             if "ESP32-C3" in board_family or "ESP32_C3" in board_family:
                 merge_cmd = [
-                    'python', '-m', 'esptool', '--chip', 'esp32c3', 'merge_bin',
+                    sys.executable, '-m', 'esptool', '--chip', 'esp32c3', 'merge_bin',
                     '-o', merged_bin_path,
                     '--flash_mode', 'dio',  # Use dio for most compatibility
                     '--flash_freq', '80m',  # ESP32-C3 typically uses 80MHz
@@ -211,7 +272,7 @@ def main():
                 # Default command for ESP32
                 chip_type = board_family.lower().replace('_', '-')
                 merge_cmd = [
-                    'python', '-m', 'esptool', '--chip', chip_type, 'merge_bin',
+                    sys.executable, '-m', 'esptool', '--chip', chip_type, 'merge_bin',
                     '-o', merged_bin_path,
                     '--flash_mode', 'dio',
                     '--flash_freq', '40m',

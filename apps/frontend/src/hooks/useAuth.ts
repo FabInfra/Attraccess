@@ -13,7 +13,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface LoginCredentials {
-  username: string;
+  usernameOrEmail: string;
   password: string;
 }
 
@@ -99,10 +99,10 @@ export function useLogin() {
   return {
     ...login,
     mutate: async (data: LoginCredentials) => {
-      return login.mutate({ requestBody: { username: data.username, password: data.password } });
+      return login.mutate({ requestBody: { username: data.usernameOrEmail, password: data.password } });
     },
-    mutateAsync: async (data: { username: string; password: string }) => {
-      return login.mutateAsync({ requestBody: { username: data.username, password: data.password } });
+    mutateAsync: async (data: { usernameOrEmail: string; password: string }) => {
+      return login.mutateAsync({ requestBody: { username: data.usernameOrEmail, password: data.password } });
     },
   };
 }

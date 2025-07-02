@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import { Card, CardBody, CardHeader, Button, Alert } from '@heroui/react';
@@ -26,13 +26,9 @@ export function ConfirmEmailChange() {
 
     setHasAttempted(true);
 
-    try {
-      await confirmEmailChange.mutateAsync({
-        requestBody: { token, newEmail },
-      });
-    } catch (error) {
-      // Error is handled by the mutation state
-    }
+    await confirmEmailChange.mutate({
+      requestBody: { token, newEmail },
+    });
   }, [token, newEmail, hasAttempted, confirmEmailChange]);
 
   useEffect(() => {
@@ -80,7 +76,7 @@ export function ConfirmEmailChange() {
     );
   }
 
-  const error = (confirmEmailChange.error as any)?.message || t('error.genericError');
+  const error = (confirmEmailChange.error as Error)?.message || t('error.genericError');
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">

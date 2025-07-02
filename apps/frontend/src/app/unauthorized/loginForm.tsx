@@ -26,15 +26,15 @@ export function LoginForm({ onNeedsAccount, onForgotPassword }: LoginFormProps) 
     async (event) => {
       event.preventDefault();
       const formData = new FormData(event.currentTarget as HTMLFormElement);
-      const username = formData.get('username');
+      const usernameOrEmail = formData.get('usernameOrEmail');
       const password = formData.get('password');
 
-      if (typeof username !== 'string' || typeof password !== 'string') {
+      if (typeof usernameOrEmail !== 'string' || typeof password !== 'string') {
         return;
       }
 
       login({
-        username,
+        usernameOrEmail,
         password,
       });
     },
@@ -66,10 +66,10 @@ export function LoginForm({ onNeedsAccount, onForgotPassword }: LoginFormProps) 
 
       <form className="mt-8 space-y-6" onSubmit={handleSubmit} data-cy="login-form">
         <Input
-          id="username"
-          name="username"
+          id="usernameOrEmail"
+          name="usernameOrEmail"
           type="text"
-          label={t('username')}
+          label={t('usernameOrEmail')}
           variant="underlined"
           required
           isDisabled={isPending}

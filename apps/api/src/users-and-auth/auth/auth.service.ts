@@ -142,14 +142,20 @@ export class AuthService {
     });
   }
 
-  async getUserByUsernameAndAuthenticationDetails<T extends AuthenticationType>(
-    username: string,
+  async getUserByAuthenticationDetails<T extends AuthenticationType>(
+    usernameOrEmail: string,
     options: AuthenticationOptions<T>
   ): Promise<User | null> {
-    const user = await this.usersService.findOne({ username });
+    // First try to find user by username
+    let user = await this.usersService.findOne({ username: usernameOrEmail });
+
+    // If not found by username, try by email
+    if (!user) {
+      user = await this.usersService.findOne({ email: usernameOrEmail });
+    }
 
     if (!user) {
-      this.logger.debug(`No user found with username: ${username}`);
+      this.logger.debug(`No user found with username or email: ${usernameOrEmail}`);
       return null;
     }
 
@@ -250,7 +256,7 @@ export class AuthService {
 
   async confirmEmailChange(newEmail: string, token: string): Promise<User> {
     this.logger.debug(`Confirming email change to: ${newEmail} with token: ${token.substring(0, 5)}...`);
-    
+
     const user = await this.usersService.findOne({ emailChangeToken: token });
 
     if (!user) {
