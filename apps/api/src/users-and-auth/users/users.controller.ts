@@ -29,6 +29,10 @@ import { BulkUpdateUserPermissionsDto } from './dtos/bulkUpdateUserPermissions.d
 import { GetUsersWithPermissionQueryDto, PermissionFilter } from './dtos/getUsersWithPermissionQuery.dto';
 import { ResetPasswordDto } from './dtos/resetPassword.dto';
 import { ChangePasswordDto } from './dtos/changePassword.dto';
+import { RequestEmailChangeDto } from './dtos/requestEmailChange.dto';
+import { ConfirmEmailChangeDto } from './dtos/confirmEmailChange.dto';
+import { AdminChangeEmailDto } from './dtos/adminChangeEmail.dto';
+import { EmailAlreadyInUseError, UserNotFoundError } from './errors/user-email.errors';
 
 @ApiTags('Users')
 @Controller('users')
@@ -499,5 +503,126 @@ export class UsersController {
     );
 
     return result;
+  }
+
+  @Post('me/request-email-change')
+  @Auth()
+  @ApiOperation({ summary: 'Request an email change for the current user', operationId: 'requestEmailChange' })
+  @ApiResponse({
+    status: 200,
+    description: 'Email change request sent successfully.',
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'Email change confirmation sent' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid input data.',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'User is not authenticated.',
+  })
+  async requestEmailChange(@Body() body: RequestEmailChangeDto, @Req() request: AuthenticatedRequest) {
+    this.logger.debug(`User ${request.user.id} requesting email change to: ${body.newEmail}`);
+
+    // Check if the new email is already in use
+    const existingUser = await this.usersService.findOne({ email: body.newEmail });
+    if (existingUser && existingUser.id !== request.user.id) {
+      this.logger.debug(`New email ${body.newEmail} is already in use by user ID: ${existingUser.id}`);
+      throw new EmailAlreadyInUseError();
+    }
+
+    // Generate email change token
+    const changeToken = await this.authService.generateEmailChangeToken(request.user, body.newEmail);
+
+    // Send confirmation email to new address
+    await this.emailService.sendEmailChangeConfirmationEmail(request.user, body.newEmail, changeToken);
+
+    this.logger.debug(`Email change confirmation sent to: ${body.newEmail} for user ID: ${request.user.id}`);
+    return { message: 'Email change confirmation sent' };
+  }
+
+  @Post('confirm-email-change')
+  @ApiOperation({ summary: 'Confirm an email change', operationId: 'confirmEmailChange' })
+  @ApiResponse({
+    status: 200,
+    description: 'Email changed successfully.',
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', example: 'Email changed successfully' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid token or email.',
+  })
+  async confirmEmailChange(@Body() body: ConfirmEmailChangeDto) {
+    this.logger.debug(`Confirming email change to: ${body.newEmail} with token: ${body.token.substring(0, 5)}...`);
+
+    await this.authService.confirmEmailChange(body.newEmail, body.token);
+
+    this.logger.debug(`Email change confirmed successfully for: ${body.newEmail}`);
+    return { message: 'Email changed successfully' };
+  }
+
+  @Patch(':id/email')
+  @Auth('canManageUsers')
+  @ApiOperation({ summary: 'Change a user email (admin only)', operationId: 'adminChangeEmail' })
+  @ApiResponse({
+    status: 200,
+    description: 'User email has been successfully changed.',
+    type: User,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid input data.',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - User does not have permission to manage users.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found.',
+  })
+  async adminChangeEmail(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: AdminChangeEmailDto,
+    @Req() request: AuthenticatedRequest
+  ): Promise<User> {
+    this.logger.debug(`Admin ${request.user.id} changing email for user ID: ${id} to: ${body.newEmail}`);
+
+    // Get the user to update
+    const user = await this.usersService.findOne({ id });
+    if (!user) {
+      this.logger.debug(`User not found with ID: ${id}`);
+      throw new UserNotFoundError(id);
+    }
+
+    // Check if the new email is already in use by another user
+    const existingUser = await this.usersService.findOne({ email: body.newEmail });
+    if (existingUser && existingUser.id !== id) {
+      this.logger.debug(`New email ${body.newEmail} is already in use by user ID: ${existingUser.id}`);
+      throw new EmailAlreadyInUseError();
+    }
+
+    // Update the user's email directly (no verification needed for admin changes)
+    const updatedUser = await this.usersService.updateOne(id, {
+      email: body.newEmail,
+      isEmailVerified: true, // Auto-verify since admin changed it
+      // Clear any pending email change if it exists
+      newEmail: null,
+      emailChangeToken: null,
+      emailChangeTokenExpiresAt: null,
+    });
+
+    this.logger.debug(`Successfully changed email for user ID: ${id} to: ${body.newEmail}`);
+    return updatedUser;
   }
 }

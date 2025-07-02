@@ -14,6 +14,7 @@
 export enum EmailTemplateType {
   VerifyEmail = "verify-email",
   ResetPassword = "reset-password",
+  ChangeEmail = "change-email",
 }
 
 /** The type of the provider */
@@ -73,6 +74,11 @@ export interface User {
    * @example "johndoe"
    */
   username: string;
+  /**
+   * The email address of the user
+   * @example "john@example.com"
+   */
+  email: string;
   /**
    * Whether the user has verified their email address
    * @example true
@@ -134,8 +140,15 @@ export interface PaginatedUsersResponseDto {
   total: number;
   page: number;
   limit: number;
-  /** The next page number, or null if it is the last page. */
+  /**
+   * Next page number if there are more pages, null if this is the last page
+   * @example 2
+   */
   nextPage: number | null;
+  /**
+   * Total number of pages
+   * @example 5
+   */
   totalPages: number;
   data: User[];
 }
@@ -174,6 +187,35 @@ export interface UserPermissionsUpdateItem {
 export interface BulkUpdateUserPermissionsDto {
   /** Array of user permission updates */
   updates: UserPermissionsUpdateItem[];
+}
+
+export interface RequestEmailChangeDto {
+  /**
+   * The new email address
+   * @example "newemail@example.com"
+   */
+  newEmail: string;
+}
+
+export interface ConfirmEmailChangeDto {
+  /**
+   * The new email address to confirm
+   * @example "newemail@example.com"
+   */
+  newEmail: string;
+  /**
+   * The verification token
+   * @example "abc123def456"
+   */
+  token: string;
+}
+
+export interface AdminChangeEmailDto {
+  /**
+   * The new email address
+   * @example "newemail@example.com"
+   */
+  newEmail: string;
 }
 
 export interface CreateSessionResponse {
@@ -578,8 +620,15 @@ export interface PaginatedResourceResponseDto {
   total: number;
   page: number;
   limit: number;
-  /** The next page number, or null if it is the last page. */
+  /**
+   * Next page number if there are more pages, null if this is the last page
+   * @example 2
+   */
   nextPage: number | null;
+  /**
+   * Total number of pages
+   * @example 5
+   */
   totalPages: number;
   data: Resource[];
 }
@@ -1553,8 +1602,15 @@ export interface GetResourceHistoryResponseDto {
   total: number;
   page: number;
   limit: number;
-  /** The next page number, or null if it is the last page. */
+  /**
+   * Next page number if there are more pages, null if this is the last page
+   * @example 2
+   */
   nextPage: number | null;
+  /**
+   * Total number of pages
+   * @example 5
+   */
   totalPages: number;
   data: ResourceUsage[];
 }
@@ -1850,6 +1906,18 @@ export interface GetAllWithPermissionParams {
 }
 
 export type GetAllWithPermissionData = PaginatedUsersResponseDto;
+
+export interface RequestEmailChangeData {
+  /** @example "Email change confirmation sent" */
+  message?: string;
+}
+
+export interface ConfirmEmailChangeData {
+  /** @example "Email changed successfully" */
+  message?: string;
+}
+
+export type AdminChangeEmailData = User;
 
 export interface CreateSessionPayload {
   username?: string;
@@ -2324,6 +2392,55 @@ export namespace Users {
     export type RequestHeaders = {};
     export type ResponseBody = GetAllWithPermissionData;
   }
+
+  /**
+   * No description
+   * @tags Users
+   * @name RequestEmailChange
+   * @summary Request an email change for the current user
+   * @request POST:/api/users/me/request-email-change
+   * @secure
+   */
+  export namespace RequestEmailChange {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = RequestEmailChangeDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = RequestEmailChangeData;
+  }
+
+  /**
+   * No description
+   * @tags Users
+   * @name ConfirmEmailChange
+   * @summary Confirm an email change
+   * @request POST:/api/users/confirm-email-change
+   */
+  export namespace ConfirmEmailChange {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = ConfirmEmailChangeDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ConfirmEmailChangeData;
+  }
+
+  /**
+   * No description
+   * @tags Users
+   * @name AdminChangeEmail
+   * @summary Change a user email (admin only)
+   * @request PATCH:/api/users/{id}/email
+   * @secure
+   */
+  export namespace AdminChangeEmail {
+    export type RequestParams = {
+      id: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = AdminChangeEmailDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = AdminChangeEmailData;
+  }
 }
 
 export namespace Authentication {
@@ -2567,7 +2684,7 @@ export namespace EmailTemplates {
   export namespace EmailTemplateControllerFindOne {
     export type RequestParams = {
       /** Template type/type */
-      type: "verify-email" | "reset-password";
+      type: "verify-email" | "reset-password" | "change-email";
     };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -2586,7 +2703,7 @@ export namespace EmailTemplates {
   export namespace EmailTemplateControllerUpdate {
     export type RequestParams = {
       /** Template type/type */
-      type: "verify-email" | "reset-password";
+      type: "verify-email" | "reset-password" | "change-email";
     };
     export type RequestQuery = {};
     export type RequestBody = UpdateEmailTemplateDto;
@@ -4419,6 +4536,74 @@ export class Api<
         format: "json",
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name RequestEmailChange
+     * @summary Request an email change for the current user
+     * @request POST:/api/users/me/request-email-change
+     * @secure
+     */
+    requestEmailChange: (
+      data: RequestEmailChangeDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<RequestEmailChangeData, void>({
+        path: `/api/users/me/request-email-change`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name ConfirmEmailChange
+     * @summary Confirm an email change
+     * @request POST:/api/users/confirm-email-change
+     */
+    confirmEmailChange: (
+      data: ConfirmEmailChangeDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ConfirmEmailChangeData, void>({
+        path: `/api/users/confirm-email-change`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name AdminChangeEmail
+     * @summary Change a user email (admin only)
+     * @request PATCH:/api/users/{id}/email
+     * @secure
+     */
+    adminChangeEmail: (
+      id: number,
+      data: AdminChangeEmailDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<AdminChangeEmailData, void>({
+        path: `/api/users/${id}/email`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
   };
   authentication = {
     /**
@@ -4685,7 +4870,7 @@ export class Api<
      * @secure
      */
     emailTemplateControllerFindOne: (
-      type: "verify-email" | "reset-password",
+      type: "verify-email" | "reset-password" | "change-email",
       params: RequestParams = {},
     ) =>
       this.request<EmailTemplateControllerFindOneData, void>({
@@ -4706,7 +4891,7 @@ export class Api<
      * @secure
      */
     emailTemplateControllerUpdate: (
-      type: "verify-email" | "reset-password",
+      type: "verify-email" | "reset-password" | "change-email",
       data: UpdateEmailTemplateDto,
       params: RequestParams = {},
     ) =>

@@ -1,0 +1,15 @@
+{
+  "loading": "E-Mail-Änderung wird bestätigt...",
+  "success": {
+    "title": "E-Mail erfolgreich geändert",
+    "message": "Ihre E-Mail-Adresse wurde zu {email} geändert. Sie können diese E-Mail-Adresse jetzt zum Anmelden verwenden.",
+    "goToLogin": "Zur Anmeldung"
+  },
+  "error": {
+    "title": "E-Mail-Änderung fehlgeschlagen",
+    "errorTitle": "Fehler",
+    "genericError": "Ein Fehler ist beim Bestätigen Ihrer E-Mail-Änderung aufgetreten. Bitte versuchen Sie es erneut.",
+    "tryAgain": "Erneut versuchen",
+    "backToLogin": "Zur Anmeldung"
+  }
+}

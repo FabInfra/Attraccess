@@ -1,0 +1,20 @@
+{
+  "title": "Email Management",
+  "currentEmail": "Current Email",
+  "verified": "Verified",
+  "notVerified": "Not Verified",
+  "newEmailLabel": "New Email Address",
+  "newEmailPlaceholder": "Enter new email address",
+  "changeEmailButton": "Change Email",
+  "successMessage": "Email address changed successfully! The user can now use this email to log in.",
+  "errorMessage": "Failed to change email address. Please try again.",
+  "note": "Changing a user's email address will immediately allow them to use the new email for login. The new email will be automatically verified.",
+  "errors": {
+    "EMAIL_ALREADY_IN_USE": "Email already in use",
+    "USER_NOT_FOUND": "User not found",
+    "INSUFFICIENT_PERMISSIONS": "You do not have permission to manage users",
+    "INVALID_EMAIL_FORMAT": "Invalid email address",
+    "HTTP_EXCEPTION": "Failed to change email address. Please try again.",
+    "generic": "Failed to change email address. Please try again."
+  }
+}

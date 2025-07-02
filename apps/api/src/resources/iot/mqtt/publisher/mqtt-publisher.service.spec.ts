@@ -32,6 +32,9 @@ describe('MqttPublisherService', () => {
     emailVerificationTokenExpiresAt: null,
     passwordResetToken: null,
     passwordResetTokenExpiresAt: null,
+    newEmail: null,
+    emailChangeToken: null,
+    emailChangeTokenExpiresAt: null,
     systemPermissions: {
       canManageResources: false,
       canManageSystemConfiguration: false,
@@ -55,6 +58,9 @@ describe('MqttPublisherService', () => {
     emailVerificationTokenExpiresAt: null,
     passwordResetToken: null,
     passwordResetTokenExpiresAt: null,
+    newEmail: null,
+    emailChangeToken: null,
+    emailChangeTokenExpiresAt: null,
     systemPermissions: {
       canManageResources: false,
       canManageSystemConfiguration: false,

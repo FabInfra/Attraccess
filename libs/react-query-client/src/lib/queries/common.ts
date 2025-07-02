@@ -79,7 +79,7 @@ export type EmailTemplatesServiceEmailTemplateControllerFindOneDefaultResponse =
 export type EmailTemplatesServiceEmailTemplateControllerFindOneQueryResult<TData = EmailTemplatesServiceEmailTemplateControllerFindOneDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
 export const useEmailTemplatesServiceEmailTemplateControllerFindOneKey = "EmailTemplatesServiceEmailTemplateControllerFindOne";
 export const UseEmailTemplatesServiceEmailTemplateControllerFindOneKeyFn = ({ type }: {
-  type: "verify-email" | "reset-password";
+  type: "verify-email" | "reset-password" | "change-email";
 }, queryKey?: Array<unknown>) => [useEmailTemplatesServiceEmailTemplateControllerFindOneKey, ...(queryKey ?? [{ type }])];
 export type ResourcesServiceGetAllResourcesDefaultResponse = Awaited<ReturnType<typeof ResourcesService.getAllResources>>;
 export type ResourcesServiceGetAllResourcesQueryResult<TData = ResourcesServiceGetAllResourcesDefaultResponse, TError = unknown> = UseQueryResult<TData, TError>;
@@ -275,6 +275,8 @@ export type UsersServiceVerifyEmailMutationResult = Awaited<ReturnType<typeof Us
 export type UsersServiceRequestPasswordResetMutationResult = Awaited<ReturnType<typeof UsersService.requestPasswordReset>>;
 export type UsersServiceChangePasswordViaResetTokenMutationResult = Awaited<ReturnType<typeof UsersService.changePasswordViaResetToken>>;
 export type UsersServiceBulkUpdatePermissionsMutationResult = Awaited<ReturnType<typeof UsersService.bulkUpdatePermissions>>;
+export type UsersServiceRequestEmailChangeMutationResult = Awaited<ReturnType<typeof UsersService.requestEmailChange>>;
+export type UsersServiceConfirmEmailChangeMutationResult = Awaited<ReturnType<typeof UsersService.confirmEmailChange>>;
 export type AuthenticationServiceCreateSessionMutationResult = Awaited<ReturnType<typeof AuthenticationService.createSession>>;
 export type AuthenticationServiceCreateOneSsoProviderMutationResult = Awaited<ReturnType<typeof AuthenticationService.createOneSsoProvider>>;
 export type AuthenticationServiceLinkUserToExternalAccountMutationResult = Awaited<ReturnType<typeof AuthenticationService.linkUserToExternalAccount>>;
@@ -309,6 +311,7 @@ export type MqttServiceMqttResourceConfigUpdateMutationResult = Awaited<ReturnTy
 export type WebhooksServiceWebhookConfigUpdateOneMutationResult = Awaited<ReturnType<typeof WebhooksService.webhookConfigUpdateOne>>;
 export type WebhooksServiceWebhookConfigUpdateStatusMutationResult = Awaited<ReturnType<typeof WebhooksService.webhookConfigUpdateStatus>>;
 export type UsersServiceUpdatePermissionsMutationResult = Awaited<ReturnType<typeof UsersService.updatePermissions>>;
+export type UsersServiceAdminChangeEmailMutationResult = Awaited<ReturnType<typeof UsersService.adminChangeEmail>>;
 export type EmailTemplatesServiceEmailTemplateControllerUpdateMutationResult = Awaited<ReturnType<typeof EmailTemplatesService.emailTemplateControllerUpdate>>;
 export type FabReaderServiceUpdateReaderMutationResult = Awaited<ReturnType<typeof FabReaderService.updateReader>>;
 export type AuthenticationServiceEndSessionMutationResult = Awaited<ReturnType<typeof AuthenticationService.endSession>>;

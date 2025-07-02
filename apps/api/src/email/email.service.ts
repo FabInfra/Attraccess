@@ -66,11 +66,15 @@ export class EmailService {
 
   private getBaseContext(user: User) {
     return {
-      'user.username': user.username,
-      'user.email': user.email,
-      'user.id': user.id,
-      'host.frontend': this.frontendUrl,
-      'host.backend': this.configService.get<string>('app.backendUrl'),
+      user: {
+        username: user.username,
+        email: user.email,
+        id: user.id,
+      },
+      host: {
+        frontend: this.frontendUrl,
+        backend: this.configService.get<string>('app.backendUrl'),
+      },
       url: this.frontendUrl,
     };
   }
@@ -97,5 +101,26 @@ export class EmailService {
     };
 
     await this.sendEmail(user, EmailTemplateType.RESET_PASSWORD, context);
+  }
+
+  async sendEmailChangeConfirmationEmail(user: User, newEmail: string, changeToken: string) {
+    const confirmUrl = `${this.frontendUrl}/confirm-email-change?newEmail=${encodeURIComponent(
+      newEmail
+    )}&token=${changeToken}`;
+
+    const baseContext = this.getBaseContext(user);
+    const context = {
+      ...baseContext,
+      user: {
+        ...baseContext.user,
+        newEmail,
+      },
+      url: confirmUrl,
+    };
+
+    // Create a temporary user object with the new email to send to the new address
+    const userWithNewEmail = { ...user, email: newEmail };
+
+    await this.sendEmail(userWithNewEmail, EmailTemplateType.CHANGE_EMAIL, context);
   }
 }

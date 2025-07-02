@@ -3,11 +3,12 @@
   "subtitle": "Ready to bring your next project to life? Sign in to book machines and get creating.",
   "noAccount": "First time here?",
   "signUpButton": "Get started here",
-  "username": "Username",
+  "usernameOrEmail": "Email or Username",
   "password": "Password",
   "rememberMe": "Keep me signed in",
   "forgotPassword": "Password slipped your mind?",
   "signInButton": "Start making",
+  "signingIn": "Signing in...",
   "error": {
     "title": "Oops! Sign-in hiccup",
     "generic": "Please check your credentials and try again"

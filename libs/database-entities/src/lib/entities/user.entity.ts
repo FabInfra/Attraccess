@@ -51,7 +51,10 @@ export class User {
   username!: string;
 
   @Column({ unique: true, type: 'text' })
-  @Exclude()
+  @ApiProperty({
+    description: 'The email address of the user',
+    example: 'john@example.com',
+  })
   email!: string;
 
   @Column({ default: false, type: 'boolean' })
@@ -76,6 +79,18 @@ export class User {
   @Column({ type: 'datetime', nullable: true })
   @Exclude()
   passwordResetTokenExpiresAt!: Date | null;
+
+  @Column({ type: 'text', nullable: true })
+  @Exclude()
+  newEmail!: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  @Exclude()
+  emailChangeToken!: string | null;
+
+  @Column({ type: 'datetime', nullable: true })
+  @Exclude()
+  emailChangeTokenExpiresAt!: Date | null;
 
   @Column(() => SystemPermissions, { prefix: '' })
   @ApiProperty({

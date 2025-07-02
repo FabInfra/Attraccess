@@ -1,0 +1,20 @@
+{
+  "title": "E-Mail-Verwaltung",
+  "currentEmail": "Aktuelle E-Mail",
+  "verified": "Verifiziert",
+  "notVerified": "Nicht verifiziert",
+  "newEmailLabel": "Neue E-Mail-Adresse",
+  "newEmailPlaceholder": "Neue E-Mail-Adresse eingeben",
+  "changeEmailButton": "E-Mail ändern",
+  "successMessage": "E-Mail-Adresse erfolgreich geändert! Der Benutzer kann diese E-Mail jetzt zum Anmelden verwenden.",
+  "errorMessage": "E-Mail-Adresse konnte nicht geändert werden. Bitte versuchen Sie es erneut.",
+  "note": "Das Ändern der E-Mail-Adresse eines Benutzers ermöglicht es ihm sofort, die neue E-Mail für die Anmeldung zu verwenden. Die neue E-Mail wird automatisch verifiziert.",
+  "errors": {
+    "EMAIL_ALREADY_IN_USE": "E-Mail-Adresse wird bereits verwendet",
+    "USER_NOT_FOUND": "Benutzer nicht gefunden",
+    "INSUFFICIENT_PERMISSIONS": "Sie haben keine Berechtigung, Benutzer zu verwalten",
+    "INVALID_EMAIL_FORMAT": "Ungültige E-Mail-Adresse",
+    "HTTP_EXCEPTION": "E-Mail-Adresse konnte nicht geändert werden. Bitte versuchen Sie es erneut.",
+    "generic": "E-Mail-Adresse konnte nicht geändert werden. Bitte versuchen Sie es erneut."
+  }
+}

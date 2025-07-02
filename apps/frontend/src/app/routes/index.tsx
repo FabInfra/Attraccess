@@ -20,6 +20,8 @@ import { ResourceGroupEditPage } from '../resource-groups';
 import { ResourceOverview } from '../resourceOverview';
 import { Dependencies } from '../dependencies';
 import { UserManagementDetailsPage } from '../user-management/details';
+import { AccountSettingsPage } from '../account-settings';
+import { ConfirmEmailChange } from '../confirm-email-change';
 
 const coreRoutes: RouteConfig[] = [
   {
@@ -136,6 +138,16 @@ const coreRoutes: RouteConfig[] = [
     path: '/email-templates/:type',
     element: <EditEmailTemplatePage />,
     authRequired: 'canManageSystemConfiguration',
+  },
+  {
+    path: '/account-settings',
+    element: <AccountSettingsPage />,
+    authRequired: true,
+  },
+  {
+    path: '/confirm-email-change',
+    element: <ConfirmEmailChange />,
+    authRequired: false,
   },
 ];
 

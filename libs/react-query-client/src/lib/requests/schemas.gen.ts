@@ -63,6 +63,11 @@ export const $User = {
             description: 'The username of the user',
             example: 'johndoe'
         },
+        email: {
+            type: 'string',
+            description: 'The email address of the user',
+            example: 'john@example.com'
+        },
         isEmailVerified: {
             type: 'boolean',
             description: 'Whether the user has verified their email address',
@@ -98,7 +103,7 @@ export const $User = {
             nullable: true
         }
     },
-    required: ['id', 'username', 'isEmailVerified', 'systemPermissions', 'createdAt', 'updatedAt']
+    required: ['id', 'username', 'email', 'isEmailVerified', 'systemPermissions', 'createdAt', 'updatedAt']
 } as const;
 
 export const $VerifyEmailDto = {
@@ -158,12 +163,15 @@ export const $PaginatedUsersResponseDto = {
             type: 'number'
         },
         nextPage: {
-            type: 'integer',
-            nullable: true,
-            description: 'The next page number, or null if it is the last page.'
+            type: 'number',
+            description: 'Next page number if there are more pages, null if this is the last page',
+            example: 2,
+            nullable: true
         },
         totalPages: {
-            type: 'number'
+            type: 'number',
+            description: 'Total number of pages',
+            example: 5
         },
         data: {
             type: 'array',
@@ -233,6 +241,47 @@ export const $BulkUpdateUserPermissionsDto = {
         }
     },
     required: ['updates']
+} as const;
+
+export const $RequestEmailChangeDto = {
+    type: 'object',
+    properties: {
+        newEmail: {
+            type: 'string',
+            description: 'The new email address',
+            example: 'newemail@example.com'
+        }
+    },
+    required: ['newEmail']
+} as const;
+
+export const $ConfirmEmailChangeDto = {
+    type: 'object',
+    properties: {
+        newEmail: {
+            type: 'string',
+            description: 'The new email address to confirm',
+            example: 'newemail@example.com'
+        },
+        token: {
+            type: 'string',
+            description: 'The verification token',
+            example: 'abc123def456'
+        }
+    },
+    required: ['newEmail', 'token']
+} as const;
+
+export const $AdminChangeEmailDto = {
+    type: 'object',
+    properties: {
+        newEmail: {
+            type: 'string',
+            description: 'The new email address',
+            example: 'newemail@example.com'
+        }
+    },
+    required: ['newEmail']
 } as const;
 
 export const $CreateSessionResponse = {
@@ -542,7 +591,7 @@ export const $PreviewMjmlResponseDto = {
 
 export const $EmailTemplateType = {
     type: 'string',
-    enum: ['verify-email', 'reset-password'],
+    enum: ['verify-email', 'reset-password', 'change-email'],
     description: 'Template type/key used by the system'
 } as const;
 
@@ -763,12 +812,15 @@ export const $PaginatedResourceResponseDto = {
             type: 'number'
         },
         nextPage: {
-            type: 'integer',
-            nullable: true,
-            description: 'The next page number, or null if it is the last page.'
+            type: 'number',
+            description: 'Next page number if there are more pages, null if this is the last page',
+            example: 2,
+            nullable: true
         },
         totalPages: {
-            type: 'number'
+            type: 'number',
+            description: 'Total number of pages',
+            example: 5
         },
         data: {
             type: 'array',
@@ -1969,12 +2021,15 @@ export const $GetResourceHistoryResponseDto = {
             type: 'number'
         },
         nextPage: {
-            type: 'integer',
-            nullable: true,
-            description: 'The next page number, or null if it is the last page.'
+            type: 'number',
+            description: 'Next page number if there are more pages, null if this is the last page',
+            example: 2,
+            nullable: true
         },
         totalPages: {
-            type: 'number'
+            type: 'number',
+            description: 'Total number of pages',
+            example: 5
         },
         data: {
             type: 'array',

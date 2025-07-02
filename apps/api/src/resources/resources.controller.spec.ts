@@ -79,6 +79,8 @@ describe('ResourcesController', () => {
         total: 1,
         page: 1,
         limit: 10,
+        nextPage: null,
+        totalPages: 1,
       };
 
       jest.spyOn(service, 'listResources').mockResolvedValue(paginatedResponse);

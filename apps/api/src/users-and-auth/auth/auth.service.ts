@@ -142,14 +142,20 @@ export class AuthService {
     });
   }
 
-  async getUserByUsernameAndAuthenticationDetails<T extends AuthenticationType>(
-    username: string,
+  async getUserByAuthenticationDetails<T extends AuthenticationType>(
+    usernameOrEmail: string,
     options: AuthenticationOptions<T>
   ): Promise<User | null> {
-    const user = await this.usersService.findOne({ username });
+    // First try to find user by username
+    let user = await this.usersService.findOne({ username: usernameOrEmail });
+
+    // If not found by username, try by email
+    if (!user) {
+      user = await this.usersService.findOne({ email: usernameOrEmail });
+    }
 
     if (!user) {
-      this.logger.debug(`No user found with username: ${username}`);
+      this.logger.debug(`No user found with username or email: ${usernameOrEmail}`);
       return null;
     }
 
@@ -234,5 +240,57 @@ export class AuthService {
 
     authenticationDetail.password = await this.hashPassword(password);
     await this.authenticationDetailRepository.save(authenticationDetail);
+  }
+
+  async generateEmailChangeToken(user: User, newEmail: string): Promise<string> {
+    const token = nanoid();
+
+    await this.usersService.updateOne(user.id, {
+      newEmail,
+      emailChangeToken: token,
+      emailChangeTokenExpiresAt: addDays(new Date(), 3),
+    });
+
+    return token;
+  }
+
+  async confirmEmailChange(newEmail: string, token: string): Promise<User> {
+    this.logger.debug(`Confirming email change to: ${newEmail} with token: ${token.substring(0, 5)}...`);
+
+    const user = await this.usersService.findOne({ emailChangeToken: token });
+
+    if (!user) {
+      this.logger.debug(`No user found with email change token: ${token.substring(0, 5)}...`);
+      throw new UnauthorizedException('Invalid token');
+    }
+
+    if (user.newEmail !== newEmail) {
+      this.logger.debug(`Email mismatch for user ID: ${user.id}. Expected: ${user.newEmail}, Provided: ${newEmail}`);
+      throw new UnauthorizedException('Invalid email');
+    }
+
+    if (user.emailChangeTokenExpiresAt < new Date()) {
+      this.logger.debug(`Expired email change token for user ID: ${user.id}`);
+      throw new UnauthorizedException('Token expired');
+    }
+
+    // Check if the new email is already in use by another user
+    const existingUser = await this.usersService.findOne({ email: newEmail });
+    if (existingUser && existingUser.id !== user.id) {
+      this.logger.debug(`New email ${newEmail} is already in use by user ID: ${existingUser.id}`);
+      throw new UnauthorizedException('Email already in use');
+    }
+
+    this.logger.debug(`Updating email for user ID: ${user.id} from ${user.email} to ${newEmail}`);
+    const updatedUser = await this.usersService.updateOne(user.id, {
+      email: newEmail,
+      newEmail: null,
+      emailChangeToken: null,
+      emailChangeTokenExpiresAt: null,
+      isEmailVerified: true, // Auto-verify the new email since they confirmed the change
+    });
+
+    this.logger.debug(`Email successfully changed for user ID: ${user.id}`);
+    return updatedUser;
   }
 }

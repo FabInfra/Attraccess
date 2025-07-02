@@ -1,0 +1,14 @@
+{
+  "title": "Kontoeinstellungen",
+  "subtitle": "Verwalten Sie Ihre Kontoeinstellungen und Präferenzen",
+  "emailSection": {
+    "title": "E-Mail-Adresse",
+    "currentEmail": "Aktuelle E-Mail",
+    "newEmailLabel": "Neue E-Mail-Adresse",
+    "newEmailPlaceholder": "Geben Sie Ihre neue E-Mail-Adresse ein",
+    "changeEmailButton": "E-Mail-Änderung anfordern",
+    "successMessage": "E-Mail-Änderungsbestätigung gesendet! Bitte überprüfen Sie Ihre neue E-Mail-Adresse für einen Bestätigungslink.",
+    "errorMessage": "Anfrage zur E-Mail-Änderung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "note": "Nach der Anfrage einer E-Mail-Änderung erhalten Sie eine Bestätigungs-E-Mail an Ihre neue Adresse. Sie müssen auf den Link in dieser E-Mail klicken, um die Änderung abzuschließen."
+  }
+}

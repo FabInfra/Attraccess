@@ -1,0 +1,14 @@
+{
+  "title": "Account Settings",
+  "subtitle": "Manage your account preferences and settings",
+  "emailSection": {
+    "title": "Email Address",
+    "currentEmail": "Current Email",
+    "newEmailLabel": "New Email Address",
+    "newEmailPlaceholder": "Enter your new email address",
+    "changeEmailButton": "Request Email Change",
+    "successMessage": "Email change confirmation sent! Please check your new email address for a confirmation link.",
+    "errorMessage": "Failed to request email change. Please try again.",
+    "note": "After requesting an email change, you will receive a confirmation email at your new address. You must click the link in that email to complete the change."
+  }
+}

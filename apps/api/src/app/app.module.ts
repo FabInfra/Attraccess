@@ -16,6 +16,8 @@ import { PluginModule } from '../plugin-system/plugin.module';
 import { FabReaderModule } from '../fabreader/fabreader.module';
 import { AnalyticsModule } from '../analytics/analytics.module';
 import { EmailTemplateModule } from '../email-template/email-template.module';
+import { APP_FILTER } from '@nestjs/core';
+import { StructuredApiErrorFilter, HttpExceptionFilter } from '../common/filters/structured-api-error.filter';
 
 @Module({
   imports: [
@@ -92,6 +94,16 @@ import { EmailTemplateModule } from '../email-template/email-template.module';
     EmailTemplateModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: StructuredApiErrorFilter,
+    },
+  ],
 })
 export class AppModule {}

@@ -1,0 +1,15 @@
+{
+  "loading": "Confirming email change...",
+  "success": {
+    "title": "Email Changed Successfully",
+    "message": "Your email address has been changed to {email}. You can now use this email address to log in.",
+    "goToLogin": "Go to Login"
+  },
+  "error": {
+    "title": "Email Change Failed",
+    "errorTitle": "Error",
+    "genericError": "An error occurred while confirming your email change. Please try again.",
+    "tryAgain": "Try Again",
+    "backToLogin": "Back to Login"
+  }
+}

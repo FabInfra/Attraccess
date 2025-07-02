@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { X, Settings, LogOut, User, ExternalLink } from 'lucide-react';
+import { X, Settings, LogOut, User, ExternalLink, UserCog } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useTranslations } from '@attraccess/plugins-frontend-ui';
 import {
@@ -223,6 +223,14 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu data-cy="sidebar-settings-dropdown-menu">
+                  <DropdownItem
+                    key="account-settings"
+                    href="/account-settings"
+                    startContent={<UserCog />}
+                    data-cy="sidebar-account-settings-button"
+                  >
+                    {t('accountSettings')}
+                  </DropdownItem>
                   <DropdownItem
                     key="logout"
                     onPress={() => logout()}

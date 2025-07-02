@@ -266,11 +266,16 @@ export class ResourcesService {
       .take(limit)
       .getManyAndCount();
 
+    const totalPages = Math.ceil(total / limit);
+    const nextPage = page < totalPages ? page + 1 : null;
+
     return {
       data: resources,
       total,
       page,
       limit,
+      totalPages,
+      nextPage,
     };
   }
 }

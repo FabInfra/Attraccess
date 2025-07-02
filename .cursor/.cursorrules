@@ -1,4 +1,129 @@
-This repository is a NX monorepo (https://nx.dev) with pnpm as its package manager.
-When executing tasks, use nx to run them.
-When installing packages, use pnpm.
-When in doubt, take a look at the online documentation of any tool you want to use/develop with.
+## Setup & Package Management
+
+- First install pnpm globally: `npm i -g pnpm`
+- Then install packages: `pnpm i`
+- When executing tasks, use nx to run them: `pnpm nx <command>`
+- When installing packages, use pnpm
+
+## React Query Client
+
+- React Query hooks are auto-generated from the API's Swagger documentation
+- After adding/modifying API endpoints, regenerate the client: `pnpm nx build react-query-client --skipNxCache`
+- The hooks will be available in `@attraccess/react-query-client` after regeneration
+- Use naming pattern: `useUsersService<OperationId>` (e.g., `useUsersServiceRequestEmailChange`)
+
+## Project Structure
+
+- **Backend API**: `apps/api/src/`
+- **Frontend**: `apps/frontend/src/`
+- **Database Entities**: `libs/database-entities/src/lib/entities/`
+- **Shared Types**: `libs/react-query-client/src/`
+
+## Backend Development Patterns
+
+### DTOs (Data Transfer Objects)
+
+- Location: `apps/api/src/<module>/dtos/`
+- Use class-validator decorators: `@IsEmail`, `@IsNotEmpty`, etc.
+- Use Swagger decorators: `@ApiProperty`
+- Follow existing naming: `<Action><Entity>.dto.ts`
+
+### Controllers
+
+- Add new endpoints to existing controllers in `apps/api/src/<module>/<module>.controller.ts`
+- Use decorators: `@Post()`, `@Patch()`, `@Auth()`, `@ApiOperation()`
+- Import new DTOs at the top of the file
+
+### Services
+
+- Business logic in `apps/api/src/<module>/<module>.service.ts`
+- Database operations, validation, token generation
+
+### Database Migrations
+
+- Location: `apps/api/src/database/migrations/`
+- Naming: `<timestamp>-<description>.ts`
+- Export in `apps/api/src/database/migrations/index.ts`
+- Use TypeORM QueryRunner for schema changes
+
+### Email Templates
+
+- Add new template types to `EmailTemplateType` enum in `libs/database-entities/src/lib/entities/email-template.entity.ts`
+- Seed templates via database migrations
+- Use MJML format for email bodies
+- Variables: comma-separated string (e.g., 'user.username,user.email,url')
+
+## Frontend Development Patterns
+
+### Components
+
+- Page components: `apps/frontend/src/app/<feature>/index.tsx`
+- Sub-components: `apps/frontend/src/app/<feature>/components/<component>/index.tsx`
+- Export main component as named export
+
+### Translations
+
+- Always create both `en.json` and `de.json` files
+- Location: Same directory as component
+- Use nested structure for sections: `{ "emailSection": { "title": "...", "button": "..." } }`
+- Import as: `import * as en from './en.json'`
+
+### Routing
+
+- Add routes to `apps/frontend/src/app/routes/index.tsx`
+- Import components at the top
+- Add to `coreRoutes` array
+- Use `authRequired: true` or specific permissions like `'canManageUsers'`
+
+### React Query Usage
+
+- Import hooks from `@attraccess/react-query-client`
+- Use mutation callbacks: `onSuccess`, `onError`
+- Pass `requestBody` parameter for POST/PATCH requests
+- Use `id` parameter for route params
+
+### UI Components
+
+- Use HeroUI components: `@heroui/react`
+- Icons from Lucide React: `lucide-react`
+- Follow existing patterns for forms, cards, buttons
+- Use `data-cy` attributes for testing
+
+## Permission System
+
+- Check user permissions in routes: `authRequired: 'canManageUsers'`
+- Available permissions: `canManageUsers`, `canManageResources`, `canManageSystemConfiguration`
+- Admin functions should require appropriate permissions
+
+## Email System
+
+- Email service located at `apps/api/src/email/email.service.ts`
+- Add new email methods following pattern: `send<EmailType>Email()`
+- Email templates use Handlebars for variable substitution
+- Context variables follow pattern: `'user.property'`, `'host.frontend'`, `url`
+
+## Database Entity Updates
+
+- User entity: `libs/database-entities/src/lib/entities/user.entity.ts`
+- Use TypeORM decorators: `@Column()`, `@Exclude()` for sensitive fields
+- Update interfaces in service files to match new fields
+
+## Common Commands
+
+- Build project: `pnpm nx build <project-name>`
+- Run tests: `pnpm nx test <project-name>`
+- Start dev server: `pnpm nx serve <project-name>`
+- Generate React Query client: `pnpm nx build react-query-client --skipNxCache`
+
+## Best Practices
+
+- Always include error handling and loading states
+- Use consistent naming conventions across files
+- Add comprehensive translations for all UI text
+- Include proper TypeScript types
+- Follow existing code patterns in the repository
+- Add database migrations for schema changes
+- Test both user and admin workflows
+- Consider security implications (tokens, permissions, validation)
+
+When in doubt, examine existing similar implementations in the codebase and follow those patterns.
