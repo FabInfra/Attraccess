@@ -157,14 +157,6 @@ export const $PaginatedUsersResponseDto = {
         limit: {
             type: 'number'
         },
-        nextPage: {
-            type: 'integer',
-            nullable: true,
-            description: 'The next page number, or null if it is the last page.'
-        },
-        totalPages: {
-            type: 'number'
-        },
         data: {
             type: 'array',
             items: {
@@ -172,7 +164,7 @@ export const $PaginatedUsersResponseDto = {
             }
         }
     },
-    required: ['total', 'page', 'limit', 'nextPage', 'totalPages', 'data']
+    required: ['total', 'page', 'limit', 'data']
 } as const;
 
 export const $UpdateUserPermissionsDto = {
@@ -762,14 +754,6 @@ export const $PaginatedResourceResponseDto = {
         limit: {
             type: 'number'
         },
-        nextPage: {
-            type: 'integer',
-            nullable: true,
-            description: 'The next page number, or null if it is the last page.'
-        },
-        totalPages: {
-            type: 'number'
-        },
         data: {
             type: 'array',
             items: {
@@ -777,7 +761,7 @@ export const $PaginatedResourceResponseDto = {
             }
         }
     },
-    required: ['total', 'page', 'limit', 'nextPage', 'totalPages', 'data']
+    required: ['total', 'page', 'limit', 'data']
 } as const;
 
 export const $UpdateResourceDto = {
@@ -1968,14 +1952,6 @@ export const $GetResourceHistoryResponseDto = {
         limit: {
             type: 'number'
         },
-        nextPage: {
-            type: 'integer',
-            nullable: true,
-            description: 'The next page number, or null if it is the last page.'
-        },
-        totalPages: {
-            type: 'number'
-        },
         data: {
             type: 'array',
             items: {
@@ -1983,7 +1959,7 @@ export const $GetResourceHistoryResponseDto = {
             }
         }
     },
-    required: ['total', 'page', 'limit', 'nextPage', 'totalPages', 'data']
+    required: ['total', 'page', 'limit', 'data']
 } as const;
 
 export const $GetActiveUsageSessionDto = {

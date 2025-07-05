@@ -72,6 +72,10 @@ export const HistoryTable = ({
 
   const loadingState = useReactQueryStatusToHeroUiTableLoadingState(fetchStatus);
 
+  const totalPages = useMemo(() => {
+    return Math.ceil((usageHistory?.total ?? 0) / rowsPerPage);
+  }, [usageHistory?.total, rowsPerPage]);
+
   if (error) {
     return <div className="text-center py-4 text-red-500">{t('errorLoadingHistory')}</div>;
   }
@@ -94,7 +98,7 @@ export const HistoryTable = ({
               label="Rows per page"
             />
           </div>
-          <Pagination total={usageHistory?.totalPages ?? 1} page={page} onChange={handlePageChange} />
+          <Pagination total={totalPages} page={page} onChange={handlePageChange} />
         </div>
       }
     >

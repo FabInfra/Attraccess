@@ -28,7 +28,7 @@
       "dependsOn": ["fabreader-config-ui:build"],
       "options": {
         "cwd": ".",
-        "command": "rm -rf apps/fabreader-firmware/data && mkdir -p apps/fabreader-firmware/data && cp -r dist/apps/fabreader-config-ui apps/fabreader-firmware/data"
+        "command": "rm -rf apps/fabreader-firmware/data && mkdir -p apps/fabreader-firmware/data && cp -r dist/apps/fabreader-config-ui/* apps/fabreader-firmware/data"
       }
     }
   }
