@@ -131,7 +131,7 @@ export function ManageResourceGroups({
           icon={<GroupIcon />}
           noMargin
           actions={
-            <ResourceGroupUpsertModal openOnCreate={false}>
+            <ResourceGroupUpsertModal>
               {(onOpen: () => void) => (
                 <Button
                   radius="full"

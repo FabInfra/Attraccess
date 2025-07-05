@@ -107,11 +107,6 @@ export type PaginatedUsersResponseDto = {
     total: number;
     page: number;
     limit: number;
-    /**
-     * The next page number, or null if it is the last page.
-     */
-    nextPage: number | null;
-    totalPages: number;
     data: Array<User>;
 };
 
@@ -519,11 +514,6 @@ export type PaginatedResourceResponseDto = {
     total: number;
     page: number;
     limit: number;
-    /**
-     * The next page number, or null if it is the last page.
-     */
-    nextPage: number | null;
-    totalPages: number;
     data: Array<Resource>;
 };
 
@@ -1378,11 +1368,6 @@ export type GetResourceHistoryResponseDto = {
     total: number;
     page: number;
     limit: number;
-    /**
-     * The next page number, or null if it is the last page.
-     */
-    nextPage: number | null;
-    totalPages: number;
     data: Array<ResourceUsage>;
 };
 

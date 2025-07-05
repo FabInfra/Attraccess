@@ -24,14 +24,12 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useToastMessage } from '../../../components/toastProvider';
-import { useNavigate } from 'react-router-dom';
 
 interface ResourceGroupUpsertModalProps {
   children: (onOpen: () => void) => React.ReactNode;
   /** If provided, the modal will be in edit mode */
   resourceGroup?: ResourceGroup;
   onUpserted?: (resourceGroup: ResourceGroup) => void;
-  openOnCreate?: boolean;
 }
 
 type FormData = CreateResourceGroupDto | UpdateResourceGroupDto;
@@ -62,7 +60,6 @@ export function ResourceGroupUpsertModal(props: Readonly<ResourceGroupUpsertModa
   const { success, error: showErrorToast } = useToastMessage();
   const queryClient = useQueryClient();
   const isEditMode = !!props.resourceGroup;
-  const navigate = useNavigate();
 
   const handleSuccess = (createdOrUpdatedGroup: ResourceGroup) => {
     success({
@@ -112,12 +109,6 @@ export function ResourceGroupUpsertModal(props: Readonly<ResourceGroupUpsertModa
   const createMutation = useResourcesServiceResourceGroupsCreateOne({
     onSuccess: (data) => {
       handleSuccess(data);
-
-      if (props.openOnCreate) {
-        navigate(`/resource-groups/${data.id}`);
-      } else {
-        closeDisclosure();
-      }
     },
     onError: handleError,
   });
