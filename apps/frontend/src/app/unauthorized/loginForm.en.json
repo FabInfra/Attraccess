@@ -7,7 +7,6 @@
   "password": "Password",
   "rememberMe": "Keep me signed in",
   "forgotPassword": "Password slipped your mind?",
-  "signInButton": "Start making",
   "error": {
     "title": "Oops! Sign-in hiccup",
     "generic": "Please check your credentials and try again"

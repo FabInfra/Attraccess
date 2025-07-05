@@ -52,13 +52,7 @@ export function LoginForm({ onNeedsAccount, onForgotPassword }: LoginFormProps) 
         <h2 className="text-3xl font-bold">{t('title')}</h2>
         <p className="mt-2 text-gray-600 dark:text-gray-300">
           {t('noAccount')}{' '}
-          <Button
-            onPress={onNeedsAccount}
-            variant="light"
-            color="secondary"
-            isDisabled={isPending}
-            data-cy="login-form-sign-up-button"
-          >
+          <Button onPress={onNeedsAccount} variant="light" color="secondary" data-cy="login-form-sign-up-button">
             {t('signUpButton')}
           </Button>
         </p>
@@ -72,7 +66,6 @@ export function LoginForm({ onNeedsAccount, onForgotPassword }: LoginFormProps) 
           label={t('username')}
           variant="underlined"
           required
-          isDisabled={isPending}
           data-cy="login-form-username-input"
         />
         <PasswordInput
@@ -81,7 +74,6 @@ export function LoginForm({ onNeedsAccount, onForgotPassword }: LoginFormProps) 
           label={t('password')}
           variant="underlined"
           required
-          isDisabled={isPending}
           data-cy="login-form-password-input"
         />
         <div className="flex items-center justify-between">
@@ -89,7 +81,6 @@ export function LoginForm({ onNeedsAccount, onForgotPassword }: LoginFormProps) 
             onPress={onForgotPassword}
             variant="light"
             color="secondary"
-            isDisabled={isPending}
             data-cy="login-form-forgot-password-button"
           >
             {t('forgotPassword')}
@@ -101,10 +92,9 @@ export function LoginForm({ onNeedsAccount, onForgotPassword }: LoginFormProps) 
           color="primary"
           endContent={memoizedArrowRight}
           isLoading={isPending}
-          isDisabled={isPending}
           data-cy="login-form-sign-in-button"
         >
-          {isPending ? t('signingIn') : t('signInButton')}
+          {t('signInButton')}
         </Button>
 
         {(error as Error) && (
