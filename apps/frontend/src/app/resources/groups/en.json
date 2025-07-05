@@ -4,5 +4,6 @@
   "columns": {
     "group": "Group",
     "actions": "Actions"
-  }
+  },
+  "addGroup": "Add Group"
 }
