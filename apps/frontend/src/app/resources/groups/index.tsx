@@ -32,6 +32,7 @@ import { useReactQueryStatusToHeroUiTableLoadingState } from '../../../hooks/use
 
 import * as en from './en.json';
 import * as de from './de.json';
+import { ResourceGroupUpsertModal } from '../../resource-groups/upsertModal/resourceGroupUpsertModal';
 
 interface ManageResourceGroupsProps {
   resourceId: number;
@@ -124,7 +125,28 @@ export function ManageResourceGroups({
   return (
     <Card {...cardProps}>
       <CardHeader>
-        <PageHeader title={t('title')} subtitle={t('subtitle')} icon={<GroupIcon />} noMargin />
+        <PageHeader
+          title={t('title')}
+          subtitle={t('subtitle')}
+          icon={<GroupIcon />}
+          noMargin
+          actions={
+            <ResourceGroupUpsertModal openOnCreate={false}>
+              {(onOpen: () => void) => (
+                <Button
+                  radius="full"
+                  onPress={onOpen}
+                  startContent={<PlusIcon size={18} />}
+                  color="secondary"
+                  size="sm"
+                  data-cy="toolbar-open-create-resource-group-modal-button"
+                >
+                  {t('addGroup')}
+                </Button>
+              )}
+            </ResourceGroupUpsertModal>
+          }
+        />
       </CardHeader>
       <CardBody>
         <Table

@@ -31,6 +31,7 @@ interface ResourceGroupUpsertModalProps {
   /** If provided, the modal will be in edit mode */
   resourceGroup?: ResourceGroup;
   onUpserted?: (resourceGroup: ResourceGroup) => void;
+  openOnCreate?: boolean;
 }
 
 type FormData = CreateResourceGroupDto | UpdateResourceGroupDto;
@@ -111,7 +112,12 @@ export function ResourceGroupUpsertModal(props: Readonly<ResourceGroupUpsertModa
   const createMutation = useResourcesServiceResourceGroupsCreateOne({
     onSuccess: (data) => {
       handleSuccess(data);
-      navigate(`/resource-groups/${data.id}`);
+
+      if (props.openOnCreate) {
+        navigate(`/resource-groups/${data.id}`);
+      } else {
+        closeDisclosure();
+      }
     },
     onError: handleError,
   });

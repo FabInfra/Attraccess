@@ -28,7 +28,7 @@ export function PageHeader({
   const navigate = useNavigate();
 
   return (
-    <div className={cn('flex items-center justify-between mb-8 flex-wrap gap-y-8', noMargin && 'mb-0')}>
+    <div className={cn('flex items-center justify-between mb-8 flex-wrap gap-y-8 w-full', noMargin && 'mb-0')}>
       <div className="flex items-center">
         {backTo && (
           <Button
