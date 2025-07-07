@@ -3,7 +3,7 @@ import { Input, InputProps } from '@heroui/input';
 import { Button } from '@heroui/button';
 import { Tooltip } from '@heroui/tooltip';
 import { Eye, EyeOff } from 'lucide-react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import * as en from './PasswordInput.en.json';
 import * as de from './PasswordInput.de.json';
 
@@ -19,17 +19,14 @@ export interface PasswordInputProps extends Omit<InputProps, 'type' | 'endConten
 /**
  * A password input component with built-in visibility toggle functionality.
  * This is a drop-in replacement for HeroUI Input components when type="password" is needed.
- * 
+ *
  * Features:
  * - Eye/EyeOff icon toggle for password visibility
  * - Internationalized tooltips
  * - Consistent styling with HeroUI components
  * - All standard Input props supported
  */
-export const PasswordInput: React.FC<PasswordInputProps> = ({
-  additionalEndContent,
-  ...inputProps
-}) => {
+export const PasswordInput: React.FC<PasswordInputProps> = ({ additionalEndContent, ...inputProps }) => {
   const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslations('passwordInput', { en, de });
 
@@ -55,11 +52,5 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
     </div>
   );
 
-  return (
-    <Input
-      {...inputProps}
-      type={showPassword ? 'text' : 'password'}
-      endContent={endContent}
-    />
-  );
+  return <Input {...inputProps} type={showPassword ? 'text' : 'password'} endContent={endContent} />;
 };

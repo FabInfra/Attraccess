@@ -1,4 +1,4 @@
-import { ResourceUsage } from '@attraccess/database-entities';
+import { ResourceUsage } from '@fabaccess/database-entities';
 import { ApiProperty } from '@nestjs/swagger';
 import { PaginatedResponse } from '../../../types/response';
 

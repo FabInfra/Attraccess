@@ -8,7 +8,7 @@
   "portLabel": "Port",
   "portPlaceholder": "1883",
   "clientIdLabel": "Client ID (Optional)",
-  "clientIdPlaceholder": "attraccess-client",
+  "clientIdPlaceholder": "fabaccess-client",
   "usernameLabel": "Username (Optional)",
   "usernamePlaceholder": "mqtt_user",
   "passwordLabel": "Password (Optional)",
@@ -20,4 +20,4 @@
   "serverCreatedDesc": "A new MQTT server has been successfully created.",
   "errorGeneric": "Error",
   "failedToCreate": "Failed to create MQTT server."
-} 
+}

@@ -17,8 +17,8 @@ import {
 } from '@nestjs/common';
 import { SSOOIDCGuard } from './oidc/oidc.guard';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthenticationType, SSOProvider, SSOProviderType } from '@attraccess/database-entities';
-import { AuthenticatedRequest, Auth } from '@attraccess/plugins-backend-sdk';
+import { AuthenticationType, SSOProvider, SSOProviderType } from '@fabaccess/database-entities';
+import { AuthenticatedRequest, Auth } from '@fabaccess/plugins-backend-sdk';
 import { CreateSessionResponse } from '../auth.types';
 import { AuthService } from '../auth.service';
 import { SSOService } from './sso.service';

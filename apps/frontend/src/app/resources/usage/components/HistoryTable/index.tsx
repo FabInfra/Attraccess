@@ -1,9 +1,9 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Table, TableHeader, TableBody, TableRow, Pagination } from '@heroui/react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { generateHeaderColumns } from './utils/tableHeaders';
 import { generateRowCells } from './utils/tableRows';
-import { useResourcesServiceResourceUsageGetHistory, ResourceUsage } from '@attraccess/react-query-client';
+import { useResourcesServiceResourceUsageGetHistory, ResourceUsage } from '@fabaccess/react-query-client';
 import { useAuth } from '../../../../../hooks/useAuth';
 import { Select } from '../../../../../components/select';
 import { TableDataLoadingIndicator } from '../../../../../components/tableComponents';

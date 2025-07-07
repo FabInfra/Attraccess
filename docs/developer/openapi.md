@@ -17,16 +17,16 @@ Learn more about OpenAPI:
 - [OpenAPI Initiative](https://www.openapis.org/)
 - [Swagger Documentation](https://swagger.io/docs/)
 
-## Attraccess OpenAPI Support
+## FabAccess OpenAPI Support
 
-All Attraccess endpoints are documented using OpenAPI specifications. This provides a comprehensive API reference that can be explored interactively.
+All FabAccess endpoints are documented using OpenAPI specifications. This provides a comprehensive API reference that can be explored interactively.
 
 ### Accessing the OpenAPI UI
 
-Once you have a running Attraccess instance, you can access the OpenAPI UI at:
+Once you have a running FabAccess instance, you can access the OpenAPI UI at:
 
 ```
-<your-attraccess-url>/api
+<your-fabaccess-url>/api
 ```
 
 This interactive interface allows you to:
@@ -41,20 +41,20 @@ This interactive interface allows you to:
 The raw OpenAPI schema is available in JSON format at:
 
 ```
-<your-attraccess-url>/api-json
+<your-fabaccess-url>/api-json
 ```
 
 This schema can be downloaded and used with various OpenAPI tools for client code generation, documentation, and more.
 
 ### Accessing the Documentation
 
-The full Attraccess documentation is available through docsify and can be accessed at:
+The full FabAccess documentation is available through docsify and can be accessed at:
 
 ```
-<your-attraccess-url>/docs
+<your-fabaccess-url>/docs
 ```
 
-This provides comprehensive documentation on all aspects of Attraccess, including setup guides, user guides, and developer documentation.
+This provides comprehensive documentation on all aspects of FabAccess, including setup guides, user guides, and developer documentation.
 
 ## Generating Client Code
 
@@ -66,19 +66,19 @@ You can use tools like:
 - [Swagger Codegen](https://github.com/swagger-api/swagger-codegen) - Official Swagger code generation tool
 - [NSwag](https://github.com/RicoSuter/NSwag) - .NET-focused OpenAPI toolchain
 
-### Pre-Generated Attraccess Clients
+### Pre-Generated FabAccess Clients
 
-Attraccess automatically generates JavaScript/TypeScript clients based on the OpenAPI schema. These clients are available as npm packages:
+FabAccess automatically generates JavaScript/TypeScript clients based on the OpenAPI schema. These clients are available as npm packages:
 
-- **@attraccess/api-client**: Basic fetch-based API client
+- **@fabaccess/api-client**: Basic fetch-based API client
 
   ```bash
-  npm install @attraccess/api-client
+  npm install @fabaccess/api-client
   ```
 
-- **@attraccess/react-query-client**: Client with React Query integration for React applications
+- **@fabaccess/react-query-client**: Client with React Query integration for React applications
   ```bash
-  npm install @attraccess/react-query-client
+  npm install @fabaccess/react-query-client
   ```
 
-These pre-generated clients provide type-safe access to all Attraccess endpoints with proper TypeScript typing, reducing implementation time and potential errors when interacting with the API.
+These pre-generated clients provide type-safe access to all FabAccess endpoints with proper TypeScript typing, reducing implementation time and potential errors when interacting with the API.

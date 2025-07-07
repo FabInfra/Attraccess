@@ -7,8 +7,8 @@ import {
   UseResourcesServiceResourceGroupsGetOneKeyFn,
   useResourcesServiceResourceGroupsDeleteOne,
   UseResourcesServiceResourceGroupsGetManyKeyFn,
-} from '@attraccess/react-query-client';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+} from '@fabaccess/react-query-client';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { useToastMessage } from '../../../components/toastProvider';
 import { useQueryClient } from '@tanstack/react-query';
 import * as en from './translations/en.json';

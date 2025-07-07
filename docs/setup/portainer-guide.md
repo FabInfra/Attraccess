@@ -1,6 +1,6 @@
-# Deploying Attraccess with Portainer
+# Deploying FabAccess with Portainer
 
-This guide explains how to set up Attraccess using Portainer, a user-friendly web interface for managing Docker containers.
+This guide explains how to set up FabAccess using Portainer, a user-friendly web interface for managing Docker containers.
 
 ## What is Portainer?
 
@@ -34,14 +34,14 @@ docker run -d -p 8000:8000 -p 9000:9000 --name=portainer --restart=always -v /va
 4. Select "Local" to manage your local Docker environment
 5. Click "Connect"
 
-## Step 3: Create Volumes for Attraccess
+## Step 3: Create Volumes for FabAccess
 
 1. In the Portainer dashboard, click on "Volumes" in the left sidebar
 2. Click "Add volume"
-3. Name the first volume `attraccess_storage` and click "Create the volume"
-4. Repeat to create a second volume named `attraccess_plugins`
+3. Name the first volume `fabaccess_storage` and click "Create the volume"
+4. Repeat to create a second volume named `fabaccess_plugins`
 
-## Step 4: Deploy Attraccess Container
+## Step 4: Deploy FabAccess Container
 
 ### Using the Web UI
 
@@ -51,8 +51,8 @@ docker run -d -p 8000:8000 -p 9000:9000 --name=portainer --restart=always -v /va
 
 #### Basic Container Settings:
 
-- **Name**: attraccess
-- **Image**: fabaccess/attraccess:latest
+- **Name**: fabaccess
+- **Image**: fabaccess/fabaccess:latest
 - **Always pull the image**: Enable this option
 - **Restart policy**: Unless stopped
 
@@ -70,10 +70,10 @@ docker run -d -p 8000:8000 -p 9000:9000 --name=portainer --restart=always -v /va
 
    - Click "Map additional volume"
    - **Container**: /app/storage
-   - **Volume**: attraccess_storage
+   - **Volume**: fabaccess_storage
    - Click "Map an additional volume"
    - **Container**: /app/plugins
-   - **Volume**: attraccess_plugins
+   - **Volume**: fabaccess_plugins
 
 3. Go to the "Env" tab and add the following environment variables:
 
@@ -101,7 +101,7 @@ Portainer also supports deploying applications using Docker Compose:
 
 1. In the Portainer dashboard, click on "Stacks" in the left sidebar
 2. Click "Add stack"
-3. Give your stack a name (e.g., "attraccess")
+3. Give your stack a name (e.g., "fabaccess")
 4. Select "Web editor" as the build method
 5. Paste the following Docker Compose configuration:
 
@@ -109,9 +109,9 @@ Portainer also supports deploying applications using Docker Compose:
 version: '3'
 
 services:
-  attraccess:
-    image: fabaccess/attraccess:latest
-    container_name: attraccess
+  fabaccess:
+    image: fabaccess/fabaccess:latest
+    container_name: fabaccess
     restart: unless-stopped
     ports:
       - '3000:3000'
@@ -133,46 +133,46 @@ services:
       # Logging level
       - LOG_LEVELS=error,warn,log
     volumes:
-      - attraccess_storage:/app/storage
-      - attraccess_plugins:/app/plugins
+      - fabaccess_storage:/app/storage
+      - fabaccess_plugins:/app/plugins
 
 volumes:
-  attraccess_storage:
-  attraccess_plugins:
+  fabaccess_storage:
+  fabaccess_plugins:
 ```
 
 6. Replace the placeholder values with your actual configuration
 7. Click "Deploy the stack"
 
-## Step 5: Access Attraccess
+## Step 5: Access FabAccess
 
 1. Once the container is running, open your web browser
 2. Navigate to `http://your-server-ip:3000`
-3. You should now see the Attraccess login page
+3. You should now see the FabAccess login page
 
-## Managing Attraccess with Portainer
+## Managing FabAccess with Portainer
 
-Portainer makes it easy to manage your Attraccess container:
+Portainer makes it easy to manage your FabAccess container:
 
 ### Viewing Logs
 
 1. In the Portainer dashboard, click on "Containers"
-2. Find and click on your "attraccess" container
+2. Find and click on your "fabaccess" container
 3. Click on "Logs" to view the container logs
 
 ### Stopping and Starting
 
 1. In the Portainer dashboard, click on "Containers"
-2. Find your "attraccess" container
+2. Find your "fabaccess" container
 3. Use the "Stop", "Start", or "Restart" buttons as needed
 
-### Updating Attraccess
+### Updating FabAccess
 
 1. In the Portainer dashboard, click on "Containers"
-2. Stop your existing "attraccess" container
+2. Stop your existing "fabaccess" container
 3. Click on "Images" in the left sidebar
-4. Find "fabaccess/attraccess" and click "Pull"
-5. Go back to "Containers" and start your "attraccess" container again
+4. Find "fabaccess/fabaccess" and click "Pull"
+5. Go back to "Containers" and start your "fabaccess" container again
 
 ## Email Configuration Help
 
@@ -180,7 +180,7 @@ Portainer makes it easy to manage your Attraccess container:
 
 To use Gmail as your email service:
 
-1. Go to your "attraccess" container in Portainer
+1. Go to your "fabaccess" container in Portainer
 2. Click "Duplicate/Edit"
 3. Go to "Advanced container settings" > "Env"
 4. Update the email settings:
@@ -217,7 +217,7 @@ For Outlook or Office 365:
    - Verify all environment variables are set correctly
    - Ensure the ports aren't already in use by another container
 
-2. **Can't access Attraccess from web browser**:
+2. **Can't access FabAccess from web browser**:
 
    - Verify the container is running in Portainer
    - Check if your firewall is blocking port 3000
@@ -242,9 +242,9 @@ To get more detailed logs for troubleshooting:
 
 ## Next Steps
 
-After successfully deploying Attraccess with Portainer, you can:
+After successfully deploying FabAccess with Portainer, you can:
 
 1. Create an account (the first account is automatically Admin)
-2. Enjoy Attraccess!
+2. Enjoy FabAccess!
 
-For further guidance on using Attraccess, refer to our [User Guide](/user/getting-started.md).
+For further guidance on using FabAccess, refer to our [User Guide](/user/getting-started.md).

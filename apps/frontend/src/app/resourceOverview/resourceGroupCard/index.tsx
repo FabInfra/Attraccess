@@ -2,7 +2,7 @@ import {
   useAccessControlServiceResourceGroupIntroducersIsIntroducer,
   useResourcesServiceGetAllResources,
   useResourcesServiceResourceGroupsGetOne,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import {
   Button,
   Card,
@@ -28,7 +28,7 @@ import { useMemo, useState } from 'react';
 import { filenameToUrl } from '../../../api';
 import { StatusChip } from './statusChip';
 import { ChevronRightIcon, Settings2Icon } from 'lucide-react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { useAuth } from '../../../hooks/useAuth';
 import { useDebounce } from '../../../hooks/useDebounce';
 import { FilterProps } from '../filterProps';

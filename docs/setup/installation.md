@@ -6,16 +6,16 @@
 > - [Docker Compose Guide](setup/docker-compose-guide.md) - Simplified deployment with Docker Compose
 > - [Portainer Guide](setup/portainer-guide.md) - Visual deployment using the Portainer web interface
 
-## 🚀 Getting Started with Attraccess
+## 🚀 Getting Started with FabAccess
 
-Attraccess is distributed as a single Docker container that includes everything you need to get up and running quickly. Follow these simple steps to deploy your instance:
+FabAccess is distributed as a single Docker container that includes everything you need to get up and running quickly. Follow these simple steps to deploy your instance:
 
 ### 📦 Pull the Docker Image
 
 Get the latest version from our GitHub Docker registry:
 
 ```bash
-docker pull fabaccess/attraccess:latest
+docker pull fabaccess/fabaccess:latest
 ```
 
 > [!TIP]
@@ -23,7 +23,7 @@ docker pull fabaccess/attraccess:latest
 
 ### 🔧 Configure Environment Variables
 
-Attraccess requires several environment variables to function properly:
+FabAccess requires several environment variables to function properly:
 
 #### Authentication & Security
 
@@ -32,7 +32,7 @@ Attraccess requires several environment variables to function properly:
 | `AUTH_JWT_ORIGIN`     | JWT secret source, either "ENV" or "FILE" | Yes                    | -       |
 | `AUTH_JWT_SECRET`     | JWT secret when using ENV origin          | If AUTH_JWT_ORIGIN=ENV | -       |
 | `AUTH_SESSION_SECRET` | Secret for encrypting sessions            | Yes                    | -       |
-| `VITE_ATTRACCESS_URL` | URL/hostname of your Attraccess instance  | Yes                    | -       |
+| `VITE_ATTRACCESS_URL` | URL/hostname of your FabAccess instance   | Yes                    | -       |
 
 > [!WARNING]
 > Always use strong, unique secrets for `AUTH_JWT_SECRET` and `AUTH_SESSION_SECRET`. These are critical for your application's security.
@@ -77,16 +77,16 @@ Attraccess requires several environment variables to function properly:
 
 ### 🐳 Run the Container
 
-Start Attraccess with your configured environment variables:
+Start FabAccess with your configured environment variables:
 
 ```bash
 docker run -d \
-  --name attraccess \
+  --name fabaccess \
   -p 3000:3000 \
   -e AUTH_JWT_ORIGIN=ENV \
   -e AUTH_JWT_SECRET=your_secure_jwt_secret \
   -e AUTH_SESSION_SECRET=your_secure_session_secret \
-  -e VITE_ATTRACCESS_URL=https://attraccess.yourdomain.com \
+  -e VITE_ATTRACCESS_URL=https://fabaccess.yourdomain.com \
   -e SMTP_SERVICE=SMTP \
   -e SMTP_FROM=no-reply@yourdomain.com \
   -e SMTP_HOST=smtp.yourdomain.com \
@@ -96,12 +96,12 @@ docker run -d \
   -e LOG_LEVELS=error,warn,log \
   -v /path/to/plugins:/app/plugins \
   -v /path/to/storage:/app/storage \
-  fabaccess/attraccess:latest
+  fabaccess/fabaccess:latest
 ```
 
 ### 📂 Storage Volume
 
-Attraccess uses a dedicated storage directory to store uploaded files, resources, and cache:
+FabAccess uses a dedicated storage directory to store uploaded files, resources, and cache:
 
 ```bash
 -v /path/to/storage:/app/storage
@@ -134,14 +134,14 @@ Example using file-based JWT secret:
 
 ```bash
 docker run -d \
-  --name attraccess \
+  --name fabaccess \
   -p 3000:3000 \
   -e AUTH_JWT_ORIGIN=FILE \
   -e AUTH_SESSION_SECRET=your_secure_session_secret \
-  -e VITE_ATTRACCESS_URL=https://attraccess.yourdomain.com \
+  -e VITE_ATTRACCESS_URL=https://fabaccess.yourdomain.com \
   -v /path/to/jwt/secret:/app/secrets \
   -v /path/to/storage:/app/storage \
-  fabaccess/attraccess:latest
+  fabaccess/fabaccess:latest
 ```
 
 > [!NOTE]
@@ -162,19 +162,19 @@ The `LOG_LEVELS` environment variable accepts a comma-separated list of these va
 
 ### 🔌 Plugin Support
 
-Attraccess supports plugins that extend its functionality. Mount your plugins directory to `/app/plugins` in the container:
+FabAccess supports plugins that extend its functionality. Mount your plugins directory to `/app/plugins` in the container:
 
 ```bash
 docker run -d \
-  --name attraccess \
+  --name fabaccess \
   -p 3000:3000 \
   -e AUTH_JWT_ORIGIN=ENV \
   -e AUTH_JWT_SECRET=your_secure_jwt_secret \
   -e AUTH_SESSION_SECRET=your_secure_session_secret \
-  -e VITE_ATTRACCESS_URL=https://attraccess.yourdomain.com \
+  -e VITE_ATTRACCESS_URL=https://fabaccess.yourdomain.com \
   -v /path/to/plugins:/app/plugins \
   -v /path/to/storage:/app/storage \
-  fabaccess/attraccess:latest
+  fabaccess/fabaccess:latest
 ```
 
 ## 🔧 Troubleshooting
@@ -182,11 +182,11 @@ docker run -d \
 If you encounter issues during installation:
 
 1. Verify all required environment variables are correctly set
-2. Check the container logs: `docker logs attraccess`
+2. Check the container logs: `docker logs fabaccess`
 3. Ensure your SMTP configuration is correct
 4. Verify network connectivity to required services
 
-For additional support, please visit our [GitHub repository](https://github.com/attraccess/attraccess).
+For additional support, please visit our [GitHub repository](https://github.com/fabaccess/fabaccess).
 
 ## 🌱 Alternative Deployment Methods
 
@@ -198,7 +198,7 @@ If you're new to Docker or server deployment, our [Complete Beginner's Guide](se
 
 ### Using Docker Compose
 
-Docker Compose provides a simpler way to manage your Attraccess configuration through a YAML file. Follow our [Docker Compose Guide](setup/docker-compose-guide.md) to get started.
+Docker Compose provides a simpler way to manage your FabAccess configuration through a YAML file. Follow our [Docker Compose Guide](setup/docker-compose-guide.md) to get started.
 
 ### Using Portainer (GUI-based approach)
 

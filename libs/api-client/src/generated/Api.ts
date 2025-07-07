@@ -355,7 +355,7 @@ export interface CreateOIDCConfigurationDto {
   userInfoURL: string;
   /**
    * The client ID of the provider
-   * @example "attraccess-client"
+   * @example "fabaccess-client"
    */
   clientId: string;
   /**
@@ -403,7 +403,7 @@ export interface UpdateOIDCConfigurationDto {
   userInfoURL?: string;
   /**
    * The client ID of the provider
-   * @example "attraccess-client"
+   * @example "fabaccess-client"
    */
   clientId?: string;
   /**
@@ -711,7 +711,7 @@ export interface MqttServer {
   password?: string;
   /**
    * Client ID for MQTT connection
-   * @example "attraccess-client-1"
+   * @example "fabaccess-client-1"
    */
   clientId?: string;
   /**
@@ -1677,7 +1677,7 @@ export interface PluginMain {
   backend: PluginMainBackend;
 }
 
-export interface PluginAttraccessVersion {
+export interface PluginFabAccessVersion {
   /**
    * The minimum version of the plugin
    * @example "1.0.0"
@@ -1707,7 +1707,7 @@ export interface LoadedPluginManifest {
    * @example "1.0.0"
    */
   version: string;
-  attraccessVersion: PluginAttraccessVersion;
+  fabaccessVersion: PluginFabAccessVersion;
   /**
    * The directory of the plugin
    * @example "plugin-name"
@@ -1847,7 +1847,7 @@ export interface NFCCard {
 }
 
 export interface InfoData {
-  /** @example "Attraccess API" */
+  /** @example "FabAccess API" */
   name?: string;
   /** @example "ok" */
   status?: string;
@@ -1920,6 +1920,7 @@ export interface ConfirmEmailChangeData {
 export type AdminChangeEmailData = User;
 
 export interface CreateSessionPayload {
+  /** Username or email address */
   username?: string;
   password?: string;
 }
@@ -4291,11 +4292,11 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title Attraccess API
+ * @title FabAccess API
  * @version 1.0.0
  * @contact
  *
- * The Attraccess API used to manage machine and tool access in a Makerspace or FabLab
+ * The FabAccess API used to manage machine and tool access in a Makerspace or FabLab
  */
 export class Api<
   SecurityDataType extends unknown,

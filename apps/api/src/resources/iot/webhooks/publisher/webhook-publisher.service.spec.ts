@@ -4,7 +4,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import axios from 'axios';
 import { WebhookPublisherService } from './webhook-publisher.service';
-import { WebhookConfig, Resource, User } from '@attraccess/database-entities';
+import { WebhookConfig, Resource, User } from '@fabaccess/database-entities';
 import { IotService } from '../../iot.service';
 import {
   ResourceUsageStartedEvent,

@@ -1,5 +1,5 @@
-import { AttraccessUser, UserSearch, useTranslations } from '@attraccess/plugins-frontend-ui';
-import { User } from '@attraccess/react-query-client';
+import { FabAccessUser, UserSearch, useTranslations } from '@fabaccess/plugins-frontend-ui';
+import { User } from '@fabaccess/react-query-client';
 import {
   Button,
   ButtonProps,
@@ -147,7 +147,7 @@ export function UserSelectionList<TUser extends User = User>(props: Readonly<Pro
           {(user) => (
             <TableRow key={user.id} className={typeof rowClassName === 'function' ? rowClassName(user) : rowClassName}>
               <TableCell className="w-full">
-                <AttraccessUser user={user} />
+                <FabAccessUser user={user} />
               </TableCell>
 
               {

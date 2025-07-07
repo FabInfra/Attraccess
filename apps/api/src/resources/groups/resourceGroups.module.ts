@@ -6,7 +6,7 @@ import {
   ResourceIntroducer,
   ResourceIntroduction,
   ResourceIntroductionHistoryItem,
-} from '@attraccess/database-entities';
+} from '@fabaccess/database-entities';
 import { ResourceGroupsController } from './resourceGroups.controller';
 import { ResourceGroupsService } from './resourceGroups.service';
 import { ResourceGroupsIntroductionsController } from './introductions/resourceGroups.introductions.controller';

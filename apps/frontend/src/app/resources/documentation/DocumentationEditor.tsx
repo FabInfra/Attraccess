@@ -14,7 +14,7 @@ import {
   Tabs,
   Textarea,
 } from '@heroui/react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { ArrowLeft, Save } from 'lucide-react';
 import { useToastMessage } from '../../../components/toastProvider';
 import { PageHeader } from '../../../components/pageHeader';
@@ -23,7 +23,7 @@ import {
   useResourcesServiceUpdateOneResource,
   UseResourcesServiceGetOneResourceByIdKeyFn,
   documentationType as DocumentationType, // alias for local usage
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import ReactMarkdown from 'react-markdown';
 import en from './documentationEditor.en.json';
 import de from './documentationEditor.de.json';

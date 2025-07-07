@@ -12,7 +12,7 @@ import { Observable, Subject } from 'rxjs';
 import { OnEvent } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Resource } from '@attraccess/database-entities';
+import { Resource } from '@fabaccess/database-entities';
 import { ResourceUsageStartedEvent, ResourceUsageEndedEvent } from '../usage/events/resource-usage.events';
 import { ApiTags } from '@nestjs/swagger';
 

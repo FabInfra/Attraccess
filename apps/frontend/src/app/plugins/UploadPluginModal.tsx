@@ -1,8 +1,8 @@
-import { usePluginsServiceUploadPlugin } from '@attraccess/react-query-client';
+import { usePluginsServiceUploadPlugin } from '@fabaccess/react-query-client';
 import { useState, useRef } from 'react';
 import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input } from '@heroui/react';
 import { Upload } from 'lucide-react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import en from './UploadPluginModal.en.json';
 import de from './UploadPluginModal.de.json';
 import { useToastMessage } from '../../components/toastProvider';

@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { bootstrap } from '../main.bootstrap';
 import request from 'supertest';
-import { AuthenticationType, User } from '@attraccess/database-entities';
+import { AuthenticationType, User } from '@fabaccess/database-entities';
 import { UsersService } from '../users-and-auth/users/users.service';
 import { AuthService } from '../users-and-auth/auth/auth.service';
 import { nanoid } from 'nanoid';
@@ -52,7 +52,7 @@ export class TestSetup {
   async createUser(username: string, permissions?: User['systemPermissions']) {
     let user = await TestSetup.usersService.createOne({
       username: `${username}-${this.testInstanceIdentifier}`,
-      email: `${username}-${this.testInstanceIdentifier}@attraccess.org`,
+      email: `${username}-${this.testInstanceIdentifier}@fabaccess.org`,
       externalIdentifier: null,
     });
 

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { Button, Card, Alert, Spinner } from '@heroui/react';
 import {
   useMqttServiceMqttResourceConfigGetOne,
   useMqttServiceMqttResourceConfigTestOne,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import en from '../translations/configTest.en.json';
 import de from '../translations/configTest.de.json';
 

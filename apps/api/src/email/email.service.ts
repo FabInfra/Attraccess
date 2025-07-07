@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { EmailTemplateService } from '../email-template/email-template.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
-import { User, EmailTemplateType, EmailTemplate } from '@attraccess/database-entities';
+import { User, EmailTemplateType, EmailTemplate } from '@fabaccess/database-entities';
 import * as Handlebars from 'handlebars';
 import { MjmlService } from '../email-template/mjml.service';
 import { AppConfigType } from '../config/app.config';

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { MqttResourceConfig, Resource } from '@attraccess/database-entities';
+import { MqttResourceConfig, Resource } from '@fabaccess/database-entities';
 import { CreateMqttResourceConfigDto, UpdateMqttResourceConfigDto } from './dtos/mqtt-resource-config.dto';
 
 @Injectable()

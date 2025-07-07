@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { Card, CardBody, CardHeader, Button, Alert } from '@heroui/react';
 import { CheckCircle, AlertCircle } from 'lucide-react';
-import { useUsersServiceConfirmEmailChange } from '@attraccess/react-query-client';
+import { useUsersServiceConfirmEmailChange } from '@fabaccess/react-query-client';
 
 import * as en from './en.json';
 import * as de from './de.json';

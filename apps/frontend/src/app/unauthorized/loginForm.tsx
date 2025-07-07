@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { Input } from '@heroui/input';
 import { Button } from '@heroui/button';
 import { Alert } from '@heroui/alert';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { PasswordInput } from '../../components/PasswordInput';
 import { useLogin } from '../../hooks/useAuth';
 import * as en from './loginForm.en.json';

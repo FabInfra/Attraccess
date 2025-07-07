@@ -1,8 +1,8 @@
 services:
-  attraccess:
-    image: fabaccess/attraccess:nightly-latest
+  fabaccess:
+    image: fabaccess/fabaccess:nightly-latest
     platform: linux/amd64
-    container_name: attraccess
+    container_name: fabaccess
     restart: unless-stopped
     ports:
       - '80:3000'
@@ -16,7 +16,7 @@ services:
 
       # Email Configuration
       - SMTP_SERVICE=SMTP
-      - SMTP_FROM=no-reply@attraccess.de
+      - SMTP_FROM=no-reply@fabaccess.de
       - SMTP_HOST=localhost
       - SMTP_PORT=1028
 
@@ -26,4 +26,3 @@ services:
       - ./storage:/app/storage
       - ./plugins:/app/plugins
       - ./secret:/app/secrets
-

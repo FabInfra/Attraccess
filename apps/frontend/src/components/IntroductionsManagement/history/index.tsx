@@ -1,11 +1,11 @@
-import { DateTimeDisplay, useTranslations } from '@attraccess/plugins-frontend-ui';
+import { DateTimeDisplay, useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@heroui/modal';
 import { Button, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@heroui/react';
 import { useMemo, useState } from 'react';
 import { TableDataLoadingIndicator } from '../../../components/tableComponents';
 import { EmptyState } from '../../../components/emptyState';
 import { IntroductionStatusChip } from '../../IntroductionStatusChip';
-import { ResourceIntroductionHistoryItem } from '@attraccess/react-query-client';
+import { ResourceIntroductionHistoryItem } from '@fabaccess/react-query-client';
 
 import * as en from './en.json';
 import * as de from './de.json';

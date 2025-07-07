@@ -4,11 +4,11 @@ import { Input } from '@heroui/input';
 import { Button } from '@heroui/button';
 import { Alert } from '@heroui/alert';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from '@heroui/modal';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { PasswordInput } from '../../components/PasswordInput';
 import * as en from './registrationForm.en.json';
 import * as de from './registrationForm.de.json';
-import { useUsersServiceCreateOneUser, UseUsersServiceFindManyKeyFn, ApiError } from '@attraccess/react-query-client';
+import { useUsersServiceCreateOneUser, UseUsersServiceFindManyKeyFn, ApiError } from '@fabaccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface RegisterFormProps {

@@ -3,7 +3,7 @@ import { ReaderState } from './reader-state.interface';
 import { InitialReaderState } from './initial.state';
 import { AuthenticatedWebSocket, FabreaderEvent, FabreaderEventType, FabreaderResponse } from '../websocket.types';
 import { GatewayServices } from '../websocket.gateway';
-import { NFCCard } from '@attraccess/database-entities';
+import { NFCCard } from '@fabaccess/database-entities';
 
 export class ResetNTAG424State implements ReaderState {
   private readonly logger = new Logger(ResetNTAG424State.name);

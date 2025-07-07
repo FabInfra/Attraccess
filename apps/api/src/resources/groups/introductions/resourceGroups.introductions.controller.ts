@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { ResourceGroupsIntroductionsService } from './resourceGroups.introductions.service';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ResourceIntroduction, ResourceIntroductionHistoryItem } from '@attraccess/database-entities';
+import { ResourceIntroduction, ResourceIntroductionHistoryItem } from '@fabaccess/database-entities';
 import { IsResourceGroupIntroducer } from './isIntroducer.decorator';
 import { UpdateResourceGroupIntroductionDto } from './dtos/update.request.dto';
 

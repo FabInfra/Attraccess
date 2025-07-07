@@ -1,4 +1,4 @@
-import { useResourcesServiceGetOneResourceById } from '@attraccess/react-query-client';
+import { useResourcesServiceGetOneResourceById } from '@fabaccess/react-query-client';
 import { useAuth } from '../../../../../hooks/useAuth';
 
 export const useTemplatePreview = (resourceId: number) => {

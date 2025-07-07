@@ -1,6 +1,6 @@
 import { UseGuards, applyDecorators } from '@nestjs/common';
 import { ApiBearerAuth, ApiForbiddenResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { JwtGuard } from '@attraccess/plugins-backend-sdk';
+import { JwtGuard } from '@fabaccess/plugins-backend-sdk';
 import { IsResourceIntroducerGuard } from './isIntroducerGuard';
 
 /**

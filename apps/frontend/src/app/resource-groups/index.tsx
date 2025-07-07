@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
-import { useResourcesServiceResourceGroupsGetOne } from '@attraccess/react-query-client';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useResourcesServiceResourceGroupsGetOne } from '@fabaccess/react-query-client';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { PageHeader } from '../../components/pageHeader';
 import { GroupDetailsForm } from './GroupDetailsForm';
 import { ResoureGroupIntroducerManagement } from './IntroducerManagement';

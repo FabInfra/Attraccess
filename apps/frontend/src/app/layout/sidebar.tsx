@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { X, Settings, LogOut, User, ExternalLink, UserCog } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import {
   Button,
   Dropdown,
@@ -14,7 +14,7 @@ import {
   LinkProps,
 } from '@heroui/react';
 import { useAllRoutes } from '../routes';
-import { SystemPermissions } from '@attraccess/react-query-client';
+import { SystemPermissions } from '@fabaccess/react-query-client';
 import de from './sidebar.de.json';
 import en from './sidebar.en.json';
 import { Logo } from '../../components/logo';

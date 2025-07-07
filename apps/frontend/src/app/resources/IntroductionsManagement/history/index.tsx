@@ -1,4 +1,4 @@
-import { useAccessControlServiceResourceIntroductionsGetHistory } from '@attraccess/react-query-client';
+import { useAccessControlServiceResourceIntroductionsGetHistory } from '@fabaccess/react-query-client';
 import { useEffect } from 'react';
 import { IntroductionHistoryModal } from '../../../../components/IntroductionsManagement/history';
 

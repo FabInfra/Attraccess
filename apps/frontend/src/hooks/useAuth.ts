@@ -9,7 +9,7 @@ import {
   useAuthenticationServiceRefreshSession,
   useAuthenticationServiceRefreshSessionKey,
   useUsersServiceGetCurrent,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface LoginCredentials {

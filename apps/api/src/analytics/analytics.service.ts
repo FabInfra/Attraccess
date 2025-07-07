@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DateRangeValue } from './dtos/dateRangeValue';
-import { ResourceUsage } from '@attraccess/database-entities';
+import { ResourceUsage } from '@fabaccess/database-entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, FindManyOptions, Repository } from 'typeorm';
 

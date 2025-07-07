@@ -1,10 +1,10 @@
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { Accordion, AccordionItem, Alert, Button, Skeleton } from '@heroui/react';
 import {
   useMqttServiceMqttResourceConfigGetAll,
   useMqttServiceMqttResourceConfigDeleteOne,
   useResourcesServiceGetOneResourceById,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { useNavigate } from 'react-router-dom';
 import { useToastMessage } from '../../../../../components/toastProvider';
 import en from '../translations/configList.en.json';

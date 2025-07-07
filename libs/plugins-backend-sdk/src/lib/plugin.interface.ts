@@ -1,4 +1,4 @@
-import { Resource, User } from '@attraccess/database-entities';
+import { Resource, User } from '@fabaccess/database-entities';
 
 export enum SystemEvent {
   RESOURCE_USAGE_STARTED = 'RESOURCE_USAGE_STARTED',

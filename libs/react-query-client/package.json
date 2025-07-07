@@ -1,5 +1,5 @@
 {
-  "name": "@attraccess/react-query-client",
+  "name": "@fabaccess/react-query-client",
   "version": "0.0.16",
   "type": "commonjs",
   "main": "./src/index.js",

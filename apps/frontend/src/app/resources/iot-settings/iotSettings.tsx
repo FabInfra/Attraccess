@@ -7,7 +7,7 @@ import { PageHeader } from '../../../components/pageHeader';
 import { MqttConfigurationPanel } from './mqtt/MqttConfigurationPanel';
 import { WebhookConfigurationPanel } from './webhooks/WebhookConfigurationPanel';
 import { ESPHomeConfigurationPanel } from './esphome/ESPHomeConfigurationPanel';
-import { useResourcesServiceGetOneResourceById } from '@attraccess/react-query-client';
+import { useResourcesServiceGetOneResourceById } from '@fabaccess/react-query-client';
 
 export function IoTSettings() {
   const { id } = useParams<{ id: string }>();

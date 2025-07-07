@@ -1,8 +1,8 @@
 import { useState, useCallback, useMemo } from 'react';
 import { Button, ButtonGroup, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@heroui/react';
 import { UserX, ChevronDownIcon } from 'lucide-react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
-import { AttraccessUser, DateTimeDisplay } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
+import { FabAccessUser, DateTimeDisplay } from '@fabaccess/plugins-frontend-ui';
 import {
   useResourcesServiceResourceUsageStartSession,
   UseResourcesServiceResourceUsageGetActiveSessionKeyFn,
@@ -11,7 +11,7 @@ import {
   useAccessControlServiceResourceIntroducersGetMany,
   useResourcesServiceResourceUsageCanControl,
   useResourcesServiceGetOneResourceById,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../../../../../hooks/useAuth';
 import { useToastMessage } from '../../../../../components/toastProvider';
@@ -114,7 +114,7 @@ export function OtherUserSessionDisplay({ resourceId }: OtherUserSessionDisplayP
       <div className="space-y-4 text-center">
         <p className="text-sm text-gray-500 dark:text-gray-400">{t('resourceInUseBy')}</p>
         {activeSession.user ? (
-          <AttraccessUser user={activeSession.user} />
+          <FabAccessUser user={activeSession.user} />
         ) : (
           <p className="text-sm font-medium text-gray-900 dark:text-white">{t('unknownUser')}</p>
         )}

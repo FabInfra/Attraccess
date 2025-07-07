@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Checkbox, Button, Card, CardHeader, CardBody, CardFooter } from '@heroui/react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { useToastMessage } from '../../../../../components/toastProvider';
 import {
   User,
   useUsersServiceGetPermissions,
   useUsersServiceUpdatePermissions,
   UseUsersServiceFindManyKeyFn,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { PageHeader } from '../../../../../components/pageHeader';
 

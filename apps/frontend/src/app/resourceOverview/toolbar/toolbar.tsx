@@ -3,7 +3,7 @@ import { Input } from '@heroui/input';
 import { SearchIcon, PlusIcon, ScanQrCodeIcon, ListFilterIcon } from 'lucide-react';
 import { ResourceGroupUpsertModal } from '../../resource-groups/upsertModal/resourceGroupUpsertModal';
 import { useAuth } from '../../../hooks/useAuth';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { ResourceEditModal } from '../../resources/editModal/resourceEditModal';
 import { useNavigate } from 'react-router-dom';
 

@@ -8,7 +8,7 @@
   "portLabel": "Port",
   "portPlaceholder": "1883",
   "clientIdLabel": "Client-ID (Optional)",
-  "clientIdPlaceholder": "attraccess-client",
+  "clientIdPlaceholder": "fabaccess-client",
   "usernameLabel": "Benutzername (Optional)",
   "usernamePlaceholder": "mqtt_benutzer",
   "passwordLabel": "Passwort (Optional)",
@@ -21,4 +21,4 @@
   "errorGeneric": "Fehler",
   "errorLoading": "Fehler beim Laden der MQTT-Server-Details.",
   "failedToUpdate": "Fehler beim Aktualisieren des MQTT-Servers."
-} 
+}

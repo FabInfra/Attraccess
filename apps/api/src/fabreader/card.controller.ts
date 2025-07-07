@@ -1,6 +1,6 @@
 import { Controller, Get, Inject, Post, Req, Body } from '@nestjs/common';
 import { FabreaderGateway } from './modules/websockets/websocket.gateway';
-import { Auth, AuthenticatedRequest, NFCCard } from '@attraccess/plugins-backend-sdk';
+import { Auth, AuthenticatedRequest, NFCCard } from '@fabaccess/plugins-backend-sdk';
 import { ApiOperation, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
 import { FabreaderService } from './fabreader.service';
 import { AppKeyRequestDto } from './dtos/app-key-request.dto';

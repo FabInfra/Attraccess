@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ResourcesController } from './resources.controller';
 import { ResourcesService } from './resources.service';
-import { Resource, DocumentationType } from '@attraccess/database-entities';
+import { Resource, DocumentationType } from '@fabaccess/database-entities';
 import { CreateResourceDto } from './dtos/createResource.dto';
 import { UpdateResourceDto } from './dtos/updateResource.dto';
 import { NotFoundException } from '@nestjs/common';
 import { PaginatedResponse } from '../types/response';
 import { ResourceImageService } from './resourceImage.service';
-import { AuthenticatedRequest } from '@attraccess/plugins-backend-sdk';
+import { AuthenticatedRequest } from '@fabaccess/plugins-backend-sdk';
 
 describe('ResourcesController', () => {
   let controller: ResourcesController;

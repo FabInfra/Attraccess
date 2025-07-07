@@ -14,12 +14,12 @@ import {
   Patch,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { AuthenticatedRequest, Auth } from '@attraccess/plugins-backend-sdk';
+import { AuthenticatedRequest, Auth } from '@fabaccess/plugins-backend-sdk';
 import { AuthService } from '../auth/auth.service';
 import { EmailService } from '../../email/email.service';
 import { FindManyUsersQueryDto } from './dtos/findManyUsersQuery.dto';
 import { VerifyEmailDto } from './dtos/verifyEmail.dto';
-import { AuthenticationDetail, User, SystemPermissions } from '@attraccess/database-entities';
+import { AuthenticationDetail, User, SystemPermissions } from '@fabaccess/database-entities';
 import { ApiTags, ApiResponse, ApiOperation } from '@nestjs/swagger';
 import { CreateUserDto } from './dtos/createUser.dto';
 import { PaginatedUsersResponseDto } from './dtos/paginatedUsersResponse.dto';

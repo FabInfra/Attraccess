@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { MqttClientService } from './mqtt-client.service';
-import { MqttServer } from '@attraccess/database-entities';
+import { MqttServer } from '@fabaccess/database-entities';
 import { Repository } from 'typeorm';
 import * as mqtt from 'mqtt';
 import { Logger } from '@nestjs/common';
@@ -101,12 +101,7 @@ describe('MqttClientService', () => {
     jest.spyOn(Logger.prototype, 'warn').mockImplementation(jest.fn());
 
     // Mock the getOrCreateClient method to avoid actual connection attempts
-    jest
-      .spyOn(
-        service as unknown as MqttClientServicePrivate,
-        'getOrCreateClient'
-      )
-      .mockResolvedValue(mqtt.connect({}));
+    jest.spyOn(service as unknown as MqttClientServicePrivate, 'getOrCreateClient').mockResolvedValue(mqtt.connect({}));
   });
 
   afterEach(() => {
@@ -120,10 +115,7 @@ describe('MqttClientService', () => {
   describe('publish', () => {
     it('should successfully publish a message', async () => {
       // Arrange - mock the internal methods to avoid actual connections
-      const getOrCreateClientSpy = jest.spyOn(
-        service as unknown as MqttClientServicePrivate,
-        'getOrCreateClient'
-      );
+      const getOrCreateClientSpy = jest.spyOn(service as unknown as MqttClientServicePrivate, 'getOrCreateClient');
       const mockClient = mqtt.connect({});
       getOrCreateClientSpy.mockResolvedValue(mockClient);
 
@@ -142,36 +134,26 @@ describe('MqttClientService', () => {
 
     it('should throw an error if publishing fails', async () => {
       // Arrange - mock the client to throw an error on publish
-      const getOrCreateClientSpy = jest.spyOn(
-        service as unknown as MqttClientServicePrivate,
-        'getOrCreateClient'
-      );
+      const getOrCreateClientSpy = jest.spyOn(service as unknown as MqttClientServicePrivate, 'getOrCreateClient');
       const mockClient = mqtt.connect({});
       getOrCreateClientSpy.mockResolvedValue(mockClient);
 
       // Make publish callback throw an error
-      mockClient.publish = jest
-        .fn()
-        .mockImplementation((topic, message, callback) => {
-          if (typeof callback === 'function') {
-            callback(new Error('Publish error'));
-          }
-        });
+      mockClient.publish = jest.fn().mockImplementation((topic, message, callback) => {
+        if (typeof callback === 'function') {
+          callback(new Error('Publish error'));
+        }
+      });
 
       // Act & Assert
-      await expect(
-        service.publish(1, 'test/topic', 'test message')
-      ).rejects.toThrow('Publish error');
+      await expect(service.publish(1, 'test/topic', 'test message')).rejects.toThrow('Publish error');
     });
   });
 
   describe('testConnection', () => {
     it('should return success if connection is successful', async () => {
       // Arrange - mock the internal methods
-      const getOrCreateClientSpy = jest.spyOn(
-        service as unknown as MqttClientServicePrivate,
-        'getOrCreateClient'
-      );
+      const getOrCreateClientSpy = jest.spyOn(service as unknown as MqttClientServicePrivate, 'getOrCreateClient');
       const mockClient = mqtt.connect({});
       getOrCreateClientSpy.mockResolvedValue(mockClient);
 
@@ -195,10 +177,7 @@ describe('MqttClientService', () => {
     it('should disconnect all clients', async () => {
       // Arrange - mock the clients map to have a client
       const mockClient = mqtt.connect({});
-      (service as unknown as MqttClientServicePrivate).clients.set(
-        1,
-        mockClient
-      );
+      (service as unknown as MqttClientServicePrivate).clients.set(1, mockClient);
 
       // Act
       await service.onModuleDestroy();

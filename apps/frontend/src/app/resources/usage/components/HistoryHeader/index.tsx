@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Checkbox } from '@heroui/react';
 import { History, Users } from 'lucide-react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import * as en from './translations/en';
 import * as de from './translations/de';
 

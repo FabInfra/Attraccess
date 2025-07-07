@@ -1,6 +1,6 @@
 import { Modal, ModalContent, ModalHeader, ModalBody } from '@heroui/modal';
 import WebhookForm from './WebhookForm';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import * as de from '../translations/de';
 import * as en from '../translations/en';
 

@@ -1,4 +1,4 @@
-import { FabReader } from '@attraccess/database-entities';
+import { FabReader } from '@fabaccess/database-entities';
 
 export class ReaderUpdatedEvent {
   constructor(public readonly reader: FabReader) {}

@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { Textarea, Accordion, AccordionItem, Snippet } from '@heroui/react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { useWebhookForm } from '../context/WebhookFormContext';
 import { templateVariables } from '../types';
 import { useTemplatePreview } from '../hooks/useTemplatePreview';

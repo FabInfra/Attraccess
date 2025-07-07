@@ -1,5 +1,5 @@
 import { useTranslations } from '../../i18n';
-import { useResourcesServiceGetAllResources } from '@attraccess/react-query-client';
+import { useResourcesServiceGetAllResources } from '@fabaccess/react-query-client';
 import { Chip, Input, Listbox, ListboxItem, ScrollShadow, Spinner } from '@heroui/react';
 import { useState, PropsWithChildren, useMemo } from 'react';
 import de from './ResourceSelector.de.json';

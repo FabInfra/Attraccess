@@ -9,7 +9,7 @@ import 'sqlite3';
 import '@nestjs/common';
 import { WebSocketEventService } from './modules/websockets/websocket-event.service';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { FabReader, NFCCard } from '@attraccess/database-entities';
+import { FabReader, NFCCard } from '@fabaccess/database-entities';
 import { UsersAndAuthModule } from '../users-and-auth/users-and-auth.module';
 import { ResourcesModule } from '../resources/resources.module';
 import { ResourceUsageModule } from '../resources/usage/resourceUsage.module';

@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
-import { Resource, ResourceGroup } from '@attraccess/database-entities';
+import { Resource, ResourceGroup } from '@fabaccess/database-entities';
 import { Repository } from 'typeorm';
 import { CreateResourceGroupDto } from './dto/createGroup.dto';
 import { UpdateResourceGroupDto } from './dto/updateGroup.dto';

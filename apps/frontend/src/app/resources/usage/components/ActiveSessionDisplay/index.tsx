@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { Button, ButtonGroup, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@heroui/react';
 import { StopCircle, ChevronDownIcon } from 'lucide-react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { useToastMessage } from '../../../../../components/toastProvider';
 import { SessionTimer } from '../SessionTimer';
 import { SessionNotesModal, SessionModalMode } from '../SessionNotesModal';
@@ -9,7 +9,7 @@ import {
   useResourcesServiceResourceUsageEndSession,
   UseResourcesServiceResourceUsageGetActiveSessionKeyFn,
   UseResourcesServiceResourceUsageGetHistoryKeyFn,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 import * as en from './translations/en.json';
 import * as de from './translations/de.json';

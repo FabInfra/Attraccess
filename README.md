@@ -1,4 +1,4 @@
-# Attraccess
+# FabAccess
 
 A comprehensive resource management system for tracking and managing access to shared resources.
 
@@ -13,7 +13,7 @@ A comprehensive resource management system for tracking and managing access to s
 
 ## ESPHome Integration
 
-Attraccess provides [ESPHome components](https://github.com/FabInfra/Attraccess-esphome-components) for easily integrating IoT devices with your access control system:
+FabAccess provides [ESPHome components](https://github.com/FabInfra/FabAccess-esphome-components) for easily integrating IoT devices with your access control system:
 
 - Real-time resource status monitoring via Server-Sent Events (SSE)
 - No polling required - uses persistent connections for efficient updates
@@ -22,17 +22,17 @@ Attraccess provides [ESPHome components](https://github.com/FabInfra/Attraccess-
 - Enables automation based on resource status (availability, usage, etc.)
 - Provides both sensors and binary sensors for monitoring
 
-To integrate your IoT devices with Attraccess, add this to your ESPHome configuration:
+To integrate your IoT devices with FabAccess, add this to your ESPHome configuration:
 
 ```yaml
 external_components:
   - source:
       type: git
-      url: https://github.com/FabInfra/Attraccess-esphome-components.git
-    components: [attraccess_resource]
+      url: https://github.com/FabInfra/FabAccess-esphome-components.git
+    components: [fabaccess_resource]
 ```
 
-See the [Attraccess ESPHome Components repository](https://github.com/FabInfra/Attraccess-esphome-components) for detailed documentation and examples.
+See the [FabAccess ESPHome Components repository](https://github.com/FabInfra/FabAccess-esphome-components) for detailed documentation and examples.
 
 ## Image Support
 

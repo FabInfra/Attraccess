@@ -2,7 +2,7 @@ import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
-import { AuthenticationType, User } from '@attraccess/database-entities';
+import { AuthenticationType, User } from '@fabaccess/database-entities';
 
 class UnknownUserOrPasswordException extends UnauthorizedException {
   constructor() {

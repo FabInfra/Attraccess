@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { DateRangeValue } from './dtos/dateRangeValue';
 import { AnalyticsService } from './analytics.service';
-import { Auth, ResourceUsage } from '@attraccess/plugins-backend-sdk';
+import { Auth, ResourceUsage } from '@fabaccess/plugins-backend-sdk';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Analytics')

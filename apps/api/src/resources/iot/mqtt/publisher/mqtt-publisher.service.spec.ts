@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { MqttPublisherService } from './mqtt-publisher.service';
-import { MqttResourceConfig, Resource, User } from '@attraccess/database-entities';
+import { MqttResourceConfig, Resource, User } from '@fabaccess/database-entities';
 import { Repository } from 'typeorm';
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

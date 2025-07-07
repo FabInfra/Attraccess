@@ -1,4 +1,4 @@
-import { Resource, User } from '@attraccess/database-entities';
+import { Resource, User } from '@fabaccess/database-entities';
 import { Injectable } from '@nestjs/common';
 import * as Handlebars from 'handlebars';
 

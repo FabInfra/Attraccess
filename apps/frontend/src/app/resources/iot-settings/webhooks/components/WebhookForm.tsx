@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { WebhookFormValues, defaultFormValues, webhookToFormValues } from '../types';
 import { WebhookFormProvider } from '../context/WebhookFormContext';
 import WebhookBasicSettings from './WebhookBasicSettings';
@@ -14,7 +14,7 @@ import {
   useWebhooksServiceWebhookConfigGetOneById,
   useWebhooksServiceWebhookConfigUpdateOne,
   UseWebhooksServiceWebhookConfigGetAllKeyFn,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { useToastMessage } from '../../../../../components/toastProvider';
 

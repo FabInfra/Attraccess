@@ -1,4 +1,4 @@
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import React from 'react';
 import * as en from './en.json';
 import * as de from './de.json';

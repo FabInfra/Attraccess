@@ -27,7 +27,7 @@ struct WiFiConfig
 
 struct WebConfig
 {
-    char admin_password[33] = "attraccess"; // Default admin password
+    char admin_password[33] = "fabaccess"; // Default admin password
 };
 
 struct PersistenceData

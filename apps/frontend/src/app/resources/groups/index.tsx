@@ -7,7 +7,7 @@ import {
   useResourcesServiceResourceGroupsAddResource,
   useResourcesServiceResourceGroupsGetMany,
   useResourcesServiceResourceGroupsRemoveResource,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import {
   Button,
   Card,
@@ -24,7 +24,7 @@ import {
 } from '@heroui/react';
 import { TableDataLoadingIndicator } from '../../../components/tableComponents';
 import { EmptyState } from '../../../components/emptyState';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { GroupIcon, PlusIcon, Trash2Icon } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { PageHeader } from '../../../components/pageHeader';

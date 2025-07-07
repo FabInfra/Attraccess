@@ -1,9 +1,9 @@
-import { useUsersServiceGetOneUserById } from '@attraccess/react-query-client';
+import { useUsersServiceGetOneUserById } from '@fabaccess/react-query-client';
 import { PageHeader } from '../../../components/pageHeader';
 import { useParams } from 'react-router-dom';
 import { UserPermissionForm } from './components/permissionsForm';
 import { EmailForm } from './components/emailForm';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 
 import en from './en.json';
 import de from './de.json';

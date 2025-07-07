@@ -9,10 +9,10 @@ import {
   Spinner,
   useDisclosure,
 } from '@heroui/react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { Edit, ExternalLink, Maximize, Minimize, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useResourcesServiceGetOneResourceById } from '@attraccess/react-query-client';
+import { useResourcesServiceGetOneResourceById } from '@fabaccess/react-query-client';
 import en from './documentationModal.en.json';
 import de from './documentationModal.de.json';
 import ReactMarkdown from 'react-markdown';

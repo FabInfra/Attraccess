@@ -1,5 +1,5 @@
 {
-  "name": "@attraccess/api-client",
+  "name": "@fabaccess/api-client",
   "version": "0.0.16",
   "type": "commonjs",
   "main": "./src/index.js",

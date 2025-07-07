@@ -1,5 +1,5 @@
 import { Button, ButtonProps } from '@heroui/react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import 'esp-web-tools';
 import de from './FabreaderFlashButton.de.json';
 import en from './FabreaderFlashButton.en.json';

@@ -1,10 +1,10 @@
 import { memo, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Card, CardBody, CardFooter, CardHeader, Spinner } from '@heroui/react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { ArrowLeft, Edit, RefreshCw } from 'lucide-react';
 import { PageHeader } from '../../../components/pageHeader';
-import { useResourcesServiceGetOneResourceById } from '@attraccess/react-query-client';
+import { useResourcesServiceGetOneResourceById } from '@fabaccess/react-query-client';
 import ReactMarkdown from 'react-markdown';
 import en from './documentationModal.en.json';
 import de from './documentationModal.de.json';

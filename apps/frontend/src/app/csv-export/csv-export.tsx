@@ -1,4 +1,4 @@
-import { useDateTimeFormatter, useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useDateTimeFormatter, useTranslations } from '@fabaccess/plugins-frontend-ui';
 import {
   Button,
   Card,
@@ -82,7 +82,13 @@ export function CsvExport() {
         </CardFooter>
       </Card>
 
-      <Modal isOpen={showExport} onClose={() => setShowExport(false)} scrollBehavior="inside" size="5xl" data-cy="csv-export-modal">
+      <Modal
+        isOpen={showExport}
+        onClose={() => setShowExport(false)}
+        scrollBehavior="inside"
+        size="5xl"
+        data-cy="csv-export-modal"
+      >
         <ModalContent>
           <ModalHeader>
             <div>

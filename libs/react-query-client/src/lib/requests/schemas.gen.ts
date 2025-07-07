@@ -463,7 +463,7 @@ export const $CreateOIDCConfigurationDto = {
         clientId: {
             type: 'string',
             description: 'The client ID of the provider',
-            example: 'attraccess-client'
+            example: 'fabaccess-client'
         },
         clientSecret: {
             type: 'string',
@@ -526,7 +526,7 @@ export const $UpdateOIDCConfigurationDto = {
         clientId: {
             type: 'string',
             description: 'The client ID of the provider',
-            example: 'attraccess-client'
+            example: 'fabaccess-client'
         },
         clientSecret: {
             type: 'string',
@@ -917,7 +917,7 @@ export const $MqttServer = {
         clientId: {
             type: 'string',
             description: 'Client ID for MQTT connection',
-            example: 'attraccess-client-1'
+            example: 'fabaccess-client-1'
         },
         useTls: {
             type: 'boolean',
@@ -2155,7 +2155,7 @@ export const $PluginMain = {
     required: ['frontend', 'backend']
 } as const;
 
-export const $PluginAttraccessVersion = {
+export const $PluginFabAccessVersion = {
     type: 'object',
     properties: {
         min: {
@@ -2193,8 +2193,8 @@ export const $LoadedPluginManifest = {
             description: 'The version of the plugin',
             example: '1.0.0'
         },
-        attraccessVersion: {
-            '$ref': '#/components/schemas/PluginAttraccessVersion'
+        fabaccessVersion: {
+            '$ref': '#/components/schemas/PluginFabAccessVersion'
         },
         pluginDirectory: {
             type: 'string',
@@ -2207,7 +2207,7 @@ export const $LoadedPluginManifest = {
             example: '123e4567-e89b-12d3-a456-426614174000'
         }
     },
-    required: ['name', 'main', 'version', 'attraccessVersion', 'pluginDirectory', 'id']
+    required: ['name', 'main', 'version', 'fabaccessVersion', 'pluginDirectory', 'id']
 } as const;
 
 export const $UploadPluginDto = {

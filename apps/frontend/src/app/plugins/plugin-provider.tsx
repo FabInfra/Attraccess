@@ -1,4 +1,4 @@
-import { OpenAPI, LoadedPluginManifest, usePluginsServiceGetPlugins } from '@attraccess/react-query-client';
+import { OpenAPI, LoadedPluginManifest, usePluginsServiceGetPlugins } from '@fabaccess/react-query-client';
 import { PropsWithChildren, useCallback, useEffect, useRef } from 'react';
 import { createPluginStore, PluginProvider as PluginProviderBase, RendererPlugin } from 'react-pluggable';
 import usePluginState from './plugin.state';
@@ -8,7 +8,7 @@ import {
   // eslint-disable-next-line
   // @ts-ignore
 } from 'virtual:__federation__';
-import { AttraccessFrontendPlugin, AttraccessFrontendPluginAuthData } from '@attraccess/plugins-frontend-sdk';
+import { FabAccessFrontendPlugin, FabAccessFrontendPluginAuthData } from '@fabaccess/plugins-frontend-sdk';
 import { ToastType, useToastMessage } from '../../components/toastProvider';
 import { useAuth } from '../../hooks/useAuth';
 import { getBaseUrl } from '../../api';
@@ -28,13 +28,13 @@ export function PluginProvider(props: PropsWithChildren) {
     if (isPluginSystemInitialized.current) return;
     isPluginSystemInitialized.current = true;
 
-    console.debug('Attraccess Plugin System: initializing');
+    console.debug('FabAccess Plugin System: initializing');
 
-    console.debug('Attraccess Plugin System: installing renderer plugin');
+    console.debug('FabAccess Plugin System: installing renderer plugin');
     const rendererPlugin = new RendererPlugin();
     pluginStore.install(rendererPlugin);
 
-    console.debug('Attraccess Plugin System: adding notificationToast function');
+    console.debug('FabAccess Plugin System: adding notificationToast function');
     pluginStore.addFunction(
       'notificationToast',
       (params: { title: string; description: string; type: ToastType; duration?: number }) => {
@@ -48,10 +48,10 @@ export function PluginProvider(props: PropsWithChildren) {
     );
 
     return () => {
-      console.debug('Attraccess Plugin System: uninstalling renderer plugin');
+      console.debug('FabAccess Plugin System: uninstalling renderer plugin');
       pluginStore.uninstall(rendererPlugin.getPluginName());
 
-      console.debug('Attraccess Plugin System: removing notificationToast function');
+      console.debug('FabAccess Plugin System: removing notificationToast function');
       pluginStore.removeFunction('notificationToast');
 
       // Reset the initialization state on unmount
@@ -60,15 +60,15 @@ export function PluginProvider(props: PropsWithChildren) {
   }, [toast]);
 
   const loadPlugin = useCallback(
-    async (pluginManifest: LoadedPluginManifest, plugin?: AttraccessFrontendPlugin) => {
+    async (pluginManifest: LoadedPluginManifest, plugin?: FabAccessFrontendPlugin) => {
       try {
         if (!plugin) {
-          console.debug(`Attraccess Plugin System: loading plugin ${pluginManifest.name}`);
+          console.debug(`FabAccess Plugin System: loading plugin ${pluginManifest.name}`);
           const entryPointFile = pluginManifest.main.frontend?.entryPoint;
 
           if (!entryPointFile) {
             console.debug(
-              `Attraccess Plugin System: Plugin ${pluginManifest.name} has no entry point file for frontend, skipping`
+              `FabAccess Plugin System: Plugin ${pluginManifest.name} has no entry point file for frontend, skipping`
             );
             return;
           }
@@ -89,13 +89,13 @@ export function PluginProvider(props: PropsWithChildren) {
           }
 
           // Initialize the plugin
-          plugin = new pluginClass() as AttraccessFrontendPlugin;
+          plugin = new pluginClass() as FabAccessFrontendPlugin;
         }
 
         const pluginName = plugin.getPluginName();
-        console.debug(`Attraccess Plugin System: Checking if plugin ${pluginName} is installed`);
+        console.debug(`FabAccess Plugin System: Checking if plugin ${pluginName} is installed`);
         if (isInstalled(pluginName)) {
-          console.debug(`Attraccess Plugin System: Plugin ${pluginName} is already installed, uninstalling first`);
+          console.debug(`FabAccess Plugin System: Plugin ${pluginName} is already installed, uninstalling first`);
           pluginStore.uninstall(pluginName);
         }
 
@@ -108,10 +108,10 @@ export function PluginProvider(props: PropsWithChildren) {
         };
         addPlugin(fullPlugin);
 
-        console.debug(`Attraccess Plugin System: Plugin ${pluginName} loaded`);
+        console.debug(`FabAccess Plugin System: Plugin ${pluginName} loaded`);
         return fullPlugin;
       } catch (error) {
-        console.error(`Attraccess Plugin System: Failed to load plugin: ${pluginManifest.name}`, error);
+        console.error(`FabAccess Plugin System: Failed to load plugin: ${pluginManifest.name}`, error);
       }
     },
     [addPlugin, isInstalled]
@@ -122,26 +122,26 @@ export function PluginProvider(props: PropsWithChildren) {
       plugin.plugin.onApiEndpointChange(getBaseUrl());
       plugin.plugin.onApiAuthStateChange({
         authToken: OpenAPI.TOKEN as string,
-        user: user as unknown as AttraccessFrontendPluginAuthData['user'],
+        user: user as unknown as FabAccessFrontendPluginAuthData['user'],
       });
     });
   }, [plugins, user]);
 
   const loadAllPlugins = useCallback(async () => {
     if (arePluginsLoaded.current) return;
-    console.debug('Attraccess Plugin System: Loading all plugins');
+    console.debug('FabAccess Plugin System: Loading all plugins');
 
     const plugins = await refetchPlugins();
     const pluginsArray = plugins.data ?? [];
     await Promise.all(pluginsArray.map((manifest) => loadPlugin(manifest)));
 
     arePluginsLoaded.current = true;
-    console.debug('Attraccess Plugin System: All plugins loaded');
+    console.debug('FabAccess Plugin System: All plugins loaded');
   }, [loadPlugin, refetchPlugins]);
 
   useEffect(() => {
     if (arePluginsLoaded.current) return;
-    console.debug('Attraccess Plugin System: Refetching plugins');
+    console.debug('FabAccess Plugin System: Refetching plugins');
     loadAllPlugins();
 
     // We're using the ref as our control mechanism, so the dependency array can be empty

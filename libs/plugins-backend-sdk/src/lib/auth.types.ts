@@ -1,4 +1,4 @@
-import { User } from '@attraccess/database-entities';
+import { User } from '@fabaccess/database-entities';
 import { Request as BaseRequest } from 'express';
 
 export interface AuthenticatedUser extends User {

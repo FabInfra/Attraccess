@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, NumberInput, Divider } from '@heroui/react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { useWebhookForm } from '../context/WebhookFormContext';
 
 // Translations for this component only

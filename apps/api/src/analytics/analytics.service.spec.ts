@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AnalyticsService } from './analytics.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ResourceUsage } from '@attraccess/database-entities';
+import { ResourceUsage } from '@fabaccess/database-entities';
 import { Between, Repository } from 'typeorm';
 import { DateRangeValue } from './dtos/dateRangeValue';
 

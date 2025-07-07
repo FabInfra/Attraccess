@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SSOService } from './sso.service';
-import { SSOProvider, SSOProviderOIDCConfiguration, SSOProviderType } from '@attraccess/database-entities';
+import { SSOProvider, SSOProviderOIDCConfiguration, SSOProviderType } from '@fabaccess/database-entities';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';

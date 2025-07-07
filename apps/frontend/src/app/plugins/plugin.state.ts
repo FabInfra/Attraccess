@@ -1,9 +1,9 @@
-import { AttraccessFrontendPlugin } from '@attraccess/plugins-frontend-sdk';
-import { LoadedPluginManifest } from '@attraccess/react-query-client';
+import { FabAccessFrontendPlugin } from '@fabaccess/plugins-frontend-sdk';
+import { LoadedPluginManifest } from '@fabaccess/react-query-client';
 import { create } from 'zustand';
 
 export interface PluginManifestWithPlugin extends LoadedPluginManifest {
-  plugin: AttraccessFrontendPlugin;
+  plugin: FabAccessFrontendPlugin;
 }
 
 interface PluginState {

@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In, Brackets } from 'typeorm';
-import { Resource } from '@attraccess/database-entities';
+import { Resource } from '@fabaccess/database-entities';
 import { CreateResourceDto } from './dtos/createResource.dto';
 import { UpdateResourceDto } from './dtos/updateResource.dto';
 import { PaginatedResponse } from '../types/response';

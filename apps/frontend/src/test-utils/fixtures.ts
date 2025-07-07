@@ -1,4 +1,4 @@
-import { Resource } from '@attraccess/react-query-client';
+import { Resource } from '@fabaccess/react-query-client';
 
 /**
  * Creates a mock resource with the given overrides

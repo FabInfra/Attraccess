@@ -2,7 +2,7 @@
 
 ## Overview
 
-The MQTT integration allows Attraccess to publish resource usage status changes to MQTT brokers. This enables integration with IoT devices, home automation systems, and other systems that support MQTT.
+The MQTT integration allows FabAccess to publish resource usage status changes to MQTT brokers. This enables integration with IoT devices, home automation systems, and other systems that support MQTT.
 
 ## Production Deployment Considerations
 
@@ -54,7 +54,7 @@ Recommended MQTT brokers:
 
 3. **Topic Structure**:
 
-   - Use a specific, unique prefix for all topics (e.g., `company/location/attraccess/resources/`)
+   - Use a specific, unique prefix for all topics (e.g., `company/location/fabaccess/resources/`)
    - Ensure topics don't leak sensitive information
 
 4. **Message Content**:

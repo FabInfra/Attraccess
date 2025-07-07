@@ -9,7 +9,7 @@
 
 - React Query hooks are auto-generated from the API's Swagger documentation
 - After adding/modifying API endpoints, regenerate the client: `pnpm nx build react-query-client --skipNxCache`
-- The hooks will be available in `@attraccess/react-query-client` after regeneration
+- The hooks will be available in `@fabaccess/react-query-client` after regeneration
 - Use naming pattern: `useUsersService<OperationId>` (e.g., `useUsersServiceRequestEmailChange`)
 
 ## Project Structure
@@ -77,7 +77,7 @@
 
 ### React Query Usage
 
-- Import hooks from `@attraccess/react-query-client`
+- Import hooks from `@fabaccess/react-query-client`
 - Use mutation callbacks: `onSuccess`, `onError`
 - Pass `requestBody` parameter for POST/PATCH requests
 - Use `id` parameter for route params

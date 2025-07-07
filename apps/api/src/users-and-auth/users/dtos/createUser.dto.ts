@@ -1,6 +1,6 @@
 import { IsEmail, IsEnum, IsString, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { AuthenticationType } from '@attraccess/database-entities';
+import { AuthenticationType } from '@fabaccess/database-entities';
 
 export class CreateUserDto {
   @ApiProperty({

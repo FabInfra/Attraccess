@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EmailTemplate } from '@attraccess/database-entities';
+import { EmailTemplate } from '@fabaccess/database-entities';
 import { EmailTemplateService } from './email-template.service';
 import { EmailTemplateController } from './email-template.controller';
 import { MjmlService } from './mjml.service';

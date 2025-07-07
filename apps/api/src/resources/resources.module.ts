@@ -7,7 +7,7 @@ import {
   ResourceIntroducer,
   ResourceIntroductionHistoryItem,
   User,
-} from '@attraccess/database-entities';
+} from '@fabaccess/database-entities';
 import { ResourcesController } from './resources.controller';
 import { ScheduleModule } from '@nestjs/schedule';
 import { FileStorageModule } from '../common/modules/file-storage.module';

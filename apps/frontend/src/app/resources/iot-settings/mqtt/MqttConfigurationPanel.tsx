@@ -1,4 +1,4 @@
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import de from './de.json';
 import en from './en.json';
 import { Button, Card, CardHeader } from '@heroui/react';

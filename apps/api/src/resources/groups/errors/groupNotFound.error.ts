@@ -1,4 +1,4 @@
-import { ResourceGroup } from '@attraccess/database-entities';
+import { ResourceGroup } from '@fabaccess/database-entities';
 import { NotFoundException } from '@nestjs/common';
 import { FindOneOptions } from 'typeorm';
 

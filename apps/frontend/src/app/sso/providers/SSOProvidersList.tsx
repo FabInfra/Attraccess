@@ -21,7 +21,7 @@ import {
 } from '@heroui/react';
 import { Pencil, Trash, Key, FileCode, Eye, EyeOff, Download } from 'lucide-react';
 import { useToastMessage } from '../../../components/toastProvider';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import {
   CreateSSOProviderDto,
   SSOProvider,
@@ -33,7 +33,7 @@ import {
   useAuthenticationServiceGetOneSsoProviderById,
   useAuthenticationServiceUpdateOneSsoProvider,
   UseAuthenticationServiceGetAllSsoProvidersKeyFn,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { TableDataLoadingIndicator } from '../../../components/tableComponents';
 import { EmptyState } from '../../../components/emptyState';

@@ -51,7 +51,7 @@ export class MqttServer {
   @Column({ nullable: true, type: 'text' })
   @ApiProperty({
     description: 'Client ID for MQTT connection',
-    example: 'attraccess-client-1',
+    example: 'fabaccess-client-1',
     required: false,
   })
   clientId!: string | null;

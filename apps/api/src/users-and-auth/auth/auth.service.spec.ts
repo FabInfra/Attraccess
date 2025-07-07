@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
-import { AuthenticationDetail, AuthenticationType, User, RevokedToken } from '@attraccess/database-entities';
+import { AuthenticationDetail, AuthenticationType, User, RevokedToken } from '@fabaccess/database-entities';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';

@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ResourceIntroductionsService } from './resouceIntroductions.service';
-import { ResourceIntroduction, ResourceIntroductionHistoryItem } from '@attraccess/database-entities';
+import { ResourceIntroduction, ResourceIntroductionHistoryItem } from '@fabaccess/database-entities';
 import { IsResourceIntroducer } from './isIntroducer.decorator';
 import { UpdateResourceIntroductionDto } from './dtos/update.request.dto';
 

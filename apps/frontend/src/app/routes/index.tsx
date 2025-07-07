@@ -6,7 +6,7 @@ import { MqttServersPage, CreateMqttServerPage, EditMqttServerPage } from '../mq
 import { SSOProvidersPage } from '../sso/SSOProvidersPage';
 import { UserManagementPage } from '../user-management';
 import { usePluginStore } from 'react-pluggable';
-import { RouteConfig } from '@attraccess/plugins-frontend-sdk';
+import { RouteConfig } from '@fabaccess/plugins-frontend-sdk';
 import { PluginsList } from '../plugins/PluginsList';
 import usePluginState, { PluginManifestWithPlugin } from '../plugins/plugin.state';
 import { FabreaderList } from '../fabreader/FabreaderList/FabreaderList';

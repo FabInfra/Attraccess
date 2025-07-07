@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsOptional, MinLength, IsEnum, IsUrl, ValidateIf, IsBoolean } from 'class-validator';
 import { FileUpload } from '../../common/types/file-upload.types';
-import { DocumentationType } from '@attraccess/database-entities';
+import { DocumentationType } from '@fabaccess/database-entities';
 import { ToBoolean } from '../../common/request-transformers';
 
 export class CreateResourceDto {

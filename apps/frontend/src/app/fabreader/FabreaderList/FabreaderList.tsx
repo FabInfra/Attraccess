@@ -3,9 +3,9 @@ import { Alert, Button, Chip, Table, TableBody, TableCell, TableColumn, TableHea
 import { Cloud, CloudOff, CpuIcon } from 'lucide-react';
 import { TableDataLoadingIndicator } from '../../../components/tableComponents';
 import { EmptyState } from '../../../components/emptyState';
-import { useDateTimeFormatter, useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useDateTimeFormatter, useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { FabreaderEditor } from '../FabreaderEditor/FabreaderEditor';
-import { useFabReaderServiceGetReaders } from '@attraccess/react-query-client';
+import { useFabReaderServiceGetReaders } from '@fabaccess/react-query-client';
 import { useToastMessage } from '../../../components/toastProvider';
 import { PageHeader } from '../../../components/pageHeader';
 import { FabreaderFlasher } from '../FabreaderFlasher/FabreaderFlasher';

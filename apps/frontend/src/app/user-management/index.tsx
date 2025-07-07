@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PageHeader } from '../../components/pageHeader';
-import { AttraccessUser, useTranslations } from '@attraccess/plugins-frontend-ui';
+import { FabAccessUser, useTranslations } from '@fabaccess/plugins-frontend-ui';
 import {
   Card,
   CardBody,
@@ -15,7 +15,7 @@ import {
   TableRow,
 } from '@heroui/react';
 import { Users, ShieldOffIcon, ShieldCheckIcon } from 'lucide-react';
-import { useUsersServiceFindMany } from '@attraccess/react-query-client';
+import { useUsersServiceFindMany } from '@fabaccess/react-query-client';
 import { EmptyState } from '../../components/emptyState';
 import { TableDataLoadingIndicator } from '../../components/tableComponents';
 import { useReactQueryStatusToHeroUiTableLoadingState } from '../../hooks/useReactQueryStatusToHeroUiTableLoadingState';
@@ -81,7 +81,7 @@ export const UserManagementPage: React.FC = () => {
                   </TableCell>
                   <TableCell>{user.id}</TableCell>
                   <TableCell>
-                    <AttraccessUser user={user} />
+                    <FabAccessUser user={user} />
                   </TableCell>
                   <TableCell className="hidden md:table-cell">{user.externalIdentifier}</TableCell>
                 </TableRow>

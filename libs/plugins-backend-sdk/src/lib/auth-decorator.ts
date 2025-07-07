@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
-import { SystemPermission, User } from '@attraccess/database-entities';
+import { SystemPermission, User } from '@fabaccess/database-entities';
 
 import { ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { JwtGuard } from './jwt.guard';

@@ -1,10 +1,10 @@
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { Button, Divider, Link } from '@heroui/react';
 import * as de from './ssoLogin.de.json';
 import * as en from './ssoLogin.en.json';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useAuthenticationServiceGetAllSsoProviders, SSOProvider } from '@attraccess/react-query-client';
+import { useAuthenticationServiceGetAllSsoProviders, SSOProvider } from '@fabaccess/react-query-client';
 import { useAuth } from '../../hooks/useAuth';
 import { SSOLinkingRequiredModal } from './ssoLinkingRequiredModal';
 import { useCallbackURL } from './use-sso-callback-url';

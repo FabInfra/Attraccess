@@ -1,10 +1,11 @@
 // typeorm.config.ts
 
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { loadEnv } from '@attraccess/env';
+import { loadEnv } from '@fabaccess/env';
 import { join, resolve } from 'path';
-import { entities } from '@attraccess/database-entities';
+import { entities } from '@fabaccess/database-entities';
 import * as migrations from './migrations';
+import { existsSync } from 'fs';
 
 const envType = loadEnv((z) => ({
   DB_TYPE: z.enum(['postgres', 'sqlite']).default('sqlite'),
@@ -44,7 +45,13 @@ function loadPostgresConfig() {
 
 function loadSqliteConfig() {
   const storageEnv = loadEnv((z) => ({ STORAGE_ROOT: z.string().default(join(process.cwd(), 'storage')) }));
-  const dbFile = resolve(join(storageEnv.STORAGE_ROOT, 'attraccess.sqlite'));
+  const fabaccessDbFile = resolve(join(storageEnv.STORAGE_ROOT, 'attraccess.sqlite'));
+  const attraccessDbFile = resolve(join(storageEnv.STORAGE_ROOT, 'attraccess.sqlite'));
+
+  let dbFile = fabaccessDbFile;
+  if (existsSync(attraccessDbFile)) {
+    dbFile = attraccessDbFile;
+  }
 
   console.log('dbFile', dbFile);
 

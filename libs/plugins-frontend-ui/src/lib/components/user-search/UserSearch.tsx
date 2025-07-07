@@ -1,8 +1,8 @@
 import { HTMLAttributes, useEffect, useMemo, useState } from 'react';
 import { Autocomplete, AutocompleteItem, AutocompleteProps } from '@heroui/autocomplete';
 import { useTranslations } from '../../i18n';
-import { AttraccessUser } from '../attraccess-user/AttraccessUser';
-import { User, useUsersServiceFindMany, useUsersServiceGetOneUserById } from '@attraccess/react-query-client';
+import { FabAccessUser } from '../FabAccessUser';
+import { User, useUsersServiceFindMany, useUsersServiceGetOneUserById } from '@fabaccess/react-query-client';
 
 import * as en from './en.json';
 import * as de from './de.json';
@@ -88,7 +88,7 @@ export function UserSearch(props: Readonly<UserSearchProps>) {
         >
           {(item) => (
             <AutocompleteItem key={(item as User).id}>
-              <AttraccessUser user={item as User} />
+              <FabAccessUser user={item as User} />
             </AutocompleteItem>
           )}
         </Autocomplete>
@@ -97,7 +97,7 @@ export function UserSearch(props: Readonly<UserSearchProps>) {
       </div>
 
       <div className="flex gap-2 items-center w-full justify-between">
-        {selectedUser && <AttraccessUser user={selectedUser} className="my-2 mx-2" />}
+        {selectedUser && <FabAccessUser user={selectedUser} className="my-2 mx-2" />}
         {afterSelection}
       </div>
     </div>

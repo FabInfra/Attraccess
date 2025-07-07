@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { MqttResourceConfig } from '@attraccess/database-entities';
+import { MqttResourceConfig } from '@fabaccess/database-entities';
 import { MqttResourceConfigService } from './mqtt-resource-config.service';
 import {
   CreateMqttResourceConfigDto,
@@ -9,7 +9,7 @@ import {
 } from './dtos/mqtt-resource-config.dto';
 import { MqttClientService } from '../../../../mqtt/mqtt-client.service';
 import * as Handlebars from 'handlebars';
-import { Auth } from '@attraccess/plugins-backend-sdk';
+import { Auth } from '@fabaccess/plugins-backend-sdk';
 
 @ApiTags('MQTT')
 @Auth('canManageResources')

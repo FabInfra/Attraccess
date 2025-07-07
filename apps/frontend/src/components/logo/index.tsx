@@ -7,8 +7,8 @@ export function Logo(props: Omit<LinkProps, 'children'>) {
       href={props.href ?? '/'}
       className={cn(props.className, 'font-bold text-inherit flex items-center gap-2')}
     >
-      <Image src="/logo.png" alt="Attraccess" height={32} />
-      <span className="text-xl">Attraccess</span>
+      <Image src="/logo.png" alt="FabAccess" height={32} />
+      <span className="text-xl">FabAccess</span>
     </Link>
   );
 }

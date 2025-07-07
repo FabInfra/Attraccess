@@ -1,4 +1,4 @@
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import {
   Button,
   Spinner,
@@ -19,7 +19,7 @@ import {
   useMqttServiceMqttServersGetAll,
   useMqttServiceMqttServersDeleteOne,
   UseMqttServiceMqttServersGetAllKeyFn,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 
 // Define ServerListItem component inline

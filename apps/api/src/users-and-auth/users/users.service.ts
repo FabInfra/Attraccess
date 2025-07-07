@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { Repository, ILike, FindOneOptions as TypeormFindOneOptions, FindOptionsWhere, In } from 'typeorm';
-import { SystemPermissions, User } from '@attraccess/database-entities';
+import { SystemPermissions, User } from '@fabaccess/database-entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginatedResponse } from '../../types/response';
 import { PaginationOptions, PaginationOptionsSchema } from '../../types/request';
@@ -212,10 +212,10 @@ export class UsersService {
     });
 
     this.logger.debug(`Found ${total} total users, returning page ${page} with ${users.length} results`);
-    
+
     const totalPages = Math.ceil(total / limit);
     const nextPage = page < totalPages ? page + 1 : null;
-    
+
     return {
       data: users,
       total,
@@ -262,10 +262,10 @@ export class UsersService {
     this.logger.debug(
       `Found ${total} total users with permission "${permission}", returning page ${page} with ${users.length} results`
     );
-    
+
     const totalPages = Math.ceil(total / limit);
     const nextPage = page < totalPages ? page + 1 : null;
-    
+
     return {
       data: users,
       total,

@@ -1,4 +1,4 @@
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { Button, Card, CardHeader } from '@heroui/react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Plus } from 'lucide-react';
@@ -29,7 +29,12 @@ export function MqttServersPage() {
         <CardHeader>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h2>{t('title')}</h2>
-            <Button color="primary" startContent={<Plus size={16} />} onPress={handleAddNewServer} data-cy="mqtt-servers-page-add-new-server-button">
+            <Button
+              color="primary"
+              startContent={<Plus size={16} />}
+              onPress={handleAddNewServer}
+              data-cy="mqtt-servers-page-add-new-server-button"
+            >
               {t('addNewServer')}
             </Button>
           </div>

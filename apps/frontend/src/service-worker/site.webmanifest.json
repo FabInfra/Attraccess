@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/web-manifest-combined.json",
-  "name": "Attraccess",
-  "short_name": "Attraccess",
-  "description": "Attraccess is a platform for managing access to resources in a collaborative environment (e.g. Makerspaces and FabLabs).",
+  "name": "FabAccess",
+  "short_name": "FabAccess",
+  "description": "FabAccess is a platform for managing access to resources in a collaborative environment (e.g. Makerspaces and FabLabs).",
   "start_url": "/?pwa=true",
   "theme_color": "#000000",
   "background_color": "#000000",

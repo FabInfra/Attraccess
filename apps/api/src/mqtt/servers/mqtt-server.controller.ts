@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { MqttServer } from '@attraccess/database-entities';
+import { MqttServer } from '@fabaccess/database-entities';
 import { MqttServerService } from './mqtt-server.service';
 import {
   CreateMqttServerDto,
@@ -9,7 +9,7 @@ import {
   MqttServerStatusDto,
   AllMqttServerStatusesDto,
 } from './dtos/mqtt-server.dto';
-import { Auth } from '@attraccess/plugins-backend-sdk';
+import { Auth } from '@fabaccess/plugins-backend-sdk';
 import { MqttClientService } from '../mqtt-client.service';
 
 @ApiTags('MQTT')

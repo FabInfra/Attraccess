@@ -7,7 +7,7 @@ import { existsSync, readFileSync } from 'fs';
 
 import { UsersService } from '../users/users.service';
 import { AuthService } from '../auth/auth.service';
-import { AuthenticatedUser } from '@attraccess/plugins-backend-sdk';
+import { AuthenticatedUser } from '@fabaccess/plugins-backend-sdk';
 
 interface JwtPayload {
   username: string;

@@ -1,10 +1,10 @@
 # Docker Compose Deployment Guide
 
-This guide walks you through setting up Attraccess using Docker Compose, which simplifies the management of Docker containers.
+This guide walks you through setting up FabAccess using Docker Compose, which simplifies the management of Docker containers.
 
 ## What is Docker Compose?
 
-Docker Compose is a tool that allows you to define and manage multi-container Docker applications. Even though Attraccess runs in a single container, Docker Compose makes it easier to manage the configuration, startup, and shutdown of your Attraccess instance.
+Docker Compose is a tool that allows you to define and manage multi-container Docker applications. Even though FabAccess runs in a single container, Docker Compose makes it easier to manage the configuration, startup, and shutdown of your FabAccess instance.
 
 > 💡 **Benefit**: Using Docker Compose means you don't have to remember long Docker commands - all your settings are stored in a simple configuration file.
 
@@ -18,19 +18,19 @@ Docker Compose is a tool that allows you to define and manage multi-container Do
 
 ### Step 1: Create a Project Directory
 
-First, create a dedicated directory for your Attraccess deployment:
+First, create a dedicated directory for your FabAccess deployment:
 
 ```bash
-# Create a main directory for Attraccess
-mkdir -p ~/attraccess
+# Create a main directory for FabAccess
+mkdir -p ~/fabaccess
 
 # Navigate to this directory
-cd ~/attraccess
+cd ~/fabaccess
 ```
 
 ### Step 2: Create Docker Compose Configuration
 
-Create a file named `docker-compose.yml` in your Attraccess directory:
+Create a file named `docker-compose.yml` in your FabAccess directory:
 
 ```bash
 touch docker-compose.yml
@@ -42,9 +42,9 @@ Open this file in a text editor and add the following configuration:
 version: '3'
 
 services:
-  attraccess:
-    image: fabaccess/attraccess:latest
-    container_name: attraccess
+  fabaccess:
+    image: fabaccess/fabaccess:latest
+    container_name: fabaccess
     restart: unless-stopped
     ports:
       - '3000:3000'
@@ -70,32 +70,30 @@ services:
       - ./plugins:/app/plugins
 ```
 
-
 ### Choosing an Image Tag
 
-Attraccess provides several Docker image tags to suit different needs. You can specify the desired tag in the `image` field of your `docker-compose.yml` file (e.g., `image: ghcr.io/fabinfra/attraccess:latest`).
+FabAccess provides several Docker image tags to suit different needs. You can specify the desired tag in the `image` field of your `docker-compose.yml` file (e.g., `image: ghcr.io/fabinfra/fabaccess:latest`).
 
 Here are the available tags:
 
-*   **`latest`**: This tag always points to the most recent stable release of Attraccess. This is the recommended tag for most users as it provides a balance of new features and stability.
-    *   Example: `ghcr.io/fabinfra/attraccess:latest`
-*   **`nightly-latest`**: This tag points to the latest successful build from the `main` development branch. It includes the newest features and bug fixes but may be less stable than a release version. Use this if you want to try out cutting-edge changes or help with testing.
-    *   Example: `ghcr.io/fabinfra/attraccess:nightly-latest`
-*   **`nightly-<commit_sha>`**: This tag points to a specific build from the `main` branch, identified by its short commit SHA (e.g., `nightly-abcdef1`). This is useful if you need to pin your deployment to a particular nightly version for testing or to avoid a regression introduced in a later nightly build.
-    *   Example: `ghcr.io/fabinfra/attraccess:nightly-a1b2c3d`
-*   **`<version>`** (e.g., `v1.2.3`): This tag points to a specific official release version of Attraccess. Use this if you need to run a specific version of the application.
-    *   Example: `ghcr.io/fabinfra/attraccess:v1.0.0`
-*   **`<version>-<commit_sha>`** (e.g., `v1.2.3-abcdef1`): This tag points to a specific official release version tied to its exact commit SHA. This offers the most precise version pinning.
-    *   Example: `ghcr.io/fabinfra/attraccess:v1.0.0-e4f5g6h`
+- **`latest`**: This tag always points to the most recent stable release of FabAccess. This is the recommended tag for most users as it provides a balance of new features and stability.
+  - Example: `ghcr.io/fabinfra/fabaccess:latest`
+- **`nightly-latest`**: This tag points to the latest successful build from the `main` development branch. It includes the newest features and bug fixes but may be less stable than a release version. Use this if you want to try out cutting-edge changes or help with testing.
+  - Example: `ghcr.io/fabinfra/fabaccess:nightly-latest`
+- **`nightly-<commit_sha>`**: This tag points to a specific build from the `main` branch, identified by its short commit SHA (e.g., `nightly-abcdef1`). This is useful if you need to pin your deployment to a particular nightly version for testing or to avoid a regression introduced in a later nightly build.
+  - Example: `ghcr.io/fabinfra/fabaccess:nightly-a1b2c3d`
+- **`<version>`** (e.g., `v1.2.3`): This tag points to a specific official release version of FabAccess. Use this if you need to run a specific version of the application.
+  - Example: `ghcr.io/fabinfra/fabaccess:v1.0.0`
+- **`<version>-<commit_sha>`** (e.g., `v1.2.3-abcdef1`): This tag points to a specific official release version tied to its exact commit SHA. This offers the most precise version pinning.
+  - Example: `ghcr.io/fabinfra/fabaccess:v1.0.0-e4f5g6h`
 
 When updating, you can change the tag in your `docker-compose.yml` and then run `docker-compose pull && docker-compose up -d` to fetch and deploy the new version.
-
 
 > ⚠️ **Security Note**: Replace the placeholder values for `AUTH_JWT_SECRET` and `AUTH_SESSION_SECRET` with strong, random strings. You can generate secure random strings with: `openssl rand -base64 32`
 
 ### Step 3: Create Storage Directories
 
-Create directories for Attraccess data that will be mapped to the Docker container:
+Create directories for FabAccess data that will be mapped to the Docker container:
 
 ```bash
 mkdir -p storage plugins
@@ -131,10 +129,10 @@ Update the email settings in your `docker-compose.yml` file with your actual SMT
 
 #### URL Configuration
 
-If you're deploying Attraccess to be accessible from other computers, update the `VITE_ATTRACCESS_URL` with your actual domain or IP address:
+If you're deploying FabAccess to be accessible from other computers, update the `VITE_ATTRACCESS_URL` with your actual domain or IP address:
 
 ```yaml
-- VITE_ATTRACCESS_URL=https://attraccess.yourdomain.com
+- VITE_ATTRACCESS_URL=https://fabaccess.yourdomain.com
 ```
 
 or
@@ -143,9 +141,9 @@ or
 - VITE_ATTRACCESS_URL=http://your-server-ip:3000
 ```
 
-### Step 5: Start Attraccess
+### Step 5: Start FabAccess
 
-Once you've configured your `docker-compose.yml` file, start Attraccess with:
+Once you've configured your `docker-compose.yml` file, start FabAccess with:
 
 ```bash
 docker-compose up -d
@@ -157,13 +155,13 @@ This command:
 
 ### Step 6: Verify Deployment
 
-Check if Attraccess is running properly:
+Check if FabAccess is running properly:
 
 ```bash
 docker-compose ps
 ```
 
-You should see your Attraccess container listed as running.
+You should see your FabAccess container listed as running.
 
 ### Step 7: Access the Application
 
@@ -172,11 +170,11 @@ Open your web browser and go to:
 - `http://localhost:3000` (if accessing from the same computer)
 - `http://your-server-ip:3000` (if accessing from another computer)
 
-### Managing Your Attraccess Instance
+### Managing Your FabAccess Instance
 
 #### View Logs
 
-To see the logs from your Attraccess container:
+To see the logs from your FabAccess container:
 
 ```bash
 docker-compose logs
@@ -188,17 +186,17 @@ For continuous log monitoring:
 docker-compose logs -f
 ```
 
-#### Stop Attraccess
+#### Stop FabAccess
 
-To stop your Attraccess instance:
+To stop your FabAccess instance:
 
 ```bash
 docker-compose down
 ```
 
-#### Restart Attraccess
+#### Restart FabAccess
 
-To restart your Attraccess instance:
+To restart your FabAccess instance:
 
 ```bash
 docker-compose restart
@@ -206,7 +204,7 @@ docker-compose restart
 
 #### Update to the Latest Version
 
-To update Attraccess to the latest version:
+To update FabAccess to the latest version:
 
 ```bash
 # Pull the latest image
@@ -253,9 +251,9 @@ LOG_LEVELS=error,warn,log
 version: '3'
 
 services:
-  attraccess:
-    image: fabaccess/attraccess:latest
-    container_name: attraccess
+  fabaccess:
+    image: fabaccess/fabaccess:latest
+    container_name: fabaccess
     restart: unless-stopped
     ports:
       - '3000:3000'
@@ -276,7 +274,7 @@ services:
    - Verify all required environment variables are set correctly
    - Check if port 3000 is already in use by another application
 
-2. **Can't access Attraccess in browser**:
+2. **Can't access FabAccess in browser**:
 
    - Verify the container is running with `docker-compose ps`
    - Check if your firewall is blocking port 3000
@@ -303,9 +301,9 @@ docker-compose logs -f
 
 ## Next Steps
 
-After successfully deploying Attraccess, you can:
+After successfully deploying FabAccess, you can:
 
 1. Create an account (the first account is automatically Admin)
-2. Enjoy Attraccess!
+2. Enjoy FabAccess!
 
-For more information on using Attraccess, refer to our [User Guide](/user/getting-started.md).
+For more information on using FabAccess, refer to our [User Guide](/user/getting-started.md).

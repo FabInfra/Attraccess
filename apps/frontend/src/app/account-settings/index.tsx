@@ -1,17 +1,10 @@
 import React, { useState } from 'react';
 import { PageHeader } from '../../components/pageHeader';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Input,
-  Button,
-  Alert,
-} from '@heroui/react';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
+import { Card, CardBody, CardHeader, Input, Button, Alert } from '@heroui/react';
 import { UserCog, Mail } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
-import { useUsersServiceRequestEmailChange } from '@attraccess/react-query-client';
+import { useUsersServiceRequestEmailChange } from '@fabaccess/react-query-client';
 
 import * as en from './en.json';
 import * as de from './de.json';
@@ -32,7 +25,7 @@ export const AccountSettingsPage: React.FC = () => {
   const handleEmailChangeRequest = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newEmail.trim()) return;
-    
+
     await requestEmailChange.mutateAsync({
       requestBody: { newEmail },
     });

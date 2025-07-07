@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input, Textarea, Select, SelectItem, Switch } from '@heroui/react'; // Added Switch
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { useWebhookForm } from '../context/WebhookFormContext';
 import { WebhookHttpMethod } from '../types';
 

@@ -1,7 +1,7 @@
 import { Modal, ModalBody, ModalContent, ModalHeader, Progress } from '@heroui/react';
 import { PageHeader } from '../../pageHeader';
 import { RefreshCcwIcon } from 'lucide-react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 
 import de from './de.json';
 import en from './en.json';

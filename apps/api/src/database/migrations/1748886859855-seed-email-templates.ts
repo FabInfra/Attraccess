@@ -30,7 +30,7 @@ export const RESET_PASSWORD_MJML_TEMPLATE = `
     <mj-section background-color="#FFFFFF" padding="20px 0">
       <mj-column>
         <mj-text align="center" font-size="24px" color="#1E40AF" font-weight="bold" padding="0">
-          Attraccess
+          FabAccess
         </mj-text>
       </mj-column>
     </mj-section>
@@ -87,7 +87,7 @@ export const RESET_PASSWORD_MJML_TEMPLATE = `
         <mj-text font-size="12px" color="#6B7280" align="center" padding="5px 0 0 0">
           Visit us:
           <a href="{{host.frontend}}">{{host.frontend}}</a> |
-          <a href="https://github.com/FabInfra/Attraccess">GitHub</a>
+          <a href="https://github.com/FabInfra/FabAccess">GitHub</a>
         </mj-text>
       </mj-column>
     </mj-section>
@@ -95,7 +95,7 @@ export const RESET_PASSWORD_MJML_TEMPLATE = `
 </mjml>
 `;
 
-// /workspace/Attraccess/apps/api/src/email/templates/verify-email.template.ts
+// /workspace/FabAccess/apps/api/src/email/templates/verify-email.template.ts
 export const VERIFY_EMAIL_MJML_TEMPLATE = `
 <mjml>
   <mj-head>
@@ -126,7 +126,7 @@ export const VERIFY_EMAIL_MJML_TEMPLATE = `
     <mj-section background-color="#FFFFFF" padding="20px 0">
       <mj-column>
         <mj-text align="center" font-size="24px" color="#1E40AF" font-weight="bold" padding="0">
-          Attraccess
+          FabAccess
         </mj-text>
       </mj-column>
     </mj-section>
@@ -183,7 +183,7 @@ export const VERIFY_EMAIL_MJML_TEMPLATE = `
         <mj-text font-size="12px" color="#6B7280" align="center" padding="5px 0 0 0">
           Visit us:
           <a href="{{host.frontend}}">{{host.frontend}}</a> |
-          <a href="https://github.com/FabInfra/Attraccess">GitHub</a>
+          <a href="https://github.com/FabInfra/FabAccess">GitHub</a>
         </mj-text>
       </mj-column>
     </mj-section>

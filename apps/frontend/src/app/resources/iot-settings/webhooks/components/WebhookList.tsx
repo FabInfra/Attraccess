@@ -1,10 +1,10 @@
 import React from 'react';
 import { Accordion, AccordionItem, Alert, Skeleton, Chip } from '@heroui/react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import * as en from '../translations/en';
 import * as de from '../translations/de';
 import WebhookForm from './WebhookForm';
-import { useWebhooksServiceWebhookConfigGetAll } from '@attraccess/react-query-client';
+import { useWebhooksServiceWebhookConfigGetAll } from '@fabaccess/react-query-client';
 
 // Types
 interface WebhookListProps {
