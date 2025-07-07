@@ -18,7 +18,7 @@ import { LoadedPluginManifest } from './plugin.manifest';
 import { join } from 'path';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUpload } from '../common/types/file-upload.types';
-import { Auth } from '@attraccess/plugins-backend-sdk';
+import { Auth } from '@fabaccess/plugins-backend-sdk';
 import { UploadPluginDto } from './dto/uploadPlugin.dto';
 
 @ApiTags('Plugins')

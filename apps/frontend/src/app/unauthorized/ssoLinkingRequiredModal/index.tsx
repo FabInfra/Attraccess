@@ -1,12 +1,12 @@
 import { Alert, Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/react';
 import { PageHeader } from '../../../components/pageHeader';
-import { useTranslations, useUrlQuery } from '@attraccess/plugins-frontend-ui';
+import { useTranslations, useUrlQuery } from '@fabaccess/plugins-frontend-ui';
 import { PasswordInput } from '../../../components/PasswordInput';
 
 import de from './de.json';
 import en from './en.json';
 import { useCallback, useMemo, useState } from 'react';
-import { SSOProviderType, useAuthenticationServiceLinkUserToExternalAccount } from '@attraccess/react-query-client';
+import { SSOProviderType, useAuthenticationServiceLinkUserToExternalAccount } from '@fabaccess/react-query-client';
 import { useCallbackURL } from '../use-sso-callback-url';
 
 interface Props {

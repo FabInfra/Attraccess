@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ResourceUsageController } from './resourceUsage.controller';
 import { ResourceUsageService } from './resourceUsage.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Resource, ResourceUsage } from '@attraccess/database-entities';
+import { Resource, ResourceUsage } from '@fabaccess/database-entities';
 import { ResourceIntroducersModule } from '../introducers/resourceIntroducers.module';
 import { ResourceIntroductionsModule } from '../introductions/resourceIntroductions.module';
 import { ResourceGroupsModule } from '../groups/resourceGroups.module';

@@ -15,7 +15,7 @@ You can install the firmware directly from your web browser using [ESP Web Tools
 ### Quick Installation
 
 1. Connect your Fabreader device to your computer via USB
-2. Visit our [firmware installation page](https://OWNER_NAME.github.io/Attraccess/) (replace OWNER_NAME with your GitHub username)
+2. Visit our [firmware installation page](https://OWNER_NAME.github.io/FabAccess/) (replace OWNER_NAME with your GitHub username)
 3. Click the "Install" button and follow the on-screen instructions
 4. If prompted, select the correct serial port for your device
 5. Wait for the installation to complete

@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { ResourceGroupsService } from './resourceGroups.service';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ResourceGroup } from '@attraccess/database-entities';
+import { ResourceGroup } from '@fabaccess/database-entities';
 import { CreateResourceGroupDto } from './dto/createGroup.dto';
 import { UpdateResourceGroupDto } from './dto/updateGroup.dto';
-import { Auth } from '@attraccess/plugins-backend-sdk';
+import { Auth } from '@fabaccess/plugins-backend-sdk';
 
 @ApiTags('Resources')
 @Controller('resource-groups')

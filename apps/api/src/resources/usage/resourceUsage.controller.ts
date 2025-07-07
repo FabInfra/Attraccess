@@ -1,10 +1,10 @@
 import { Controller, Post, Put, Get, Param, Body, Query, ParseIntPipe, Req, ForbiddenException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ResourceUsageService } from './resourceUsage.service';
-import { ResourceUsage } from '@attraccess/database-entities';
+import { ResourceUsage } from '@fabaccess/database-entities';
 import { StartUsageSessionDto } from './dtos/startUsageSession.dto';
 import { EndUsageSessionDto } from './dtos/endUsageSession.dto';
-import { Auth, AuthenticatedRequest } from '@attraccess/plugins-backend-sdk';
+import { Auth, AuthenticatedRequest } from '@fabaccess/plugins-backend-sdk';
 import { GetResourceHistoryQueryDto } from './dtos/getResourceHistoryQuery.dto';
 import { GetResourceHistoryResponseDto } from './dtos/GetResourceHistoryResponse.dto';
 import { GetActiveUsageSessionDto } from './dtos/getActiveUsageSession.dto';

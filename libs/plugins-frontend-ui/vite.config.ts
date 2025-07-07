@@ -13,8 +13,8 @@ const sharedLibs = [
   'react-pluggable',
   '@heroui/react',
   '@tanstack/react-query',
-  '@attraccess/react-query-client',
-  '@attraccess/plugins-frontend-ui',
+  '@fabaccess/react-query-client',
+  '@fabaccess/plugins-frontend-ui',
 ];
 
 export default defineConfig({

@@ -14,7 +14,7 @@ import { QrCodeIcon } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { QRCode } from 'react-qrcode-logo';
 import { Select } from '../../../../components/select';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { QrCodeAction } from './action';
 
 import de from './de.json';

@@ -2,9 +2,9 @@
 
 ## Overview
 
-The Attraccess plugin system enables developers to extend the platform's capabilities without modifying the core codebase. This modular approach allows for customized functionality while maintaining a stable foundation.
+The FabAccess plugin system enables developers to extend the platform's capabilities without modifying the core codebase. This modular approach allows for customized functionality while maintaining a stable foundation.
 
-Plugins in Attraccess consist of three main components:
+Plugins in FabAccess consist of three main components:
 
 1. **Plugin Manifest (`plugin.json`)** - A descriptor file defining the plugin and its entry points
 2. **Frontend Module** - A React-based component that extends the UI (optional)
@@ -33,7 +33,7 @@ plugin-name/
 
 ### Compiled Structure
 
-After compilation, the plugin structure that gets loaded by Attraccess looks like this:
+After compilation, the plugin structure that gets loaded by FabAccess looks like this:
 
 ```
 plugin-name/
@@ -49,7 +49,7 @@ plugin-name/
         └── other assets       # CSS, images, etc.
 ```
 
-The compiled version is what gets loaded by the Attraccess plugin system at runtime.
+The compiled version is what gets loaded by the FabAccess plugin system at runtime.
 
 ## Plugin Manifest
 
@@ -67,7 +67,7 @@ The `plugin.json` file is required for all plugins and defines the plugin's meta
   },
   "version": "0.0.16",
   "description": "Description of the plugin",
-  "attraccessVersion": {
+  "fabaccessVersion": {
     "min": "0.0.0",
     "max": "2.0.0",
     "exact": null
@@ -85,15 +85,15 @@ The `plugin.json` file is required for all plugins and defines the plugin's meta
 | `main.frontend.entryPoint` | Path to the frontend entry point        |
 | `version`                  | Plugin version                          |
 | `description`              | Plugin description                      |
-| `attraccessVersion`        | Compatibility with Attraccess versions  |
+| `fabaccessVersion`         | Compatibility with FabAccess versions   |
 
-### The `attraccessVersion` Field
+### The `fabaccessVersion` Field
 
-The `attraccessVersion` field helps ensure compatibility between your plugin and the Attraccess platform:
+The `fabaccessVersion` field helps ensure compatibility between your plugin and the FabAccess platform:
 
-- `min`: Specifies the minimum Attraccess version your plugin is compatible with
-- `max`: Specifies the maximum Attraccess version your plugin is compatible with
-- `exact`: If set, specifies that your plugin only works with this exact Attraccess version
+- `min`: Specifies the minimum FabAccess version your plugin is compatible with
+- `max`: Specifies the maximum FabAccess version your plugin is compatible with
+- `exact`: If set, specifies that your plugin only works with this exact FabAccess version
 
 You can specify any combination of these properties. For example:
 
@@ -101,7 +101,7 @@ You can specify any combination of these properties. For example:
 - `{ "min": "1.0.0", "max": "2.0.0" }` - Compatible with versions between 1.0.0 and 2.0.0
 - `{ "exact": "1.5.0" }` - Only compatible with version 1.5.0
 
-When Attraccess loads a plugin, it compares its own version with the plugin's compatibility settings and will only load the plugin if the versions match. This prevents loading plugins that might cause errors due to incompatible APIs or features.
+When FabAccess loads a plugin, it compares its own version with the plugin's compatibility settings and will only load the plugin if the versions match. This prevents loading plugins that might cause errors due to incompatible APIs or features.
 
 Version checking follows semantic versioning rules (major.minor.patch):
 
@@ -111,21 +111,17 @@ Version checking follows semantic versioning rules (major.minor.patch):
 
 ## Frontend Plugin Development
 
-The frontend part of a plugin extends the Attraccess UI using [React](https://reactjs.org/) and the [react-pluggable](https://github.com/adarshpastakia/react-pluggable) library. It is compiled as a [Module Federation](https://webpack.js.org/concepts/module-federation/) package to enable dynamic loading.
+The frontend part of a plugin extends the FabAccess UI using [React](https://reactjs.org/) and the [react-pluggable](https://github.com/adarshpastakia/react-pluggable) library. It is compiled as a [Module Federation](https://webpack.js.org/concepts/module-federation/) package to enable dynamic loading.
 
 ### Creating a Frontend Plugin
 
-1. Create a class that implements the `AttraccessFrontendPlugin` interface:
+1. Create a class that implements the `FabAccessFrontendPlugin` interface:
 
 ```tsx
 import { PluginStore } from 'react-pluggable';
-import {
-  AttraccessFrontendPlugin,
-  AttraccessFrontendPluginAuthData,
-  RouteConfig,
-} from '@attraccess/plugins-frontend-sdk';
+import { FabAccessFrontendPlugin, FabAccessFrontendPluginAuthData, RouteConfig } from '@fabaccess/plugins-frontend-sdk';
 
-export default class MyPlugin implements AttraccessFrontendPlugin {
+export default class MyPlugin implements FabAccessFrontendPlugin {
   public pluginStore!: PluginStore;
   public readonly name = 'MyPlugin';
   public readonly version = 'v1.0.0';
@@ -146,7 +142,7 @@ export default class MyPlugin implements AttraccessFrontendPlugin {
     // Handle API endpoint changes
   }
 
-  onApiAuthStateChange(authData: null | AttraccessFrontendPluginAuthData): void {
+  onApiAuthStateChange(authData: null | FabAccessFrontendPluginAuthData): void {
     // Handle authentication state changes
   }
 
@@ -171,9 +167,9 @@ export default class MyPlugin implements AttraccessFrontendPlugin {
 
 ### Understanding the `GET_ROUTES` Function
 
-The `GET_ROUTES` function is a critical part of the plugin integration with Attraccess. When you register this function:
+The `GET_ROUTES` function is a critical part of the plugin integration with FabAccess. When you register this function:
 
-1. The Attraccess core application automatically discovers your plugin's routes
+1. The FabAccess core application automatically discovers your plugin's routes
 2. These routes are integrated into the main application's routing system
 3. Your plugin's UI components are rendered at the specified paths
 4. If you include a `sidebar` configuration, your plugin gets an entry in the navigation menu
@@ -189,7 +185,7 @@ The function should return an array of `RouteConfig` objects with these properti
 | `sidebar.label` | The text displayed in the sidebar                       |
 | `sidebar.icon`  | The icon component for the sidebar item                 |
 
-The Attraccess router system is built on [React Router](https://reactrouter.com/), so your routes will be integrated into the application's routing hierarchy. This means you can:
+The FabAccess router system is built on [React Router](https://reactrouter.com/), so your routes will be integrated into the application's routing hierarchy. This means you can:
 
 - Access URL parameters with React Router's hooks
 - Create nested routes within your plugin
@@ -221,8 +217,8 @@ export default defineConfig({
         'react-i18next',
         'i18next-browser-languagedetector',
         '@tanstack/react-query',
-        '@attraccess/react-query-client',
-        '@attraccess/plugins-frontend-ui',
+        '@fabaccess/react-query-client',
+        '@fabaccess/plugins-frontend-ui',
       ],
     }),
     // ... other plugins
@@ -233,13 +229,13 @@ export default defineConfig({
 
 ### Shared Dependencies
 
-The `shared` array in the Module Federation configuration is crucial. It specifies which dependencies should be shared between the host application (Attraccess) and your plugin. This is important for:
+The `shared` array in the Module Federation configuration is crucial. It specifies which dependencies should be shared between the host application (FabAccess) and your plugin. This is important for:
 
 1. **Preventing Duplicate Modules**: Without shared dependencies, React and other libraries would be loaded multiple times, causing conflicts and increased bundle size
 2. **Shared Context**: Components like contexts need to be from the same instance to work properly
 3. **Consistent Versions**: Ensures all components use the same version of libraries
 
-The following dependencies must be shared for proper integration with Attraccess:
+The following dependencies must be shared for proper integration with FabAccess:
 
 ```js
 [
@@ -252,8 +248,8 @@ The following dependencies must be shared for proper integration with Attraccess
   'react-i18next',
   'i18next-browser-languagedetector',
   '@tanstack/react-query',
-  '@attraccess/react-query-client',
-  '@attraccess/plugins-frontend-ui',
+  '@fabaccess/react-query-client',
+  '@fabaccess/plugins-frontend-ui',
 ];
 ```
 
@@ -279,7 +275,7 @@ The following dependencies must be shared for proper integration with Attraccess
    - Purpose: Core plugin architecture that enables plugin functionality
    - [Documentation](https://github.com/adarshpastakia/react-pluggable)
 
-5. **@heroui/react** - UI component library of Attraccess
+5. **@heroui/react** - UI component library of FabAccess
 
    - Purpose: Provides UI components and styling for the application
    - [Documentation](https://www.heroui.com/)
@@ -304,14 +300,14 @@ The following dependencies must be shared for proper integration with Attraccess
    - Purpose: Manages API requests, caching, and state
    - [Documentation](https://tanstack.com/query/latest)
 
-10. **@attraccess/react-query-client** - Attraccess-specific React Query client
+10. **@fabaccess/react-query-client** - FabAccess-specific React Query client
 
-    - Purpose: Pre-configured React Query client for Attraccess API endpoints
-    - Internal library specific to Attraccess
+    - Purpose: Pre-configured React Query client for FabAccess API endpoints
+    - Internal library specific to FabAccess
 
-11. **@attraccess/plugins-frontend-ui** - Attraccess UI components for plugins
+11. **@fabaccess/plugins-frontend-ui** - FabAccess UI components for plugins
     - Purpose: Shared UI components to maintain consistent look and feel
-    - Internal library specific to Attraccess
+    - Internal library specific to FabAccess
 
 If you don't properly share these dependencies:
 
@@ -322,7 +318,7 @@ If you don't properly share these dependencies:
 
 ## Backend Plugin Development
 
-The backend part of a plugin extends the Attraccess API using [NestJS](https://nestjs.com/) dynamic modules.
+The backend part of a plugin extends the FabAccess API using [NestJS](https://nestjs.com/) dynamic modules.
 
 ### Creating a Backend Plugin
 
@@ -343,7 +339,7 @@ import { MyPluginService } from './my-plugin.service';
 export default class MyPluginModule {}
 ```
 
-The module must be exported as the default export. This allows the Attraccess plugin system to dynamically load it.
+The module must be exported as the default export. This allows the FabAccess plugin system to dynamically load it.
 
 2. Implement your controllers, services, and other components as needed:
 
@@ -366,7 +362,7 @@ export class MyPluginController {
 
 ### Loading
 
-The Attraccess plugin system loads plugins in this sequence:
+The FabAccess plugin system loads plugins in this sequence:
 
 1. The system scans the plugins directory for `plugin.json` files
 2. For each valid plugin, it:

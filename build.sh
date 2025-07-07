@@ -58,13 +58,13 @@ echo "Running docker build with arguments: ${BUILD_ARGS[@]}"
 docker build \
   "${BUILD_ARGS[@]}" \
   "${SECRET_ARGS[@]}" \
-  -t attraccess:${VERSION_TAG} \
+  -t fabaccess:${VERSION_TAG} \
   .
 
 # Always tag as latest for convenience
 if [[ "$VERSION_TAG" != "latest" ]]; then
-  docker tag attraccess:${VERSION_TAG} attraccess:latest
-  echo "Docker image built successfully with tags: attraccess:${VERSION_TAG}, attraccess:latest"
+  docker tag fabaccess:${VERSION_TAG} fabaccess:latest
+  echo "Docker image built successfully with tags: fabaccess:${VERSION_TAG}, fabaccess:latest"
 else
-  echo "Docker image built successfully with tag: attraccess:latest"
+  echo "Docker image built successfully with tag: fabaccess:latest"
 fi 

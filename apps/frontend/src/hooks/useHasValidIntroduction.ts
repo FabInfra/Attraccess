@@ -1,4 +1,4 @@
-import { ResourceIntroduction, User } from '@attraccess/react-query-client';
+import { ResourceIntroduction, User } from '@fabaccess/react-query-client';
 import { useCallback } from 'react';
 
 interface Props {

@@ -1,4 +1,4 @@
-import { useTranslations, ResourceSelector } from '@attraccess/plugins-frontend-ui';
+import { useTranslations, ResourceSelector } from '@fabaccess/plugins-frontend-ui';
 import de from './fabreader-editor.de.json';
 import en from './fabreader-editor.en.json';
 import { Button, Form, ModalBody, Modal, ModalContent, ModalHeader, ModalFooter } from '@heroui/react';
@@ -9,7 +9,7 @@ import {
   useFabReaderServiceGetReaderById,
   useFabReaderServiceGetReadersKey,
   useFabReaderServiceUpdateReader,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { useToastMessage } from '../../../components/toastProvider';
 
 interface Props {

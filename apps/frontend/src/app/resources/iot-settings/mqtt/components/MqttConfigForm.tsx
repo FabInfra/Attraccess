@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import {
   Button,
   Card,
@@ -23,7 +23,7 @@ import {
   UseMqttServiceMqttResourceConfigGetAllKeyFn,
   UseMqttServiceMqttResourceConfigGetOneKeyFn,
   MqttResourceConfig,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { useNavigate } from 'react-router-dom';
 import { useToastMessage } from '../../../../../components/toastProvider';
 import en from '../translations/configForm.en.json';

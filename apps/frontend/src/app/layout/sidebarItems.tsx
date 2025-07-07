@@ -108,7 +108,7 @@ export const useSidebarEndItems = () => {
 
   const reportBugUrl = newGithubIssueUrl({
     user: 'FabInfra',
-    repo: 'Attraccess',
+    repo: 'FabAccess',
     title: '[Bug] ',
     labels: ['bug'],
     body: `
@@ -129,7 +129,7 @@ export const useSidebarEndItems = () => {
 
   const requestFeatureUrl = newGithubIssueUrl({
     user: 'FabInfra',
-    repo: 'Attraccess',
+    repo: 'FabAccess',
     title: '[Feature Request] ',
     labels: ['enhancement'],
     body: `

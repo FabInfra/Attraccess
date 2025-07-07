@@ -1,8 +1,8 @@
 import { Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ResourceIntroducer } from '@attraccess/database-entities';
+import { ResourceIntroducer } from '@fabaccess/database-entities';
 import { ResourceGroupsIntroducersService } from './resourceGroups.introducers.service';
-import { Auth } from '@attraccess/plugins-backend-sdk';
+import { Auth } from '@fabaccess/plugins-backend-sdk';
 import { IsResourceGroupIntroducerResponseDto } from './dtos/isIntroducer.response.dto';
 
 @ApiTags('Access Control')

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
-import { DateTimeDisplay } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
+import { DateTimeDisplay } from '@fabaccess/plugins-frontend-ui';
 import * as en from './translations/en.json';
 import * as de from './translations/de.json';
 

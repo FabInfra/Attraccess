@@ -1,10 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsObject,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { IsObject, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class UpdateOIDCConfigurationDto {
@@ -19,8 +14,7 @@ export class UpdateOIDCConfigurationDto {
 
   @ApiProperty({
     description: 'The authorization URL of the provider',
-    example:
-      'https://sso.example.com/auth/realms/example/protocol/openid-connect/auth',
+    example: 'https://sso.example.com/auth/realms/example/protocol/openid-connect/auth',
     required: false,
   })
   @IsString()
@@ -29,8 +23,7 @@ export class UpdateOIDCConfigurationDto {
 
   @ApiProperty({
     description: 'The token URL of the provider',
-    example:
-      'https://sso.example.com/auth/realms/example/protocol/openid-connect/token',
+    example: 'https://sso.example.com/auth/realms/example/protocol/openid-connect/token',
     required: false,
   })
   @IsString()
@@ -39,8 +32,7 @@ export class UpdateOIDCConfigurationDto {
 
   @ApiProperty({
     description: 'The user info URL of the provider',
-    example:
-      'https://sso.example.com/auth/realms/example/protocol/openid-connect/userinfo',
+    example: 'https://sso.example.com/auth/realms/example/protocol/openid-connect/userinfo',
     required: false,
   })
   @IsString()
@@ -49,7 +41,7 @@ export class UpdateOIDCConfigurationDto {
 
   @ApiProperty({
     description: 'The client ID of the provider',
-    example: 'attraccess-client',
+    example: 'fabaccess-client',
     required: false,
   })
   @IsString()

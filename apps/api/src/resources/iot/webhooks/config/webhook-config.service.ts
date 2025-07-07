@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { WebhookConfig, Resource } from '@attraccess/database-entities';
+import { WebhookConfig, Resource } from '@fabaccess/database-entities';
 import { randomBytes, createHmac } from 'crypto';
 
 @Injectable()

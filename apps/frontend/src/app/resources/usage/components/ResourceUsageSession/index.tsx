@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Card, CardBody, CardHeader, Spinner } from '@heroui/react';
 import { Clock } from 'lucide-react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { useAuth } from '../../../../../hooks/useAuth';
 import { ActiveSessionDisplay } from '../ActiveSessionDisplay';
 import { OtherUserSessionDisplay } from '../OtherUserSessionDisplay';
@@ -12,7 +12,7 @@ import {
   useResourcesServiceResourceUsageGetActiveSession,
   Resource,
   useResourcesServiceResourceUsageCanControl,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import * as en from './translations/en.json';
 import * as de from './translations/de.json';
 

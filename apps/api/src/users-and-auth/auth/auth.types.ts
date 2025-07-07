@@ -1,4 +1,4 @@
-import { User } from '@attraccess/database-entities';
+import { User } from '@fabaccess/database-entities';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateSessionResponse {

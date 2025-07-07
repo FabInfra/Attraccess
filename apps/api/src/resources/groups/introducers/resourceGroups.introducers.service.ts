@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
-import { ResourceIntroducer } from '@attraccess/database-entities';
+import { ResourceIntroducer } from '@fabaccess/database-entities';
 import { Repository } from 'typeorm';
 
 @Injectable()

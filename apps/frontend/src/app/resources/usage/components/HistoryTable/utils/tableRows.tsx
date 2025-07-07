@@ -1,10 +1,10 @@
 import React, { ReactElement } from 'react';
 import { TableCell, Chip } from '@heroui/react';
-import { ResourceUsage } from '@attraccess/react-query-client';
+import { ResourceUsage } from '@fabaccess/react-query-client';
 import { TFunction } from 'i18next';
-import { DurationDisplay, DateTimeDisplay } from '@attraccess/plugins-frontend-ui';
+import { DurationDisplay, DateTimeDisplay } from '@fabaccess/plugins-frontend-ui';
 import { MessageSquareText } from 'lucide-react';
-import { AttraccessUser } from '@attraccess/plugins-frontend-ui';
+import { FabAccessUser } from '@fabaccess/plugins-frontend-ui';
 
 /**
  * Generates table row cells based on session data and user permissions
@@ -21,7 +21,7 @@ export function generateRowCells(
   if (canManageResources && showAllUsers) {
     cells.push(
       <TableCell key={`user-${session.id}`}>
-        <AttraccessUser user={session.user} />
+        <FabAccessUser user={session.user} />
       </TableCell>
     );
   }

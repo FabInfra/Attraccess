@@ -13,7 +13,7 @@ The MQTTX Web client is automatically started as part of the local development e
 1. Open your web browser and navigate to [http://localhost:4000](http://localhost:4000)
 2. The MQTTX Web interface should load automatically
 3. To connect to the MQTT broker, click on "New Connection" and use these settings:
-   - Name: `Attraccess MQTT`
+   - Name: `FabAccess MQTT`
    - Host: `localhost`
    - Port: `1883`
    - No username/password (development mode)
@@ -38,7 +38,7 @@ The main interface will display all received messages for your subscribed topics
 
 ### Testing Resource Usage Events
 
-When you mark a resource as "in use" or "not in use" in Attraccess, the system will publish messages to topics following this pattern:
+When you mark a resource as "in use" or "not in use" in FabAccess, the system will publish messages to topics following this pattern:
 
 ```
 resources/{id}/status

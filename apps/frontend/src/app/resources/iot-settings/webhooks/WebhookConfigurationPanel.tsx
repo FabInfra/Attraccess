@@ -1,5 +1,5 @@
 import { Card, Accordion, AccordionItem, CardBody, Button } from '@heroui/react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import * as en from './translations/en';
 import * as de from './translations/de';
 import WebhookList from './components/WebhookList';
@@ -37,7 +37,13 @@ export function WebhookConfigurationPanel(props: WebhookConfigurationPanelProps)
               <span>{t('title')}</span>
 
               {isOpen && (
-                <Button size="sm" color="primary" onPress={() => setShowCreateModal(true)} startContent={<Plus />} data-cy="webhook-config-add-webhook-button">
+                <Button
+                  size="sm"
+                  color="primary"
+                  onPress={() => setShowCreateModal(true)}
+                  startContent={<Plus />}
+                  data-cy="webhook-config-add-webhook-button"
+                >
                   {t('addWebhook')}
                 </Button>
               )}

@@ -8,8 +8,8 @@ import {
   WebhookTestResponseDto,
   WebhookConfigResponseDto,
 } from './dtos/webhook-config.dto';
-import { WebhookConfig } from '@attraccess/database-entities';
-import { Auth } from '@attraccess/plugins-backend-sdk';
+import { WebhookConfig } from '@fabaccess/database-entities';
+import { Auth } from '@fabaccess/plugins-backend-sdk';
 
 @ApiTags('Webhooks')
 @Controller('resources/:resourceId/webhooks')

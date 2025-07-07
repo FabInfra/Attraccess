@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalProps } from '@heroui/modal';
 import { Button } from '@heroui/button';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import * as en from './en.json';
 import * as de from './de.json';
 import { Trans } from 'react-i18next';

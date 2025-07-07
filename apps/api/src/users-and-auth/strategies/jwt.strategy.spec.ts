@@ -4,7 +4,7 @@ import { UsersService } from '../users/users.service';
 import { AuthService } from '../auth/auth.service';
 import { UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { User } from '@attraccess/database-entities';
+import { User } from '@fabaccess/database-entities';
 
 describe('JwtStrategy', () => {
   let jwtStrategy: JwtStrategy;
@@ -61,9 +61,7 @@ describe('JwtStrategy', () => {
 
     jest.spyOn(authService, 'isJWTRevoked').mockResolvedValue(true);
 
-    await expect(jwtStrategy.validate(payload)).rejects.toThrow(
-      UnauthorizedException
-    );
+    await expect(jwtStrategy.validate(payload)).rejects.toThrow(UnauthorizedException);
   });
 
   it('should throw UnauthorizedException if user is not found', async () => {
@@ -72,8 +70,6 @@ describe('JwtStrategy', () => {
     jest.spyOn(authService, 'isJWTRevoked').mockResolvedValue(false);
     jest.spyOn(usersService, 'findOne').mockResolvedValue(null);
 
-    await expect(jwtStrategy.validate(payload)).rejects.toThrow(
-      UnauthorizedException
-    );
+    await expect(jwtStrategy.validate(payload)).rejects.toThrow(UnauthorizedException);
   });
 });

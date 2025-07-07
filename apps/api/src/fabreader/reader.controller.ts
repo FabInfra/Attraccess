@@ -14,7 +14,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FabreaderGateway } from './modules/websockets/websocket.gateway';
-import { AuthenticatedRequest, Auth, FabReader } from '@attraccess/plugins-backend-sdk';
+import { AuthenticatedRequest, Auth, FabReader } from '@fabaccess/plugins-backend-sdk';
 import { ApiOperation, ApiResponse, ApiParam, ApiTags, ApiBody } from '@nestjs/swagger';
 import { WebsocketService } from './modules/websockets/websocket.service';
 import { FabreaderService } from './fabreader.service';

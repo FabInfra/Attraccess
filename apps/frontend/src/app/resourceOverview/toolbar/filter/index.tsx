@@ -1,4 +1,4 @@
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { DrawerBody, Drawer, DrawerContent, DrawerHeader, useDisclosure, Switch } from '@heroui/react';
 
 import de from './de.json';

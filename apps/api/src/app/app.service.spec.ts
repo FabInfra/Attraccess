@@ -14,7 +14,7 @@ describe('AppService', () => {
 
   describe('getInfo', () => {
     it('should return api information', () => {
-      expect(service.getInfo()).toEqual({ name: 'Attraccess API', status: 'ok' });
+      expect(service.getInfo()).toEqual({ name: 'FabAccess API', status: 'ok' });
     });
   });
 });

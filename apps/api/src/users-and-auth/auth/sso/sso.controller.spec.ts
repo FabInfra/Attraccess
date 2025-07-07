@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SSOController } from './sso.controller';
 import { SSOService } from './sso.service';
 import { AuthService } from '../auth.service';
-import { SSOProvider, SSOProviderType } from '@attraccess/database-entities';
+import { SSOProvider, SSOProviderType } from '@fabaccess/database-entities';
 import { NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CreateSSOProviderDto } from './dto/create-sso-provider.dto';

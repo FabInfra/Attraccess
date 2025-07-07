@@ -1,4 +1,4 @@
-import { usePluginsServiceDeletePlugin, usePluginsServiceGetPlugins } from '@attraccess/react-query-client';
+import { usePluginsServiceDeletePlugin, usePluginsServiceGetPlugins } from '@fabaccess/react-query-client';
 import { useState } from 'react';
 import {
   Card,
@@ -21,7 +21,7 @@ import {
   Alert,
 } from '@heroui/react';
 import { Trash2, Upload } from 'lucide-react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { UploadPluginModal } from './UploadPluginModal';
 import { useToastMessage } from '../../components/toastProvider';
 import { EmptyState } from '../../components/emptyState';

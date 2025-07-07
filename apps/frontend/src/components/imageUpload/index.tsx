@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, HTMLAttributes, useMemo } from 'react';
 import { ImageIcon, X } from 'lucide-react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import * as en from './en.json';
 import * as de from './de.json';
 import { useToastMessage } from '../toastProvider';

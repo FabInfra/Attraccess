@@ -1,7 +1,7 @@
 import { Profile, Strategy } from 'passport-openidconnect';
 import { PassportStrategy } from '@nestjs/passport';
 import { BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { SSOProviderOIDCConfiguration, SSOProviderType, User } from '@attraccess/database-entities';
+import { SSOProviderOIDCConfiguration, SSOProviderType, User } from '@fabaccess/database-entities';
 import { UsersService } from '../../../users/users.service';
 import { ModuleRef } from '@nestjs/core';
 import { AccountLinkingRequiredException } from './exceptions/account-linking-required.exception';

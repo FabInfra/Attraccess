@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
-import { User, ApiError } from '@attraccess/react-query-client';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
+import { User, ApiError } from '@fabaccess/react-query-client';
 import { Card, CardBody, CardHeader, Input, Button, Alert } from '@heroui/react';
 import { Mail, Check } from 'lucide-react';
-import { useUsersServiceAdminChangeEmail } from '@attraccess/react-query-client';
+import { useUsersServiceAdminChangeEmail } from '@fabaccess/react-query-client';
 
 import * as en from './en.json';
 import * as de from './de.json';

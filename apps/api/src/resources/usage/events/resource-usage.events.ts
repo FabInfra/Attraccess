@@ -2,7 +2,7 @@
  * Events emitted when resource usage status changes
  */
 
-import { User } from '@attraccess/database-entities';
+import { User } from '@fabaccess/database-entities';
 
 export class ResourceUsageStartedEvent {
   constructor(public readonly resourceId: number, public readonly startTime: Date, public readonly user: User) {}

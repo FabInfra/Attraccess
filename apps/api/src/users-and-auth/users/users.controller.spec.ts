@@ -3,8 +3,8 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { AuthService } from '../auth/auth.service';
 import { EmailService } from '../../email/email.service';
-import { User, AuthenticationType } from '@attraccess/database-entities';
-import { AuthenticatedRequest } from '@attraccess/plugins-backend-sdk';
+import { User, AuthenticationType } from '@fabaccess/database-entities';
+import { AuthenticatedRequest } from '@fabaccess/plugins-backend-sdk';
 import { CreateUserDto } from './dtos/createUser.dto';
 
 describe('UsersController', () => {

@@ -1,5 +1,5 @@
 import { MehIcon } from 'lucide-react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 
 export const EmptyState = () => {
   const { t } = useTranslations('emptyState', {

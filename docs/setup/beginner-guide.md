@@ -1,10 +1,10 @@
-# Beginner's Guide to Attraccess Installation
+# Beginner's Guide to FabAccess Installation
 
-This guide is designed for absolute beginners with no prior knowledge of Docker or server deployment. We'll walk through each step carefully to help you get Attraccess up and running.
+This guide is designed for absolute beginners with no prior knowledge of Docker or server deployment. We'll walk through each step carefully to help you get FabAccess up and running.
 
-## What is Attraccess?
+## What is FabAccess?
 
-Attraccess is a complete solution for managing access to spaces, resources, and equipment. It's packaged as a Docker container, which is a standardized way to deliver software that works consistently across different computers and servers.
+FabAccess is a complete solution for managing access to spaces, resources, and equipment. It's packaged as a Docker container, which is a standardized way to deliver software that works consistently across different computers and servers.
 
 ## Prerequisites
 
@@ -21,11 +21,11 @@ Before you begin, you'll need:
 
 Docker is a platform that allows you to package and run applications in isolated environments called "containers." Think of a container as a lightweight, standalone package that includes everything needed to run the software: code, runtime, system tools, libraries, and settings.
 
-> 💡 **Why Docker?** Docker makes it easy to install and run software without worrying about dependencies or configuration issues. It ensures that Attraccess runs the same way regardless of where it's installed.
+> 💡 **Why Docker?** Docker makes it easy to install and run software without worrying about dependencies or configuration issues. It ensures that FabAccess runs the same way regardless of where it's installed.
 
 ### Installing Docker
 
-Before you can run Attraccess, you need to install Docker on your system:
+Before you can run FabAccess, you need to install Docker on your system:
 
 - **Windows**: Download and install [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop)
 - **macOS**: Download and install [Docker Desktop for Mac](https://www.docker.com/products/docker-desktop)
@@ -38,26 +38,26 @@ After installation:
 
 ## Step-by-Step Installation Guide
 
-### Step 1: Create Directories for Attraccess
+### Step 1: Create Directories for FabAccess
 
-First, create directories to store your Attraccess data:
+First, create directories to store your FabAccess data:
 
 ```bash
-# Create a main directory for Attraccess
-mkdir -p ~/attraccess
+# Create a main directory for FabAccess
+mkdir -p ~/fabaccess
 
 # Create subdirectories for storage and plugins
-mkdir -p ~/attraccess/storage
-mkdir -p ~/attraccess/plugins
+mkdir -p ~/fabaccess/storage
+mkdir -p ~/fabaccess/plugins
 ```
 
 ### Step 2: Create Your Environment Configuration
 
-You need to configure several settings for Attraccess to work correctly:
+You need to configure several settings for FabAccess to work correctly:
 
 ```bash
-# Navigate to your Attraccess directory
-cd ~/attraccess
+# Navigate to your FabAccess directory
+cd ~/fabaccess
 
 # Create an environment file
 touch .env
@@ -90,31 +90,31 @@ LOG_LEVELS=error,warn,log
 > - You can generate secure random strings with this command: `openssl rand -base64 32`
 > - Never share these values with anyone
 
-### Step 3: Running Attraccess
+### Step 3: Running FabAccess
 
-Now that you've set up your configuration, you can run Attraccess:
+Now that you've set up your configuration, you can run FabAccess:
 
 ```bash
 docker run -d \
-  --name attraccess \
+  --name fabaccess \
   -p 3000:3000 \
   --env-file ./.env \
   -v $(pwd)/storage:/app/storage \
   -v $(pwd)/plugins:/app/plugins \
-  fabaccess/attraccess:latest
+  fabaccess/fabaccess:latest
 ```
 
-### Step 4: Accessing Attraccess
+### Step 4: Accessing FabAccess
 
 Once the container is running:
 
 1. Open your web browser
 2. Go to `http://localhost:3000`
-3. You should see the Attraccess login page
+3. You should see the FabAccess login page
 
 #### Accessing from a Remote Server
 
-If you've installed Attraccess on a remote server (not your local computer):
+If you've installed FabAccess on a remote server (not your local computer):
 
 1. You'll need to use the server's IP address or domain name instead of `localhost`
 2. Open your web browser on your local computer
@@ -135,7 +135,7 @@ If you've installed Attraccess on a remote server (not your local computer):
 
 ##### Firewall Considerations
 
-If you can't access your Attraccess instance, you may need to:
+If you can't access your FabAccess instance, you may need to:
 
 1. Make sure port 3000 is open in your server's firewall
 2. For most cloud providers (AWS, DigitalOcean, etc.), you'll need to configure security groups or firewall rules to allow traffic on port 3000
@@ -144,7 +144,7 @@ If you can't access your Attraccess instance, you may need to:
 
 For production environments, it's recommended to:
 
-1. Set up a reverse proxy (like Nginx or Apache) in front of Attraccess
+1. Set up a reverse proxy (like Nginx or Apache) in front of FabAccess
 2. Configure SSL/TLS certificates (using Let's Encrypt)
 3. Update your `VITE_ATTRACCESS_URL` to use `https://` instead of `http://`
 
@@ -152,10 +152,10 @@ Detailed instructions for setting up a secure proxy are beyond the scope of this
 
 ### Step 5: First-Time Setup
 
-The first time you access Attraccess, you'll need to:
+The first time you access FabAccess, you'll need to:
 
 1. Create an account (the first account is automatically Admin)
-2. Enjoy Attraccess!
+2. Enjoy FabAccess!
 
 ## Email Configuration Help
 
@@ -199,7 +199,7 @@ If you encounter issues:
    - Check if the required ports are already in use
    - Verify your environment variables are set correctly
 
-2. **Can't connect to Attraccess**:
+2. **Can't connect to FabAccess**:
 
    - Make sure you're using the correct URL
    - Check if the container is running with `docker ps`
@@ -210,13 +210,13 @@ If you encounter issues:
    - Some email providers may block sending from apps
 
 4. **Getting error messages**:
-   - Check the logs with `docker logs attraccess`
+   - Check the logs with `docker logs fabaccess`
 
 ## Additional Resources
 
 - [Official Docker Documentation](https://docs.docker.com/)
 - [SMTP Configuration Guide](https://nodemailer.com/smtp/)
-- [Attraccess GitHub Repository](https://github.com/attraccess/attraccess)
+- [FabAccess GitHub Repository](https://github.com/fabaccess/fabaccess)
 
 For more advanced deployment options, check our specialized guides:
 

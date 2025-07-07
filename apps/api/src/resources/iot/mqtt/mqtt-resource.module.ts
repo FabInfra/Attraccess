@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MqttResourceConfig, Resource } from '@attraccess/database-entities';
+import { MqttResourceConfig, Resource } from '@fabaccess/database-entities';
 import { MqttResourceConfigController } from './config/mqtt-resource-config.controller';
 import { MqttResourceConfigService } from './config/mqtt-resource-config.service';
 import { MqttPublisherService } from './publisher/mqtt-publisher.service';

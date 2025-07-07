@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { WebhookConfig, Resource, User } from '@attraccess/database-entities';
+import { WebhookConfig, Resource, User } from '@fabaccess/database-entities';
 import {
   ResourceUsageStartedEvent,
   ResourceUsageEndedEvent,

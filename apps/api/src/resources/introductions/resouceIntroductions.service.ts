@@ -2,7 +2,7 @@ import {
   IntroductionHistoryAction,
   ResourceIntroduction,
   ResourceIntroductionHistoryItem,
-} from '@attraccess/database-entities';
+} from '@fabaccess/database-entities';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

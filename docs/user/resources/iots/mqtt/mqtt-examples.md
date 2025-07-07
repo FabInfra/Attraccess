@@ -1,6 +1,6 @@
 # MQTT Integration Examples
 
-This document provides practical examples of using Attraccess's MQTT integration feature with common IoT platforms and devices.
+This document provides practical examples of using FabAccess's MQTT integration feature with common IoT platforms and devices.
 
 ## Topic and Message Templates
 
@@ -17,7 +17,7 @@ Good MQTT topic design follows these principles:
 ### Example Topic Structures
 
 ```
-attraccess/resources/{resourceId}/status
+fabaccess/resources/{resourceId}/status
 organization/resources/{resourceName}/usage
 site/{location}/resource/{resourceId}/state
 department/{departmentName}/resources/{resourceName}/status
@@ -296,12 +296,12 @@ For complex data structures:
 
 To verify your MQTT integration is working correctly:
 
-1. Configure your MQTT server and resource in Attraccess
+1. Configure your MQTT server and resource in FabAccess
 2. Set up an MQTT client to subscribe to your topics:
    ```bash
    mosquitto_sub -h localhost -p 1883 -t "resources/#" -v
    ```
-3. Start and end resource usage in Attraccess
+3. Start and end resource usage in FabAccess
 4. Verify the messages are received in the expected format
 
 This approach helps troubleshoot issues before connecting to actual IoT devices.

@@ -1,13 +1,13 @@
 import { useCallback, useMemo, useState } from 'react';
-import { useUrlQuery } from '@attraccess/plugins-frontend-ui';
+import { useUrlQuery } from '@fabaccess/plugins-frontend-ui';
 import { useNavigate } from 'react-router-dom';
 import { Loading } from '../loading';
 import { Button, Card, CardBody, CardFooter, CardHeader, Form } from '@heroui/react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { PasswordInput } from '../../components/PasswordInput';
 import * as en from './en.json';
 import * as de from './de.json';
-import { useUsersServiceChangePasswordViaResetToken } from '@attraccess/react-query-client';
+import { useUsersServiceChangePasswordViaResetToken } from '@fabaccess/react-query-client';
 import { useToastMessage } from '../../components/toastProvider';
 
 export function ResetPassword() {
@@ -60,7 +60,12 @@ export function ResetPassword() {
             <p className="text-sm text-gray-600 dark:text-gray-400 text-center">{t('success.message')}</p>
           </CardBody>
           <CardFooter>
-            <Button fullWidth color="primary" onPress={() => navigate('/')} data-cy="reset-password-success-go-to-login-button">
+            <Button
+              fullWidth
+              color="primary"
+              onPress={() => navigate('/')}
+              data-cy="reset-password-success-go-to-login-button"
+            >
               {t('success.goToLogin')}
             </Button>
           </CardFooter>

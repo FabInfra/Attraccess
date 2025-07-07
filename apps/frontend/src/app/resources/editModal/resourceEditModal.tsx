@@ -11,7 +11,7 @@ import {
   Switch,
   useDisclosure,
 } from '@heroui/react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import * as en from './resourceEditModal.en.json';
 import * as de from './resourceEditModal.de.json';
 import {
@@ -22,7 +22,7 @@ import {
   useResourcesServiceGetOneResourceById,
   UseResourcesServiceGetOneResourceByIdKeyFn,
   useResourcesServiceCreateOneResource,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { ImageUpload } from '../../../components/imageUpload';
 import { useToastMessage } from '../../../components/toastProvider';

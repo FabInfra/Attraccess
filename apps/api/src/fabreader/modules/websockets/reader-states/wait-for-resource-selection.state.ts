@@ -3,7 +3,7 @@ import { AuthenticatedWebSocket, FabreaderEvent, FabreaderEventType } from '../w
 import { ReaderState } from './reader-state.interface';
 import { WaitForNFCTapState } from './wait-for-nfc-tap.state';
 import { GatewayServices } from '../websocket.gateway';
-import { Resource } from '@attraccess/plugins-backend-sdk';
+import { Resource } from '@fabaccess/plugins-backend-sdk';
 
 export class WaitForResourceSelectionState implements ReaderState {
   private readonly logger = new Logger(WaitForResourceSelectionState.name);

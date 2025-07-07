@@ -4,7 +4,7 @@ import { AppConfigType } from '../../../../config/app.config';
 import { SSOOIDCStrategy } from './oidc.strategy';
 import { ModuleRef } from '@nestjs/core';
 import { SSOService } from '../sso.service';
-import { SSOProviderType } from '@attraccess/database-entities';
+import { SSOProviderType } from '@fabaccess/database-entities';
 import {
   InvalidSSOProviderIdException,
   InvalidSSOProviderTypeException,

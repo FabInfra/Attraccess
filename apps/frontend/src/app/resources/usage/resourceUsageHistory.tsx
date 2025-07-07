@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { useAuth } from '../../../hooks/useAuth';
 import { Card, CardHeader, CardBody } from '@heroui/react';
-import { ResourceUsage } from '@attraccess/react-query-client';
+import { ResourceUsage } from '@fabaccess/react-query-client';
 import { HistoryTable } from './components/HistoryTable';
 import { HistoryHeader } from './components/HistoryHeader';
 import { UsageNotesModal } from './components/UsageNotesModal';

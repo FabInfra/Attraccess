@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ResourceIntroducer, User } from '@attraccess/database-entities';
+import { ResourceIntroducer, User } from '@fabaccess/database-entities';
 
 @Injectable()
 export class IsResourceGroupIntroducerGuard implements CanActivate {

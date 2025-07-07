@@ -3,7 +3,7 @@ import { GatewayServices } from '../websocket.gateway';
 import { AuthenticatedWebSocket, FabreaderEventType, FabreaderResponse } from '../websocket.types';
 import { FabreaderEvent } from '../websocket.types';
 import { ReaderState } from './reader-state.interface';
-import { NFCCard } from '@attraccess/database-entities';
+import { NFCCard } from '@fabaccess/database-entities';
 
 export class WaitForNFCTapState implements ReaderState {
   private readonly logger = new Logger(WaitForNFCTapState.name);

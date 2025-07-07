@@ -9,14 +9,14 @@ import { ResourceUsageSession } from '../usage/resourceUsageSession';
 import { ResourceUsageHistory } from '../usage/resourceUsageHistory';
 import { PageHeader } from '../../../components/pageHeader';
 import { DeleteConfirmationModal } from '../../../components/deleteConfirmationModal';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { memo, useMemo } from 'react';
 import {
   useResourcesServiceDeleteOneResource,
   useResourcesServiceGetOneResourceById,
   UseResourcesServiceGetAllResourcesKeyFn,
   useAccessControlServiceResourceIntroducersIsIntroducer,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { ManageResourceGroups } from '../groups';
 import { DocumentationModal } from '../documentation';

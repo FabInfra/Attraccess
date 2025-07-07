@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@heroui/react';
 import { Trash2, RefreshCw, Save } from 'lucide-react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { useWebhookForm } from '../context/WebhookFormContext';
 
 // Translations for this component only
@@ -10,7 +10,7 @@ import de from './WebhookFormActions.de.json';
 import {
   useWebhooksServiceWebhookConfigDeleteOne,
   useWebhooksServiceWebhookConfigTest,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { useToastMessage } from '../../../../../components/toastProvider';
 
 interface WebhookFormActionsProps {

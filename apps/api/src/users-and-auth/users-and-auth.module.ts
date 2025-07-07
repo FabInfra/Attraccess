@@ -23,7 +23,7 @@ import {
   RevokedToken,
   SSOProviderOIDCConfiguration,
   SSOProvider,
-} from '@attraccess/database-entities';
+} from '@fabaccess/database-entities';
 import { EmailModule } from '../email/email.module';
 import { SSOService } from './auth/sso/sso.service';
 import { SSOOIDCStrategy } from './auth/sso/oidc/oidc.strategy';

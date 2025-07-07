@@ -1,4 +1,4 @@
-import { OpenAPI, CreateSessionResponse } from '@attraccess/react-query-client';
+import { OpenAPI, CreateSessionResponse } from '@fabaccess/react-query-client';
 
 function getInferredApiUrl() {
   const frontendUrl = new URL(window.location.href);

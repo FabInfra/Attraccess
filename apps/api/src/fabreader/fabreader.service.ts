@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { subtle } from 'crypto';
-import { NFCCard, FabReader } from '@attraccess/database-entities';
+import { NFCCard, FabReader } from '@fabaccess/database-entities';
 import { DeleteResult, FindManyOptions, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { nanoid } from 'nanoid';

@@ -1,4 +1,4 @@
-import { SSOProviderType } from '@attraccess/database-entities';
+import { SSOProviderType } from '@fabaccess/database-entities';
 import { getBaseUrl } from '../../api';
 import { useMemo } from 'react';
 

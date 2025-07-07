@@ -1,7 +1,7 @@
 import { Injectable, BadRequestException, ForbiddenException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull, FindOneOptions } from 'typeorm';
-import { Resource, ResourceUsage, User } from '@attraccess/database-entities';
+import { Resource, ResourceUsage, User } from '@fabaccess/database-entities';
 import { StartUsageSessionDto } from './dtos/startUsageSession.dto';
 import { EndUsageSessionDto } from './dtos/endUsageSession.dto';
 import { ResourceNotFoundException } from '../../exceptions/resource.notFound.exception';

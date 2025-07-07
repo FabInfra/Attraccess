@@ -1,6 +1,6 @@
 # MQTT Broker Setup Guide
 
-This guide provides practical instructions for setting up and configuring an MQTT broker for use with Attraccess.
+This guide provides practical instructions for setting up and configuring an MQTT broker for use with FabAccess.
 
 ## Development Environment Setup
 
@@ -94,7 +94,7 @@ The easiest way to set up an MQTT broker for development is using the included D
 ### Using Mosquitto CLI Tools
 
 > [!NOTE]
-> Mosquitto CLI tools provide a quick way to verify your broker configuration before integrating with Attraccess. They're particularly useful for troubleshooting connection issues.
+> Mosquitto CLI tools provide a quick way to verify your broker configuration before integrating with FabAccess. They're particularly useful for troubleshooting connection issues.
 
 1. Subscribe to a topic:
 
@@ -139,7 +139,7 @@ For production environments, we recommend additional security measures:
 1. Create user credentials:
 
    ```bash
-   sudo mosquitto_passwd -c /etc/mosquitto/passwd attraccess
+   sudo mosquitto_passwd -c /etc/mosquitto/passwd fabaccess
    ```
 
 2. Update the configuration:
@@ -195,7 +195,7 @@ For production environments, we recommend additional security measures:
        restart: unless-stopped
    ```
 
-2. Configure Attraccess to use TLS and authentication for connecting to the MQTT broker.
+2. Configure FabAccess to use TLS and authentication for connecting to the MQTT broker.
 
 ## Cloud-Based MQTT Brokers
 
@@ -212,11 +212,11 @@ These services typically provide:
 - High availability and scalability
 - Usage metrics and monitoring
 
-## Configuring Attraccess with MQTT Broker
+## Configuring FabAccess with MQTT Broker
 
 Once your MQTT broker is running:
 
-1. Navigate to the MQTT Server management page in Attraccess.
+1. Navigate to the MQTT Server management page in FabAccess.
 
 2. Add a new MQTT server with:
 
@@ -232,4 +232,4 @@ Once your MQTT broker is running:
 4. Add MQTT configuration to your resources to start publishing messages.
 
 > [!NOTE]
-> Attraccess will maintain a persistent connection to your MQTT broker. If the connection is lost, it will automatically attempt to reconnect using an exponential backoff strategy.
+> FabAccess will maintain a persistent connection to your MQTT broker. If the connection is lost, it will automatically attempt to reconnect using an exponential backoff strategy.

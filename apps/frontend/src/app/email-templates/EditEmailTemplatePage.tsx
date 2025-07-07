@@ -4,7 +4,7 @@ import {
   useEmailTemplatesServiceEmailTemplateControllerFindOne as useFindOneEmailTemplate,
   useEmailTemplatesServiceEmailTemplateControllerUpdate as useUpdateEmailTemplate,
   useEmailTemplatesServiceEmailTemplateControllerPreviewMjml,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import {
   Button,
   Card,
@@ -19,7 +19,7 @@ import {
   ModalFooter,
   Link,
 } from '@heroui/react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { PageHeader } from '../../components/pageHeader';
 import Editor from '@monaco-editor/react';
 

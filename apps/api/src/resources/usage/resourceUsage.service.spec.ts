@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ResourceUsageService } from './resourceUsage.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Resource, ResourceUsage, User } from '@attraccess/database-entities';
+import { Resource, ResourceUsage, User } from '@fabaccess/database-entities';
 import { Repository, IsNull, SelectQueryBuilder } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { BadRequestException } from '@nestjs/common';

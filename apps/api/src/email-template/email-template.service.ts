@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EmailTemplate, EmailTemplateType } from '@attraccess/database-entities';
+import { EmailTemplate, EmailTemplateType } from '@fabaccess/database-entities';
 import { Repository } from 'typeorm';
 import { UpdateEmailTemplateDto } from './dto/update-email-template.dto';
 import { MjmlService } from './mjml.service';

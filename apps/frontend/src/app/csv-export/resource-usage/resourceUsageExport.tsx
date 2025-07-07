@@ -1,7 +1,7 @@
 import {
   ResourceUsage,
   useAnalyticsServiceAnalyticsControllerGetResourceUsageHoursInDateRange,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { ExportProps } from '../export-props';
 import {
   Table,
@@ -23,7 +23,7 @@ import {
   useDateTimeFormatter,
   useNumberFormatter,
   useTranslations,
-} from '@attraccess/plugins-frontend-ui';
+} from '@fabaccess/plugins-frontend-ui';
 import { nanoid } from 'nanoid';
 import { RotateCwIcon } from 'lucide-react';
 import { useReactQueryStatusToHeroUiTableLoadingState } from '../../../hooks/useReactQueryStatusToHeroUiTableLoadingState';

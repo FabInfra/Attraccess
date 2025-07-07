@@ -5,7 +5,7 @@ import {
   ResourceIntroducer,
   ResourceIntroduction,
   ResourceIntroductionHistoryItem,
-} from '@attraccess/database-entities';
+} from '@fabaccess/database-entities';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({

@@ -1,7 +1,7 @@
 import { Alert, Divider, Spinner } from '@heroui/react';
 import { Users } from 'lucide-react';
-import { useTranslations, AttraccessUser } from '@attraccess/plugins-frontend-ui';
-import { useAccessControlServiceResourceIntroducersGetMany } from '@attraccess/react-query-client';
+import { useTranslations, FabAccessUser } from '@fabaccess/plugins-frontend-ui';
+import { useAccessControlServiceResourceIntroducersGetMany } from '@fabaccess/react-query-client';
 import * as en from './translations/en.json';
 import * as de from './translations/de.json';
 
@@ -38,7 +38,7 @@ export function IntroductionRequiredDisplay({ resourceId }: Readonly<Introductio
           <Divider className="my-2" />
           <div className="space-y-2 mt-2">
             {introducers?.map((introducer) => (
-              <AttraccessUser key={introducer.id} user={introducer.user} />
+              <FabAccessUser key={introducer.id} user={introducer.user} />
             ))}
           </div>
         </div>

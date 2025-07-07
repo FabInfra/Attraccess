@@ -15,8 +15,8 @@ import {
   Form,
 } from '@heroui/react';
 import { HistoryIcon, ShieldCheckIcon } from 'lucide-react';
-import { ResourceIntroduction, User } from '@attraccess/react-query-client';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { ResourceIntroduction, User } from '@fabaccess/react-query-client';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import * as en from './en.json';
 import * as de from './de.json';
 import { PageHeader } from '../pageHeader';

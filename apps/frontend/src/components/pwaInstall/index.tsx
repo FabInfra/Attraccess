@@ -1,7 +1,7 @@
 import PWAInstallFromLib from '@khmyznikov/pwa-install/react-legacy';
 import de from './de.json';
 import en from './en.json';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 
 declare global {
   interface Window {
@@ -18,7 +18,7 @@ export function PWAInstall() {
 
   return (
     <PWAInstallFromLib
-      name="Attraccess"
+      name="FabAccess"
       description={t('description')}
       icon={'/icon-512-maskable.png'}
     ></PWAInstallFromLib>

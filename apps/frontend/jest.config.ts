@@ -13,7 +13,7 @@ export default {
     '\\.svg$': 'identity-obj-proxy',
     '\\.css$': 'identity-obj-proxy',
   },
-  transformIgnorePatterns: ['node_modules/(?!(@attraccess)/)'],
+  transformIgnorePatterns: ['node_modules/(?!(@fabaccess)/)'],
   globals: {
     'import.meta': {
       env: {},

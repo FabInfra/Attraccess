@@ -2,10 +2,10 @@
 
 ## Introduction
 
-Attraccess is a comprehensive resource management system for tracking and managing access to shared resources. This guide will help you get started with developing and enhancing the project.
+FabAccess is a comprehensive resource management system for tracking and managing access to shared resources. This guide will help you get started with developing and enhancing the project.
 
 > [!NOTE]
-> This guide is intended for developers who want to contribute to or extend the Attraccess platform. If you're looking for user documentation, please refer to the [User Guides](../user/) section.
+> This guide is intended for developers who want to contribute to or extend the FabAccess platform. If you're looking for user documentation, please refer to the [User Guides](../user/) section.
 
 ## Technology Stack
 
@@ -42,7 +42,7 @@ Attraccess is a comprehensive resource management system for tracking and managi
 
 ## Project Structure
 
-Attraccess follows an Nx monorepo structure, organized into apps and libs:
+FabAccess follows an Nx monorepo structure, organized into apps and libs:
 
 ### Apps
 
@@ -73,8 +73,8 @@ Attraccess follows an Nx monorepo structure, organized into apps and libs:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/Attraccess.git
-   cd Attraccess
+   git clone https://github.com/yourusername/FabAccess.git
+   cd FabAccess
    ```
 
 2. Install dependencies:
@@ -147,10 +147,10 @@ nx build frontend
 
 ### Plugin Development
 
-Attraccess supports a plugin system for both frontend and backend extensions. For detailed information on plugin development, please refer to the [Plugin Development Guide](/developer/plugins.md).
+FabAccess supports a plugin system for both frontend and backend extensions. For detailed information on plugin development, please refer to the [Plugin Development Guide](/developer/plugins.md).
 
 > [!NOTE]
-> Plugins are a powerful way to extend Attraccess functionality without modifying the core codebase. They can be developed and distributed independently.
+> Plugins are a powerful way to extend FabAccess functionality without modifying the core codebase. They can be developed and distributed independently.
 
 ## Useful Commands
 
@@ -172,10 +172,10 @@ nx graph
 
 For detailed information about the API and OpenAPI documentation, please refer to the [OpenAPI Documentation Guide](/developer/openapi.md).
 
-The full Attraccess documentation is also accessible directly from your running instance at:
+The full FabAccess documentation is also accessible directly from your running instance at:
 
 ```
-<your-attraccess-url>/docs
+<your-fabaccess-url>/docs
 ```
 
 ## Need Help?

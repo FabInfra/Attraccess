@@ -1,5 +1,5 @@
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
-import { useResourcesServiceResourceUsageGetActiveSession } from '@attraccess/react-query-client';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
+import { useResourcesServiceResourceUsageGetActiveSession } from '@fabaccess/react-query-client';
 import { Chip } from '@heroui/react';
 import { useMemo } from 'react';
 

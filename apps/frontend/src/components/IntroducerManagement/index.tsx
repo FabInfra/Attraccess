@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { Card, CardHeader, CardBody, CardProps } from '@heroui/react';
 import { Trash2Icon, AwardIcon } from 'lucide-react';
-import { User, ResourceIntroducer } from '@attraccess/react-query-client';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { User, ResourceIntroducer } from '@fabaccess/react-query-client';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { UserSelectionList } from '../userSelectionList';
 import * as en from './en.json';
 import * as de from './de.json';

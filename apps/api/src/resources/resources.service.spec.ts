@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ResourcesService } from './resources.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Resource, DocumentationType } from '@attraccess/database-entities';
+import { Resource, DocumentationType } from '@fabaccess/database-entities';
 import { Repository, SelectQueryBuilder, Brackets } from 'typeorm';
 import { CreateResourceDto } from './dtos/createResource.dto';
 import { UpdateResourceDto } from './dtos/updateResource.dto';

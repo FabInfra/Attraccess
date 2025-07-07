@@ -1,4 +1,4 @@
-import { useTranslations, useUrlQuery } from '@attraccess/plugins-frontend-ui';
+import { useTranslations, useUrlQuery } from '@fabaccess/plugins-frontend-ui';
 import { useCallback, useEffect, useRef } from 'react';
 import { QrCodeAction } from './qrcode/action';
 import {
@@ -6,7 +6,7 @@ import {
   useResourcesServiceResourceUsageEndSession,
   UseResourcesServiceResourceUsageGetActiveSessionKeyFn,
   UseResourcesServiceResourceUsageGetHistoryKeyFn,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { useToastMessage } from '../../../components/toastProvider';
 

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { User } from '@attraccess/database-entities';
+import { User } from '@fabaccess/database-entities';
 import { Repository, UpdateResult } from 'typeorm';
 import { BadRequestException } from '@nestjs/common';
 import { UserNotFoundException } from '../../exceptions/user.notFound.exception';

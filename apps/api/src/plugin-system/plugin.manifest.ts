@@ -49,7 +49,7 @@ export class PluginMain {
   backend?: PluginMainBackend;
 }
 
-export class PluginAttraccessVersion {
+export class PluginFabAccessVersion {
   @ApiProperty({
     description: 'The minimum version of the plugin',
     example: '1.0.0',
@@ -88,9 +88,9 @@ export class PluginManifest {
   version: string;
 
   @ApiProperty({
-    type: PluginAttraccessVersion,
+    type: PluginFabAccessVersion,
   })
-  attraccessVersion: PluginAttraccessVersion;
+  fabaccessVersion: PluginFabAccessVersion;
 }
 
 export class LoadedPluginManifest extends PluginManifest {
@@ -119,7 +119,7 @@ export const PluginManifestSchema = z.object({
     backend: mainSchema,
   }),
   version: z.string(),
-  attraccessVersion: z
+  fabaccessVersion: z
     .object({
       min: z.string().optional(),
       max: z.string().optional(),

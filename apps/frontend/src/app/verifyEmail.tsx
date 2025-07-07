@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useUrlQuery } from '@attraccess/plugins-frontend-ui';
+import { useUrlQuery } from '@fabaccess/plugins-frontend-ui';
 import { useNavigate } from 'react-router-dom';
 import { Loading } from './loading';
 import { Alert, Button, Card, CardBody, CardFooter, CardHeader, Spacer } from '@heroui/react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import * as en from './verifyEmail.en.json';
 import * as de from './verifyEmail.de.json';
-import { useUsersServiceVerifyEmail, UseUsersServiceGetCurrentKeyFn } from '@attraccess/react-query-client';
+import { useUsersServiceVerifyEmail, UseUsersServiceGetCurrentKeyFn } from '@fabaccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 
 export function VerifyEmail() {
@@ -90,14 +90,30 @@ export function VerifyEmail() {
             <h2 className="text-3xl font-bold">{t('error.title')}</h2>
           </CardHeader>
           <CardBody>
-            <Alert color="danger" title={t('error.errorTitle')} description={error} data-cy="verify-email-error-alert" />
+            <Alert
+              color="danger"
+              title={t('error.errorTitle')}
+              description={error}
+              data-cy="verify-email-error-alert"
+            />
           </CardBody>
           <CardFooter>
-            <Button fullWidth color="primary" onPress={activateEmail} isDisabled={verifyEmail.isPending} data-cy="verify-email-error-try-again-button">
+            <Button
+              fullWidth
+              color="primary"
+              onPress={activateEmail}
+              isDisabled={verifyEmail.isPending}
+              data-cy="verify-email-error-try-again-button"
+            >
               {t('error.tryAgain')}
             </Button>
             <Spacer y={2} />
-            <Button fullWidth variant="bordered" onPress={() => navigate('/')} data-cy="verify-email-error-back-to-login-button">
+            <Button
+              fullWidth
+              variant="bordered"
+              onPress={() => navigate('/')}
+              data-cy="verify-email-error-back-to-login-button"
+            >
               {t('error.backToLogin')}
             </Button>
           </CardFooter>

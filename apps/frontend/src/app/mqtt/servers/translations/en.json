@@ -31,7 +31,7 @@
   "portLabel": "Port",
   "portPlaceholder": "1883",
   "clientIdLabel": "Client ID (Optional)",
-  "clientIdPlaceholder": "attraccess-client",
+  "clientIdPlaceholder": "fabaccess-client",
   "usernameLabel": "Username (Optional)",
   "usernamePlaceholder": "mqtt_user",
   "passwordLabel": "Password (Optional)",
@@ -61,4 +61,4 @@
   "failedToUpdate": "Failed to update MQTT server.",
   "failedToCreate": "Failed to create MQTT server.",
   "failedToConnect": "Failed to connect to MQTT server"
-} 
+}

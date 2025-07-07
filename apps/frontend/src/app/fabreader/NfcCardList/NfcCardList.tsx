@@ -17,14 +17,14 @@ import {
   Card,
 } from '@heroui/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { AttraccessUser, useTranslations } from '@attraccess/plugins-frontend-ui';
+import { FabAccessUser, useTranslations } from '@fabaccess/plugins-frontend-ui';
 import {
   useFabReaderServiceGetAllCards,
   useFabReaderServiceResetNfcCard,
   NFCCard,
   useFabReaderServiceEnrollNfcCard,
   useUsersServiceGetOneUserById,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { FabreaderSelect } from '../FabreaderSelect/FabreaderSelect';
 import { useToastMessage } from '../../../components/toastProvider';
 import { useAuth } from '../../../hooks/useAuth';
@@ -105,7 +105,7 @@ const NfcCardTableCell = (props: NfcCardTableCellProps) => {
   });
 
   if (props.header === 'userId') {
-    return <AttraccessUser user={user} />;
+    return <FabAccessUser user={user} />;
   }
 
   if (props.header === 'actions') {

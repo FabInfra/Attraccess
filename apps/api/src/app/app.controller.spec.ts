@@ -15,7 +15,7 @@ describe('AppController', () => {
   describe('/info', () => {
     it('should return api information', () => {
       const appController = app.get<AppController>(AppController);
-      expect(appController.getInfo()).toEqual({ name: 'Attraccess API', status: 'ok' });
+      expect(appController.getInfo()).toEqual({ name: 'FabAccess API', status: 'ok' });
     });
   });
 });

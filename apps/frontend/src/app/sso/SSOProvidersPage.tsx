@@ -5,7 +5,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { Navigate } from 'react-router-dom';
 import { Button } from '@heroui/react';
 import { Plus } from 'lucide-react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import * as providerListEn from './providers/translations/en';
 import * as providerListDe from './providers/translations/de';
 

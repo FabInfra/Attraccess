@@ -1,4 +1,4 @@
-import { SystemPermissions } from '@attraccess/database-entities';
+import { SystemPermissions } from '@fabaccess/database-entities';
 import { PathRouteProps } from 'react-router-dom';
 
 // Extended route type that includes sidebar options

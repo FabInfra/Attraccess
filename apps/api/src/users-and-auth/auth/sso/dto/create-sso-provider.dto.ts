@@ -1,12 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsNotEmpty,
-  IsObject,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
-import { SSOProviderType } from '@attraccess/database-entities';
+import { IsNotEmpty, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { SSOProviderType } from '@fabaccess/database-entities';
 import { Type } from 'class-transformer';
 
 export class CreateOIDCConfigurationDto {
@@ -20,8 +14,7 @@ export class CreateOIDCConfigurationDto {
 
   @ApiProperty({
     description: 'The authorization URL of the provider',
-    example:
-      'https://sso.example.com/auth/realms/example/protocol/openid-connect/auth',
+    example: 'https://sso.example.com/auth/realms/example/protocol/openid-connect/auth',
   })
   @IsString()
   @IsNotEmpty()
@@ -29,8 +22,7 @@ export class CreateOIDCConfigurationDto {
 
   @ApiProperty({
     description: 'The token URL of the provider',
-    example:
-      'https://sso.example.com/auth/realms/example/protocol/openid-connect/token',
+    example: 'https://sso.example.com/auth/realms/example/protocol/openid-connect/token',
   })
   @IsString()
   @IsNotEmpty()
@@ -38,8 +30,7 @@ export class CreateOIDCConfigurationDto {
 
   @ApiProperty({
     description: 'The user info URL of the provider',
-    example:
-      'https://sso.example.com/auth/realms/example/protocol/openid-connect/userinfo',
+    example: 'https://sso.example.com/auth/realms/example/protocol/openid-connect/userinfo',
   })
   @IsString()
   @IsNotEmpty()
@@ -47,7 +38,7 @@ export class CreateOIDCConfigurationDto {
 
   @ApiProperty({
     description: 'The client ID of the provider',
-    example: 'attraccess-client',
+    example: 'fabaccess-client',
   })
   @IsString()
   @IsNotEmpty()

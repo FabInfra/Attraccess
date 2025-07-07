@@ -1,5 +1,5 @@
 {
-  "name": "@attraccess/env",
+  "name": "@fabaccess/env",
   "version": "0.0.16",
   "type": "commonjs",
   "main": "./src/index.js",
@@ -13,8 +13,6 @@
   ],
   "dependencies": {
     "tslib": "^2.3.0",
-
     "zod": "^3.24.4"
-
   }
 }

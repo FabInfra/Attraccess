@@ -3,7 +3,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { nanoid } from 'nanoid';
 import { Repository } from 'typeorm';
-import { User, RevokedToken, AuthenticationDetail, AuthenticationType } from '@attraccess/database-entities';
+import { User, RevokedToken, AuthenticationDetail, AuthenticationType } from '@fabaccess/database-entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EmailService } from '../../email/email.service';
 import { addDays } from 'date-fns';
@@ -147,6 +147,7 @@ export class AuthService {
     options: AuthenticationOptions<T>
   ): Promise<User | null> {
     // First try to find user by username
+    console.log('usernameOrEmail', usernameOrEmail);
     let user = await this.usersService.findOne({ username: usernameOrEmail });
 
     // If not found by username, try by email

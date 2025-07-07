@@ -1,5 +1,5 @@
 services:
-  attraccess:
+  fabaccess:
     restart: unless-stopped
     build:
       context: .
@@ -16,5 +16,3 @@ services:
     ports:
       - '8025:8025'
       - '1025:1025'
-
-

@@ -1,4 +1,4 @@
-import { FabReader } from '@attraccess/database-entities';
+import { FabReader } from '@fabaccess/database-entities';
 import { ReaderState } from './reader-states/reader-state.interface';
 
 interface FabreaderMessageBaseData<TPayload = unknown> {

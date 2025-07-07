@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { ReaderState } from './reader-state.interface';
 import { InitialReaderState } from './initial.state';
-import { User } from '@attraccess/plugins-backend-sdk';
+import { User } from '@fabaccess/plugins-backend-sdk';
 import { AuthenticatedWebSocket, FabreaderEvent, FabreaderEventType, FabreaderResponse } from '../websocket.types';
 import { GatewayServices } from '../websocket.gateway';
 

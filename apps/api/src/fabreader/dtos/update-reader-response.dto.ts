@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { FabReader } from '@attraccess/plugins-backend-sdk';
+import { FabReader } from '@fabaccess/plugins-backend-sdk';
 
 export class UpdateReaderResponseDto {
   @ApiProperty({

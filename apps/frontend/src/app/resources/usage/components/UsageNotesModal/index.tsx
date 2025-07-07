@@ -1,10 +1,10 @@
 import { memo } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Spinner, Textarea } from '@heroui/react';
-import { ResourceUsage } from '@attraccess/react-query-client';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { ResourceUsage } from '@fabaccess/react-query-client';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import * as en from './translations/en';
 import * as de from './translations/de';
-import { DateTimeDisplay } from '@attraccess/plugins-frontend-ui';
+import { DateTimeDisplay } from '@fabaccess/plugins-frontend-ui';
 
 interface UsageNotesModalProps {
   isOpen: boolean;
@@ -18,7 +18,7 @@ export const UsageNotesModal = memo(({ isOpen, onClose, session }: UsageNotesMod
   if (!isOpen) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} scrollBehavior='inside'>
+    <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
       <ModalContent>
         <ModalHeader className="flex flex-col gap-1">{t('sessionNotes')}</ModalHeader>
         <ModalBody>

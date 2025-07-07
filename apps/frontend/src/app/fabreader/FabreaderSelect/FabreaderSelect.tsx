@@ -1,4 +1,4 @@
-import { useFabReaderServiceGetReaders } from '@attraccess/react-query-client';
+import { useFabReaderServiceGetReaders } from '@fabaccess/react-query-client';
 import { Select, SelectItem } from '@heroui/react';
 import { useCallback, useEffect, useState } from 'react';
 

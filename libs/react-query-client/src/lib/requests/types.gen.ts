@@ -1486,7 +1486,7 @@ export type PluginMain = {
     backend: PluginMainBackend;
 };
 
-export type PluginAttraccessVersion = {
+export type PluginFabAccessVersion = {
     /**
      * The minimum version of the plugin
      */
@@ -1511,7 +1511,7 @@ export type LoadedPluginManifest = {
      * The version of the plugin
      */
     version: string;
-    attraccessVersion: PluginAttraccessVersion;
+    fabaccessVersion: PluginFabAccessVersion;
     /**
      * The directory of the plugin
      */

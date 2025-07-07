@@ -1,4 +1,4 @@
-import { User } from '@attraccess/database-entities';
+import { User } from '@fabaccess/database-entities';
 import { PaginatedResponse } from '../../../types/response';
 import { ApiProperty } from '@nestjs/swagger';
 

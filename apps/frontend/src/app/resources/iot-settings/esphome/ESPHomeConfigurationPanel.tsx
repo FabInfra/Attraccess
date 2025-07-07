@@ -1,10 +1,10 @@
 import { Card, Accordion, AccordionItem, CardBody, Snippet, Link, Alert } from '@heroui/react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import * as en from './translations/en';
 import * as de from './translations/de';
 import { useMemo, useState } from 'react';
 import { ExternalLink, InfoIcon } from 'lucide-react';
-import { useResourcesServiceGetOneResourceById } from '@attraccess/react-query-client';
+import { useResourcesServiceGetOneResourceById } from '@fabaccess/react-query-client';
 import { getBaseUrl } from '../../../../api';
 
 function useEspHomeConfigSnippet(resourceId: number) {
@@ -34,30 +34,30 @@ function useEspHomeConfigSnippet(resourceId: number) {
     return `external_components:
     - source:
         type: git
-        url: https://github.com/FabInfra/Attraccess-esphome-components.git
-      components: [attraccess_resource]
+        url: https://github.com/FabInfra/FabAccess-esphome-components.git
+      components: [fabaccess_resource]
   
-  attraccess_resource:
+  fabaccess_resource:
     id: ${formatEspHomeId(resource?.name)}
     api_url: ${apiBaseUrl}
     resource_id: "${resource?.id || 'resource_id'}"
   
   # Add text sensor to show human-readable status
   text_sensor:
-    - platform: attraccess_resource
+    - platform: fabaccess_resource
       resource: ${formatEspHomeId(resource?.name)}
       name: "${resource?.name || 'Resource'} Status"
       id: ${formatEspHomeId(resource?.name)}_status
   
   
   binary_sensor:
-    - platform: attraccess_resource
+    - platform: fabaccess_resource
       resource: ${formatEspHomeId(resource?.name)}
   
       # Monitor if API connection is available
       availability:
-        name: "Attraccess API Availability"
-        id: attraccess_api_availability
+        name: "FabAccess API Availability"
+        id: fabaccess_api_availability
   
       # Monitor actual resource usage
       in_use:
@@ -124,7 +124,7 @@ export function ESPHomeConfigurationPanel(props: ESPHomeConfigurationPanelProps)
               <div className="flex items-center mt-2 text-sm">
                 <InfoIcon className="w-4 h-4 mr-2 text-blue-500" />
                 <Link
-                  href="https://github.com/FabInfra/Attraccess-esphome-components"
+                  href="https://github.com/FabInfra/FabAccess-esphome-components"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 text-blue-500"

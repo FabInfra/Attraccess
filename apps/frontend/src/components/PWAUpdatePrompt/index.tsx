@@ -1,6 +1,6 @@
 import { useRegisterSW } from 'virtual:pwa-register/react';
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/react';
-import { useFormatDateTime, useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useFormatDateTime, useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { useCallback, useMemo, useState } from 'react';
 import { PageHeader } from '../pageHeader';
 import { ClockIcon, GiftIcon, RefreshCcwIcon } from 'lucide-react';

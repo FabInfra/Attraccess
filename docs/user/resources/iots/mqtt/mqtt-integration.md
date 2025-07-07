@@ -1,12 +1,12 @@
-# MQTT Integration for Attraccess
+# MQTT Integration for FabAccess
 
-This documentation covers the MQTT integration feature that allows Attraccess to publish messages to MQTT servers when resources are used or released.
+This documentation covers the MQTT integration feature that allows FabAccess to publish messages to MQTT servers when resources are used or released.
 
 ## Overview
 
 The MQTT integration allows administrators to configure resource-specific messaging to MQTT servers. This enables integration with external systems and IoT devices to react to resource usage events.
 
-When a resource is used or released, Attraccess can automatically publish messages to one or more MQTT servers, which can trigger actions like turning on/off lights, managing power to workstations, or updating status displays.
+When a resource is used or released, FabAccess can automatically publish messages to one or more MQTT servers, which can trigger actions like turning on/off lights, managing power to workstations, or updating status displays.
 
 ## Configuration Options
 

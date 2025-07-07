@@ -6,7 +6,7 @@ import {
   ResourceGroup,
   ResourceIntroduction,
   ResourceIntroductionHistoryItem,
-} from '@attraccess/database-entities';
+} from '@fabaccess/database-entities';
 import { Repository } from 'typeorm';
 import { UpdateResourceGroupIntroductionDto } from './dtos/update.request.dto';
 

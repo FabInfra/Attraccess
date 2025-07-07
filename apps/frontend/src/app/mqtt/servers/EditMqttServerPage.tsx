@@ -1,4 +1,4 @@
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { Button, Card, CardHeader, Input, Checkbox, Spinner } from '@heroui/react';
 import { ArrowLeft } from 'lucide-react';
 import { PasswordInput } from '../../../components/PasswordInput';
@@ -12,7 +12,7 @@ import {
   useMqttServiceMqttServersGetOneById,
   CreateMqttServerDto,
   UseMqttServiceMqttServersGetAllKeyFn,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 
 export function EditMqttServerPage() {

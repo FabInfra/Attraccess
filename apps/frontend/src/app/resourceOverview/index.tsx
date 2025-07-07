@@ -1,7 +1,7 @@
 import {
   useResourcesServiceResourceGroupsGetMany,
   useResourcesServiceGetAllResources,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { Toolbar } from './toolbar/toolbar';
 import { ResourceGroupCard } from './resourceGroupCard';
 import { useCallback, useMemo, useState } from 'react';

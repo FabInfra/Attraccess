@@ -1,4 +1,4 @@
-import { User } from '@attraccess/database-entities';
+import { User } from '@fabaccess/database-entities';
 import { IPlugin } from 'react-pluggable';
 
 export enum FrontendLocation {}
@@ -11,12 +11,12 @@ export const getPluginFunctionName = (pluginName: string, func: FRONTEND_FUNCTIO
   return `${pluginName}.${func}`;
 };
 
-export interface AttraccessFrontendPluginAuthData {
+export interface FabAccessFrontendPluginAuthData {
   authToken: string;
   user: User;
 }
 
-export interface AttraccessFrontendPlugin extends IPlugin {
-  onApiAuthStateChange(authData: null | AttraccessFrontendPluginAuthData): void;
+export interface FabAccessFrontendPlugin extends IPlugin {
+  onApiAuthStateChange(authData: null | FabAccessFrontendPluginAuthData): void;
   onApiEndpointChange(endpoint: string): void;
 }

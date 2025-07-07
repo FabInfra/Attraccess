@@ -27,7 +27,7 @@ export default defineConfig({
     nxCopyAssetsPlugin([]),
     // MillionLint.vite(),
     federation({
-      name: 'attraccess',
+      name: 'fabaccess',
       remotes: {
         // Dynamic remotes will be loaded at runtime
         // dummy remote so that vite prepares the shared libs,

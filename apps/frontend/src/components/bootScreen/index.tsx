@@ -1,4 +1,4 @@
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import { UnauthorizedLayout } from '../../app/unauthorized/unauthorized-layout/layout';
 import { PageHeader } from '../pageHeader';
 import { Progress } from '@heroui/react';

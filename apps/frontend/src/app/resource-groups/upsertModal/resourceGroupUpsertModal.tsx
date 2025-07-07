@@ -10,7 +10,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from '@heroui/react';
-import { useTranslations } from '@attraccess/plugins-frontend-ui';
+import { useTranslations } from '@fabaccess/plugins-frontend-ui';
 import * as en from './resourceGroupUpsertModal.en.json';
 import * as de from './resourceGroupUpsertModal.de.json';
 import {
@@ -20,7 +20,7 @@ import {
   useResourcesServiceResourceGroupsUpdateOne,
   UpdateResourceGroupDto,
   useResourcesServiceResourceGroupsGetManyKey,
-} from '@attraccess/react-query-client';
+} from '@fabaccess/react-query-client';
 import { useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useToastMessage } from '../../../components/toastProvider';

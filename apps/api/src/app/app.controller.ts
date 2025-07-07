@@ -15,7 +15,7 @@ export class AppController {
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string', example: 'Attraccess API' },
+        name: { type: 'string', example: 'FabAccess API' },
         status: { type: 'string', example: 'ok' },
       },
     },
