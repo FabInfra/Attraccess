@@ -76,7 +76,7 @@ export const FabreaderList = () => {
         onSave={() => setOpenedReaderEditor(null)}
       />
 
-      <Table aria-label="Fabreaders" data-cy="fabreader-list-table">
+      <Table aria-label="FabReaders" data-cy="fabreader-list-table">
         <TableHeader>
           <TableColumn>{t('table.columns.name')}</TableColumn>
           <TableColumn>{t('table.columns.lastConnection')}</TableColumn>

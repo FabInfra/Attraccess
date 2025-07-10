@@ -90,7 +90,7 @@ void setup()
   Serial.begin(115200);
   delay(2000);
 
-  Serial.println("FABReader starting...");
+  Serial.println("FabReader starting...");
 
   // Initialize SPI for other peripherals if needed
   SPI.begin(PIN_SPI_SCK, PIN_SPI_MISO, PIN_SPI_MOSI);

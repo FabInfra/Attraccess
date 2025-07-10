@@ -161,13 +161,13 @@ export class WaitForNFCTapState implements ReaderState {
       responseMessage = 'Resource stopped';
       this.logger.debug(`Stopping resource usage for user ${userOfNFCCard.id} on resource ${this.selectedResourceId}`);
       await this.services.resourceUsageService.endSession(this.selectedResourceId, userOfNFCCard, {
-        notes: `-- by Fabreader (ID: ${this.socket.reader.id}) with NFC Card (ID: ${this.card.id}) --`,
+        notes: `-- by FabReader (ID: ${this.socket.reader.id}) with NFC Card (ID: ${this.card.id}) --`,
       });
     } else {
       responseMessage = 'Resource started';
       this.logger.debug(`Starting resource usage for user ${userOfNFCCard.id} on resource ${this.selectedResourceId}`);
       await this.services.resourceUsageService.startSession(this.selectedResourceId, userOfNFCCard, {
-        notes: `-- by Fabreader (ID: ${this.socket.reader.id}) with NFC Card (ID: ${this.card.id}) --`,
+        notes: `-- by FabReader (ID: ${this.socket.reader.id}) with NFC Card (ID: ${this.card.id}) --`,
       });
     }
 

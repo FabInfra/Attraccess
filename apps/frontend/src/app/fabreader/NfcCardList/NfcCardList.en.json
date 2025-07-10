@@ -16,8 +16,8 @@
     "deleteModal": {
       "title": "Delete NFC Card",
       "description": "You are about to delete the NFC Card with the ID {{id}}. This action cannot be undone.",
-      "readerLabel": "Select FABreader",
-      "readerPlaceholder": "Select a FABreader",
+      "readerLabel": "Select FabReader",
+      "readerPlaceholder": "Select a FabReader",
       "cancel": "Cancel",
       "delete": "Delete"
     }
@@ -25,9 +25,9 @@
   "enroll": "Enroll NFC Card",
   "enrollModal": {
     "title": "Enroll NFC Card",
-    "description": "To enroll a new NFC Card, choose a connected FABreader in the list below. Then click on the button \"Enroll new NFC Card\" and follow the instructions on the FABreader.",
-    "readerLabel": "Select FABreader",
-    "readerPlaceholder": "Select a FABreader",
+    "description": "To enroll a new NFC Card, choose a connected FabReader in the list below. Then click on the button \"Enroll new NFC Card\" and follow the instructions on the FabReader.",
+    "readerLabel": "Select FabReader",
+    "readerPlaceholder": "Select a FabReader",
     "cancel": "Cancel",
     "enroll": "Enroll"
   }

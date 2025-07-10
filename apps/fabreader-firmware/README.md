@@ -1,6 +1,6 @@
-# Fabreader Firmware
+# FabReader Firmware
 
-This directory contains the firmware for the Fabreader device, an ESP32-C3 based RFID/NFC reader.
+This directory contains the firmware for the FabReader device, an ESP32-C3 based RFID/NFC reader.
 
 ## Web Installation
 
@@ -9,12 +9,12 @@ You can install the firmware directly from your web browser using [ESP Web Tools
 ### Requirements
 
 - Chrome or Edge browser on desktop (Web Serial is not supported on mobile or Firefox)
-- ESP32-C3 based Fabreader device
+- ESP32-C3 based FabReader device
 - USB connection to your computer
 
 ### Quick Installation
 
-1. Connect your Fabreader device to your computer via USB
+1. Connect your FabReader device to your computer via USB
 2. Visit our [firmware installation page](https://OWNER_NAME.github.io/Attraccess/) (replace OWNER_NAME with your GitHub username)
 3. Click the "Install" button and follow the on-screen instructions
 4. If prompted, select the correct serial port for your device
