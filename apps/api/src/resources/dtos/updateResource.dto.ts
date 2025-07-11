@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsEnum, IsUrl, ValidateIf, IsBoolean } from 'class-validator';
+import { IsString, IsOptional, IsEnum, IsUrl, ValidateIf, IsBoolean, IsObject } from 'class-validator';
 import { FileUpload } from '../../common/types/file-upload.types';
 import { DocumentationType } from '@attraccess/database-entities';
 import { ToBoolean } from '../../common/request-transformers';
@@ -82,4 +82,14 @@ export class UpdateResourceDto {
   @ToBoolean()
   @IsOptional()
   allowTakeOver?: boolean;
+
+  @ApiProperty({
+    description: 'Custom fields for the resource as key-value pairs',
+    example: { externalID: 'MRP-001', category: 'printer', location: 'room-a' },
+    required: false,
+    type: Object
+  })
+  @IsObject()
+  @IsOptional()
+  customFields?: Record<string, string>;
 }

@@ -27,6 +27,7 @@ export class ResourcesService {
       documentationMarkdown: dto.documentationMarkdown || null,
       documentationUrl: dto.documentationUrl || null,
       allowTakeOver: dto.allowTakeOver || false,
+      customFields: dto.customFields || null,
     });
 
     // Save the resource first to get an ID
@@ -83,6 +84,9 @@ export class ResourcesService {
 
     // Handle allowTakeOver field
     if (dto.allowTakeOver !== undefined) resource.allowTakeOver = dto.allowTakeOver;
+
+    // Handle custom fields
+    if (dto.customFields !== undefined) resource.customFields = dto.customFields;
 
     if (image && dto.deleteImage) {
       throw new BadRequestException('Image and deleteImage cannot be used together');

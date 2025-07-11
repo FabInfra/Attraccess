@@ -468,6 +468,12 @@ export type CreateResourceDto = {
      * Whether this resource allows overtaking by the next user without the prior user ending their session
      */
     allowTakeOver?: boolean;
+    /**
+     * Custom fields for the resource as key-value pairs
+     */
+    customFields?: {
+        [key: string]: unknown;
+    };
 };
 
 /**
@@ -535,6 +541,12 @@ export type Resource = {
      */
     allowTakeOver: boolean;
     /**
+     * Custom fields for the resource as key-value pairs
+     */
+    customFields?: {
+        [key: string]: unknown;
+    };
+    /**
      * When the resource was created
      */
     createdAt: string;
@@ -596,6 +608,12 @@ export type UpdateResourceDto = {
      * Whether this resource allows overtaking by the next user without the prior user ending their session
      */
     allowTakeOver?: boolean;
+    /**
+     * Custom fields for the resource as key-value pairs
+     */
+    customFields?: {
+        [key: string]: unknown;
+    };
 };
 
 export type MqttServer = {
